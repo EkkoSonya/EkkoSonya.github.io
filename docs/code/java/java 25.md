@@ -1,5 +1,5 @@
 ---
-title: Java - 反射
+title: Java - 反射1
 date: 2025-03-09
 category:
   - code
@@ -191,17 +191,17 @@ public static void main(String[] args) {
   如果我们已经明确了继承的泛型的类型，那么对应返回的就是确定的类型 `class`
 
   ```java
-    <!-- Test.class -->
+    <!-- Test.java -->
     public class Test <T> {
     }
 
-    <!-- Student.class -->
+    <!-- Student.java -->
     public class Student extends Test<String> {
         String name;
         int age;
     }
 
-    <!-- Main.class -->
+    <!-- Main.java -->
     public static void main(String[] args) {
         ParameterizedType type = (ParameterizedType) Student.class.getGenericSuperclass();
         System.out.println(type);

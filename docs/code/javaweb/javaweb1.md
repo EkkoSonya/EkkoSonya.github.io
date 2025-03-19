@@ -1,5 +1,5 @@
 ---
-title: Java - Socket1
+title: Socket1
 date: 2024-08-15
 category:
   - code

@@ -6,8 +6,8 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 19 Mar 2025 16:57:02 GMT</pubDate>
-    <lastBuildDate>Wed, 19 Mar 2025 16:57:02 GMT</lastBuildDate>
+    <pubDate>Wed, 19 Mar 2025 16:59:43 GMT</pubDate>
+    <lastBuildDate>Wed, 19 Mar 2025 16:59:43 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
@@ -45,7 +45,7 @@
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre></div><p>实际上它就是一个TCP连接的建立过程：</p>
-<figure><img src="http://myimg.ekkosonya.cn/20250319235934.png" alt="20250319235934" tabindex="0" loading="lazy"><figcaption>20250319235934</figcaption></figure>
+<figure><figcaption>20250319235934</figcaption></figure>
 <p>一旦TCP连接建立，服务端和客户端之间就可以相互发送数据，直到客户端主动关闭连接。当然，服务端不仅仅只可以让一个客户端进行连接，我们可以尝试让服务端一直运行来不断接受客户端的连接：</p>
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
     <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> server <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerSocket</span><span class="token punctuation">(</span><span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>    <span class="token comment">//将服务端创建在端口8080上</span>
@@ -150,7 +150,6 @@ socket<span class="token punctuation">.</span><span class="token function">shutd
 </code></pre></div></li>
 </ol>
 ]]></content:encoded>
-      <enclosure url="http://myimg.ekkosonya.cn/20250319235934.png" type="image/png"/>
     </item>
     <item>
       <title>Java - 反射2</title>

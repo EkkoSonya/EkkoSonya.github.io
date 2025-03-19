@@ -6,16 +6,16 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 19 Mar 2025 16:53:48 GMT</pubDate>
-    <lastBuildDate>Wed, 19 Mar 2025 16:53:48 GMT</lastBuildDate>
+    <pubDate>Wed, 19 Mar 2025 16:57:02 GMT</pubDate>
+    <lastBuildDate>Wed, 19 Mar 2025 16:57:02 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
     <item>
-      <title>Java - Socket1</title>
+      <title>Socket1</title>
       <link>http://ekkosonya.cn/code/javaweb/javaweb1.html</link>
       <guid>http://ekkosonya.cn/code/javaweb/javaweb1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Java - Socket1</source>
+      <source url="http://ekkosonya.cn/rss.xml">Socket1</source>
       <description>Socket 通过Socket技术（它是计算机之间进行通信的一种约定或一种方式），我们就可以实现两台计算机之间的通信，Socket也被翻译为套接字，是操作系统底层提供的一项通信技术，它支持TCP和UDP。而Java就对socket底层支持进行了一套完整的封装，我们可以通过Java来实现Socket通信。 socket 连接示例 实际上它就是一个TCP连...</description>
       <category>code</category>
       <pubDate>Thu, 15 Aug 2024 00:00:00 GMT</pubDate>

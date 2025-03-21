@@ -4,7 +4,7 @@ date: 2024-08-15
 category:
   - code
 tag:
-  - java
+  - javaweb
 # star: true
 # sticky: true
 order: -1
@@ -72,6 +72,7 @@ public static void main(String[] args) {
 
 1. 如果服务端是 `Socket socket = server.accept();`  最后需要 `socket.close` 不然会报错
 2. 如果接收端读取的是 `reader.readLine()`, 注意需要添加 `\n`，`writer.write(text+ "\n");`, `writer`不会主动加 `\n`
+3. `OutputStream` 是把东西先到对应的流里  `InputStream` 是获取对应流的内容
 
 ```java
 // Server.java
@@ -169,7 +170,7 @@ public class Client {
     当客户端连接后，如果设置了keeplive为 true，当对方没有发送任何数据过来，超过一个时间(看系统内核参数配置)，那么我们这边会发送一个ack探测包发到对方，探测双方的TCP/IP连接是否有效。
 
 5. TCP在传输过程中，实际上会有一个缓冲区用于数据的发送和接收：
-   ![20250320005040](http://myimg.ekkosonya.cn/20250320005040.png)
+   ![20250319235934](../../img/javaweb/2.png)
    此缓冲区大小为：8192，我们可以手动调整其大小来优化传输效率：
 
    ```java

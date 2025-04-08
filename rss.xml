@@ -6,11 +6,316 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Fri, 21 Mar 2025 17:21:49 GMT</pubDate>
-    <lastBuildDate>Fri, 21 Mar 2025 17:21:49 GMT</lastBuildDate>
+    <pubDate>Tue, 08 Apr 2025 14:25:41 GMT</pubDate>
+    <lastBuildDate>Tue, 08 Apr 2025 14:25:41 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>数据库1</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb3.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">数据库1</source>
+      <description>数据库 1 简介 数据库是数据管理的有效技术，是由一批数据构成的有序集合，这些数据被存放在结构化的数据表里。数据表之间相互关联，反映客观事物间的本质联系。数据库能有效地帮助一个组织或企业科学地管理各类信息资源。简而言之，我们的数据可以交给数据库来帮助我们进行管理，同时数据库能够为我们提供高效的访问性能。 常见的数据库有很多种，包括但不限于： MySQL...</description>
+      <category>code</category>
+      <pubDate>Sat, 23 Mar 2024 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>数据库 1</h2>
+<h3>简介</h3>
+<p>数据库是数据管理的有效技术，是由一批数据构成的有序集合，这些数据被存放在结构化的数据表里。数据表之间相互关联，反映客观事物间的本质联系。数据库能有效地帮助一个组织或企业科学地管理各类信息资源。简而言之，我们的数据可以交给数据库来帮助我们进行管理，同时数据库能够为我们提供高效的访问性能。</p>
+<p>常见的数据库有很多种，包括但不限于：</p>
+<p>MySQL - 免费，用的最多的，开源数据库，适用于中小型
+Microsoft SQL Server - 收钱的，但是提供技术支持，适用于Windows Server
+Oracle - 收钱的，大型数据库系统</p>
+<h3>数据模型</h3>
+<p>数据模型与现实世界中的模型一样，是对现实世界数据特征的一种抽象。实际上，我们之前学习的类就是对现实世界数据的一种抽象，比如一个学生的特征包括姓名，年龄，年级，学号，专业等，这些特征也称为实体的一种属性，属性具有以下特点：</p>
+<ul>
+<li>属性不可再分</li>
+<li>一个实体的属性可以有很多个</li>
+<li>用于唯一区分不同实体的的属性，称为<strong>Key</strong>，比如每个同学的学号都是不一样的</li>
+<li>属性取值可以有一定的约束，比如性别只能是男或是女</li>
+</ul>
+<p>实体或是属性之间可以具有一定的联系，比如一个老师可以教很多个学生，而学生相对于老师就是被教授的关系；又比如每个同学都有一个学号与其唯一对应，因此学号和学生之间也有一种联系。而像一个老师教多个学生的联系就是一种一对多的联系（1:n），而学号唯一对应，就是一种一对一的联系（1:1）；每一个老师不仅可以教多个学生，每一个学生也可以有多个教师，这就是一种多对多的联系（n:m）
+MySQL就是一种<strong>关系型数据库</strong>，通过使用关系型数据库，我们就可以很好地存储这样带有一定联系的数据。</p>
+<p>通过构建一个ER图，我们就能很好地理清不同数据模型之间的关系和特点。</p>
+<figure><figcaption>1</figcaption></figure>
+<h3>数据库创建</h3>
+<p>既然了解了属性和联系，那么我们就来尝试创建一个数据库，并在数据库中添加用于存放数据的表，每一张表都代表一种实体的数据。首先我们要明确，我们需要创建什么样子的表：</p>
+<ul>
+<li>学生表：用于存放所有学生的数据，学生（<u>学号</u>，姓名，性别）</li>
+<li>教师表：用于存放所有教师的数据，教师（<u>教师号</u>，姓名）</li>
+<li>授课表：用于存放教师与学生的授课信息，授课（<u>学号</u>，教师号）</li>
+</ul>
+<p>其中，标注下划线的属性，作为Key，用于区别于其他实体数据的唯一标记。</p>
+<h3>数据库的规范化</h3>
+<p>要去设计存放一个实体的表，我们就需要了解数据库的关系规范化，尽可能减少“不好”的关系存在，如何设计一个优良的关系模型是最关键的内容！简而言之，我们要学习一下每一个表该如何去设计。</p>
+<p><strong>1NF</strong>对表中每一列进行约束，<strong>2NF</strong>对主属性和其他属性的依赖关系产生约束，<strong>3NF</strong>对依赖关系进一步加强，<strong>BCNF</strong>则是对主键的选取进行唯一确定</p>
+<h4>第一范式（1NF）</h4>
+<p>第一范式是指数据库的每一列都是不可分割的基本数据项，而下面这样的就存在可分割的情况：</p>
+<ul>
+<li>学生（姓名，电话号码）</li>
+</ul>
+<p>电话号码实际上包括了<code>家用座机电话</code>和<code>移动电话</code>，因此它可以被拆分为：</p>
+<ul>
+<li>学生（姓名，座机号码，手机号码）</li>
+</ul>
+<p>满足第一范式是关系型数据库最基本的要求！</p>
+<h4>第二范式（2NF）</h4>
+<p>第二范式要求表中必须存在主键，且其他的属性必须完全依赖于主键，比如：</p>
+<ul>
+<li>学生（<u>学号</u>，姓名，性别）</li>
+</ul>
+<p>学号是每个学生的唯一标识，每个学生都有着不同的学号，因此此表中存在一个主键，并且每个学生的所有属性都依赖于学号，学号发生改变就代表学生发生改变，姓名和性别都会因此发生改变，所有此表满足第二范式。</p>
+<h4>第三范式（3NF）</h4>
+<p>在满足第二范式的情况下，所有的属性都不传递依赖于主键，满足第三范式。</p>
+<ul>
+<li>学生借书情况（<u>借阅编号</u>，学生学号，书籍编号，书籍名称，书籍作者）</li>
+</ul>
+<p>实际上<strong>书籍编号依赖于借阅编号</strong>，而<strong>书籍名称和书籍作者依赖于书籍编号</strong>，因此存在传递依赖的情况，<strong>我们可以将书籍信息进行单独拆分为另一张表</strong>：</p>
+<ul>
+<li>学生借书情况（<u>借阅编号</u>，学生学号，书籍编号）</li>
+<li>书籍（<u>书籍编号</u>，书籍名称，书籍作者）</li>
+</ul>
+<p>这样就<strong>消除了传递依赖</strong>，从而满足第三范式。</p>
+<h4>BCNF</h4>
+<p>BCNF作为第三范式的补充，假设仓库管理关系表为StorehouseManage(仓库ID, 存储物品ID, 管理员ID, 数量)，且有一个管理员只在一个仓库工作；一个仓库可以存储多种物品。这个数据库表中存在如下决定关系：</p>
+<p>(仓库ID, 存储物品ID) →(管理员ID, 数量)</p>
+<p>(管理员ID, 存储物品ID) → (仓库ID, 数量)</p>
+<p>所以，(仓库ID, 存储物品ID)和(管理员ID, 存储物品ID)都是StorehouseManage的候选关键字，表中的唯一非关键字段为数量，它是符合第三范式的。但是，由于存在如下决定关系：</p>
+<p>(仓库ID) → (管理员ID)</p>
+<p>(管理员ID) → (仓库ID)</p>
+<p>即存在关键字段决定关键字段的情况，如果修改管理员ID，那么就必须逐一进行修改，所以其不符合BCNF范式。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>数据库2</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb4.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">数据库2</source>
+      <description>数据库 2 SQL 语句 结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。 SQL语句不区分大小写（关键字推荐使用大写），它支持多行，并且需要使用;进行结尾！ SQL也支持注释，通...</description>
+      <category>code</category>
+      <pubDate>Sat, 23 Mar 2024 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>数据库 2</h2>
+<h2>SQL 语句</h2>
+<p>结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。</p>
+<p>SQL语句<strong>不区分大小写</strong>（关键字推荐使用大写），它支持多行，并且需要使用<code>;</code>进行结尾！</p>
+<p>SQL也支持注释，通过使用<code>--</code>或是<code>#</code>来编写注释内容，也可以使用<code>/*</code>来进行多行注释。</p>
+<p>我们要学习的就是以下四种类型的SQL语言：</p>
+<ul>
+<li>
+<p>数据查询语言（Data Query Language, DQL）
+基本结构是由<code>SELECT</code>子句，<code>FROM</code>子句，<code>WHERE</code>子句组成的查询块。</p>
+</li>
+<li>
+<p>数据操纵语言（Data Manipulation Language, DML）是SQL语言中，负责对数据库对象运行数据访问工作的指令集，
+以<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>三种指令为核心，分别代表插入、更新与删除，是开发以数据为中心的应用程序必定会使用到的指令。</p>
+</li>
+<li>
+<p>数据库定义语言DDL(Data Definition Language)，是用于描述数据库中要存储的现实世界实体的语言。</p>
+</li>
+<li>
+<p>DCL（Data Control Language）是数据库控制语言。
+是用来设置或更改数据库用户或角色权限的语句
+包括（grant,deny,revoke等）语句。在默认状态下，只有sysadmin,dbcreator,db_owner或db_securityadmin等人员才有权力执行DCL。</p>
+</li>
+</ul>
+<p>我们平时所说的CRUD其实就是增删改查（Create/Retrieve/Update/Delete）</p>
+<h3>数据库定义语言（DDL）</h3>
+<h4>SQL数据类型</h4>
+<p>以下的数据类型用于字符串存储：</p>
+<ul>
+<li><code>char(n)</code>可以存储任意字符串，但是是<strong>固定长度为n</strong>，如果插入的长度小于定义长度时，则用空格填充。</li>
+<li><code>varchar(n)</code>也可以存储任意数量字符串，<strong>长度不固定</strong>，但<strong>不能超过n</strong>，不会用空格填充。</li>
+</ul>
+<p>以下数据类型用于存储数字：</p>
+<ul>
+<li><code>smallint</code>用于存储小的整数，范围在 (-32768，32767)</li>
+<li><code>int</code>用于存储一般的整数，范围在 (-2147483648，2147483647)</li>
+<li><code>bigint</code>用于存储大型整数，范围在 (-9,223,372,036,854,775,808，9,223,372,036,854,775,807)</li>
+<li><code>float</code>用于存储单精度小数</li>
+<li><code>double</code>用于存储双精度的小数</li>
+</ul>
+<p>以下数据类型用于存储时间：</p>
+<ul>
+<li><code>date</code>存储日期</li>
+<li><code>time</code>存储时间</li>
+<li><code>year</code>存储年份</li>
+<li><code>datetime</code>用于混合存储日期+时间</li>
+</ul>
+<h4>列级约束条件</h4>
+<p>列级约束有六种：</p>
+<ul>
+<li>
+<p>主键 Primary key
+确保列中的每个值都是唯一的，并且不能为空。一个表只能有一个主键，主键列的值用来唯一标识每一行数据。在主键列中，不允许有重复的值和空值。</p>
+<p><code>id INT PRIMARY KEY</code> 表示 <code>id</code> 列是主键，且不能为空且唯一。</p>
+</li>
+<li>
+<p>外键 foreign key
+用于建立和维护两表之间的关系，确保列中的值必须存在于另一表的主键或唯一约束列中。它保证数据的参照完整性。即外键列中的数据值必须对应于另一表的主键或唯一列中的某个值。</p>
+<p><code>FOREIGN KEY (department_id) REFERENCES departments(id)</code>，表示 <code>department_id</code> 列是外键，参照 <code>departments</code> 表的 <code>id</code> 列。</p>
+</li>
+<li>
+<p>唯一 unique
+确保列中的每个值都是唯一的，但允许空值。与主键类似，唯一约束保证列中所有的非空数据都是唯一的。一个表可以有多个唯一约束，不同于主键，唯一约束允许有空值。</p>
+<p><code>email VARCHAR(255) UNIQUE</code> 表示 <code>email</code> 列的值是唯一的。</p>
+</li>
+<li>
+<p>检查 check （MySQL不支持）
+用于定义列的值必须满足某些条件。检查约束通常用于限制某些特定的数值范围或模式。</p>
+<p><code>age INT CHECK (age &gt;= 18)</code>，表示 <code>age</code> 列的值必须大于或等于 18。</p>
+</li>
+<li>
+<p>默认 default
+用于为列指定默认值。如果在插入数据时没有为该列提供值，则会使用默认值。默认值仅在插入数据时使用，如果插入时该列有明确值，则默认值不会生效。</p>
+<p><code>status VARCHAR(10) DEFAULT 'active'</code>，表示 <code>status</code> 列在未指定值时默认值为 'active'。</p>
+</li>
+<li>
+<p>非空/空值 not null/ null
+用于定义列是否可以为空。NOT NULL 约束要求该列的每一行必须有一个非空值，而 NULL 允许列中的某些行没有值。</p>
+<p><code>name VARCHAR(100) NOT NULL</code> 表示 <code>name</code> 列不能为 <code>NULL</code>，每一行必须有值。</p>
+</li>
+</ul>
+<h4>表级约束条件</h4>
+<p>表级约束有四种：主键、外键、唯一、检查</p>
+<ul>
+<li>
+<p>主键
+主键约束保证表中的每一行数据都有唯一的标识符，且该列的值不能为空。一个表只能有一个主键。</p>
+<p><code>CONSTRAINT pk_primary_key PRIMARY KEY (id)</code></p>
+</li>
+<li>
+<p>外键
+外键约束用于<strong>在两个表之间建立参照完整性关系</strong>，确保某列的值必须存在于另一表的主键或唯一约束列中。</p>
+</li>
+</ul>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Departments <span class="token punctuation">(</span>
+    DepartmentID <span class="token keyword">INT</span><span class="token punctuation">,</span>
+    DepartmentName <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
+    Location <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    ManagerID <span class="token keyword">INT</span><span class="token punctuation">,</span>
+    Budget <span class="token keyword">DECIMAL</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+    <span class="token keyword">CONSTRAINT</span> PK_Departments <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>DepartmentID<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">CONSTRAINT</span> UC_DepartmentName <span class="token keyword">UNIQUE</span> <span class="token punctuation">(</span>DepartmentName<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">CONSTRAINT</span> CK_BudgetPositive <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>Budget <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">CONSTRAINT</span> FK_Manager <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>ManagerID<span class="token punctuation">)</span> <span class="token keyword">REFERENCES</span> Employees<span class="token punctuation">(</span>EmployeeID<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token keyword">CONSTRAINT</span> DF_Location <span class="token keyword">DEFAULT</span> <span class="token string">'Headquarters'</span> <span class="token keyword">FOR</span> Location
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+</code></pre></div><h4>数据库操作</h4>
+<p>我们可以通过<code>create database</code>来创建一个数据库：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">DATABASE</span> 数据库名
+</code></pre></div><p>为了能够支持中文，我们在创建时可以设定编码格式：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">DATABASE</span> <span class="token keyword">IF</span> <span class="token operator">NOT</span> <span class="token keyword">EXISTS</span> 数据库名 <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span> utf8 <span class="token keyword">COLLATE</span> utf8_general_ci<span class="token punctuation">;</span>
+</code></pre></div><p>如果我们创建错误了，我们可以将此数据库删除，通过使用<code>drop database</code>来删除一个数据库：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DROP</span> <span class="token keyword">DATABASE</span> 数据库名
+</code></pre></div><h4>创建表 <code>CREATE</code></h4>
+<p>在创建表之前，一定要先切换到我们要创建表的数据库内 <code>use xxxx;</code>，默认并不是你创建的数据库。</p>
+<p>数据库创建完成后，我们一般通过<code>create table</code>语句来创建一张表：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">table</span> 表名<span class="token punctuation">(</span>列名 数据类型<span class="token punctuation">[</span>列级约束条件<span class="token punctuation">]</span><span class="token punctuation">,</span>
+             列名 数据类型<span class="token punctuation">[</span>列级约束条件<span class="token punctuation">]</span><span class="token punctuation">,</span>
+             <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+             <span class="token punctuation">[</span><span class="token punctuation">,</span>表级约束条件<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</code></pre></div><h4>修改表 <code>ALTER</code></h4>
+<p>如果我们想修改表结构，我们可以通过<code>alter table</code>来进行修改：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> 表名 <span class="token punctuation">[</span><span class="token keyword">ADD</span> 新列名 数据类型<span class="token punctuation">[</span>列级约束条件<span class="token punctuation">]</span><span class="token punctuation">]</span>
+                <span class="token punctuation">[</span><span class="token keyword">DROP</span> <span class="token keyword">COLUMN</span> 列名<span class="token punctuation">[</span><span class="token keyword">restrict</span><span class="token operator">|</span><span class="token keyword">cascade</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+                <span class="token punctuation">[</span><span class="token keyword">ALTER</span> <span class="token keyword">COLUMN</span> 列名 新数据类型<span class="token punctuation">]</span>
+</code></pre></div><p>我们可以通过<code>ADD</code>来添加一个新的列，通过<code>DROP</code>来删除一个列，不过我们可以添加<code>restrict</code>或<code>cascade</code>，默认是<code>restrict</code>，表示如果此列作为其他表的约束或视图引用到此列时，将无法删除，而<code>cascade</code>会强制连带引用此列的约束、视图一起删除。还可以通过<code>ALTER</code>来修改此列的属性。</p>
+<h4>删除表 <code>DROP</code></h4>
+<p>我们可以通过<code>drop table</code>来删除一个表：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DROP</span> <span class="token keyword">TABLE</span> 表名<span class="token punctuation">[</span><span class="token keyword">restrict</span><span class="token operator">|</span><span class="token keyword">cascade</span><span class="token punctuation">]</span>
+</code></pre></div><p>其中restrict和cascade上面的效果一致。</p>
+<h3>数据库操纵语言 (DML)</h3>
+<h4>插入数据 <code>INSERT INTO</code></h4>
+<p>通过使用<code>insert into</code>语句来向数据库中插入一条数据（一条记录）：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> 表名 <span class="token keyword">VALUES</span><span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">,</span> 值<span class="token number">3</span><span class="token punctuation">)</span>
+</code></pre></div><p>如果插入的数据与列一一对应，那么可以省略列名，但是如果希望向指定列上插入数据，就需要给出列名：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> 表名<span class="token punctuation">(</span>列名<span class="token number">1</span><span class="token punctuation">,</span> 列名<span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span><span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span>
+</code></pre></div><p>我们也可以一次性向数据库中插入多条数据：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> 表名<span class="token punctuation">(</span>列名<span class="token number">1</span><span class="token punctuation">,</span> 列名<span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span><span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span>
+</code></pre></div><p>我们来试试看向我们刚刚创建的表中添加三条数据。</p>
+<h4>修改数据 <code>UPDATE</code></h4>
+<p>我们可以通过<code>update</code>语句来更新表中的数据：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">UPDATE</span> 表名 <span class="token keyword">SET</span> 列名<span class="token operator">=</span>值<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token keyword">WHERE</span> 条件
+</code></pre></div><p>注意，SQL语句中的等于判断是<code>=</code></p>
+<p><strong>警告：</strong> 如果忘记添加<code>WHERE</code>字句来限定条件，<strong>将使得整个表中此列的所有数据都被修改</strong>！</p>
+<h4>删除数据</h4>
+<p>我们可以通过使用<code>delete</code>来删除表中的数据：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> 表名
+</code></pre></div><p>通过这种方式，<strong>将删除表中全部数据</strong>，我们也可以使用<code>where</code>来添加条件，只删除指定的数据：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>数据库2</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb5.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb5.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">数据库2</source>
+      <description>数据库 3 数据库查询语言 (DQL) 单表查询 SELECET 单表查询是最简单的一种查询，我们只需要在一张表中去查找数据即可，通过使用select语句来进行单表查询： 我们也可以添加where字句来限定查询目标： 常用where查询条件 一般的比较运算符，包括=、&amp;gt;、&amp;lt;、&amp;gt;=、&amp;lt;=、!=等。 是否在集合中：in、not in 字符模糊匹配：like...</description>
+      <category>code</category>
+      <pubDate>Sat, 23 Mar 2024 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>数据库 3</h2>
+<h2>数据库查询语言 (DQL)</h2>
+<h3>单表查询 <code>SELECET</code></h3>
+<p>单表查询是最简单的一种查询，我们只需要在一张表中去查找数据即可，通过使用<code>select</code>语句来进行单表查询：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 指定查询某一列数据</span>
+<span class="token keyword">SELECT</span> 列名<span class="token punctuation">[</span><span class="token punctuation">,</span>列名<span class="token punctuation">]</span> <span class="token keyword">FROM</span> 表名
+<span class="token comment">-- 会以别名显示此列</span>
+<span class="token keyword">SELECT</span> 列名 别名 <span class="token keyword">FROM</span> 表名
+<span class="token comment">-- 查询所有的列数据</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名
+<span class="token comment">-- 只查询不重复的值</span>
+<span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> 列名 <span class="token keyword">FROM</span> 表名
+</code></pre></div><p>我们也可以添加<code>where</code>字句来限定查询目标：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件
+</code></pre></div><h4>常用<code>where</code>查询条件</h4>
+<ul>
+<li>
+<p>一般的比较运算符，包括=、&gt;、&lt;、&gt;=、&lt;=、!=等。</p>
+</li>
+<li>
+<p>是否在集合中：in、not in</p>
+</li>
+<li>
+<p>字符模糊匹配：like，not like
+<code>%</code> 表示任意内容
+比如 <code>03%</code> 表示03开头</p>
+</li>
+<li>
+<p>多重条件连接查询：and、or、not</p>
+</li>
+</ul>
+<h4>排序查询 <code>order by</code></h4>
+<p>我们可以通过<code>order by</code>来将查询结果进行排序：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> 列名 <span class="token keyword">ASC</span><span class="token operator">|</span><span class="token keyword">DESC</span>
+</code></pre></div><p>使用ASC表示升序排序，使用DESC表示降序排序，默认为升序。</p>
+<p>我们也可以可以同时添加<strong>多个排序</strong>：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件 <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> 列名<span class="token number">1</span> <span class="token keyword">ASC</span><span class="token operator">|</span><span class="token keyword">DESC</span><span class="token punctuation">,</span> 列名<span class="token number">2</span> <span class="token keyword">ASC</span><span class="token operator">|</span><span class="token keyword">DESC</span>
+</code></pre></div><p>这样会先按照列名1进行排序，每组列名1相同的数据再按照列名2排序。</p>
+<h4>聚集函数</h4>
+<p>聚集函数一般用作统计，包括：</p>
+<ul>
+<li><code>count([distinct]*)</code>统计所有的行数（distinct表示<strong>去重再统计</strong>，下同）</li>
+<li><code>count([distinct]列名)</code>统计某列的值总和</li>
+<li><code>sum([distinct]列名)</code>求一列的和（注意必须是数字类型的）</li>
+<li><code>avg([distinct]列名)</code>求一列的平均值（注意必须是数字类型）</li>
+<li><code>max([distinct]列名)</code>求一列的最大值</li>
+<li><code>min([distinct]列名)</code>求一列的最小值</li>
+</ul>
+<p>一般聚集函数是这样使用的：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> 列名<span class="token punctuation">)</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件
+</code></pre></div><h4>分组和分页查询</h4>
+<p>通过使用<code>group by</code>来对查询结果进行分组，它需要结合聚合函数一起使用：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token function">sum</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件 <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> 列名
+</code></pre></div><p>我们还可以添加<code>having</code>来限制分组条件：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token function">sum</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件 <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> 列名 <span class="token keyword">HAVING</span> 约束条件
+</code></pre></div><p>我们可以通过<code>limit</code>来限制查询的数量，只取前n个结果：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">LIMIT</span> 数量
+</code></pre></div><p>我们也可以进行分页：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">LIMIT</span> 起始位置<span class="token punctuation">,</span>数量
+</code></pre></div>]]></content:encoded>
+    </item>
     <item>
       <title>Socket2</title>
       <link>http://ekkosonya.cn/code/javaweb/javaweb2.html</link>
@@ -18,7 +323,7 @@
       <source url="http://ekkosonya.cn/rss.xml">Socket2</source>
       <description>Socket2 Socket 传输文件 其实本质上都差不多，主要掌握几种流之间的操作，和 socket 的用法 一般 xxxOutputStream 的操作是往对应的xxx流内写入一些东西；xxxInputStream 的操作是从对应的xxx流内获取一些东西。 使用浏览器访问Socket服务器 Http请求是基于TCP协议，不会保持长久连接，在收到响应...</description>
       <category>code</category>
-      <pubDate>Thu, 15 Aug 2024 00:00:00 GMT</pubDate>
+      <pubDate>Fri, 22 Mar 2024 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Socket2</h2>
 <h3>Socket 传输文件</h3>
 <p>其实本质上都差不多，主要掌握几种流之间的操作，和 <code>socket</code> 的用法</p>
@@ -139,7 +444,7 @@
       <source url="http://ekkosonya.cn/rss.xml">Socket1</source>
       <description>Socket 通过Socket技术（它是计算机之间进行通信的一种约定或一种方式），我们就可以实现两台计算机之间的通信，Socket也被翻译为套接字，是操作系统底层提供的一项通信技术，它支持TCP和UDP。而Java就对socket底层支持进行了一套完整的封装，我们可以通过Java来实现Socket通信。 socket 连接示例 实际上它就是一个TCP连...</description>
       <category>code</category>
-      <pubDate>Thu, 15 Aug 2024 00:00:00 GMT</pubDate>
+      <pubDate>Fri, 21 Mar 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Socket</h2>
 <p>通过Socket技术（它是计算机之间进行通信的一种约定或一种方式），我们就可以实现两台计算机之间的通信，Socket也被翻译为套接字，是操作系统底层提供的一项通信技术，它支持TCP和UDP。而Java就对socket底层支持进行了一套完整的封装，我们可以通过Java来实现Socket通信。</p>
 <h3>socket 连接示例</h3>
@@ -1053,527 +1358,6 @@ socket<span class="token punctuation">.</span><span class="token function">shutd
 <span class="token punctuation">}</span>
 </code></pre></div>]]></content:encoded>
       <enclosure url="http://myimg.ekkosonya.cn/20250309155822.png" type="image/png"/>
-    </item>
-    <item>
-      <title>Java - 多线程与反射</title>
-      <link>http://ekkosonya.cn/code/java/java%2024.html</link>
-      <guid>http://ekkosonya.cn/code/java/java%2024.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Java - 多线程与反射</source>
-      <description>多线程4 守护线程 t.setDaemon(true); 守护进程在后台运行运行，不需要和用户交互，本质和普通进程类似。 而守护线程就不一样了，当其他所有的非守护线程结束之后，守护线程自动结束，也就是说，Java中所有的线程都执行完毕后，守护线程自动结束，因此守护线程不适合进行IO操作，只适合打打杂。 在守护线程中产生的新线程也是守护的： 集合类 ja...</description>
-      <category>code</category>
-      <pubDate>Sun, 09 Mar 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>多线程4</h2>
-<h3>守护线程</h3>
-<p><code>t.setDaemon(true);</code></p>
-<ul>
-<li>守护进程在后台运行运行，不需要和用户交互，本质和普通进程类似。</li>
-<li>而守护线程就不一样了，当其他所有的非守护线程结束之后，守护线程自动结束，也就是说，<strong>Java中所有的线程都执行完毕后，守护线程自动结束</strong>，因此守护线程不适合进行IO操作，只适合打打杂。</li>
-</ul>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"程序正常运行中..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t<span class="token punctuation">.</span><span class="token function">setDaemon</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//设置为守护线程（必须在开始之前，中途是不允许转换的）</span>
-    t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">5</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在守护线程中产生的新线程也是守护的：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Thread</span> it <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-            <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"程序正常运行中..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        it<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t<span class="token punctuation">.</span><span class="token function">setDaemon</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//设置为守护线程（必须在开始之前，中途是不允许转换的）</span>
-    t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">5</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>集合类</h3>
-<p>java中也有些使用并行来进行操作的</p>
-<p>集合类中有一个东西是Java8新增的<code>Spliterator</code>接口，翻译过来就是：可拆分迭代器（Splitable Iterator）和Iterator一样，<code>Spliterator</code>也用于遍历数据源中的元素，但它是为了并行执行而设计的。Java 8已经为集合框架中包含的所有数据结构提供了一个默认的<code>Spliterator</code>实现。在集合跟接口<code>Collection</code>中提供了一个<code>spliterator()</code>方法用于获取可拆分迭代器。</p>
-<ul>
-<li>
-<p>并行流 <code>parallelStream()</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>  <span class="token keyword">default</span> <span class="token class-name">Stream</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">E</span><span class="token punctuation">&gt;</span></span> <span class="token function">parallelStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">return</span> <span class="token class-name">StreamSupport</span><span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token function">spliterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//parallelStream就是利用了可拆分迭代器进行多线程操作</span>
-  <span class="token punctuation">}</span>
-</code></pre></div><p>并行流，其实就是一个多线程执行的流，它通过默认的ForkJoinPool实现（这里不讲解原理），它可以提高你的多线程任务的速度。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      list
-              <span class="token punctuation">.</span><span class="token function">parallelStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment">//获得并行流</span>
-              <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>i <span class="token operator">-&gt;</span> <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">" -&gt; "</span><span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-</code></pre></div><p>我们发现，<code>forEach</code>操作的顺序，并不是我们实际List中的顺序，同时每次打印也是不同的线程在执行！我们可以通过调用<code>forEachOrdered()</code>方法来使用单线程维持原本的顺序。</p>
-</li>
-<li>
-<p>在<code>Arrays</code>数组工具类中，也包含大量的并行方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> arr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-      <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">parallelSort</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//使用多线程进行并行排序，效率更高</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-</code></pre></div></li>
-<li>
-<p>集合类，并没有考虑到多线程运行的情况，如果两个线程同时执行，那么有可能两个线程同一时间都执行同一个方法，这种情况下就很容易出问题</p>
-</li>
-</ul>
-<h3>生产者与消费者</h3>
-<p>所谓的生产者消费者模型，是通过一个容器来解决生产者和消费者的强耦合问题。通俗的讲，就是生产者在不断的生产，消费者也在不断的消费，可是消费者消费的产品是生产者生产的，这就必然存在一个中间容器，我们可以把这个容器想象成是一个货架，当货架空的时候，生产者要生产产品，此时消费者在等待生产者往货架上生产产品，而当货架有货物的时候，消费者可以从货架上拿走商品，生产者此时等待货架出现空位，进而补货，这样不断的循环。</p>
-<p>通过多线程编程，来模拟一个餐厅的2个厨师和3个顾客，假设厨师炒出一个菜的时间为3秒，顾客吃掉菜品的时间为4秒。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Queue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> queue <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token operator">::</span><span class="token function">add</span><span class="token punctuation">,</span> <span class="token string">"厨师1"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token operator">::</span><span class="token function">add</span><span class="token punctuation">,</span> <span class="token string">"厨师2"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token operator">::</span><span class="token function">take</span><span class="token punctuation">,</span> <span class="token string">"顾客1"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token operator">::</span><span class="token function">take</span><span class="token punctuation">,</span> <span class="token string">"顾客2"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token operator">::</span><span class="token function">take</span><span class="token punctuation">,</span> <span class="token string">"顾客3"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>queue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    <span class="token class-name">String</span> name <span class="token operator">=</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">"put menu"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    queue<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    queue<span class="token punctuation">.</span><span class="token function">notifyAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">take</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                    <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>queue<span class="token punctuation">)</span><span class="token punctuation">{</span>
-                        <span class="token keyword">while</span><span class="token punctuation">(</span>queue<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>queue<span class="token punctuation">.</span><span class="token function">wait</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                        queue<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                        <span class="token class-name">String</span> name <span class="token operator">=</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> name <span class="token operator">+</span> <span class="token string">"eat"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token punctuation">}</span>
-                    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">4000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Java - 多线程与反射</title>
-      <link>http://ekkosonya.cn/code/java/java%2021.html</link>
-      <guid>http://ekkosonya.cn/code/java/java%2021.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Java - 多线程与反射</source>
-      <description>多线程 进程与线程概念 进程是程序执行的实体，每一个进程都是一个应用程序（比如我们运行QQ、浏览器、LOL、网易云音乐等软件），都有自己的内存空间，CPU一个核心同时只能处理一件事情，当出现多个进程需要同时运行时，CPU一般通过时间片轮转调度算法，来实现多个进程的同时运行。 2025022617374720250226173747 在早期的计算机中，进...</description>
-      <category>code</category>
-      <pubDate>Wed, 26 Feb 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>多线程</h2>
-<h3>进程与线程概念</h3>
-<p><strong>进程</strong>是程序执行的实体，每一个进程都是一个应用程序（比如我们运行QQ、浏览器、LOL、网易云音乐等软件），都有自己的内存空间，<strong>CPU一个核心同时只能处理一件事情</strong>，当出现多个进程需要同时运行时，CPU一般通过<strong>时间片轮转调度算法</strong>，来实现多个进程的同时运行。</p>
-<figure><img src="http://myimg.ekkosonya.cn/20250226173747.png" alt="20250226173747" tabindex="0" loading="lazy"><figcaption>20250226173747</figcaption></figure>
-<p>在早期的计算机中，进程是拥有资源和独立运行的最小单位，也是程序执行的最小单位。但是，如果我希望两个任务同时进行，就必须运行两个进程，由于每个进程都有一个自己的内存空间，进程之间的通信就变得非常麻烦（比如要共享某些数据）而且执行不同进程会产生上下文切换，非常耗时。</p>
-<p><strong>线程</strong>横空出世，<strong>一个进程可以有多个线程</strong>，线程是程序执行中一个单一的顺序控制流程，现在<strong>线程才是程序执行流的最小单元</strong>，<strong>各个线程之间共享程序的内存空间（也就是所在进程的内存空间</strong>），上下文切换速度也高于进程。</p>
-<p>在Java中，我们从开始，一直以来编写的都是<strong>单线程应用程序</strong>(运行<code>main()</code>方法的内容), 也就是说只能同时执行一个任务（无论你是调用方法、还是进行计算，始终都是依次进行的，也就是同步的），而如果我们希望同时执行多个任务（两个方法同时在运行或者是两个计算同时在进行，也就是异步的），就需要用到<strong>Java多线程框架</strong>。实际上一个Java程序启动后，会创建很多线程，不仅仅只运行一个主线程:</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">ThreadMXBean</span> bean <span class="token operator">=</span> <span class="token class-name">ManagementFactory</span><span class="token punctuation">.</span><span class="token function">getThreadMXBean</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">long</span><span class="token punctuation">[</span><span class="token punctuation">]</span> ids <span class="token operator">=</span> bean<span class="token punctuation">.</span><span class="token function">getAllThreadIds</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">ThreadInfo</span><span class="token punctuation">[</span><span class="token punctuation">]</span> infos <span class="token operator">=</span> bean<span class="token punctuation">.</span><span class="token function">getThreadInfo</span><span class="token punctuation">(</span>ids<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">ThreadInfo</span> info <span class="token operator">:</span> infos<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>info<span class="token punctuation">.</span><span class="token function">getThreadName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>线程的创建和启动</h3>
-<p><strong>线程之间是同时运行的</strong>
-通过创建<code>Thread</code>对象来创建一个新的线程，<code>Thread</code>构造方法中需要传入一个<code>Runnable</code>接口的实现（其实就是编写要在另一个线程执行的内容逻辑）同时<code>Runnable</code>只有一个未实现方法，<strong>因此可以直接使用lambda表达式</strong></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>    <span class="token doc-comment comment">/**
-     * Creates a new Thread that inherits the given AccessControlContext.
-     * This is not a public constructor.
-     */</span>
-    <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token class-name">Runnable</span> target<span class="token punctuation">,</span> <span class="token class-name">AccessControlContext</span> acc<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">init</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> target<span class="token punctuation">,</span> <span class="token string">"Thread-"</span> <span class="token operator">+</span> <span class="token function">nextThreadNum</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> acc<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">//Runnable</span>
-    <span class="token annotation punctuation">@FunctionalInterface</span>
-    <span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
-        <span class="token doc-comment comment">/**
-         * When an object implementing interface <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span><span class="token punctuation">&gt;</span></span><span class="token code-section"><span class="token line"><span class="token code language-java"><span class="token class-name">Runnable</span></span></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">&gt;</span></span> is used
-         * to create a thread, starting the thread causes the object's
-         * <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span><span class="token punctuation">&gt;</span></span><span class="token code-section"><span class="token line"><span class="token code language-java">run</span></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">&gt;</span></span> method to be called in that separately executing
-         * thread.
-         * <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>
-         * The general contract of the method <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>code</span><span class="token punctuation">&gt;</span></span><span class="token code-section"><span class="token line"><span class="token code language-java">run</span></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>code</span><span class="token punctuation">&gt;</span></span> is that it may
-         * take any action whatsoever.
-         *
-         * <span class="token keyword">@see</span>     <span class="token reference"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span></span><span class="token class-name">Thread</span><span class="token punctuation">#</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span>
-         */</span>
-        <span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-</code></pre></div><h4><code>start</code>方法</h4>
-<figure><img src="http://myimg.ekkosonya.cn/20250226175843.png" alt="20250226175843" tabindex="0" loading="lazy"><figcaption>20250226175843</figcaption></figure>
-<p>创建好后，通过调用<code>start()</code>方法来运行此线程:</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>    
-        <span class="token comment">//直接编写逻辑</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是另一个线程！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
-    <span class="token comment">//调用此方法来开始执行此线程</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// 获取当前线程对象</span>
-
-<span class="token class-name">Thread</span> t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>    <span class="token comment">//自定义线程名称</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是另一个线程！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 获取线程名称</span>
-</code></pre></div><h4><code>run</code>方法</h4>
-<p><code>run</code>方法，也能执行线程里面定义的内容，但是<code>run</code>是直接在当前线程执行，并不是创建一个线程执行！</p>
-<h4><code>sleep</code>方法</h4>
-<p>实际上，线程和进程差不多，也会等待获取CPU资源，一旦获取到，就开始按顺序执行我们给定的程序，当需要等待外部IO操作（比如Scanner获取输入的文本），就会暂时处于休眠状态，等待通知，或是调用<code>sleep()</code>方法来让当前线程休眠一段时间</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//休眠时间，以毫秒为单位，1000ms = 1s</span>
-</code></pre></div><p>我们也可以使用<code>stop()</code>方法来强行终止此线程</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Thread</span> me <span class="token operator">=</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//获取当前线程对象</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">50</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"打印:"</span><span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">==</span> <span class="token number">20</span><span class="token punctuation">)</span> me<span class="token punctuation">.</span><span class="token function">stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//此方法会直接终止此线程</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>虽然<code>stop()</code>方法能够终止此线程，但是并不是所推荐的做法，有关线程中断相关问题，我们会在后面继续了解。</p>
-<h3>线程的休眠和中断</h3>
-<figure><img src="http://myimg.ekkosonya.cn/20250226175843.png" alt="20250226175843" tabindex="0" loading="lazy"><figcaption>20250226175843</figcaption></figure>
-<p>一个线程处于运行状态下，线程的下一个状态会出现以下情况：</p>
-<ul>
-<li>当CPU给予的运行时间结束时，会从运行状态回到就绪（可运行）状态，等待下一次获得CPU资源。</li>
-<li>当线程进入休眠 / 阻塞(如等待IO请求) / 手动调用<code>wait()</code>方法时，会使得线程处于等待状态，<strong>当等待状态结束后会回到就绪状态</strong>。</li>
-<li>当线程出现异常或错误 / 被 <code>stop()</code> 方法强行停止 / 所有代码执行结束时，会使得线程的运行终止。</li>
-</ul>
-<p>通过调用<code>sleep()</code>方法可以将当前线程进入休眠，使得线程处于等待状态一段时间。</p>
-<p>在<code>sleep</code>代码中可以发现，显示声明了会抛出一个<code>InterruptedException</code>异常</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">sleep</span><span class="token punctuation">(</span><span class="token keyword">long</span> millis<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span><span class="token punctuation">;</span>
-</code></pre></div><h4>中断</h4>
-<p>每一个<code>Thread</code>对象中，都有一个<code>interrupt()</code>方法，调用此方法后，会给指定线程添加一个中断标记以告知线程需要立即停止运行或是进行其他操作，由线程来响应此中断并进行相应的处理，我们前面提到的<code>stop()</code>方法是<strong>强制终止线程</strong>，这样的做法虽然简单粗暴，但是很有可能导致资源不能完全释放，而类似这样的发送通知来告知线程需要中断，让线程自行处理后续，会更加合理一些，也是更加推荐的做法。</p>
-<p><code>interrupt</code>用法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程开始运行！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>   <span class="token comment">//无限循环</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isInterrupted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>   <span class="token comment">//判断是否存在中断标志</span>
-                <span class="token keyword">break</span><span class="token punctuation">;</span>   <span class="token comment">//响应中断</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程被中断了！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//休眠3秒，一定比线程t先醒来</span>
-        t<span class="token punctuation">.</span><span class="token function">interrupt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//调用t的interrupt方法</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>通过<code>isInterrupted()</code>可以判断线程是否存在中断标志，如果存在，说明外部希望当前线程立即停止，也有可能是给当前线程发送一个其他的信号，如果我们并不是希望收到中断信号就是结束程序，而是通知程序做其他事情，我们可以在收到中断信号后，复位中断标记，然后继续做我们的事情：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">interrupted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">/</span>复位中断标记（返回值是当前是否有中断标记）
-</code></pre></div><h3>线程优先级</h3>
-<p>Java程序中的每个线程并不是平均分配CPU时间的，为了使得线程资源分配更加合理，Java采用的是<strong>抢占式调度方式</strong>，<strong>优先级越高的线程，优先使用CPU资源！</strong><br>
-我们希望CPU花费更多的时间去处理更重要的任务，而不太重要的任务，则可以先让出一部分资源。线程的优先级一般分为以下三种：</p>
-<ul>
-<li><code>MIN_PRIORITY</code> 最低优先级</li>
-<li><code>MAX_PRIORITY</code> 最高优先级</li>
-<li><code>NOM_PRIORITY</code> 常规优先级</li>
-</ul>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程开始运行！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t<span class="token punctuation">.</span><span class="token function">setPriority</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token constant">MIN_PRIORITY</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//通过使用setPriority方法来设定优先级</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>优先级越高的线程，<strong>获得CPU资源的概率会越大，并不是说一定优先级越高的线程越先执行！</strong></p>
-<h4>线程的礼让和加入</h4>
-<h5><code>yield()</code> 主动让出CPU资源</h5>
-<p>我们还可以在当前线程的工作不重要时，将CPU资源让位给其他线程，通过使用<code>yield()</code>方法来将当前资源让位给其他同优先级线程：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1开始运行！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">50</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">%</span> <span class="token number">5</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"让位！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token keyword">yield</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"1打印："</span><span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1结束！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span> t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程2开始运行！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">50</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"2打印："</span><span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t2<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>观察结果，我们发现，在让位之后，尽可能多的在执行线程2的内容。</p>
-<h5><code>join()</code></h5>
-<p>当我们希望一个线程等待另一个线程执行完成后再继续进行，我们可以使用<code>join()</code>方法来实现线程的加入:</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1开始运行！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">50</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"1打印："</span><span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1结束！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span> t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程2开始运行！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">50</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"2打印："</span><span class="token operator">+</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">==</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1加入到此线程！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    t1<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    
-                    <span class="token comment">//在i==10时，让线程1加入，先完成线程1的内容，在继续当前内容</span>
-                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t2<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们发现，线程1加入后，线程2等待线程1待执行的内容全部执行完成之后，再继续执行的线程2内容。注意，<strong>线程的加入只是等待另一个线程的完成，并不是将另一个线程和当前线程合并！</strong></p>
-]]></content:encoded>
-      <enclosure url="http://myimg.ekkosonya.cn/20250226173747.png" type="image/png"/>
-    </item>
-    <item>
-      <title>Java - 多线程与反射</title>
-      <link>http://ekkosonya.cn/code/java/java%2022.html</link>
-      <guid>http://ekkosonya.cn/code/java/java%2022.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Java - 多线程与反射</source>
-      <description>多线程2 线程锁和线程同步 多线程下java内存管理 2025022622332420250226223324 线程之间的共享变量（比如之前悬念中的value变量）存储在主内存（main memory）中，每个线程都有一个私有的工作内存（本地内存），工作内存中存储了该线程以读/写共享变量的副本。 类似于我们在计算机组成原理中学习的多核心处理器高速缓存机...</description>
-      <category>code</category>
-      <pubDate>Wed, 26 Feb 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>多线程2</h2>
-<h3>线程锁和线程同步</h3>
-<h4>多线程下java内存管理</h4>
-<figure><img src="http://myimg.ekkosonya.cn/20250226223324.png" alt="20250226223324" tabindex="0" loading="lazy"><figcaption>20250226223324</figcaption></figure>
-<p>线程之间的共享变量（比如之前悬念中的value变量）存储在主内存（main memory）中，每个线程都有一个私有的工作内存（本地内存），工作内存中存储了该线程以读/写共享变量的副本。</p>
-<p>类似于我们在计算机组成原理中学习的多核心处理器高速缓存机制：</p>
-<p>高速缓存通过保存内存中数据的副本来提供更加快速的数据访问，但是如果多个处理器的运算任务都<strong>涉及同一块内存区域</strong>，就可能导致各自的高速缓存数据不一致，在写回主内存时就会发生冲突，这就是引入高速缓存引发的新问题，称之为：<strong>缓存一致性</strong>。</p>
-<p>实际上，Java的内存模型也是这样类似设计的，<strong>当我们同时去操作一个共享变量时，如果仅仅是读取还好，但是如果同时写入内容，就会出现问题</strong>！<br>
-好比说一个银行，如果我和我的朋友同时在银行取我账户里面的钱，难道取1000还可能吐2000出来吗？我们需要一种更加安全的机制来维持秩序，保证数据的安全性！</p>
-<p>比如我们可以来看看下面这个问题：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">int</span> value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> value<span class="token operator">++</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span> t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> value<span class="token operator">++</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程2完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t2<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//主线程停止1秒，保证两个线程执行完成</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>实际上，当两个线程同时读取value的时候，可能会同时拿到同样的值，而进行自增操作之后，也是同样的值，再写回主内存后，本来应该进行2次自增操作，实际上只执行了一次！</p>
-<h4>线程锁 <code>synchronized</code></h4>
-<p>为了避免上面的这个现象，引入 线程锁 的概念</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">synchronized</span><span class="token punctuation">(</span>对象 <span class="token operator">|</span> 类<span class="token punctuation">)</span><span class="token punctuation">{</span>
-  代码块
-<span class="token punctuation">}</span>
-</code></pre></div><p><code>synchronized</code>需要在括号中填入一个内容，必须是一个对象或是一个类，因此有对象锁和类锁区别（传入的如果是对象，就是对象锁，<strong>不同的对象代表不同的对象锁</strong>，如果是类，就是类锁，<strong>类锁只有一个</strong>，实际上类锁也是对象锁，<strong>是Class类实例</strong>，但是<strong>Class类实例同样的类无论怎么获取都是同一个</strong>），但是注意两个线程必须使用<strong>同一把锁</strong>！</p>
-<p>当一个线程进入到同步代码块时，会获取到当前的锁，而这时如果其他使用同样的锁的同步代码块也想执行内容，就必须等待当前同步代码块的内容执行完毕，在执行完毕后会自动释放这把锁，而其他的线程才能拿到这把锁并开始执行同步代码块里面的内容（实际上<code>synchronized</code>是一种悲观锁，随时都认为有其他线程在对数据进行修改，后面在JUC中我们还会讲到乐观锁，如CAS算法）</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">int</span> value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">{</span>  
-                <span class="token comment">//使用synchronized关键字创建同步代码块</span>
-                value<span class="token operator">++</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span> t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                value<span class="token operator">++</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程2完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t2<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//主线程停止1秒，保证两个线程执行完成</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>当对象不同时，获取到的是不同的锁，因此并不能保证自增操作的原子性，最后也得不到我们想要的结果。</p>
-<p><code>synchronized</code>关键字也可以作用于方法上，调用此方法时也会获取锁：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">int</span> value <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    value<span class="token operator">++</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Thread</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span> t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程2完成"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t2<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//主线程停止1秒，保证两个线程执行完成</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们发现实际上效果是相同的，只不过这个锁不用你去给，<br>
-如果是<strong>静态方法</strong>，就是<strong>使用的类锁</strong>，</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        i<span class="token operator">++</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token punctuation">{</span>
-            <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>j <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
-                <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token punctuation">{</span>
-            <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>j <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
-                <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token punctuation">{</span>
-            <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>j <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                    <span class="token comment">// Main.class 就保证三个线程的锁是一致的 类锁</span>
-                    i<span class="token operator">++</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>而如果是<strong>普通成员方法</strong>，就是使用的<strong>对象锁</strong>。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        i<span class="token operator">++</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Main</span> main <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token punctuation">{</span>
-            <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>j <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
-                main<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token punctuation">{</span>
-            <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>j <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
-                main<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-&gt;</span><span class="token punctuation">{</span>
-            <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>j <span class="token operator">&lt;</span> <span class="token number">100000</span><span class="token punctuation">;</span>j<span class="token operator">++</span><span class="token punctuation">)</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>main<span class="token punctuation">)</span><span class="token punctuation">{</span>
-                    <span class="token comment">// 使用 main 才正确</span>
-                    i<span class="token operator">++</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>通过灵活的使用<code>synchronized</code>就能很好地解决我们之前提到的问题了。</p>
-<h3>死锁</h3>
-<p>死锁是指两个线程相互持有对方需要的锁，但是又迟迟不释放，导致程序卡住：</p>
-<figure><img src="http://myimg.ekkosonya.cn/20250226231025.png" alt="20250226231025" tabindex="0" loading="lazy"><figcaption>20250226231025</figcaption></figure>
-<p>我们发现，线程A和线程B都需要对方的锁，但是又被对方牢牢把握，由于线程被无限期地阻塞，因此程序不可能正常终止。我们来看看以下这段代码会得到什么结果：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Object</span> o1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Object</span> o2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span> t1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>o1<span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>o2<span class="token punctuation">)</span><span class="token punctuation">{</span>
-                    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Thread</span> t2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>o2<span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">synchronized</span> <span class="token punctuation">(</span>o1<span class="token punctuation">)</span><span class="token punctuation">{</span>
-                    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"线程2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t1<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    t2<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>所以，我们在编写程序时，一定要注意，不要出现这种死锁的情况。那么我们如何去检测死锁呢？<br>
-我们可以利用<code>jstack</code>命令来检测死锁，首先利用jps找到我们的java进程号，然后 <code>jstack pid</code> 即可</p>
-<p><code>jstack</code>自动帮助我们找到了一个死锁，并打印出了相关线程的栈追踪信息，同样的，使用<code>jconsole</code>也可以进行监测。</p>
-<p>因此，前面说不推荐使用 <code>suspend()</code> 去挂起线程的原因，是因为<code>suspend()</code>在使线程暂停的同时，并不会去释放任何锁资源。其他线程都无法访问被它占用的锁。直到对应的线程执行<code>resume()</code>方法后，被挂起的线程才能继续，从而其它被阻塞在这个锁的线程才可以继续执行。但是，如果<code>resume()</code>操作出现在<code>suspend()</code>之前执行，那么线程将一直处于挂起状态，同时一直占用锁，这就产生了死锁。</p>
-]]></content:encoded>
-      <enclosure url="http://myimg.ekkosonya.cn/20250226223324.png" type="image/png"/>
     </item>
   </channel>
 </rss>

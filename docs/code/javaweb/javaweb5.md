@@ -220,3 +220,5 @@ grant all|权限1,权限2...(列1,...) on 数据库.表 to 用户 [with grant op
 ```sql
 revoke all|权限1,权限2...(列1,...) on 数据库.表 from 用户
 ```
+
+test

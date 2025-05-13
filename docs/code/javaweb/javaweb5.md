@@ -1,5 +1,5 @@
 ---
-title: 数据库2
+title: javaweb - 数据库3
 date: 2024-03-23
 category:
   - code
@@ -220,5 +220,3 @@ grant all|权限1,权限2...(列1,...) on 数据库.表 to 用户 [with grant op
 ```sql
 revoke all|权限1,权限2...(列1,...) on 数据库.表 from 用户
 ```
-
-test

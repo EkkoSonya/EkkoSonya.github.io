@@ -1,5 +1,5 @@
 ---
-title: 数据库2
+title: javaweb - 数据库2
 date: 2024-03-23
 category:
   - code

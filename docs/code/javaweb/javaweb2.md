@@ -1,5 +1,5 @@
 ---
-title: Socket2
+title: javaweb - Socket2
 date: 2024-03-22
 category:
   - code

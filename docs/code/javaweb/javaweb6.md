@@ -8,7 +8,7 @@ tag:
   - mysql
 # star: true
 # sticky: true
-order: -0.7496
+order: -0.7495
 ---
 
 ## 数据库 4

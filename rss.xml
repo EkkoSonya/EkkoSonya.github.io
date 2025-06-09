@@ -6,8 +6,8 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Sat, 07 Jun 2025 17:02:59 GMT</pubDate>
-    <lastBuildDate>Sat, 07 Jun 2025 17:02:59 GMT</lastBuildDate>
+    <pubDate>Mon, 09 Jun 2025 12:19:43 GMT</pubDate>
+    <lastBuildDate>Mon, 09 Jun 2025 12:19:43 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
@@ -16,13 +16,13 @@
       <link>http://ekkosonya.cn/code/javaweb/javaweb10.html</link>
       <guid>http://ekkosonya.cn/code/javaweb/javaweb10.html</guid>
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Lombok1</source>
-      <description>Lombok1 我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的get/set方法，这不仅使得我们类定义中充满了get和set方法，同时如果字段名称发生改变，又要挨个进行修改，甚至当字段变得很多时，构造方法的编写会非常麻烦！ 通过使用 Lombok（小辣椒）就可以解决这样的问题！ img 使用原生方式和小辣椒方式编写类的区...</description>
+      <description>Lombok1 我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的get/set方法，这不仅使得我们类定义中充满了get和set方法，同时如果字段名称发生改变，又要挨个进行修改，甚至当字段变得很多时，构造方法的编写会非常麻烦！ 通过使用 Lombok(小辣椒)就可以解决这样的问题！ imgimg 使用原生方式和小辣椒方式编写...</description>
       <category>code</category>
-      <pubDate>Sun, 26 May 2024 00:00:00 GMT</pubDate>
+      <pubDate>Mon, 26 May 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Lombok1</h2>
 <p>我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的<code>get/set</code>方法，这不仅使得我们类定义中充满了get和set方法，同时如果字段名称发生改变，又要挨个进行修改，甚至当字段变得很多时，构造方法的编写会非常麻烦！</p>
-<p>通过使用 Lombok（小辣椒）就可以解决这样的问题！
-</p>
+<p>通过使用 Lombok(小辣椒)就可以解决这样的问题！</p>
+<figure><figcaption>img</figcaption></figure>
 <p>使用原生方式和小辣椒方式编写类的区别，首先是传统方式：</p>
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
     <span class="token keyword">private</span> <span class="token class-name">Integer</span> sid<span class="token punctuation">;</span>
@@ -586,7 +586,7 @@ con<span class="token punctuation">.</span><span class="token function">commit</
       <source url="http://ekkosonya.cn/rss.xml">javaweb - 数据库1</source>
       <description>数据库 1 简介 数据库是数据管理的有效技术，是由一批数据构成的有序集合，这些数据被存放在结构化的数据表里。数据表之间相互关联，反映客观事物间的本质联系。数据库能有效地帮助一个组织或企业科学地管理各类信息资源。简而言之，我们的数据可以交给数据库来帮助我们进行管理，同时数据库能够为我们提供高效的访问性能。 常见的数据库有很多种，包括但不限于： MySQL...</description>
       <category>code</category>
-      <pubDate>Sat, 23 Mar 2024 00:00:00 GMT</pubDate>
+      <pubDate>Sun, 23 Mar 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>数据库 1</h2>
 <h3>简介</h3>
 <p>数据库是数据管理的有效技术，是由一批数据构成的有序集合，这些数据被存放在结构化的数据表里。数据表之间相互关联，反映客观事物间的本质联系。数据库能有效地帮助一个组织或企业科学地管理各类信息资源。简而言之，我们的数据可以交给数据库来帮助我们进行管理，同时数据库能够为我们提供高效的访问性能。</p>
@@ -661,7 +661,7 @@ MySQL就是一种<strong>关系型数据库</strong>，通过使用关系型数�
       <source url="http://ekkosonya.cn/rss.xml">javaweb - 数据库2</source>
       <description>数据库 2 SQL 语句 结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。 SQL语句不区分大小写（关键字推荐使用大写），它支持多行，并且需要使用;进行结尾！ SQL也支持注释，通...</description>
       <category>code</category>
-      <pubDate>Sat, 23 Mar 2024 00:00:00 GMT</pubDate>
+      <pubDate>Sun, 23 Mar 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>数据库 2</h2>
 <h2>SQL 语句</h2>
 <p>结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。</p>
@@ -891,7 +891,7 @@ MySQL就是一种<strong>关系型数据库</strong>，通过使用关系型数�
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Socket2</source>
       <description>Socket2 Socket 传输文件 其实本质上都差不多，主要掌握几种流之间的操作，和 socket 的用法 一般 xxxOutputStream 的操作是往对应的xxx流内写入一些东西；xxxInputStream 的操作是从对应的xxx流内获取一些东西。 使用浏览器访问Socket服务器 Http请求是基于TCP协议，不会保持长久连接，在收到响应...</description>
       <category>code</category>
-      <pubDate>Fri, 22 Mar 2024 00:00:00 GMT</pubDate>
+      <pubDate>Sat, 22 Mar 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Socket2</h2>
 <h3>Socket 传输文件</h3>
 <p>其实本质上都差不多，主要掌握几种流之间的操作，和 <code>socket</code> 的用法</p>

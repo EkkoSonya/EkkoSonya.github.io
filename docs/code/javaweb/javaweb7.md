@@ -1,6 +1,6 @@
 ---
 title: javaweb - JAVA与数据库1
-date: 2024-05-23
+date: 2025-05-23
 category:
   - code
 tag:

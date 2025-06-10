@@ -5,7 +5,7 @@ category:
   - code
 tag:
   - javaweb
-  - Lombok1
+  - Lombok
 # star: true
 # sticky: true
 order: -0.7491

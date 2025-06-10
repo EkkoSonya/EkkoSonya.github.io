@@ -5,7 +5,7 @@ category:
   - code
 tag:
   - javaweb
-  - Lombok1
+  - mybatis
 # star: true
 # sticky: true
 order: -0.7488

@@ -6,8 +6,8 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Tue, 10 Jun 2025 16:17:41 GMT</pubDate>
-    <lastBuildDate>Tue, 10 Jun 2025 16:17:41 GMT</lastBuildDate>
+    <pubDate>Tue, 10 Jun 2025 17:10:27 GMT</pubDate>
+    <lastBuildDate>Tue, 10 Jun 2025 17:10:27 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
@@ -16,12 +16,11 @@
       <link>http://ekkosonya.cn/code/javaweb/javaweb14.html</link>
       <guid>http://ekkosonya.cn/code/javaweb/javaweb14.html</guid>
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis4</source>
-      <description>Mybatis4 Mybatis详解2 指定构造方法 (一般不咋用) 通过前面的学习，我们已经知道如何使用Mybatis进行各种查询操作。我们知道，Mybatis在执行完查询语句后，会自动将查询的结果转换为我们所需要的实体类 实际上Mybatis一开始会通过我们实体类默认的无参构造得到一个最初的对象，然后通过反射进行赋值，我们可以手动编写一个带调试信息...</description>
+      <description>Mybatis详解2 指定构造方法 (一般不咋用) 通过前面的学习，我们已经知道如何使用Mybatis进行各种查询操作。我们知道，Mybatis在执行完查询语句后，会自动将查询的结果转换为我们所需要的实体类 实际上Mybatis一开始会通过我们实体类默认的无参构造得到一个最初的对象，然后通过反射进行赋值，我们可以手动编写一个带调试信息的无参构造： al...</description>
       <category>code</category>
       <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Mybatis4</h2>
-<h3>Mybatis详解2</h3>
-<h4>指定构造方法</h4>
+      <content:encoded><![CDATA[<h2>Mybatis详解2</h2>
+<h3>指定构造方法</h3>
 <p>(一般不咋用)
 通过前面的学习，我们已经知道如何使用Mybatis进行各种查询操作。我们知道，<code>Mybatis</code>在执行完查询语句后，会自动将查询的结果转换为我们所需要的实体类</p>
 <p>实际上<code>Mybatis</code>一开始会通过我们实体类<strong>默认的无参构造</strong>得到一个<strong>最初的对象</strong>，然后通过<strong>反射进行赋值</strong>，我们可以手动编写一个带调试信息的无参构造：</p>
@@ -93,7 +92,7 @@
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>constructor</span><span class="token punctuation">&gt;</span></span>
 </code></pre></div><p>注意参数的顺序，<strong>必须和构造方法的顺序一致</strong>，否则会导致<code>Mybatis</code>无法确认。</p>
 <p>指定构造方法后，若此字段被填入了构造方法作为参数，将不会通过反射给字段单独赋值，<strong>而构造方法中没有传入的字段，依然会被反射赋值</strong>。</p>
-<h4>接口绑定 <code>sqlSession.getMapper(xxx.class)</code></h4>
+<h3>接口绑定 <code>sqlSession.getMapper(xxx.class)</code></h3>
 <p>之前通过创建一个映射器来将结果快速转换为实体类，但是这样可能还是不够方便，我们每次都需要去找映射器对应操作的名称，而且还要知道对应的返回类型，再通过<code>SqlSession</code>来执行对应的方法，可以用<strong>接口</strong>来简化</p>
 <p>通过<code>namespace</code>来将各种操作绑定到一个接口上，然后使用方法的形式来表示，注意接口的参数和返回值必须正确对应，否则可能会出现问题：</p>
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">TestMapper</span> <span class="token punctuation">{</span>
@@ -224,11 +223,10 @@
       <link>http://ekkosonya.cn/code/javaweb/javaweb13.html</link>
       <guid>http://ekkosonya.cn/code/javaweb/javaweb13.html</guid>
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis3</source>
-      <description>Mybatis3 Mybatis详解 由于SqlSessionFactory一般只需要创建一次，因此我们可以创建一个工具类来集中创建SqlSession，这样会更加方便一些： 现在我们只需要在main方法中这样写即可查询结果了： 查询操作 XML配置sql操作 对应java进行调用 查询操作在XML配置中使用一个select标签进行囊括 假设我们现在需...</description>
+      <description>Mybatis详解1 由于SqlSessionFactory一般只需要创建一次，因此我们可以创建一个工具类来集中创建SqlSession，这样会更加方便一些： 现在我们只需要在main方法中这样写即可查询结果了： 查询操作 XML配置sql操作 对应java进行调用 查询操作在XML配置中使用一个select标签进行囊括 假设我们现在需要编写一个根据I...</description>
       <category>code</category>
       <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Mybatis3</h2>
-<h3>Mybatis详解</h3>
+      <content:encoded><![CDATA[<h2>Mybatis详解1</h2>
 <p>由于<code>SqlSessionFactory</code>一般只需要创建一次，因此我们可以创建一个工具类来集中创建<code>SqlSession</code>，这样会更加方便一些：</p>
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MybatisUtil</span> <span class="token punctuation">{</span>
 
@@ -258,7 +256,7 @@
         student<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
-</code></pre></div><h4>查询操作</h4>
+</code></pre></div><h3>查询操作</h3>
 <ol>
 <li><code>XML</code>配置sql操作</li>
 <li>对应<code>java</code>进行调用</li>
@@ -285,7 +283,7 @@
 <div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span> <span class="token attr-name">parameterType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>int<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     select * from user where id = #{id}
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h5>别名</h5>
+</code></pre></div><h4>别名</h4>
 <p>当然，如果你觉得像这样每次都要写一个完整的类名太累了，也可以为它起个别名，我们只需要在Mybatis的配置文件中进行编写即可：</p>
 <div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>typeAliases</span><span class="token punctuation">&gt;</span></span>
     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>typeAlias</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span> <span class="token attr-name">alias</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>User<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
@@ -298,7 +296,7 @@
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//这里我们填写刚刚的id，然后将我们的参数填写到后面</span>
 <span class="token class-name">User</span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectOne</span><span class="token punctuation">(</span><span class="token string">"selectUserById"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h5>hashmap 转换</h5>
+</code></pre></div><h4>hashmap 转换</h4>
 <p>当然，如果你不需要转换为实体类，Mybatis也为我们提供了多种转换方案，比如转换为一个<code>Map</code>对象：</p>
 <div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserByIdAndAge<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hashmap<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     select * from user where id = #{id}
@@ -306,7 +304,7 @@
 </code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//使用Map类型变量进行接受，Key为String类型，Value为Object类型</span>
 <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectOne</span><span class="token punctuation">(</span><span class="token string">"selectUserById"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h5>多参数查询</h5>
+</code></pre></div><h4>多参数查询</h4>
 <p>我们可以尝试接着来写一个同时查询ID和年龄的查询操作：</p>
 <div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserByIdAndAge<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hashmap<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
     select * from user where id = #{id} and age = #{age}
@@ -314,7 +312,7 @@
 </code></pre></div><p>因为这里需要多个参数，我们可以使用一个<code>Map</code> (<code>Map.of</code>是JAVA9的特性)或是具有同样参数的实体类来传递，显然Map用起来更便捷一些，注意key的名称需要与我们编写的SQL语句中占位符一致：</p>
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">User</span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectOne</span><span class="token punctuation">(</span><span class="token string">"selectUserByIdAndAge"</span><span class="token punctuation">,</span> <span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"age"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h5><code>resultMap</code></h5>
+</code></pre></div><h4><code>resultMap</code></h4>
 <p>下面这种情况，实体类中定义的属性名称和我们数据库中的名称不一样</p>
 <p>这会导致Mybatis自动处理出现问题：</p>
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
@@ -339,7 +337,7 @@
 <p>这里我们在<code>resultMap</code>标签中配置了一些r<code>esult</code>标签，每一个<code>result</code>标签都可以配置数据库字段和类属性的对应关系，这样Mybatis就可以按照我们的配置来正确找到对应的位置并赋值了，没有手动配置的字段会按照之前默认的方式进行赋值。</p>
 <p>配置完成后，最终只需要将<code>resultType</code>改为<code>resultMap</code>并指定对应id即可，然后就能够正确查询了。</p>
 <p>这里有一个<code>RowBounds</code>参数，用于实现分页效果，但是其分页功能是对查询到的数据进行划分，非常鸡肋，这里不进行介绍，了解即可。</p>
-<h5>查询列表操作</h5>
+<h4>查询列表操作</h4>
 <p>我们再来尝试编写一下查询一个列表，查询列表时，resultType无需设置为list这种类型，而是使用List内部所包含的类型</p>
 <p>所以这里还是填写<code>com.test.User</code>类型或是Map类型：</p>
 <div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUsers<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>

@@ -178,4 +178,6 @@ export default hopeTheme({
 
   // 开发模式下是否启动热更新，显示所有更改并重新渲染
   hotReload: true,
+
+  headerDepth: 4, // 目录深度，默认为 2
 });

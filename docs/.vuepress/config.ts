@@ -39,4 +39,13 @@ export default defineUserConfig({
     postcss: {},
     vue: {},
   }),
+
+  markdown: {
+    headers: {
+      level: [2, 3, 4, 5], // 生成标题的层级，包含二级和三级标题
+    },
+    // toc: { 
+    //   level: [2, 3, 4, 5] 
+    // }, // 目录生成配置，包含二级和三级标题
+  }
 });

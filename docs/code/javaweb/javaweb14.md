@@ -8,14 +8,12 @@ tag:
   - mybatis
 # star: true
 # sticky: true
-order: -0.7487
+order: -0.7486
 ---
 
-## Mybatis4
+## Mybatis详解2
 
-### Mybatis详解2
-
-#### 指定构造方法
+### 指定构造方法
 
 (一般不咋用)
 通过前面的学习，我们已经知道如何使用Mybatis进行各种查询操作。我们知道，`Mybatis`在执行完查询语句后，会自动将查询的结果转换为我们所需要的实体类
@@ -127,7 +125,7 @@ public User(int id, String name) {
 
 指定构造方法后，若此字段被填入了构造方法作为参数，将不会通过反射给字段单独赋值，**而构造方法中没有传入的字段，依然会被反射赋值**。
 
-#### 接口绑定 `sqlSession.getMapper(xxx.class)`
+### 接口绑定 `sqlSession.getMapper(xxx.class)`
 
 之前通过创建一个映射器来将结果快速转换为实体类，但是这样可能还是不够方便，我们每次都需要去找映射器对应操作的名称，而且还要知道对应的返回类型，再通过`SqlSession`来执行对应的方法，可以用**接口**来简化
 
@@ -196,7 +194,7 @@ System.out.println(testMapper.getClass());
 
 ---
 
-##### 多参数表示
+### 多参数表示
 
 1. xml中参数名改为 `param1, param2, ...`
 2. 用注解 `@param(xx)`

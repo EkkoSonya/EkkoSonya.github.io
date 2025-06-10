@@ -11,9 +11,7 @@ tag:
 order: -0.7487
 ---
 
-## Mybatis3
-
-### Mybatis详解
+## Mybatis详解1
 
 由于`SqlSessionFactory`一般只需要创建一次，因此我们可以创建一个工具类来集中创建`SqlSession`，这样会更加方便一些：
 
@@ -52,7 +50,7 @@ public static void main(String[] args) {
 }
 ```
 
-#### 查询操作
+### 查询操作
 
 1. `XML`配置sql操作
 2. 对应`java`进行调用
@@ -97,7 +95,7 @@ public static void main(String[] args) {
 </select>
 ```
 
-##### 别名
+#### 别名
 
 当然，如果你觉得像这样每次都要写一个完整的类名太累了，也可以为它起个别名，我们只需要在Mybatis的配置文件中进行编写即可：
 
@@ -123,7 +121,7 @@ User user = session.selectOne("selectUserById", 1);
 System.out.println(user);
 ```
 
-##### hashmap 转换
+#### hashmap 转换
 
 当然，如果你不需要转换为实体类，Mybatis也为我们提供了多种转换方案，比如转换为一个`Map`对象：
 
@@ -139,7 +137,7 @@ Map<String, Object> user = session.selectOne("selectUserById", 1);
 System.out.println(user);
 ```
 
-##### 多参数查询
+#### 多参数查询
 
 我们可以尝试接着来写一个同时查询ID和年龄的查询操作：
 
@@ -156,7 +154,7 @@ User user = session.selectOne("selectUserByIdAndAge", Map.of("id", 1, "age", 18)
 System.out.println(user);
 ```
 
-##### `resultMap`
+#### `resultMap`
 
 下面这种情况，实体类中定义的属性名称和我们数据库中的名称不一样
 
@@ -193,7 +191,7 @@ public class User {
 
 这里有一个`RowBounds`参数，用于实现分页效果，但是其分页功能是对查询到的数据进行划分，非常鸡肋，这里不进行介绍，了解即可。
 
-##### 查询列表操作
+#### 查询列表操作
 
 我们再来尝试编写一下查询一个列表，查询列表时，resultType无需设置为list这种类型，而是使用List内部所包含的类型
 

@@ -1,5 +1,5 @@
 ---
-title: Java - IO
+title: Java - IO1
 date: 2025-01-27
 category:
   - code

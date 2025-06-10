@@ -1,6 +1,6 @@
 ---
 title: javaweb - Mybatis1
-date: 2024-06-09
+date: 2025-06-09
 category:
   - code
 tag:

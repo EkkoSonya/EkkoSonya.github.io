@@ -6,8 +6,8 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Tue, 10 Jun 2025 16:12:17 GMT</pubDate>
-    <lastBuildDate>Tue, 10 Jun 2025 16:12:17 GMT</lastBuildDate>
+    <pubDate>Tue, 10 Jun 2025 16:17:41 GMT</pubDate>
+    <lastBuildDate>Tue, 10 Jun 2025 16:17:41 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
@@ -18,7 +18,7 @@
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis4</source>
       <description>Mybatis4 Mybatis详解2 指定构造方法 (一般不咋用) 通过前面的学习，我们已经知道如何使用Mybatis进行各种查询操作。我们知道，Mybatis在执行完查询语句后，会自动将查询的结果转换为我们所需要的实体类 实际上Mybatis一开始会通过我们实体类默认的无参构造得到一个最初的对象，然后通过反射进行赋值，我们可以手动编写一个带调试信息...</description>
       <category>code</category>
-      <pubDate>Mon, 10 Jun 2024 00:00:00 GMT</pubDate>
+      <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Mybatis4</h2>
 <h3>Mybatis详解2</h3>
 <h4>指定构造方法</h4>
@@ -136,7 +136,7 @@
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis2</source>
       <description>Mybatis2 初次使用 Mybatis 文档网站：https://mybatis.org/mybatis-3/zh_CN/configuration.html 我们需要导入Mybatis的依赖，依赖导入完成后，编写Mybatis的配置文件(通过一个XML文件去配置) 按照官方文档给定的提示，在项目根目录下新建名为mybatis-config.xml...</description>
       <category>code</category>
-      <pubDate>Mon, 10 Jun 2024 00:00:00 GMT</pubDate>
+      <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Mybatis2</h2>
 <h3>初次使用 Mybatis</h3>
 <p>文档网站：<a href="https://mybatis.org/mybatis-3/zh_CN/configuration.html" target="_blank" rel="noopener noreferrer">https://mybatis.org/mybatis-3/zh_CN/configuration.html</a></p>
@@ -226,7 +226,7 @@
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis3</source>
       <description>Mybatis3 Mybatis详解 由于SqlSessionFactory一般只需要创建一次，因此我们可以创建一个工具类来集中创建SqlSession，这样会更加方便一些： 现在我们只需要在main方法中这样写即可查询结果了： 查询操作 XML配置sql操作 对应java进行调用 查询操作在XML配置中使用一个select标签进行囊括 假设我们现在需...</description>
       <category>code</category>
-      <pubDate>Mon, 10 Jun 2024 00:00:00 GMT</pubDate>
+      <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Mybatis3</h2>
 <h3>Mybatis详解</h3>
 <p>由于<code>SqlSessionFactory</code>一般只需要创建一次，因此我们可以创建一个工具类来集中创建<code>SqlSession</code>，这样会更加方便一些：</p>
@@ -382,7 +382,7 @@
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis1</source>
       <description>Mybatis1 在前面JDBC的学习中，虽然我们能够通过JDBC来连接和操作数据库，但是哪怕只是完成一个SQL语句的执行，都需要编写大量的代码，更不用说如果我还需要进行实体类映射，将数据转换为我们可以直接操作的实体类型，JDBC很方便，但是还不够方便，我们需要一种更加简洁高效的方式来和数据库进行交互。 再次强调： 学习厉害的框架或是厉害的技术，并不是...</description>
       <category>code</category>
-      <pubDate>Sun, 09 Jun 2024 00:00:00 GMT</pubDate>
+      <pubDate>Mon, 09 Jun 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Mybatis1</h2>
 <p>在前面JDBC的学习中，虽然我们能够通过JDBC来连接和操作数据库，但是哪怕只是完成一个SQL语句的执行，都需要编写大量的代码，更不用说如果我还需要进行实体类映射，将数据转换为我们可以直接操作的实体类型，JDBC很方便，但是还不够方便，我们需要一种更加简洁高效的方式来和数据库进行交互。</p>
 <p><strong>再次强调：</strong> 学习厉害的框架或是厉害的技术，并不是为了一定要去使用它，而是它们能够使得我们在不同的开发场景下，合理地使用这些技术，以灵活地应对需要解决的问题。</p>
@@ -458,7 +458,7 @@
       <source url="http://ekkosonya.cn/rss.xml">javaweb - Lombok1</source>
       <description>Lombok1 我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的get/set方法，这不仅使得我们类定义中充满了get和set方法，同时如果字段名称发生改变，又要挨个进行修改，甚至当字段变得很多时，构造方法的编写会非常麻烦！ 通过使用 Lombok（小辣椒）就可以解决这样的问题！ imgimg 使用原生方式和小辣椒方式编写...</description>
       <category>code</category>
-      <pubDate>Sun, 26 May 2024 00:00:00 GMT</pubDate>
+      <pubDate>Mon, 26 May 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>Lombok1</h2>
 <p>我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的<code>get/set</code>方法，这不仅使得我们类定义中充满了get和set方法，同时如果字段名称发生改变，又要挨个进行修改，甚至当字段变得很多时，构造方法的编写会非常麻烦！</p>
 <p>通过使用 Lombok（小辣椒）就可以解决这样的问题！</p>

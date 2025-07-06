@@ -6,11 +6,316 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Tue, 17 Jun 2025 10:44:35 GMT</pubDate>
-    <lastBuildDate>Tue, 17 Jun 2025 10:44:35 GMT</lastBuildDate>
+    <pubDate>Sun, 06 Jul 2025 14:54:50 GMT</pubDate>
+    <lastBuildDate>Sun, 06 Jul 2025 14:54:50 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>javaweb - JUL日志1</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb20.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb20.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUL日志1</source>
+      <description>JUL日志系统 JDK为我们提供了一个自带的日志框架，位于java.util.logging包下，我们可以使用此框架来实现日志的规范化打印，使用起来非常简单： 我们可以在主类中使用日志打印，得到日志的打印结果： 我们发现，通过日志输出的结果会更加规范，在后续的学习中，日志将时刻伴随我们左右。 JUL基本使用 日志的打印并不是简单的输出，有些时候我们可以...</description>
+      <category>code</category>
+      <pubDate>Fri, 04 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUL日志系统</h2>
+<p>JDK为我们提供了一个自带的日志框架，位于<code>java.util.logging</code>包下，我们可以使用此框架来实现日志的规范化打印，使用起来非常简单：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 首先获取日志打印器，名称随意</span>
+        <span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 调用info来输出一个普通的信息，直接填写字符串即可</span>
+        logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"我是普通的日志"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>我们可以在主类中使用日志打印，得到日志的打印结果：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>十一月 15, 2021 12:55:37 下午 com.test.Main main
+信息: 我是普通的日志
+</code></pre></div><p>我们发现，通过日志输出的结果会更加规范，在后续的学习中，日志将时刻伴随我们左右。</p>
+<h3>JUL基本使用</h3>
+<p>日志的打印并不是简单的输出，有些时候我们可以会打印一些比较重要的日志信息，或是一些非常紧急的日志信息，根据不同类型的信息进行划分</p>
+<h4>级别划分</h4>
+<p>日志一般分为7个级别，详细信息我们可以在<code>Level</code>类中查看：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Level</span> <span class="token keyword">implements</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span>Serializable</span> <span class="token punctuation">{</span>
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+  
+    <span class="token comment">//出现严重故障的消息级别，值为1000，也是可用的日志级别中最大的</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">SEVERE</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"SEVERE"</span><span class="token punctuation">,</span><span class="token number">1000</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//存在潜在问题的消息级别，比如边充电边打电话就是个危险操作，虽然手机爆炸的概率很小，但是还是会有人警告你最好别这样做，这是日志级别中倒数第二大的</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">WARNING</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"WARNING"</span><span class="token punctuation">,</span> <span class="token number">900</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//所有常规提示日志信息都以INFO级别进行打印</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">INFO</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"INFO"</span><span class="token punctuation">,</span> <span class="token number">800</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//以下日志级别依次降低，不太常用</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">CONFIG</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"CONFIG"</span><span class="token punctuation">,</span> <span class="token number">700</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">FINE</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"FINE"</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">FINER</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"FINER"</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">FINEST</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"FINEST"</span><span class="token punctuation">,</span> <span class="token number">300</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+ 
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>之前通过<code>info</code>方法直接输出的结果就是使用的默认级别的日志，实际上每个级别都有一个对应的方法用于打印：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    logger<span class="token punctuation">.</span><span class="token function">severe</span><span class="token punctuation">(</span><span class="token string">"severe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//最高日志级别</span>
+    logger<span class="token punctuation">.</span><span class="token function">warning</span><span class="token punctuation">(</span><span class="token string">"warning"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"info"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//默认日志级别</span>
+    logger<span class="token punctuation">.</span><span class="token function">config</span><span class="token punctuation">(</span><span class="token string">"config"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    logger<span class="token punctuation">.</span><span class="token function">fine</span><span class="token punctuation">(</span><span class="token string">"fine"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    logger<span class="token punctuation">.</span><span class="token function">finer</span><span class="token punctuation">(</span><span class="token string">"finer"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    logger<span class="token punctuation">.</span><span class="token function">finest</span><span class="token punctuation">(</span><span class="token string">"finest"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//最低日志级别</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>自定义级别设置 <code>logger.log</code></h4>
+<p>当然，如果需要更加灵活地控制日志级别</p>
+<p>我们也可以通过<code>log</code>方法来主动设定该条日志的输出级别：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">SEVERE</span><span class="token punctuation">,</span> <span class="token string">"严重的错误"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token string">"祝你明天就遇到我"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">WARNING</span><span class="token punctuation">,</span> <span class="token string">"警告的内容"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">INFO</span><span class="token punctuation">,</span> <span class="token string">"普通的信息"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">CONFIG</span><span class="token punctuation">,</span> <span class="token string">"级别低于普通信息"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><code>Logger</code>默认情况下只会打印INFO级别以上的日志，而INFO级别以下的日志则会直接省略，我们可以通过配置来进行调整。</p>
+<h4>修改日志的默认打印级别</h4>
+<p>我们知道日志的默认打印级别为INFO，此时低于INFO的所有日志都是被屏蔽的，而要修改日志的默认打印级别，我们需要同时调整<code>Handler</code>和<code>Logger</code>的<code>level</code>属性：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>handler<span class="token punctuation">.</span><span class="token function">setLevel</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">FINEST</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+<span class="token comment">//注意，填写的日志打印级别是什么，高于等于此级别的所有日志都会被打印</span>
+logger<span class="token punctuation">.</span><span class="token function">setLevel</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">FINEST</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">fine</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>现在我们再次打印低于INFO级别的日志就可以正确得到结果了。</p>
+<p><code>Logger</code>类还为我们提供了两个比较特殊的日志级别，它们专门用于配置特殊情况：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//表示直接关闭所有日志信息，值为int的最大值</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">OFF</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"OFF"</span><span class="token punctuation">,</span><span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token constant">MAX_VALUE</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//表示开启所有日志信息，无论是什么级别都进行打印</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Level</span> <span class="token constant">ALL</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Level</span><span class="token punctuation">(</span><span class="token string">"ALL"</span><span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token constant">MIN_VALUE</span><span class="token punctuation">,</span> defaultBundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>因为这这里OFF的值为int的最大值，也就是说没有任何日志级别的值大于它，因此，如果将打印等级配置为OFF，那么所有类型的日志信息都不会被打印了，而ALL则相反。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - JUL日志2</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb21.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb21.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUL日志2</source>
+      <description>JUL日志系统2 日志核心内容 核心部分 Handler 日志打印的核心部分：Handler，它用于处理我们的日志内容打印 ConsoleHandler | FileHandler | SocketHandler JDK为我们提供了很多种类的Handler用于多种不同类型的日志打印，比较常见的就是打印到控制台，当然我们也可以打印到一个日志文件中，名字一...</description>
+      <category>code</category>
+      <pubDate>Sun, 06 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUL日志系统2</h2>
+<h3>日志核心内容</h3>
+<h4>核心部分 <code>Handler</code></h4>
+<p>日志打印的核心部分：<code>Handler</code>，它用于处理我们的日志内容打印</p>
+<p><code>ConsoleHandler</code> | <code>FileHandler</code> | <code>SocketHandler</code></p>
+<p>JDK为我们提供了很多种类的<code>Handler</code>用于多种不同类型的日志打印，比较常见的就是打印到控制台，当然我们也可以打印到一个日志文件中，名字一般为<code>xxx.log</code>这种格式。</p>
+<p>常用的Handler实现有：</p>
+<ul>
+<li><code>ConsoleHandler</code>: 将日志通过<code>System. err</code>打印到控制台，现在默认就是使用的这个。</li>
+<li><code>FileHandler</code>: 将日志直接写入到指定的文件中。</li>
+<li><code>SocketHandler</code>: 将日志利用Socket通过网络发送到另一个主机。</li>
+</ul>
+<p>当然，一个Logger中可以包含多个Handler用于同时向不同的地方打印日志，我们可以通过<code>getHandlers</code>方法来获取Logger对象中已经配置的Handler对象：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>logger<span class="token punctuation">.</span><span class="token function">getHandlers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>此时打印的列表中不存在任何Handler对象，可见，我们创建的Logger默认是不带任何Handler对象的</p>
+<p>那么我们之前的日志是怎么打印出来的呢？这实际上是Logger的父级提供的，这里我们先暂时不介绍继承关系。</p>
+<p>我们使用<code>setUseParentHandlers</code>方法来屏蔽所有父级提供的日志处理器：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>logger<span class="token punctuation">.</span><span class="token function">setUseParentHandlers</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>现在由于Logger没有配置任何Handler处理器，因此我们打印日志就<strong>不会有任何效果</strong>。</p>
+<h5><code>ConsoleHandler</code></h5>
+<p>我们可以来尝试自己配置一个用于控制台打印的Handler处理器，这里直接创建一个新的ConsoleHandler对象：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">ConsoleHandler</span> handler <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConsoleHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">addHandler</span><span class="token punctuation">(</span>handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>现在我们打印日志就可以出现想要的结果了：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>8月 28, 2024 12:12:37 上午 com.test.Main main
+信息: Hello World
+</code></pre></div><h5><code>FileHandler</code></h5>
+<p>我们接着来尝试将日志记录到我们本地的文件中，这里使用FileHandler类型：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">FileHandler</span> handler <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileHandler</span><span class="token punctuation">(</span><span class="token string">"test.log"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+<span class="token comment">//第二个参数开启后会续写已有的日志，如果不开启会直接覆盖重写</span>
+logger<span class="token punctuation">.</span><span class="token function">addHandler</span><span class="token punctuation">(</span>handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>最后我们就可以得到一个日志文件了，默认是以XML格式进行写入的：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>这种格式有助于程序的日志读取，但是对于我们人来说，非常难以阅读，那有没有什么办法将文件的日志打印变成控制台那种格式呢？</p>
+<h5>修改输出格式 <code>Formatter</code></h5>
+<p>实际上每一个Handler都有一个<code>Formatter</code>对象，它用于控制日志的格式，默认情况下，<code>ConsoleHandler</code>会配置一个<code>SimpleFormatte</code>r对象，格式为：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>时间 类名 方法
+日志级别: 日志内容
+</code></pre></div><p>我们刚刚在<code>FileHandler</code>中见到的是默认生成的<code>XMLFormatter</code>，它会将日志以XML的形式进行打印，现在我们也可以手动修改它为<code>SimpleFormatter</code>类型：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Handler</span> handler <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileHandler</span><span class="token punctuation">(</span><span class="token string">"test.log"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+handler<span class="token punctuation">.</span><span class="token function">setFormatter</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SimpleFormatter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>此时日志文件中写入的内容就是简单的日志格式了
+</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - JUL日志3</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb22.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb22.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUL日志3</source>
+      <description>JUL日志系统3 日志继承关系 RootLogger JUL中Logger之间存在父子关系，这种父子关系类似于继承，我们可以通过Logger的getParent方法来获取其父Logger对象： 这里我们会得到一个： 这个RootLogger对象为所有日志记录器的最顶层父级对象，它包含一个默认的ConsoleHandler处理器用于进行控制台打印，而日志...</description>
+      <category>code</category>
+      <pubDate>Sun, 06 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUL日志系统3</h2>
+<h3>日志继承关系</h3>
+<h4><code>RootLogger</code></h4>
+<p>JUL中Logger之间存在父子关系，这种父子关系类似于继承，我们可以通过Logger的<code>getParent</code>方法来获取其父Logger对象：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>logger<span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>这里我们会得到一个：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>java.util.logging.LogManager$RootLogger@24d46ca6
+</code></pre></div><p>这个<code>RootLogger</code>对象为所有日志记录器的最顶层父级对象，它包含一个默认的<code>ConsoleHandler</code>处理器用于进行控制台打印，而日志在打印时，子Logger会继承父Logger提供的所有<code>Handler</code>进行日志处理，因此我们在默认情况下才能正常使用日志打印：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Logger</span> parent <span class="token operator">=</span> logger<span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>parent<span class="token punctuation">.</span><span class="token function">getHandlers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4>修改默认情况下的打印等级</h4>
+<p><code>Handler</code>是属于对应的<code>Logger</code>的，即继承的子<code>Logger</code>不能直接修改父<code>Logger</code>的<code>Handler</code></p>
+<p>根据我们上节课学习的知识，在默认情况下如果我们需要修改日志打印等级，那么同时<strong>也需要将父级的Handler也进行日志等级配置</strong>：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>parent<span class="token punctuation">.</span><span class="token function">getHandlers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">setLevel</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">ALL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">setLevel</span><span class="token punctuation">(</span><span class="token class-name">Level</span><span class="token punctuation">.</span><span class="token constant">ALL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">finest</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4>重复<code>Logger</code>问题</h4>
+<p>当然，如果我们在不屏蔽父级<code>Handler</code>的情况下为子级配置一个<code>Handler</code>，那么此时两个<code>Handler</code>都会生效</p>
+<p>顺序：先子<code>Logger</code>, 再父<code>Logger</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>logger<span class="token punctuation">.</span><span class="token function">addHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ConsoleHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"你干嘛"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>日志中出现了两次：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>8月 28, 2024 12:57:39 上午 com.test.Main main
+信息: 你干嘛
+8月 28, 2024 12:57:39 上午 com.test.Main main
+信息: 你干嘛
+</code></pre></div><p>不过需要注意一下顺序，当父级和子级都配置时，那么<strong>子级的Handler优先进行处理，接着才是父级。</strong></p>
+<h4>名称分级，自动构建继承关系</h4>
+<p>除了默认的RootLogger作为父类，实际上Logger还会通过名称进行分级，自动构建一个继承关系，比如下面：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Logger</span> logger1 <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Logger</span> logger2 <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"com.test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Logger</span> logger3 <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"com.test.inner1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Logger</span> logger4 <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"com.test.inner2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>logger4<span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> logger2<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//全true</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>logger3<span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> logger2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>logger2<span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> logger1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>就像包名一样，<strong>日志的名称会按照包的分级，进行自动继承</strong>，就像下面这个图一样：</p>
+<figure><figcaption>alt text</figcaption></figure>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - JUL日志4</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb23.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb23.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUL日志4</source>
+      <description>JUL日志系统4 日志默认配置 Properties 格式 Properties格式的文件是Java的一种配置文件，我们之前在学习Mybatis的时候学习了XML，但是我们发现XML配置文件读取实在是太麻烦，那么能否有一种简单一点的配置文件呢？ 此时就可以使用Properties文件，它的格式如下： 该文件配置很简单，格式类似于我们Java中的Map键...</description>
+      <category>code</category>
+      <pubDate>Sun, 06 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUL日志系统4</h2>
+<h3>日志默认配置</h3>
+<h4><code>Properties</code> 格式</h4>
+<p><code>Properties</code>格式的文件是Java的一种配置文件，我们之前在学习Mybatis的时候学习了XML，但是我们发现XML配置文件读取实在是太麻烦，那么能否有一种简单一点的配置文件呢？</p>
+<p>此时就可以使用<code>Properties</code>文件，它的格式如下：</p>
+<div class="language-properties" data-ext="properties" data-title="properties"><pre class="language-properties"><code><span class="token key attr-name">name</span><span class="token punctuation">=</span><span class="token value attr-value">Test</span>
+<span class="token key attr-name">desc</span><span class="token punctuation">=</span><span class="token value attr-value">Description</span>
+</code></pre></div><p>该文件配置很简单，格式<strong>类似于我们Java中的Map键值对</strong>，中间使用<strong>等号</strong>进行连接。</p>
+<p>当然，<strong>键的名称我们也可以分为多级进行配置</strong>，每一级使用<code>.</code>进行划分，比如我们现在要配置数据库的连接信息，就可以编写为这种形式：</p>
+<div class="language-properties" data-ext="properties" data-title="properties"><pre class="language-properties"><code><span class="token key attr-name">jdbc.datasource.driver</span><span class="token punctuation">=</span><span class="token value attr-value">com.cj.mysql.Driver</span>
+<span class="token key attr-name">jdbc.datasource.url</span><span class="token punctuation">=</span><span class="token value attr-value">jdbc:mysql://localhost:3306/test</span>
+<span class="token key attr-name">jdbc.datasource.username</span><span class="token punctuation">=</span><span class="token value attr-value">test</span>
+<span class="token key attr-name">jdbc.datasource.password</span><span class="token punctuation">=</span><span class="token value attr-value">123456</span>
+</code></pre></div><h5>JAVA读取<code>Properties</code></h5>
+<p>JDK为我们提供了一个叫做<code>Properties</code>的类型，它继承自<code>Hashtable</code>类（是HashMap的<strong>同步加锁版</strong>）</p>
+<p>使用起来和<code>HashMap</code>是差不多的：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Properties</span> <span class="token keyword">extends</span> <span class="token class-name">Hashtable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">,</span><span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div><p>相关操作：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Properties</span> properties <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Properties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+properties<span class="token punctuation">.</span><span class="token function">load</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileReader</span><span class="token punctuation">(</span><span class="token string">"test.properties"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//使用load方法读取本地文件中的所有配置到Map中</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>properties<span class="token punctuation">)</span><span class="token punctuation">;</span>
+properties<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>xxx<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>获取系统数据<code>getProperties</code></h5>
+<p>实际上，我们也可以通过这种方式来获取我们的一些系统属性</p>
+<p><code>System</code>类中有一个<code>getProperties</code>方法用于存储所有系统相关的属性值，这里我们打印一下系统名称和版本：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Properties</span> properties <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">getProperties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>properties<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"os.name"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>properties<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"os.version"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>当然，程序中的Properties对象也可以快速保存为一个对应的<code>.properties</code>文件：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Properties</span> properties <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">getProperties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+properties<span class="token punctuation">.</span><span class="token function">store</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileWriter</span><span class="token punctuation">(</span><span class="token string">"system.properties"</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"系统属性"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4>JUL设置默认配置 <code>LogManger</code></h4>
+<p>实际上JUL也可以通过进行<strong>配置文件来规定日志打印器的一些默认值</strong></p>
+<p>比如我们现在想配置默认的日志打印级别：</p>
+<div class="language-properties" data-ext="properties" data-title="properties"><pre class="language-properties"><code><span class="token comment"># RootLogger 的默认处理器为</span>
+<span class="token key attr-name">handlers</span><span class="token punctuation">=</span><span class="token value attr-value">java.util.logging.ConsoleHandler</span>
+<span class="token comment"># RootLogger 的默认的日志级别</span>
+<span class="token key attr-name">.level</span><span class="token punctuation">=</span><span class="token value attr-value">ALL</span>
+<span class="token comment"># 配置ConsoleHandler的默认level</span>
+<span class="token key attr-name">java.util.logging.ConsoleHandler.level</span><span class="token punctuation">=</span><span class="token value attr-value">ALL</span>
+</code></pre></div><p>接着我们需要在程序开始之前加载这里的配置：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">LogManager</span> manager <span class="token operator">=</span> <span class="token class-name">LogManager</span><span class="token punctuation">.</span><span class="token function">getLogManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+<span class="token comment">//获取LogManager读取配置文件</span>
+manager<span class="token punctuation">.</span><span class="token function">readConfiguration</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token string">"test.properties"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">config</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>这样就可以通过配置文件的形式修改一些功能的默认属性了，而不需要我们再使用代码进行配置。</p>
+<p>实际上在JUL的这类内部也有着对应的配置处理操作，如果发现有默认配置优先使用配置里面的，比如Handler的构造方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Handler</span><span class="token punctuation">(</span><span class="token class-name">Level</span> defaultLevel<span class="token punctuation">,</span> <span class="token class-name">Formatter</span> defaultFormatter<span class="token punctuation">,</span>
+        <span class="token class-name">Formatter</span> specifiedFormatter<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token class-name">LogManager</span> manager <span class="token operator">=</span> <span class="token class-name">LogManager</span><span class="token punctuation">.</span><span class="token function">getLogManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> cname <span class="token operator">=</span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">final</span> <span class="token class-name">Level</span> level <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">getLevelProperty</span><span class="token punctuation">(</span>cname <span class="token operator">+</span> <span class="token string">".level"</span><span class="token punctuation">,</span> defaultLevel<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Filter</span> filter <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">getFilterProperty</span><span class="token punctuation">(</span>cname <span class="token operator">+</span> <span class="token string">".filter"</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">Formatter</span> formatter <span class="token operator">=</span> specifiedFormatter <span class="token operator">==</span> <span class="token keyword">null</span>
+                                <span class="token operator">?</span> manager<span class="token punctuation">.</span><span class="token function">getFormatterProperty</span><span class="token punctuation">(</span>cname <span class="token operator">+</span> <span class="token string">".formatter"</span><span class="token punctuation">,</span> defaultFormatter<span class="token punctuation">)</span>
+                                <span class="token operator">:</span> specifiedFormatter<span class="token punctuation">;</span>
+    <span class="token keyword">final</span> <span class="token class-name">String</span> encoding <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">getStringProperty</span><span class="token punctuation">(</span>cname <span class="token operator">+</span> <span class="token string">".encoding"</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>关于使用配置文件的形式修改JUL部分内容的默认值就先讲解到这里。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - JUL日志5</title>
+      <link>http://ekkosonya.cn/code/javaweb/javaweb24.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/javaweb24.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUL日志5</source>
+      <description>JUL日志系统5 自定义日志格式 新建一个类，来继承Formatter，通过修改对应的format函数来实现自定义 每一个Handler都可以配置一个对应的Formatter来决定日志打印的格式，除了官方为我们提供的两种默认格式外，我们也可以自定义我们想要的日志打印格式。 我们只需要继承Formatter类，就可以创建一个自定义的日志格式处理逻辑了： ...</description>
+      <category>code</category>
+      <pubDate>Sun, 06 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUL日志系统5</h2>
+<h3>自定义日志格式</h3>
+<p>新建一个类，来继承<code>Formatter</code>，通过修改对应的<code>format</code>函数来实现自定义</p>
+<p>每一个<code>Handler</code>都可以配置一个对应的<code>Formatter</code>来决定日志打印的格式，除了官方为我们提供的两种默认格式外，我们也可以自定义我们想要的日志打印格式。</p>
+<p>我们只需要继承<code>Formatter</code>类，就可以创建一个自定义的日志格式处理逻辑了：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyFormatter</span> <span class="token keyword">extends</span> <span class="token class-name">Formatter</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">format</span><span class="token punctuation">(</span><span class="token class-name">LogRecord</span> record<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"我是自定义日志格式"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>其中参数为<code>LogRecord</code>，它提供了当前日志记录的相关信息，比如：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">format</span><span class="token punctuation">(</span><span class="token class-name">LogRecord</span> record<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"所在类: "</span> <span class="token operator">+</span> record<span class="token punctuation">.</span><span class="token function">getSourceClassName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"方法名称: "</span> <span class="token operator">+</span> record<span class="token punctuation">.</span><span class="token function">getSourceMethodName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"日志级别: "</span> <span class="token operator">+</span> record<span class="token punctuation">.</span><span class="token function">getLevel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getLocalizedName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token string">"我是自定义日志格式"</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>修改对应<code>Formatter</code></h4>
+<h5>手动修改 <code>setFormatter</code></h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">Logger</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"com.test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+logger<span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHandlers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">setFormatter</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyFormatter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>配置文件修改</h5>
+<p>直接把<code>ConsoleHandler</code>的默认<code>Formatter</code>配置为我们自己的类：</p>
+<div class="language-properties" data-ext="properties" data-title="properties"><pre class="language-properties"><code><span class="token key attr-name">java.util.logging.ConsoleHandler.formatter</span><span class="token punctuation">=</span><span class="token value attr-value">com.test.MyFormatter</span>
+</code></pre></div><h4>自定义例子</h4>
+<p>因此，我们也可以利用这些属性来编写一个类似于的<code>SimpleFormatter</code>的日志格式，比如这里包含类名、时间等，类似于下面图中的日志格式：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>我们来尝试编写一下：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">format</span><span class="token punctuation">(</span><span class="token class-name">LogRecord</span> record<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">StringBuilder</span> builder <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//日期</span>
+    <span class="token class-name">Date</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>record<span class="token punctuation">.</span><span class="token function">getMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">SimpleDateFormat</span> dateFormat <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SimpleDateFormat</span><span class="token punctuation">(</span><span class="token string">"yyyy-MM-dd HH:mm:ss.SSS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    builder<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>dateFormat<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//级别</span>
+    builder<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"  "</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>record<span class="token punctuation">.</span><span class="token function">getLevel</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    builder<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>" </code></pre></div>]]></content:encoded>
+    </item>
     <item>
       <title>hint - List初始化</title>
       <link>http://ekkosonya.cn/code/java_hint/hint1.html</link>
@@ -640,572 +945,6 @@ mapper<span class="token punctuation">.</span><span class="token function">delet
 session<span class="token punctuation">.</span><span class="token function">rollback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//进行回滚操作</span>
 <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>mapper<span class="token punctuation">.</span><span class="token function">selectUserById</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//之前被删除的数据回来了</span>
 </code></pre></div><p>事务相关操作非常简单，这里就暂时先介绍这么多。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Mybatis7</title>
-      <link>http://ekkosonya.cn/code/javaweb/javaweb17.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/javaweb17.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis7</source>
-      <description>Mybatis详解5 动态SQL 批处理 ExecutorType.BATCH 在之前JDBC讲解的时候，我们就提到过批量执行语句的问题，当我们要执行很多条语句时，可能会一个一个地提交： 虽然这样看似非常完美，也符合逻辑，但是实际上我们每次执行SQL语句，都像是去厨房端菜到客人桌上一样，我们每次上菜的时候只从厨房端一个菜，效率非常低 但是如果我们每次上...</description>
-      <category>code</category>
-      <pubDate>Tue, 17 Jun 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Mybatis详解5</h2>
-<h3>动态SQL</h3>
-<h4>批处理 <code>ExecutorType.BATCH</code></h4>
-<p>在之前JDBC讲解的时候，我们就提到过批量执行语句的问题，当我们要执行很多条语句时，可能会一个一个地提交：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//现在要求把下面所有用户都插入到数据库中</span>
-<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> users <span class="token operator">=</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"小刚"</span><span class="token punctuation">,</span> <span class="token string">"小强"</span><span class="token punctuation">,</span> <span class="token string">"小王"</span><span class="token punctuation">,</span> <span class="token string">"小美"</span><span class="token punctuation">,</span> <span class="token string">"小黑子"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">//使用for循环来一个一个执行insert语句</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> user <span class="token operator">:</span> users<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user (name, age) values ('"</span> <span class="token operator">+</span> user <span class="token operator">+</span> <span class="token string">"', 18)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>虽然这样看似非常完美，也符合逻辑，但是实际上我们每次执行<code>SQL</code>语句，都像是去厨房端菜到客人桌上一样，我们每次上菜的时候只从厨房端一个菜，效率非常低</p>
-<p>但是如果我们每次上菜推一个小推车装满N个菜一起上，效率就会提升很多，而数据库也是这样，我们每一次执行SQL语句，都需要一定的时间开销</p>
-<p>但是如果我把这些任务合在一起告诉数据库，效率会截然不同：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>可见，使用循环操作执行数据库相关操作实际上非常耗费资源，不仅带来网络上的额外开销，还有数据库的额外开销</p>
-<p>更推荐使用<strong>批处理</strong>来优化这种情况，一次性提交一个批量操作给数据库。</p>
-<p>需要在<code>Mybatis</code>中开启批处理，我们只需要在创建<code>SqlSession</code>时进行一些配置即可：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>factory<span class="token punctuation">.</span><span class="token function">openSession</span><span class="token punctuation">(</span><span class="token class-name">ExecutorType</span><span class="token punctuation">.</span><span class="token constant">BATCH</span><span class="token punctuation">,</span> autoCommit<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>在使用<code>openSession</code>时直接配置<code>ExecutorType</code>为BATCH即可，这样SqlSession会开启批处理模式，在多次处理相同SQL时会尽可能转换为一次执行，开启批处理后，无论是否处于事务模式下，我们都需要<code>flushStatements()</code>来一次性提交之前是所有批处理操作：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">TestMapper</span> mapper <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">getMapper</span><span class="token punctuation">(</span><span class="token class-name">TestMapper</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> <span class="token number">5</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    mapper<span class="token punctuation">.</span><span class="token function">deleteUserById</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-session<span class="token punctuation">.</span><span class="token function">flushStatements</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>此时日志中可以看到Mybatis在尽可能优化我们的SQL操作：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>动态SQL介绍</h4>
-<p>除了使用批处理之外，Mybatis还为我们提供了一种更好的方式来处理这种问题，我们可以使用<strong>动态SQL来一次性生成一个批量操作的SQL语句</strong></p>
-<blockquote>
-<p>动态 SQL 是 MyBatis 的强大特性之一。如果你使用过 JDBC 或其它类似的框架，你应该能理解根据不同条件拼接 SQL 语句有多痛苦，例如拼接时要确保不能忘记添加必要的空格，还要注意去掉列表最后一个列名的逗号。利用动态 SQL，可以彻底摆脱这种痛苦。</p>
-</blockquote>
-<p>简单来说，动态SQL在执行时可以进行各种<strong>条件判断</strong>以及<strong>循环拼接</strong>等操作，极大地提升了SQL语句编写的的灵活性。</p>
-<h4>条件判断  <code>if</code>标签</h4>
-<p>在编写SQL时，我们可以添加一些用于条件判断的标签到<code>XML</code>的<code>SQL</code>语句中</p>
-<p>比如我们希望在根据ID查询用户时，如果查询的ID大于3，那么必须同时要满足大于18岁这个条件，这看似是一个很奇怪的查询条件，此时动态SQL就能很轻松实现这个操作：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id}
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id &gt; 3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        and age &gt; 18
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>这里我们使用<code>if</code>标签表示<strong>里面的内容会在判断条件满足时拼接到后面</strong></p>
-<p>如果不满足，那么就不拼接里面的内容到原本的SQL中，其中test属性就是我们需要填写的判断条件，它采用OGNL表达式进行编写，语法与Java比较相似</p>
-<p>详细了解: <a href="https://commons.apache.org/dormant/commons-ognl/" target="_blank" rel="noopener noreferrer">https://commons.apache.org/dormant/commons-ognl/</a></p>
-<p>当我们查询条件不同时，Mybatis会选择性拼接我们的SQL语句</p>
-<h4>选择判断 <code>choose</code></h4>
-<p>除了if操作之外，Mybatis还针对<strong>多分支情况</strong>提供了<code>choose</code>操作，它类似于Java中的switch语句</p>
-<p>比如现在我们希望在查询用户时，ID等于1的必须同时要满足小于18岁，ID等于2的必须满足等于18岁，其他情况的必须满足大于18岁(这需求有点抽象)</p>
-<p>我们可以像这样进行编写：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id}
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>choose</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>when</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id == 1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-             and age <span class="token entity named-entity" title="<">&amp;lt;</span>= 18
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>when</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>when</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id == 2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-            and age = 18
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>when</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>otherwise</span><span class="token punctuation">&gt;</span></span>
-            and age &gt; 18
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>otherwise</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>choose</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>注意在<code>when</code>中不允许使用<code>&lt;</code>或是<code>&gt;</code>这种模糊匹配的条件(实际运行好像是可以的)。</p>
-<h4>实现批量处理 <code>foreach</code></h4>
-<p><code>foreach</code>操作，它与<code>Java</code>中的<code>for</code>类似，可以实现批量操作，这非常适合处理我们前面说的<strong>批量执行SQL</strong>的问题：</p>
-<h5>批量删除</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> <span class="token number">5</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    mapper<span class="token punctuation">.</span><span class="token function">deleteUserById</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>但是实际上这种情况完全可以简写为一个SQL语句：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">IN</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>使用<code>foreach</code>来完成它就很简单了：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>delete</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>deleteUsers<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    delete from user where id in
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>foreach</span> <span class="token attr-name">collection</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>list<span class="token punctuation">"</span></span> <span class="token attr-name">item</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>item<span class="token punctuation">"</span></span> <span class="token attr-name">index</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>index<span class="token punctuation">"</span></span> <span class="token attr-name">open</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>(<span class="token punctuation">"</span></span> <span class="token attr-name">separator</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>,<span class="token punctuation">"</span></span> <span class="token attr-name">close</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>)<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        #{item}
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>foreach</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>delete</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>其中:</p>
-<ul>
-<li>
-<p><code>collection</code>就是我们需要遍历的集合或是数组等任意可迭代对象</p>
-</li>
-<li>
-<p><code>item</code>和<code>index</code>分别代表我们在<code>foreach</code>标签中使用<strong>每一个元素</strong>和<strong>下标的变量名称</strong>，即我们在<code>JAVA</code>中所传给他的值</p>
-</li>
-<li>
-<p><code>open</code>和<code>close</code>用于控制起始和结束位置添加的符号</p>
-</li>
-<li>
-<p><code>separator</code>用于控制分隔符</p>
-</li>
-</ul>
-<p>现在执行以下操作：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>session<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token string">"deleteUsers"</span><span class="token punctuation">,</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>最后实际执行的SQL为：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>批量插入</h5>
-<p>我们再来看一个例子，比如现在我们想要批量插入一些用户到数据库里面，原本Java应该这样写，但是这是一种极其不推荐的做法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">TestMapper</span> mapper <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">getMapper</span><span class="token punctuation">(</span><span class="token class-name">TestMapper</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">&gt;</span></span> users <span class="token operator">=</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"小美"</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"小张"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"小刘"</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">User</span> user <span class="token operator">:</span> users<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    mapper<span class="token punctuation">.</span><span class="token function">insertUser</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>实际上这种操作完全可以浓缩为一个SQL语句：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> <span class="token keyword">user</span> <span class="token punctuation">(</span>name<span class="token punctuation">,</span> age<span class="token punctuation">)</span> <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token string">'小美'</span><span class="token punctuation">,</span> <span class="token number">17</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">'小张'</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token string">'小刘'</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>那这时又可以直接使用咱们的动态SQL来完成操作了：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>insert</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>insertAllUser<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    insert into user (name, age) values
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>foreach</span> <span class="token attr-name">collection</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>list<span class="token punctuation">"</span></span> <span class="token attr-name">item</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>item<span class="token punctuation">"</span></span> <span class="token attr-name">separator</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>,<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        (#{item.name}, #{item.age})
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>foreach</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>insert</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><figure><figcaption>alt text</figcaption></figure>
-<p>通过使用动态SQL语句，我们基本上可以解决大部分的SQL查询和批量处理场景了。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Mybatis4</title>
-      <link>http://ekkosonya.cn/code/javaweb/javaweb14.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/javaweb14.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis4</source>
-      <description>Mybatis详解2 指定构造方法 (一般不咋用) 通过前面的学习，我们已经知道如何使用Mybatis进行各种查询操作。我们知道，Mybatis在执行完查询语句后，会自动将查询的结果转换为我们所需要的实体类 实际上Mybatis一开始会通过我们实体类默认的无参构造得到一个最初的对象，然后通过反射进行赋值，我们可以手动编写一个带调试信息的无参构造： al...</description>
-      <category>code</category>
-      <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Mybatis详解2</h2>
-<h3>指定构造方法</h3>
-<p>(一般不咋用)
-通过前面的学习，我们已经知道如何使用Mybatis进行各种查询操作。我们知道，<code>Mybatis</code>在执行完查询语句后，会自动将查询的结果转换为我们所需要的实体类</p>
-<p>实际上<code>Mybatis</code>一开始会通过我们实体类<strong>默认的无参构造</strong>得到一个<strong>最初的对象</strong>，然后通过<strong>反射进行赋值</strong>，我们可以手动编写一个带调试信息的无参构造：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"????"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><figure><figcaption>alt text</figcaption></figure>
-<p>可以看到Mybatis确实调用了我们的无参构造方法来构建对象，属性则是通过反射进行赋值，这里截取部分Mybatis源代码进行演示：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//这里的object就是刚刚构造好的实体类对象，prop是要设置的值的字段信息，value就是要设置的值</span>
-<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">setBeanProperty</span><span class="token punctuation">(</span><span class="token class-name">PropertyTokenizer</span> prop<span class="token punctuation">,</span> <span class="token class-name">Object</span> object<span class="token punctuation">,</span> <span class="token class-name">Object</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-    <span class="token comment">//Invoker是Mybatis内部编写一个用于反射设置对象属性值的工具</span>
-    <span class="token class-name">Invoker</span> method <span class="token operator">=</span> metaClass<span class="token punctuation">.</span><span class="token function">getSetInvoker</span><span class="token punctuation">(</span>prop<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> params <span class="token operator">=</span> <span class="token punctuation">{</span> value <span class="token punctuation">}</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>object<span class="token punctuation">,</span> params<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//通过Invoker为传入的实体类对象赋值</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> t<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">throw</span> <span class="token class-name">ExceptionUtil</span><span class="token punctuation">.</span><span class="token function">unwrapThrowable</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> t<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>由于<code>Mybatis</code>默认情况下直接通过<strong>无参构造来创建实体类对象</strong>，如果我们的类中存在其他的构造方法覆盖掉默认的无参构造，那么<code>Mybatis</code>会选择<strong>可用的构造方法</strong>来进行构造。</p>
-<p>但是如果存在多个构造方法，<code>Mybatis</code>会出现问题：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ToString</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> id<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    
-    <span class="token keyword">public</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token keyword">int</span> age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>运行时出现错误：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Exception in thread "main" org.apache.ibatis.exceptions.PersistenceException: 
-### Error querying database.  Cause: org.apache.ibatis.executor.ExecutorException: No constructor found in com.test.User matching [java.lang.Integer, java.lang.String, java.lang.Integer]
-### The error may exist in file:mappers/TestMapper.xml
-</code></pre></div><p>此时由于类中存在多个构造方法，而<code>Mybatis</code>不知道该如何选择，那么就会告诉我们找不到合适的构造方法，要解决这种问题也很简单，我们不需要删除这些多余的构造方法，只需添加一个无参构造或是全参构造即可，注意全参构造必须与查询结果字段参数一一对应。</p>
-<p>但是注意，<code>Mybatis</code>仅仅是使用这种方式<strong>进行对象的构建</strong>，而字段的赋值无论是什么构造方法，都会使用反射进行一次赋值：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">,</span> <span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token keyword">int</span> age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> id<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age <span class="token operator">+</span> <span class="token number">20</span><span class="token punctuation">;</span>   <span class="token comment">//这里我们让age在赋值时增加一次</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们会发现，就算像这样进行了修改，最终的结果依然是被赋值为数据库中的结果，也就是说构造方法在默认情况下<strong>仅仅只是用于构造一个单纯的对象罢了</strong>。</p>
-<p>如果需要让<code>Mybatis</code>完全使用构造方法进行对象构建与赋值工作，那么我们需要在XML中手动编写配置，同样需要使用resultMap来完成：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span> <span class="token attr-name">resultMap</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>test<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id}
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>resultMap</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>test<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>constructor</span><span class="token punctuation">&gt;</span></span>
-            
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>constructor</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>resultMap</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>这一次我们在<code>resultMap</code>中添加<code>constructor</code>标签，表示我们的查询结果直接使用指定的构造方法来处理。接着我们需要配置一下<code>constructor</code>里面的内容，使其符合我们指定构造方法的定义，比如现在我们有一个这样的构造方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">,</span> <span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>id <span class="token operator">=</span> id<span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name <span class="token operator">+</span> <span class="token string">"同学"</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>那么对应的<code>XML</code>配置编写为，使用<code>arg</code>标签来代表每一个参数，<strong>主键可以使用</strong><code>idArg</code>来表示，有助于优化性能：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>constructor</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>idArg</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span> <span class="token attr-name">javaType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>_int<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">javaType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>String<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>constructor</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>注意参数的顺序，<strong>必须和构造方法的顺序一致</strong>，否则会导致<code>Mybatis</code>无法确认。</p>
-<p>指定构造方法后，若此字段被填入了构造方法作为参数，将不会通过反射给字段单独赋值，<strong>而构造方法中没有传入的字段，依然会被反射赋值</strong>。</p>
-<h3>接口绑定 <code>sqlSession.getMapper(xxx.class)</code></h3>
-<p>之前通过创建一个映射器来将结果快速转换为实体类，但是这样可能还是不够方便，我们每次都需要去找映射器对应操作的名称，而且还要知道对应的返回类型，再通过<code>SqlSession</code>来执行对应的方法，可以用<strong>接口</strong>来简化</p>
-<p>通过<code>namespace</code>来将各种操作绑定到一个接口上，然后使用方法的形式来表示，注意接口的参数和返回值必须正确对应，否则可能会出现问题：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">TestMapper</span> <span class="token punctuation">{</span>
-    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Student</span><span class="token punctuation">&gt;</span></span> <span class="token function">selectStudent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Student</span> <span class="token function">selectStuById</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Student</span><span class="token punctuation">&gt;</span></span> <span class="token function">selectStusBySex</span><span class="token punctuation">(</span><span class="token class-name">String</span> sex<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>接着将<code>Mapper</code>文件的命名空间修改为我们的接口完整名称：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">namespace</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.mapper.TestMapper<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectStudent<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Student<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        select * from student
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-    
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectStuById<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Student<span class="token punctuation">"</span></span> <span class="token attr-name">parameterType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>_int<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        select * from student where sid = #{sid}
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-    
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectStusBySex<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Student<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        select * from student where sex = #{sex}
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>这里建议将对应的xml配置也放到放到同包中，作为内部资源：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>作为内部资源后，我们需要修改一下配置文件中的<code>mapper</code>文件目录，不使用<code>url</code>而是<code>resource</code>表示是Jar内部的文件：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mappers</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">resource</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com/test/mapper/TestMapper.xml<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mappers</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>现在我们可以直接通过<code>SqlSession</code>获取我们编写接口的实现类，这个实现类是由<code>Mybatis</code>根据我们的配置自动生成的，不需要我们做任何事情：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">SqlSession</span> sqlSession <span class="token operator">=</span> <span class="token class-name">MybatisUtil</span><span class="token punctuation">.</span><span class="token function">openSession</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">TestMapper</span> mapper <span class="token operator">=</span> sqlSession<span class="token punctuation">.</span><span class="token function">getMapper</span><span class="token punctuation">(</span><span class="token class-name">TestMapper</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//直接获取实现类</span>
-    <span class="token comment">//这里调用我们编写的接口方法</span>
-    mapper<span class="token punctuation">.</span><span class="token function">selectStudent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Mybatis2</title>
-      <link>http://ekkosonya.cn/code/javaweb/javaweb12.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/javaweb12.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis2</source>
-      <description>Mybatis2 初次使用 Mybatis 文档网站：https://mybatis.org/mybatis-3/zh_CN/configuration.html 我们需要导入Mybatis的依赖，依赖导入完成后，编写Mybatis的配置文件(通过一个XML文件去配置) 按照官方文档给定的提示，在项目根目录下新建名为mybatis-config.xml...</description>
-      <category>code</category>
-      <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Mybatis2</h2>
-<h3>初次使用 Mybatis</h3>
-<p>文档网站：<a href="https://mybatis.org/mybatis-3/zh_CN/configuration.html" target="_blank" rel="noopener noreferrer">https://mybatis.org/mybatis-3/zh_CN/configuration.html</a></p>
-<p>我们需要导入Mybatis的依赖，依赖导入完成后，编写<code>Mybatis</code>的配置文件(通过一个<code>XML</code>文件去配置)</p>
-<p>按照官方文档给定的提示，在项目根目录下新建名为<code>mybatis-config.xml</code>的文件，并填写以下内容：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
-<span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">configuration</span>
-  <span class="token name">PUBLIC</span> <span class="token string">"-//mybatis.org//DTD Config 3.0//EN"</span>
-  <span class="token string">"http://mybatis.org/dtd/mybatis-3-config.dtd"</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>environments</span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>development<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>environment</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>development<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>transactionManager</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JDBC<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dataSource</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>POOLED<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        <span class="token comment">&lt;!-- 对应哪个数据库的JDBC驱动 com.mysql.cj.jdbc.Driver --&gt;</span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>driver<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>${驱动类（含包名）}<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>url<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>${数据库连接URL}<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>${用户名}<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>${密码}<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dataSource</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>environment</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>environments</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>我们发现，在最上方还引入了一个叫做<code>DTD</code>（文档类型定义）的东西，它提前帮助我们规定了一些标签，我们就需要使用<code>Mybatis</code>提前帮助我们规定好的标签来进行配置（因为只有这样<code>Mybatis</code>才能正确识别我们配置的内容）</p>
-<p>通过进行配置，我们就告诉了<code>Mybatis</code>我们链接数据库的一些信息，包括URL、用户名、密码等，这样<code>Mybatis</code>就知道该链接哪个数据库、使用哪个账号进行登陆了
-（也可以不使用配置文件，自行阅读官方文档）</p>
-<p>配置文件完成后，我们需要在Java程序启动时，让Mybatis对配置文件进行读取并得到一个<code>SqlSessionFactory</code>对象：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">FileNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> resource <span class="token operator">=</span> <span class="token string">"mybatis-config.xml"</span><span class="token punctuation">;</span>
-    <span class="token class-name">InputStream</span> inputStream <span class="token operator">=</span> <span class="token class-name">Resources</span><span class="token punctuation">.</span><span class="token function">getResourceAsStream</span><span class="token punctuation">(</span>resource<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">SqlSessionFactory</span> sqlSessionFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SqlSessionFactoryBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span>inputStream<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">SqlSession</span> s <span class="token operator">=</span> sqlSessionFactory<span class="token punctuation">.</span><span class="token function">openSession</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>直接运行即可，虽然没有干什么事情，但是不会出现错误，如果之前的配置文件编写错误，直接运行会产生报错！</p>
-<h4><code>SqlSessionFactory</code></h4>
-<p>那么现在我们来看看，<code>SqlSessionFactory</code>对象是什么东西：</p>
-<figure><figcaption></figcaption></figure>
-<p>每个基于 MyBatis 的应用都是以一个 <code>SqlSessionFactory</code> 的实例为核心的，我们可以通过<code>SqlSessionFactory</code>来创建多个新的会话 —— <code>SqlSession</code>对象，</p>
-<p>每个会话就相当于我不同的地方登陆一个账号去访问数据库，你也可以认为这就是之前JDBC中的<code>Statement</code>对象，会话之间相互隔离，没有任何关联。</p>
-<p>而通过<code>SqlSession</code>就可以完成几乎所有的数据库操作，我们发现这个接口中定义了大量数据库操作的方法，因此，现在我们只需要通过一个对象就能完成数据库交互了，极大简化了之前的流程。</p>
-<h4>直接读取实体类</h4>
-<p>我们来尝试一下直接读取实体类，读取实体类肯定需要一个映射规则，比如类中的哪个字段对应数据库中的哪个字段</p>
-<p>在查询语句返回结果后，Mybatis就会自动将对应的结果填入到对象的对应字段上。</p>
-<p>首先编写实体类，直接使用Lombok：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span></span><span class="token class-name">Data</span></span><span class="token punctuation">;</span>
-
-<span class="token annotation punctuation">@Data</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
-    <span class="token keyword">int</span> sid<span class="token punctuation">;</span>   <span class="token comment">//名称最好和数据库字段名称保持一致，不然可能会映射失败导致查询结果丢失</span>
-    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> sex<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在根目录下重新创建一个<code>mapper</code>文件夹，新建名为<code>TestMapper.xml</code>的文件作为我们的映射器，并填写以下内容：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
-<span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">mapper</span>
-        <span class="token name">PUBLIC</span> <span class="token string">"-//mybatis.org//DTD Mapper 3.0//EN"</span>
-        <span class="token string">"http://mybatis.org/dtd/mybatis-3-mapper.dtd"</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">namespace</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>TestMapper<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectStudent<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.entity.Student<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-        select * from student
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mapper</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>其中<code>namespace</code>就是命名空间，每个<code>Mapper</code>都是唯一的，因此需要用一个命名空间来区分，它还可以用来绑定一个接口。</p>
-<p>我们在里面写入了一个<code>select</code>标签，表示添加一个<code>select</code>操作，同时<code>id</code>作为操作的名称，<code>resultType</code>指定为我们刚刚定义的实体类，表示将数据库结果映射为<code>Student</code>类，然后就在标签中写入我们的查询语句即可。</p>
-<p>编写好后，我们在配置文件中添加这个Mapper映射器：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mappers</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">url</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>file:mappers/TestMapper.xml<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-    <span class="token comment">&lt;!--    这里用的是url，也可以使用其他类型，我们会在后面讲解    --&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mappers</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>最后在程序中使用我们定义好的<code>Mapper</code>即可：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">FileNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">SqlSessionFactory</span> sqlSessionFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SqlSessionFactoryBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token string">"mybatis-config.xml"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">SqlSession</span> sqlSession <span class="token operator">=</span> sqlSessionFactory<span class="token punctuation">.</span><span class="token function">openSession</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Student</span><span class="token punctuation">&gt;</span></span> student <span class="token operator">=</span> sqlSession<span class="token punctuation">.</span><span class="token function">selectList</span><span class="token punctuation">(</span><span class="token string">"selectStudent"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        student<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们会发现，Mybatis非常智能，我们只需要告诉一个映射关系，就能够直接将查询结果转化为一个实体类！</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Mybatis3</title>
-      <link>http://ekkosonya.cn/code/javaweb/javaweb13.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/javaweb13.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis3</source>
-      <description>Mybatis详解1 由于SqlSessionFactory一般只需要创建一次，因此我们可以创建一个工具类来集中创建SqlSession，这样会更加方便一些： 现在我们只需要在main方法中这样写即可查询结果了： 查询操作 XML配置sql操作 对应java进行调用 查询操作在XML配置中使用一个select标签进行囊括 假设我们现在需要编写一个根据I...</description>
-      <category>code</category>
-      <pubDate>Tue, 10 Jun 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Mybatis详解1</h2>
-<p>由于<code>SqlSessionFactory</code>一般只需要创建一次，因此我们可以创建一个工具类来集中创建<code>SqlSession</code>，这样会更加方便一些：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MybatisUtil</span> <span class="token punctuation">{</span>
-
-    <span class="token comment">//在类加载时就进行创建</span>
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">SqlSessionFactory</span> sqlSessionFactory<span class="token punctuation">;</span>
-    <span class="token keyword">static</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            sqlSessionFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SqlSessionFactoryBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token string">"mybatis-config.xml"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">FileNotFoundException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token doc-comment comment">/**
-     * 获取一个新的会话
-     * <span class="token keyword">@param</span> <span class="token parameter">autoCommit</span> 是否开启自动提交（跟JDBC是一样的，如果不自动提交，则会变成事务操作）
-     * <span class="token keyword">@return</span> SqlSession对象
-     */</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">SqlSession</span> <span class="token function">getSession</span><span class="token punctuation">(</span><span class="token keyword">boolean</span> autoCommit<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> sqlSessionFactory<span class="token punctuation">.</span><span class="token function">openSession</span><span class="token punctuation">(</span>autoCommit<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在我们只需要在main方法中这样写即可查询结果了：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">SqlSession</span> sqlSession <span class="token operator">=</span> <span class="token class-name">MybatisUtil</span><span class="token punctuation">.</span><span class="token function">getSession</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Student</span><span class="token punctuation">&gt;</span></span> student <span class="token operator">=</span> sqlSession<span class="token punctuation">.</span><span class="token function">selectList</span><span class="token punctuation">(</span><span class="token string">"selectStudent"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        student<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>查询操作</h3>
-<ol>
-<li><code>XML</code>配置sql操作</li>
-<li>对应<code>java</code>进行调用</li>
-</ol>
-<p>查询操作在<code>XML</code>配置中使用一个<code>select</code>标签进行囊括</p>
-<p>假设我们现在需要编写一个根据ID查询用户的操作，首先我们需要指定select操作的id：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>  
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>接着是我们需要进行查询的参数，这里我们需要根据用户ID查询，那么传入的参数就是一个int类型的参数，参数也可以是字符串类型的，类型名称：</p>
-<ol>
-<li>如果是基本类型，需要使用<code>_int</code>这样前面添加下划线。</li>
-<li>如果是JDK内置的包装类型或是其他类型，可以直接使用其名称，比如<code>String</code>、<code>int</code>（Integer的缩写）、<code>Long</code></li>
-<li>如果是自己编写的类型，需要完整的包名+类名才可以。</li>
-</ol>
-<p>当然也可以直接不填这个属性，Mybatis会自动判断：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span> <span class="token attr-name">parameterType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>int<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>接下来就是编写我们的SQL语句了，由于这里我们需要通过一个参数来查询，所以需要填入一个占位符，通过使用<code>#{xxx}</code>或是<code>${xxx}</code>来填入我们给定的属性，名称随便：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span> <span class="token attr-name">parameterType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>int<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id}
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>实际上Mybatis也是通过<code>PreparedStatement</code>首先进行一次预编译，来有效地防止SQL注入问题，但是如果使用<code>${xxx}</code>就不再是通过预编译，而是直接传值，因此对于常见的一些查询参数，我们一般都使用<code>#{xxx}</code>来进行操作保证安全性。</p>
-<p>最后我们查询到结果后，一般都是将其转换为对应的实体类对象，所以说这里我们之间填写之前建好的实体类名称，使用<code>resultType</code>属性来指定：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserById<span class="token punctuation">"</span></span> <span class="token attr-name">parameterType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>int<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id}
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h4>别名</h4>
-<p>当然，如果你觉得像这样每次都要写一个完整的类名太累了，也可以为它起个别名，我们只需要在Mybatis的配置文件中进行编写即可：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>typeAliases</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>typeAlias</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span> <span class="token attr-name">alias</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>User<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>typeAliases</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>也可以直接扫描整个包下的所有实体类，自动起别名，默认情况下别名就是类的名称：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>typeAliases</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>package</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.entity<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>typeAliases</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>这样，SQL语句映射配置我们就编写好了，接着就是Java这边进行调用了：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//这里我们填写刚刚的id，然后将我们的参数填写到后面</span>
-<span class="token class-name">User</span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectOne</span><span class="token punctuation">(</span><span class="token string">"selectUserById"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h4>hashmap 转换</h4>
-<p>当然，如果你不需要转换为实体类，Mybatis也为我们提供了多种转换方案，比如转换为一个<code>Map</code>对象：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserByIdAndAge<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hashmap<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id}
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//使用Map类型变量进行接受，Key为String类型，Value为Object类型</span>
-<span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectOne</span><span class="token punctuation">(</span><span class="token string">"selectUserById"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h4>多参数查询</h4>
-<p>我们可以尝试接着来写一个同时查询ID和年龄的查询操作：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserByIdAndAge<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hashmap<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id} and age = #{age}
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>因为这里需要多个参数，我们可以使用一个<code>Map</code> (<code>Map.of</code>是JAVA9的特性)或是具有同样参数的实体类来传递，显然Map用起来更便捷一些，注意key的名称需要与我们编写的SQL语句中占位符一致：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">User</span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectOne</span><span class="token punctuation">(</span><span class="token string">"selectUserByIdAndAge"</span><span class="token punctuation">,</span> <span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"age"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h4><code>resultMap</code></h4>
-<p>下面这种情况，实体类中定义的属性名称和我们数据库中的名称不一样</p>
-<p>这会导致Mybatis自动处理出现问题：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
-    <span class="token keyword">int</span> uid<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> username<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> age<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>运行后发现，Mybatis虽然可以查询到对应的记录，但是转换的实体类数据并没有被添加上去，这是因为数据库字段名称与类中字段名称不匹配导致的，我们可以手动配一个<code>resultMap</code>来解决这种问题，直接在<code>Mapper</code>中添加：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUserByIdAndAge<span class="token punctuation">"</span></span> <span class="token attr-name">resultMap</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where id = #{id} and age = #{age}
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>resultMap</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>user<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token comment">&lt;!-- 因为id为主键，这里也可以使用&lt;id&gt;标签，有助于提高性能 --&gt;</span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>id<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>uid<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>result</span> <span class="token attr-name">column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">property</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>resultMap</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><ul>
-<li><code>column</code> 对应数据库字段名</li>
-<li><code>property</code> 对应实体类属性名</li>
-</ul>
-<p>这里我们在<code>resultMap</code>标签中配置了一些r<code>esult</code>标签，每一个<code>result</code>标签都可以配置数据库字段和类属性的对应关系，这样Mybatis就可以按照我们的配置来正确找到对应的位置并赋值了，没有手动配置的字段会按照之前默认的方式进行赋值。</p>
-<p>配置完成后，最终只需要将<code>resultType</code>改为<code>resultMap</code>并指定对应id即可，然后就能够正确查询了。</p>
-<p>这里有一个<code>RowBounds</code>参数，用于实现分页效果，但是其分页功能是对查询到的数据进行划分，非常鸡肋，这里不进行介绍，了解即可。</p>
-<h4>查询列表操作</h4>
-<p>我们再来尝试编写一下查询一个列表，查询列表时，resultType无需设置为list这种类型，而是使用List内部所包含的类型</p>
-<p>所以这里还是填写<code>com.test.User</code>类型或是Map类型：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUsers<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user;
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>由于返回的结果是一个列表，这里我们需要使用<code>selectList</code>方法来执行，如果使用之前的<code>selectOne</code>会导致异常：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">&gt;</span></span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectList</span><span class="token punctuation">(</span><span class="token string">"selectUsers"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>我们同样可以进行简单的条件查询，比如我们想要查询所有年龄大于等于18岁的用户：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>selectUsersByAge<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.User<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    select * from user where age <span class="token entity named-entity" title=">">&amp;gt;</span> #{age};
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>注意由于这里是XML配置，其中一些字符被用作标签表示，无法代表其原本的意思，比如小于、大于符号，分别需要使用<code>&amp;lt;</code>和<code>&amp;gt;</code>来进行转义。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">&gt;</span></span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectList</span><span class="token punctuation">(</span><span class="token string">"selectUsersByAge"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>一个比较特殊的选择方法<code>selectMap</code></p>
-<p>可以将查询结果以一个Map的形式表示，只不过这和我们之前说的Map不太一样，它返回的Map是使用我们想要的属性作为Key，然后得到的结果作为Value的Map，它适用于单个数据查询或是多行数据查询：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//最后一个参数为我们希望作为key的属性</span>
-<span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">User</span><span class="token punctuation">&gt;</span></span> user <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectMap</span><span class="token punctuation">(</span><span class="token string">"selectUserById"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"id"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>可以看到这个Map中确实使用的是id作为Key，然后查询得到的实体对象作为Value。</p>
-<p>还有一个比较特殊的选择操作是<code>selectCursor</code></p>
-<p>可以得到一个<code>Cursor</code>对象，同样是用于列表查询的，只不过使用起来和我们之前JDBC中的ResultSet比较类似，也是通过迭代器的形式去进行数据的读取，官方解释它主要用于惰性获取数据，提高性能：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Cursor</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token keyword">extends</span> <span class="token class-name">Closeable</span><span class="token punctuation">,</span> <span class="token class-name">Iterable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
-</code></pre></div><p>可以看到它本身是实现了Iterable接口的，表明它可以获取迭代器或是直接使用foreach来遍历：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Cursor</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">User</span><span class="token punctuation">&gt;</span></span> cursor <span class="token operator">=</span> session<span class="token punctuation">.</span><span class="token function">selectCursor</span><span class="token punctuation">(</span><span class="token string">"selectUsers"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">User</span> user <span class="token operator">:</span> cursor<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>只不过这种方式在大部分请情况下还是用的比较少，我们主要还是以<code>selectOne</code>和<code>selectList</code>为主。</p>
-<p>最后还有一个普通的<code>select</code>方法，它支持我们使用Lambda的形式进行查询结果的处理：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>session<span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token string">"selectUsers"</span><span class="token punctuation">,</span> context <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>  <span class="token comment">//使用ResultHandler来处理结果</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">getResultObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>结果会自动进行遍历并依次执行我们传入的Lambda表达式。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Mybatis1</title>
-      <link>http://ekkosonya.cn/code/javaweb/javaweb11.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/javaweb11.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Mybatis1</source>
-      <description>Mybatis1 在前面JDBC的学习中，虽然我们能够通过JDBC来连接和操作数据库，但是哪怕只是完成一个SQL语句的执行，都需要编写大量的代码，更不用说如果我还需要进行实体类映射，将数据转换为我们可以直接操作的实体类型，JDBC很方便，但是还不够方便，我们需要一种更加简洁高效的方式来和数据库进行交互。 再次强调： 学习厉害的框架或是厉害的技术，并不是...</description>
-      <category>code</category>
-      <pubDate>Mon, 09 Jun 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Mybatis1</h2>
-<p>在前面JDBC的学习中，虽然我们能够通过JDBC来连接和操作数据库，但是哪怕只是完成一个SQL语句的执行，都需要编写大量的代码，更不用说如果我还需要进行实体类映射，将数据转换为我们可以直接操作的实体类型，JDBC很方便，但是还不够方便，我们需要一种更加简洁高效的方式来和数据库进行交互。</p>
-<p><strong>再次强调：</strong> 学习厉害的框架或是厉害的技术，并不是为了一定要去使用它，而是它们能够使得我们在不同的开发场景下，合理地使用这些技术，以灵活地应对需要解决的问题。</p>
-<figure><figcaption>image-20230306163528771</figcaption></figure>
-<p>MyBatis 是一款优秀的持久层框架，它支持定制化 SQL、存储过程以及高级映射。MyBatis 避免了几乎所有的 JDBC 代码和手动设置参数以及获取结果集。MyBatis 可以使用简单的 XML 或注解来配置和映射原生信息，将接口和 Java 的 POJOs(Plain Ordinary Java Object,普通的 Java对象)映射成数据库中的记录。</p>
-<h3>XML语言</h3>
-<p>在开始介绍Mybatis之前，XML语言发明最初是用于<strong>数据的存储和传输</strong>，它可以长这样：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>outer</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">&gt;</span></span>阿伟<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>desc</span><span class="token punctuation">&gt;</span></span>怎么又在玩电动啊<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>desc</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>inner</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>age</span><span class="token punctuation">&gt;</span></span>10<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>age</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>sex</span><span class="token punctuation">&gt;</span></span>男<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>sex</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>inner</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>outer</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p><code>HTML</code>主要用于通过编排来展示数据，而<code>XML</code>主要是存放数据，它更像是一个配置文件！当然，浏览器也是可以直接打开<code>XML</code>文件的。</p>
-<p>一个XML文件存在以下的格式规范：</p>
-<ul>
-<li>必须存在一个根节点，将所有的子标签全部包含。</li>
-<li>可以但不必须包含一个头部声明（主要是可以设定编码格式）</li>
-<li>所有的标签必须成对出现，可以嵌套但<strong>不能交叉嵌套</strong></li>
-<li>区分大小写。</li>
-<li>标签中可以存在属性，比如上面的<code>type="1"</code>就是<code>inner</code>标签的一个属性，属性的值由单引号或双引号包括。</li>
-</ul>
-<p>XML文件也可以使用注释：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
-<span class="token comment">&lt;!-- 注释内容 --&gt;</span>
-</code></pre></div><p>通过IDEA我们可以使用<code>Ctrl</code>+<code>/</code>来快速添加注释文本（不仅仅适用于XML，还支持很多种类型的文件）</p>
-<h4>转义字符</h4>
-<figure><figcaption>image-20230306163528771</figcaption></figure>
-<p>如果嫌一个一个改太麻烦，也可以使用CDATA <code>&lt;![CDATA[ xxxxx ]</code> 来快速创建不解析区域：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>test</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">&gt;</span></span><span class="token cdata">&lt;![CDATA[我看你&lt;&gt;&lt;&gt;&lt;&gt;是一点都不懂哦&gt;&gt;&gt;]]&gt;</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>test</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h4>解析XML文件</h4>
-<p>如何将定义好的XML文件读取到Java程序中</p>
-<p>JDK为我们内置了一个叫做<code>org.w3c</code>的XML解析库：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 创建DocumentBuilderFactory对象</span>
-<span class="token class-name">DocumentBuilderFactory</span> factory <span class="token operator">=</span> <span class="token class-name">DocumentBuilderFactory</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 创建DocumentBuilder对象</span>
-<span class="token keyword">try</span> <span class="token punctuation">{</span>
-    <span class="token class-name">DocumentBuilder</span> builder <span class="token operator">=</span> factory<span class="token punctuation">.</span><span class="token function">newDocumentBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Document</span> d <span class="token operator">=</span> builder<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token string">"file:mappers/test.xml"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// 每一个标签都作为一个节点</span>
-    <span class="token class-name">NodeList</span> nodeList <span class="token operator">=</span> d<span class="token punctuation">.</span><span class="token function">getElementsByTagName</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-    <span class="token comment">// 可能有很多个名字为test的标签</span>
-    <span class="token class-name">Node</span> rootNode <span class="token operator">=</span> nodeList<span class="token punctuation">.</span><span class="token function">item</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 获取首个</span>
-
-    <span class="token class-name">NodeList</span> childNodes <span class="token operator">=</span> rootNode<span class="token punctuation">.</span><span class="token function">getChildNodes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-    <span class="token comment">// 一个节点下可能会有很多个节点，比如根节点下就囊括了所有的节点</span>
-    <span class="token comment">// 节点可以是一个带有内容的标签（它内部就还有子节点），也可以是一段文本内容</span>
-
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> childNodes<span class="token punctuation">.</span><span class="token function">getLength</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Node</span> child <span class="token operator">=</span> childNodes<span class="token punctuation">.</span><span class="token function">item</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>child<span class="token punctuation">.</span><span class="token function">getNodeType</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token class-name">Node</span><span class="token punctuation">.</span><span class="token constant">ELEMENT_NODE</span><span class="token punctuation">)</span>  
-        <span class="token comment">//过滤换行符之类的内容，因为它们都被认为是一个文本节点</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>child<span class="token punctuation">.</span><span class="token function">getNodeName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"："</span> <span class="token operator">+</span>child<span class="token punctuation">.</span><span class="token function">getFirstChild</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getNodeValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 输出节点名称，也就是标签名称，以及标签内部的文本</span>
-        <span class="token comment">// （内部的内容都是子节点，所以要获取内部的节点）</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>当然，学习和使用XML只是为了更好地去认识<code>Mybatis</code>的工作原理，以及如何使用<code>XML</code>来作为<code>Mybatis</code>的配置文件，这是在开始之前必须要掌握的内容（使用<code>Java</code>读取XML内容不要求掌握，但是需要知道<code>Mybatis</code>就是通过这种方式来读取配置文件的）</p>
-<p>不仅仅是<code>Mybatis</code>，包括后面的<code>Spring</code>等众多框架都会用到<code>XML</code>来作为框架的配置文件！</p>
 ]]></content:encoded>
     </item>
   </channel>

@@ -148,12 +148,12 @@ SELECT * FROM 表名 别名1, 表名 别名2
 - 通过使用`inner join xxx on`进行内连接
   只会**返回两个表满足条件的交集部分**：
   `select * from student inner join teach on student.sid = teach.sid;`
-  ![在这里插入图片描述](../../img/javaweb/4.png)
+  ![在这里插入图片描述](../../../img/javaweb/4.png)
 
 - 通过使用`left join xxx on`进行左连接
   不仅会**返回两个表满足条件的交集部分**，也会返回**左边表中的全部数据**，而在右表中缺失的数据会使用`null`来代替（右连接`right join`同理，只是反过来而已，这里就不再介绍了）：
   `select * from student left join teach on student.sid = teach.sid;`
-  ![在这里插入图片描述](../../img/javaweb/5.png)
+  ![在这里插入图片描述](../../../img/javaweb/5.png)
 
 - 右连接类似 `right join xxx on`
 

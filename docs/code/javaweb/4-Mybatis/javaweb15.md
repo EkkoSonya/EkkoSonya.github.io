@@ -19,7 +19,7 @@ order: -0.7485
 
 首先来看最简单的一对一查询，假设我们每个用户都有一个自己的详细信息表：
 
-![alt text](../../img/javaweb/15.png)
+![alt text](../../../img/javaweb/15.png)
 
 这里的id与用户id一致，作为用户id的逻辑外键，表示对应用户的详细信息。对应的实体类为：
 
@@ -67,7 +67,7 @@ public class User {
 select * from user left join user_detail on user.id = user_detail.id where user.id = #{id}
 ```
 
-![alt text](../../img/javaweb/16.png)
+![alt text](../../../img/javaweb/16.png)
 
 接着我们需要在`resultMap`编写好对应关系，一对一查询我们可以使用`association`标签来进行指定，其中`property`就是需要进行一对一处理的对象
 
@@ -89,7 +89,7 @@ select * from user left join user_detail on user.id = user_detail.id where user.
 
 这里的`column`和`javaType`可以不填，`Mybatis`一般情况下可以自动完成推断，配置完成后，我们在查询时`Mybatis`就可以自动把额外信息也封装好了：
 
-![alt text](../../img/javaweb/17.png)
+![alt text](../../../img/javaweb/17.png)
 
 ##### 嵌套 Select 查询 `select + association`
 
@@ -173,7 +173,7 @@ public class User {
 
 其中`book`表设计如下，其中uid作为用户id的逻辑外键，表示这本书是谁借的：
 
-![alt text](../../img/javaweb/18.png)
+![alt text](../../../img/javaweb/18.png)
 
 对于一对多查询，我们也可以进行**关联查询**来让`Mybatis`自动解析结果并封装为对象
 
@@ -226,7 +226,7 @@ select * from user left join book on user.id = book.uid where user.id = #{id}
 
 比如每个用户现在都有一个小组，但是他们目前都是在同一个小组中，此时我们查询所有用户信息的时候，需要自动携带他们的小组：
 
-![alt text](../../img/javaweb/19.png)
+![alt text](../../../img/javaweb/19.png)
 
 这里我们需要修改一下user表来记录每一个用户所属的小组id，这里使用gid作为分组id的逻辑外键
 

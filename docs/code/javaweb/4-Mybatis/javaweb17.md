@@ -34,7 +34,7 @@ for (String user : users) {
 
 但是如果我把这些任务合在一起告诉数据库，效率会截然不同：
 
-![alt text](../../img/javaweb/20.png)
+![alt text](../../../img/javaweb/20.png)
 
 可见，使用循环操作执行数据库相关操作实际上非常耗费资源，不仅带来网络上的额外开销，还有数据库的额外开销
 
@@ -58,7 +58,7 @@ session.flushStatements();
 
 此时日志中可以看到Mybatis在尽可能优化我们的SQL操作：
 
-![alt text](../../img/javaweb/21.png)
+![alt text](../../../img/javaweb/21.png)
 
 #### 动态SQL介绍
 
@@ -165,7 +165,7 @@ session.delete("deleteUsers", List.of(1, 2, 3, 4, 5));
 
 最后实际执行的SQL为：
 
-![alt text](../../img/javaweb/22.png)
+![alt text](../../../img/javaweb/22.png)
 
 ##### 批量插入
 
@@ -198,6 +198,6 @@ INSERT INTO user (name, age) VALUES ('小美', 17), ('小张', 18), ('小刘', 1
 </insert>
 ```
 
-![alt text](../../img/javaweb/23.png)
+![alt text](../../../img/javaweb/23.png)
 
 通过使用动态SQL语句，我们基本上可以解决大部分的SQL查询和批量处理场景了。

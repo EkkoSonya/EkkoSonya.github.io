@@ -63,7 +63,7 @@ java.util.logging.ConsoleHandler.formatter=com.test.MyFormatter
 
 因此，我们也可以利用这些属性来编写一个类似于的`SimpleFormatter`的日志格式，比如这里包含类名、时间等，类似于下面图中的日志格式：
 
-![alt text](../../img/javaweb/33.png)
+![alt text](../../../img/javaweb/33.png)
 
 我们来尝试编写一下：
 

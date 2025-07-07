@@ -66,7 +66,7 @@ public static void main(String[] args) throws FileNotFoundException {
 
 那么现在我们来看看，`SqlSessionFactory`对象是什么东西：
 
-![](../../img/javaweb/12.png)
+![](../../../img/javaweb/12.png)
 
 每个基于 MyBatis 的应用都是以一个 `SqlSessionFactory` 的实例为核心的，我们可以通过`SqlSessionFactory`来创建多个新的会话 —— `SqlSession`对象，
 

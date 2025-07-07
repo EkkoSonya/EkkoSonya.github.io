@@ -52,7 +52,7 @@ while (set.next()){
 
 我们在移动行数后，就可以通过`set`中提供的方法，来获取每一列的数据。
 
-![7](../../img/javaweb/7.png)
+![7](../../../img/javaweb/7.png)
 
 ### 执行批处理操作 `addBatch()`
 

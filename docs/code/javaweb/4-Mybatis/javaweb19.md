@@ -115,7 +115,7 @@ mapper.insertStudent(student);
 System.out.println(student);
 ```
 
-![alt text](../../img/javaweb/29.png)
+![alt text](../../../img/javaweb/29.png)
 
 所以我们通过`Mybatis`为我们设计的这一系列注解就可以很轻松地取代掉之前的配置。
 

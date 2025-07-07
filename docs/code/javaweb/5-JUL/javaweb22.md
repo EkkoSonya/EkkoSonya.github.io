@@ -89,4 +89,4 @@ System.out.println(logger2.getParent() == logger1);
 
 就像包名一样，**日志的名称会按照包的分级，进行自动继承**，就像下面这个图一样：
 
-![alt text](../../img/javaweb/32.png)
+![alt text](../../../img/javaweb/32.png)

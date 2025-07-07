@@ -77,7 +77,7 @@ logger.addHandler(handler);
 
 最后我们就可以得到一个日志文件了，默认是以XML格式进行写入的：
 
-![alt text](../../img/javaweb/30.png)
+![alt text](../../../img/javaweb/30.png)
 
 这种格式有助于程序的日志读取，但是对于我们人来说，非常难以阅读，那有没有什么办法将文件的日志打印变成控制台那种格式呢？
 
@@ -98,4 +98,4 @@ handler.setFormatter(new SimpleFormatter());
 ```
 
 此时日志文件中写入的内容就是简单的日志格式了
-![alt text](../../img/javaweb/31.png)
+![alt text](../../../img/javaweb/31.png)

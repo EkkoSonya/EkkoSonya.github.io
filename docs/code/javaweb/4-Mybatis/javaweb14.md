@@ -26,7 +26,7 @@ public User() {
 }
 ```
 
-![alt text](../../img/javaweb/13.png)
+![alt text](../../../img/javaweb/13.png)
 
 可以看到Mybatis确实调用了我们的无参构造方法来构建对象，属性则是通过反射进行赋值，这里截取部分Mybatis源代码进行演示：
 
@@ -159,7 +159,7 @@ public interface TestMapper {
 
 这里建议将对应的xml配置也放到放到同包中，作为内部资源：
 
-![alt text](../../img/javaweb/14.png)
+![alt text](../../../img/javaweb/14.png)
 
 作为内部资源后，我们需要修改一下配置文件中的`mapper`文件目录，不使用`url`而是`resource`表示是Jar内部的文件：
 

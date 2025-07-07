@@ -19,7 +19,7 @@ order: -0.7480
 
 Mybatis为了查询效率，同样内置了一个缓存机制，我们在查询时，如果Mybatis缓存中存在数据，那么我们就可以直接从缓存中获取，而不是再去向数据库进行请求，节省性能开销。
 
-![alt text](../../img/javaweb/24.png)
+![alt text](../../../img/javaweb/24.png)
 
 `Mybatis`的缓存机制有些复杂，存在**一级缓存(本地缓存)**和**二级缓存**
 
@@ -39,11 +39,11 @@ System.out.println(mapper.selectUserById(1));  //再次获取
 
 这里我们连续获取了两次ID为1的用户，我们会在日志中惊奇地发现，这里的查询操作实际上只进行了一次：
 
-![alt text](../../img/javaweb/25.png)
+![alt text](../../../img/javaweb/25.png)
 
 我们去掉类上的`@Data`注解，会发现得到的两个对象实际上就是同一个：
 
-![alt text](../../img/javaweb/26.png)
+![alt text](../../../img/javaweb/26.png)
 
 也就是说我们第二次查询不仅压根就**没执行SQL语句**，甚至直接没有**重新构造对象，而是直接获取之前创建好的**。
 
@@ -138,7 +138,7 @@ try(SqlSession session = MybatisUtil.getSession(true);
 
 开启二级缓存后，再次执行我们之前的操作，就可以直接在二级缓存中命中了：
 
-![alt text](../../img/javaweb/27.png)
+![alt text](../../../img/javaweb/27.png)
 
 ##### 查找顺序
 
@@ -174,7 +174,7 @@ try(SqlSession session = MybatisUtil.getSession(true);
 
 当多个CPU在操作自己的缓存时，可能会出现各自的缓存内容不同步的问题。
 
-![alt text](../../img/javaweb/28.png)
+![alt text](../../../img/javaweb/28.png)
 
 而`Mybatis`也会这样，我们来看看这个例子：
 

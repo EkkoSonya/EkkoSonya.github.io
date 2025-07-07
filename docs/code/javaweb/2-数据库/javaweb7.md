@@ -198,4 +198,4 @@ Statement除了执行这样的DQL语句外，我们还可以使用`executeUpdate
 
 也可以通过`excute()`来执行任意的SQL语句，它会返回一个`boolean`来表示执行结果是一个ResultSet还是一个int，我们可以通过使用`getResultSet()`或是`getUpdateCount()`来获取。
 
-![6](../../img/javaweb/6.png)
+![6](../../../img/javaweb/6.png)

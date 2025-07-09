@@ -6,11 +6,628 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Mon, 07 Jul 2025 16:03:56 GMT</pubDate>
-    <lastBuildDate>Mon, 07 Jul 2025 16:03:56 GMT</lastBuildDate>
+    <pubDate>Wed, 09 Jul 2025 16:44:20 GMT</pubDate>
+    <lastBuildDate>Wed, 09 Jul 2025 16:44:20 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>hint - 对象问题</title>
+      <link>http://ekkosonya.cn/code/java_hint/hint2.html</link>
+      <guid>http://ekkosonya.cn/code/java_hint/hint2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">hint - 对象问题</source>
+      <description> -128 到 +127 以内的int值都是自动包装好，所以对象都是一个 alt text </description>
+      <category>code</category>
+      <pubDate>Mon, 16 Jun 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<ol>
+<li>-128 到 +127 以内的int值都是自动包装好，所以对象都是一个
+</li>
+</ol>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - JUnit1</title>
+      <link>http://ekkosonya.cn/code/javaweb/6-JUnit/javaweb25.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/6-JUnit/javaweb25.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUnit1</source>
+      <description>JUnit单元测试1 单元测试 在很多情况下，我们的项目可能会很庞大，不可能每次都去完整地启动一个项目来测试某一个功能，这样显然会降低我们的开发效率，因此，我们需要使用单元测试来帮助我们针对于某个功能或是某个模块单独运行代码进行测试，而不是启动整个项目，比如： 如果现在我们想单独测试某一个功能的对应方法，而不是让整个项目完全跑起来，这就非常麻烦了。 而...</description>
+      <category>code</category>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUnit单元测试1</h2>
+<h3>单元测试</h3>
+<p>在很多情况下，我们的项目可能会很庞大，不可能每次都去完整地启动一个项目来测试某一个功能，这样显然会降低我们的开发效率，因此，我们需要使用单元测试来帮助我们针对于某个功能或是某个模块单独运行代码进行测试，而不是启动整个项目，比如：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">func1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">func2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">func3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">func1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是第一个功能"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">func2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是第二个功能"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">func3</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是第三个功能"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>如果现在我们想单独测试某一个功能的对应方法，而不是让整个项目完全跑起来，这就非常麻烦了。</p>
+<p>而单元测试则可以针对某一个方法直接进行测试执行，无需完整启动项目。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>同时，在我们项目的维护过程中，难免会涉及到一些原有代码的修改，很有可能出现改了代码导致之前的功能出现问题（牵一发而动全身），而我们又不一定能立即察觉到，因此，我们可以提前保存一些测试用例，每次完成代码后都可以跑一遍测试用例，来确保之前的功能没有因为后续的修改而出现问题。</p>
+<p>我们还可以利用单元测试来评估某个模块或是功能的耗时和性能，快速排查导致程序运行缓慢的问题，这些都可以通过单元测试来完成，可见单元测试对于开发的重要性。</p>
+<h3>JUnit使用</h3>
+<h4>导入依赖</h4>
+<p>现在用的是JUnit5, 感觉没学到maven，找jar包花了点时间</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>同时IDEA需要安装JUnit插件（终极版默认是已经捆绑安装的，因此无需多余配置），安装好之后，我们就可以直接上手使用了</p>
+<h4>使用- 注解<code>@Test</code></h4>
+<p>使用方式很简单，只需添加一个<code>@Test</code>注解即可快速创建新的测试用例，这里我们尝试新建一个类用于单元测试：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span>
+    
+<span class="token punctuation">}</span>
+</code></pre></div><p>接着就可以编写我们的测试用例了，现在我们需要创建一个<code>public</code>的无参无返回值方法（不能是静态方法）并在方法内编写我们的需要进行测试的代码：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token function">func1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>最后在方法上添加<code>@Test</code>注解，此时IDEA会提示我们可以运行，旁边出现运行按钮：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>接着点击运行，就可以直接执行我们的测试方法了，然后可以在控制台看到当前的测试用例耗时以及状态：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>一个测试类中可以同时有多个测试案例：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token function">func1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token function">func2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token function">func3</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>我们只需要点击类旁边的运行按钮，就可以直接执行当前类中所有的测试案例</p>
+<h4>跳过某个测试 - <code>@Disable</code></h4>
+<p>有些时候，可能我们并不想开启其中某个测试用例，我们也可以使用<code>@Disable</code>来关闭某一个测试用例：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@Disabled</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><p>此时再次全部运行，将忽略二号测试案例进行测试</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>测试自定义名称 - <code>@DisplayName</code></h4>
+<p>我们还可以为测试案例添加一个自定义的名称，不然测试案例一多我们就分不清楚到底哪个案例是干嘛的</p>
+<p>我们需要使用<code>@DisplayName</code>注解来为其命名：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@DisplayName</span><span class="token punctuation">(</span><span class="token string">"一只企鹅"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div><p>这样我们的控制台也可以看到对应的名称：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>预设的名称生成器 - <code>@DisplayNameGeneration</code></h4>
+<p>Junit还提供了一些预设的名称生成器，按照一定规则进行名称处理，可以通过<code>@DisplayNameGeneration</code>注解来配置使用，列表如下：</p>
+<p>| 显示名称生成器        | 行为                                       |
+| :</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - JUnit2</title>
+      <link>http://ekkosonya.cn/code/javaweb/6-JUnit/javaweb26.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/6-JUnit/javaweb26.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUnit2</source>
+      <description>JUnit单元测试2 断言工具 Assertions JUnit提供了非常多的断言操作，相比JUnit 4，它们都被封装在一个新的Assertions类中 这些断言操作基本上都是用于判断某个测试结果是否符合我们的预期情况 值判断 Assertions.assertEquals 其中最简单的就是判断结果是否等于某个值 Assertions.assertE...</description>
+      <category>code</category>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUnit单元测试2</h2>
+<h3>断言工具 <code>Assertions</code></h3>
+<p>JUnit提供了非常多的断言操作，相比JUnit 4，它们都被封装在一个新的<code>Assertions</code>类中</p>
+<p>这些断言操作基本上都是用于判断某个测试结果是否符合我们的预期情况</p>
+<h4>值判断 <code>Assertions.assertEquals</code></h4>
+<p>其中最简单的就是判断结果是否等于某个值</p>
+<p><code>Assertions.assertEquals(expected, actual, message)</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> c <span class="token operator">=</span> a <span class="token operator">+</span> b<span class="token punctuation">;</span>
+    <span class="token comment">//判断结果是否相等，前面的是预期结果，后面的就是实际结果</span>
+    <span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertEquals</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">,</span> c<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>当断言操作发现实际结果与预期不符时，会直接抛出异常告诉我们这个测试案例没有通过，并最终以失败状态结束。我们也可以为本次断言添加一个<code>message</code>来助于我们快速了解是什么类型的测试结果出现问题：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertEquals</span><span class="token punctuation">(</span><span class="token number">14</span><span class="token punctuation">,</span> c<span class="token punctuation">,</span> <span class="token string">"计算结果验证"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>此时控制台就会得到：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>真假判断 <code>Assertions.assertTure/False</code></h4>
+<p><code>Assertions.assertTure(condition, message)</code></p>
+<p>除了使用值进行比较外，我们也可以直接对某个<code>boolean</code>类型的结果快速进行判断，使用<code>assertTrue</code>方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertTrue</span><span class="token punctuation">(</span><span class="token number">14</span> <span class="token operator">==</span> c<span class="token punctuation">,</span> <span class="token string">"计算结果验证"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4>对象判断 <code>Assertions.assertSame()</code></h4>
+<p>与其相似的还有两个相同对象的判断：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertSame</span><span class="token punctuation">(</span><span class="token number">999</span><span class="token punctuation">,</span> <span class="token number">999</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//判断两个值是否为同一个对象</span>
+</code></pre></div><h4>复杂判断</h4>
+<p>如果判断流程比较复杂，我们也可以使用Java8的Lambda来编写结果判断逻辑，提供一个BooleanSupplier对象：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertTrue</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>c <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>c <span class="token operator">&gt;</span> <span class="token number">20</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> c <span class="token operator">==</span> <span class="token number">15</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">"计算结果验证"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>对于更加复杂的组合结果判断，我们还可以使用<code>assertAll</code>来包含多个判断操作：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertAll</span><span class="token punctuation">(</span><span class="token string">"整体测试"</span><span class="token punctuation">,</span>
+        <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertTrue</span><span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token number">14</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertTrue</span><span class="token punctuation">(</span>c <span class="token operator">&gt;</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertTrue</span><span class="token punctuation">(</span>c <span class="token operator">&lt;</span> <span class="token number">20</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>进行整体测试时，所有的测试结果将合并到一起输出。</p>
+<h4>异常判断 <code>Assertions.assertThrows</code></h4>
+<p>除了我们上面提到的真假判断外，还有很多不同类型的结果判断，比如异常判断，我们希望这个案例抛出指定的异常：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertThrows</span><span class="token punctuation">(</span><span class="token class-name">IOException</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token operator">/</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">"此测试案例并未抛出指定异常"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>由于此时抛出的是一个<code>ArithmeticException</code>并不是我们需要的<code>IOException</code>或是<strong>其子类</strong>，所以说断言失败：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>除了上述例子中出现的断言方法之外，JUnit还提供了上百种断言方法供大家使用，这里就不挨个介绍了。</p>
+<h3>假设工具 <code>Assumptions</code></h3>
+<p>除了断言工具外，对于一些不影响结果的测试</p>
+<p>我们可以使用“假设”工具来实现对结果的判断但不作为测试结果的判断依据，它通常在执行给定测试没有意义时使用。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">Assumptions</span><span class="token punctuation">.</span><span class="token function">assumeTrue</span><span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>测试结果中会将其显示为已忽略，而不是失败：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>条件测试和执行</h3>
+<p>有些时候我们可能需要配置各种条件来执行某些测试案例</p>
+<p>比如某些测试案例必须在指定JDK版本执行，或是某些案例只需要在某个特定操作系统执行</p>
+<p>Junit支持我们就为测试案例设置条件来实现这些功能。</p>
+<h4>指定操作系统 - <code>@EnabledOnOs</code></h4>
+<p>比如，我们要限制某个测试案例只在指定操作系统下进行，那么就可以使用<code>@EnabledOnOs</code>来指定：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledOnOs</span><span class="token punctuation">(</span><span class="token constant">OS</span><span class="token punctuation">.</span><span class="token constant">MAC</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是只在Mac下执行的测试案例"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledOnOs</span><span class="token punctuation">(</span><span class="token constant">OS</span><span class="token punctuation">.</span><span class="token constant">WINDOWS</span><span class="token punctuation">)</span>
+<span class="token comment">//@DisabledOnOs(OS.MAC)  或是使用相反注解来为指定操作系统关闭此用例</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是只在Windows下执行的测试案例"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这样，当我们在指定操作系统下执行时，此测试案例才会启动，否则会直接忽略：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>指定JDK版本 <code>@EnableOnJre</code></h4>
+<p>同样的，如果我们要指定在某个JDK版本执行测试案例，也可以使用<code>@EnabledOnJre</code>来进行指定：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledOnJre</span><span class="token punctuation">(</span><span class="token constant">JRE</span><span class="token punctuation">.</span><span class="token constant">JAVA_8</span><span class="token punctuation">)</span>
+<span class="token comment">//@DisabledOnJre(JRE.JAVA_8) 或是使用相反的注解来为指定JDK关闭</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是只在Java8下执行的测试案例"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledOnJre</span><span class="token punctuation">(</span><span class="token constant">JRE</span><span class="token punctuation">.</span><span class="token constant">JAVA_17</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是只在Java17下执行的测试案例"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>指定JDK版本范围 <code>@EnableOnJreRange(min=xxx, max=xxx)</code></h4>
+<p>或是一个指定的JDK版本范围：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledForJreRange</span><span class="token punctuation">(</span>min <span class="token operator">=</span> <span class="token constant">JRE</span><span class="token punctuation">.</span><span class="token constant">JAVA_8</span><span class="token punctuation">,</span> max <span class="token operator">=</span> <span class="token constant">JRE</span><span class="token punctuation">.</span><span class="token constant">JAVA_17</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是只在Java8-17下执行的测试案例"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>除了这种简单判断外，我们还可以直接从系统属性中获取我们需要的参数来进行判断。</p>
+<blockquote>
+<p>使用<code>System.getProperties()</code>来获取所有的系统属性，包括系统的架构、版本、名称等信息。下面注解主要就是利用这个函数来进行判断</p>
+</blockquote>
+<h4>系统属性判断 <code>@EnabledIfSystemProperty</code></h4>
+<p>使用<code>@EnabledIfSystemProperty</code>来对系统属性进行判断：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledIfSystemProperty</span><span class="token punctuation">(</span>named <span class="token operator">=</span> <span class="token string">"os.arch"</span><span class="token punctuation">,</span> matches <span class="token operator">=</span> <span class="token string">"aarch64"</span><span class="token punctuation">)</span>
+<span class="token comment">//其中matches参数支持正则表达式</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是只在arm64架构下做的测试"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>当然，有时候为了方便，我们也可以直接读取环境变量：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledIfEnvironmentVariable</span><span class="token punctuation">(</span>named <span class="token operator">=</span> <span class="token string">"TEST_STR"</span><span class="token punctuation">,</span> matches <span class="token operator">=</span> <span class="token string">"666"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是只在环境变量: TEST_STR = 666"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>自定义方法 <code>@EnabledIf(xxx)</code></h4>
+<p>如果你认为这还不够灵活，你还可以直接声明一个自定义方法来进行判断：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@EnabledIf</span><span class="token punctuation">(</span><span class="token string">"testCondition"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是自定义的测试条件"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">testCondition</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token number">1</span> <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><blockquote>
+<p>条件方法可以位于测试类之外。在这种情况下，它必须用其<em>完全限定的名称</em>来引用</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@EnabledIf</span><span class="token punctuation">(</span><span class="token string">"example.ExternalCondition#customCondition"</span><span class="token punctuation">)</span>
+</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">class</span> <span class="token class-name">ExternalCondition</span> <span class="token punctuation">{</span>
+      <span class="token doc-comment comment">/**
+     * 在几种情况下，条件方法需要static：
+     * 当@EnabledIf或@DisabledIf在类上使用时
+     * 当@EnabledIf或@DisabledIf用于@ParameterizedTest或@TestTemplate方法时
+     * 当条件方法位于外部类中时
+     */</span>
+    <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">customCondition</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div></blockquote>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - JUnit2</title>
+      <link>http://ekkosonya.cn/code/javaweb/6-JUnit/javaweb27.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/6-JUnit/javaweb27.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - JUnit2</source>
+      <description>JUnit单元测试3 生命周期 @BeforeAll @AferAll @BeforeEach @AfterEach 其中 @BeforeAll 必须是static方法 我们可以自由设定某些操作在测试开始之前或之后执行，比如测试前的准备工作或是测试后的收尾工作： 其中，@BeforeAll表示此准备工作在所有测试用例执行之前执行，这样，当测试开始前，会...</description>
+      <category>code</category>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JUnit单元测试3</h2>
+<h3>生命周期</h3>
+<p><code>@BeforeAll</code> <code>@AferAll</code> <code>@BeforeEach</code> <code>@AfterEach</code></p>
+<p>其中 <code>@BeforeAll</code> 必须是<code>static</code>方法</p>
+<p>我们可以自由设定某些操作在测试开始之前或之后执行，比如测试前的准备工作或是测试后的收尾工作：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是测试方法1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@BeforeAll</span>  <span class="token comment">//使用BeforeAll必须为static方法</span>
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是测试前必须要执行的准备工作"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>其中，<code>@BeforeAll</code>表示此准备工作在所有测试用例执行之前执行，这样，当测试开始前，会优先进行指定的准备工作，防止准备不足导致的测试失败。</p>
+<p>相反的，<code>@AfterAll</code>则会在所有测试用例完成之后执行。</p>
+<p>除了在所有方法执行前后插入准备工作，我们也可以为所有的方法单个插入准备工作：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@BeforeEach</span>  <span class="token comment">//使用BeforeEach不能为static方法</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是测试前必须要执行的准备工作"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这样，在每个测试用例执行之前，都会执行一次这里的准备工作</p>
+<h4>测试类的生命周期</h4>
+<p>我们接着来了解一下测试类的生命周期。</p>
+<p>默认情况下，执行测试实际上也会对类进行实例化，并通过<strong>实例化对象来调用其中的测试方法</strong>，并且，<strong>每一个测试用例执行之前，都会创建一个新的对象</strong>，而不是直接执行：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestMain</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token class-name">TestMain</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"构造函数"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Test1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Test2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+</code></pre></div><p>像这样，我们可以得到这样的输出结果：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>每次执行测试用例都会创建一个新的对象来执行，这在某些场景下可能会显得不太方便，比如初始化类需要花费大量时间或是执行非常费时的IO操作时，这会导致我们要花费大量时间来等待每次测试用例的初始化操作。</p>
+<p>我们也可以手动修改测试类的初始化行为，默认情况下为<code>PER_METHOD</code>模式：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@TestInstance</span><span class="token punctuation">(</span><span class="token class-name">TestInstance<span class="token punctuation">.</span>Lifecycle</span><span class="token punctuation">.</span><span class="token constant">PER_CLASS</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div><p>将其修改为<code>PER_CLASS</code>模式后，初始化操作只会执行一次，因为现在是以类为单位：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>当然，如果依然对测试用例执行前后有其他准备工作需求，也可以使用之前的<code>@BeforeEach</code>和<code>@AfterEach</code>来实现灵活控制。</p>
+<h3>测试顺序控制 <code>@TestMethodOrder(xxx.class)</code></h3>
+<p>有些时候我们可能需要控制某些测试案例的顺序</p>
+<p>默认情况下，所有的测试案例都是按照<strong>方法的名称顺序</strong>来进行的，比如：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test3</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  
+    <span class="token comment">//按照名称顺序，虽然这里是第一个定义的，但是它是第三个</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是测试用例3"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是测试用例1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是测试用例2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>除了默认的名称顺序之外，JUnit提供了以下顺序：</p>
+<ul>
+<li>
+<p><code>MethodOrderer.DisplayName</code>：根据显示名称对测试方法进行<em>字母数字</em>排序（请参阅<a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-display-name-generator-precedence-rules" target="_blank" rel="noopener noreferrer">显示名称生成优先级规则</a>）</p>
+</li>
+<li>
+<p><code>MethodOrderer.MethodName</code>：根据测试方法的名称和形式参数列表，<em>以字母数字</em>排序</p>
+</li>
+<li>
+<p><code>MethodOrderer.OrderAnnotation</code>：根据通过<code>@Order</code>注释指定的值对测试方法<em>进行数值</em>排序</p>
+</li>
+<li>
+<p><code>MethodOrderer.Random</code>：<em>伪随机</em>排序测试方法，并支持自定义<em>种子</em>的配置</p>
+</li>
+</ul>
+<p>其中，注解顺序可以由我们自己通过注解来手动定义执行顺序：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token annotation punctuation">@Order</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token keyword">void</span> <span class="token function">nullValues</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// perform assertions against null values</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>嵌套测试 - <code>@Nested</code></h3>
+<p>有些时候我们可能需要对测试用例进行进一步的分层，比如用户相关的测试全部归为一个组，而管理相关的测试全部归为一个组</p>
+<p>此时我们可以使用嵌套测试，通过<strong>在类中定义多个内部类</strong>来完成：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是外部测试类型"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Nested</span>
+    <span class="token keyword">class</span> <span class="token class-name">Test1</span> <span class="token punctuation">{</span>
+
+        <span class="token annotation punctuation">@Test</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1_1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是内部测试类型1-1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token annotation punctuation">@Test</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1_2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是内部测试类型1-2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Nested</span>
+    <span class="token keyword">class</span> <span class="token class-name">Test2</span> <span class="token punctuation">{</span>
+        <span class="token annotation punctuation">@Test</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test2_1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是内部测试类型2-1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token annotation punctuation">@Test</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test2_2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是内部测试类型2-2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>此时测试的结果展示也是嵌套的样式：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>注意，当我们在嵌套测试中使用诸如<code>@BeforeEach</code>、<code>@BeforeAll</code>这种注解时(就是写到里面)，它仅会<strong>作用于所属内部类中的所有测试用例</strong>，而不是包含外部类中和其他内部类中的全部测试用例，写到外面还是全部</p>
+<p>嵌套类的执行同样可以通过<code>@TestClassOrder</code>来控制嵌套类的执行顺序。</p>
+<h3>重复和参数化测试</h3>
+<p>对于某些存在随机性的测试案例，我们可能需要多次执行才能确定其是否存在某些问题</p>
+<h4>重复测试 <code>@RepeatedTest(x)</code></h4>
+<p>比如某个案例存在一个BUG，导致其10次里面会有1次出现错误，现在我们想要保证其<strong>10次都不会出现问题才算通过</strong>，此时我们就可以使用重复测试案例来使其多次执行：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@RepeatedTest</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Random</span> random <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>random<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalStateException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>此时会重复执行10次此案例，并且当每一次执行都没有出现问题时，才会正常通过.</p>
+<h4>参数化测试 <code>@ParameterizedTest</code> + <code>@ValueSource()</code></h4>
+<p>某些测试可能并不是固定单个输入参数，有时我们可能也需要对多个输入参数进行测试，来做到全方面的问题排查。</p>
+<p>它<strong>与重复测试比较类似</strong>，但是参数可以由我们自己决定，并且每个参数都会进行一次测试：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token comment">//使用此注解来表示此测试是一个参数化测试</span>
+<span class="token annotation punctuation">@ValueSource</span><span class="token punctuation">(</span>strings <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token string">"aa"</span><span class="token punctuation">,</span> <span class="token string">"bb"</span><span class="token punctuation">,</span> <span class="token string">"ccc"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment">//指定参数列表</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token class-name">String</span> str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">//需要添加一个参数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>str<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IllegalStateException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这里我们使用<code>@ValueSource</code>来进行参数来源设定，也就是需要进行测试的参数列表</p>
+<p>接着下面会根据参数挨个执行此测试用例，保证每一种情况都正常执行</p>
+<p>这里的<code>@ValueSource</code>是最简单的一种参数设定，我们可以直接设置一系列值，支持以下类型：</p>
+<p><code>short</code>、<code>byte</code>、<code>int</code>、<code>long</code>、<code>float</code>、<code>double</code>、<code>char</code>、<code>boolean</code>、<code>java.lang.String</code>、<code>java.lang.Class</code></p>
+<h5>空值 <code>@NullSource</code></h5>
+<p>除了直接设置指定类型常量值，我们也可以传入空值或是一些为空的字符串、数组等：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token annotation punctuation">@NullSource</span>  <span class="token comment">//将值设置为null进行测试</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token class-name">String</span> str<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token annotation punctuation">@EmptySource</span>  <span class="token comment">//将值设置为空进行测试，如空字符串、空数组、空集合等</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> arr<span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div><blockquote>
+<p><code>@NullAndEmptySource</code>：结合了<code>@NullSource</code>和<code>@EmptySource</code>两个注解的功能。</p>
+</blockquote>
+<h5>枚举值 <code>@EnumSource(xx.class)</code></h5>
+<p>我们也可以使用枚举值来进行测试，比如我们希望测试某个枚举类型下所有的枚举作为参数进行测试：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">enum</span> <span class="token class-name">Type</span> <span class="token punctuation">{</span>
+    <span class="token constant">SMALL</span><span class="token punctuation">,</span> <span class="token constant">MEDIUM</span><span class="token punctuation">,</span> <span class="token constant">LARGE</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token annotation punctuation">@EnumSource</span><span class="token punctuation">(</span><span class="token class-name">Type</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>  <span class="token comment">//这将依次测试枚举类中的所有枚举</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token class-name">Type</span> type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>或是指定某些枚举常量：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token comment">//模式默认为INCLUDE，即使用指定的枚举常量进行测试</span>
+<span class="token annotation punctuation">@EnumSource</span><span class="token punctuation">(</span>mode <span class="token operator">=</span> <span class="token class-name">EnumSource<span class="token punctuation">.</span>Mode</span><span class="token punctuation">.</span><span class="token constant">INCLUDE</span><span class="token punctuation">,</span> names <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token string">"SMALL"</span><span class="token punctuation">,</span> <span class="token string">"LARGE"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token class-name">Type</span> type<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>type<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>特定的方法来生成参数</h5>
+<p>除了以上方式获取参数，我们也可以使用特定的方法来生成我们需要的测试参数，只需要添加<code>@MethodSource</code>注解即可指定方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token annotation punctuation">@MethodSource</span><span class="token punctuation">(</span><span class="token string">"stringProvider"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token class-name">String</span> str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">static</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> <span class="token function">stringProvider</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"apple"</span><span class="token punctuation">,</span> <span class="token string">"banana"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>方法的返回值可以是<strong>任何可迭代（Iterable）内容</strong>，如数组、集合类、Stream等。同样的，对于其他类中的方法，需要和之前一样使用<em>完全限定的方法名称</em>来引用。</p>
+<h5>字段</h5>
+<p>和方法一样，字段同样可以作为参数的来源，但它必须是静态的：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">static</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"AAA"</span><span class="token punctuation">,</span> <span class="token string">"BBB"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token annotation punctuation">@FieldSource</span><span class="token punctuation">(</span><span class="token string">"list"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token class-name">String</span> str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>不仅仅是一个普通的集合或是数组可以作为字段参数来源，如Supplier这种懒加载的数据，也可以作为参数来源：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">static</span> <span class="token class-name">Supplier</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"AAA"</span><span class="token punctuation">,</span> <span class="token string">"BBB"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@ParameterizedTest</span>
+<span class="token annotation punctuation">@FieldSource</span><span class="token punctuation">(</span><span class="token string">"list"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test1</span><span class="token punctuation">(</span><span class="token class-name">String</span> str<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>当然，JUnit还支持从CSV表格中导入或自定义参数提供器等，这里就不做详细介绍了</p>
+<p>官方文档：<a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-sources-ArgumentsSource" target="_blank" rel="noopener noreferrer">https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-sources-ArgumentsSource</a></p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - Maven1</title>
+      <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven1.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - Maven1</source>
+      <description>Maven1 简介 Maven 翻译为&amp;quot;专家&amp;quot;、&amp;quot;内行&amp;quot;，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。 Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种项目，例如 C#，R...</description>
+      <category>code</category>
+      <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Maven1</h2>
+<h3>简介</h3>
+<p>Maven 翻译为"专家"、"内行"，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
+<p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。</p>
+<p>Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。</p>
+<p>通过Maven，可以帮助我们做：</p>
+<ul>
+<li>项目的自动构建，包括代码的编译、测试、打包、安装、部署等操作。</li>
+<li>依赖管理，项目使用到哪些依赖，可以快速完成导入，不需要手动导入jar包。</li>
+</ul>
+<p>Maven也需要安装环境，但是IDEA已经自带了Maven环境，因此我们不需要再去进行额外的环境安装。</p>
+<h3>Maven项目结构</h3>
+<p>Maven就很好地解决了这个问题，我们可以先来看一下，一个Maven项目和我们普通的项目有什么区别：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>其中src目录下存放我们的源代码和测试代码，分别位于main和test目录下</p>
+<p>而test和main目录下又具有java、resources目录，它们分别用于存放Java源代码、静态资源（如配置文件、图片等），测试代码不会打包到项目里面，只仅用于测试。</p>
+<p>很多JavaWeb项目可能还会用到webapp目录。</p>
+<h4>核心配置 <code>pom.xml</code></h4>
+<p>而下面的<code>pom.xml</code>则是Maven的核心配置，也是整个项目的所有依赖、插件、以及各种配置的集合，它也是使用XML格式编写的，一个标准的pom配置长这样：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>modelVersion</span><span class="token punctuation">&gt;</span></span>4.0.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>modelVersion</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>HelloWorld<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.source</span><span class="token punctuation">&gt;</span></span>17<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.source</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.target</span><span class="token punctuation">&gt;</span></span>17<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.target</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project.build.sourceEncoding</span><span class="token punctuation">&gt;</span></span>UTF-8<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project.build.sourceEncoding</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>我们可以看到，Maven的配置文件是以<code>project</code>为根节点，而<code>modelVersion</code>定义了当前模型的版本，一般是4.0.0，我们不用去修改。</p>
+<h5>项目标识</h5>
+<p><code>groupId</code>、<code>artifactId</code>、<code>version</code>这三个元素合在一起，用于唯一区别每个项目</p>
+<p>别人如果需要将我们编写的代码作为依赖，那么就必须通过这三个元素来定位我们的项目，我们称为一个项目的基本坐标</p>
+<p>所有的项目一般都有自己的Maven坐标</p>
+<p><strong>因此我们通过Maven导入其他的依赖只需要填写这三个基本元素就可以了，无需再下载Jar文件，而是Maven自动帮助我们下载</strong>依赖并导入：</p>
+<ul>
+<li>
+<p><code>groupId</code> 一般用于指定组名称，命名规则一般和包名一致，比如我们这里使用的是<code>org.example</code>，一个组下面可以有很多个项目。</p>
+</li>
+<li>
+<p><code>artifactId</code> 一般用于指定项目在当前组中的唯一名称，也就是说在组中用于区分于其他项目的标记。</p>
+</li>
+<li>
+<p><code>version</code> 代表项目版本，随着我们项目的开发和改进，版本号也会不断更新，就像LOL一样，每次赛季更新都会有一个大版本更新，我们的Maven项目也是这样，我们可以手动指定当前项目的版本号，其他人使用我们的项目作为依赖时，也可以根本版本号进行选择（这里的SNAPSHOT代表快照，一般表示这是一个处于开发中的项目，正式发布项目一般只带版本号）</p>
+</li>
+</ul>
+<p><code>properties</code>中一般都是一些变量和选项的配置，我们这里指定了JDK的源代码和编译版本为17，同时下面的源代码编码格式为UTF-8，无需进行修改。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>javaweb - Maven2</title>
+      <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven2.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">javaweb - Maven2</source>
+      <description>Maven2 Maven依赖导入 我们尝试使用Maven来帮助我们快速导入依赖，我们需要导入之前的JDBC驱动依赖、JUnit依赖、Mybatis依赖、Lombok依赖，那么如何使用Maven来管理依赖呢？ 我们可以创建一个dependencies节点： 那么现在就可以向节点中填写依赖了，那么我们如何知道每个依赖的坐标呢？ 我们可以在：https://...</description>
+      <category>code</category>
+      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Maven2</h2>
+<h3>Maven依赖导入</h3>
+<p>我们尝试使用Maven来帮助我们快速导入依赖，我们需要导入之前的JDBC驱动依赖、JUnit依赖、Mybatis依赖、Lombok依赖，那么如何使用Maven来管理依赖呢？</p>
+<p>我们可以创建一个<code>dependencies</code>节点：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+    //里面填写的就是所有的依赖
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>那么现在就可以向节点中填写依赖了，那么我们如何知道每个依赖的坐标呢？</p>
+<p>我们可以在：<a href="https://central.sonatype.com" target="_blank" rel="noopener noreferrer">https://central.sonatype.com</a> 进行查询</p>
+<p>直接搜索Lombok即可，打开后可以看到已经给我们写出了依赖的坐标：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.projectlombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>lombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.18.36<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>我们直接将其添加到<code>dependencies</code>节点中即可</p>
+<p>现在我们来编写一个测试用例看看依赖导入成功了没有：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">Student</span> student <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Student</span><span class="token punctuation">(</span><span class="token string">"小明"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>student<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token annotation punctuation">@AllArgsConstructor</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> age<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>项目运行成功，表示成功导入了依赖。</p>
+<h3>Maven依赖管理原理</h3>
+<p>那么，Maven是如何进行依赖管理呢，以致于如此便捷的导入依赖，我们来看看Maven项目的依赖管理流程：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>通过流程图我们得知，一个项目依赖一般是存储在中央仓库中，也有可能存储在一些其他的远程仓库（可以自行搭建私服）</p>
+<p>几乎所有的依赖都被放到了中央仓库中，因此，Maven可以直接从中央仓库中下载大部分的依赖（因此Maven<strong>第一次导入依赖是需要联网</strong>的，否则无法下载）</p>
+<p>远程仓库中下载之后 ，会暂时存储在本地仓库，我们会发现我们本地存在一个<code>.m2</code>文件夹，这就是Maven本地仓库文件夹，<strong>默认建立在C盘</strong>，如果你C盘空间不足，会出现问题。</p>
+<p>在下次导入依赖时，如果Maven发现<strong>本地仓库中就已经存在某个依赖，那么就不会再去远程仓库下载了</strong>。</p>
+<h4>修改国内镜像源</h4>
+<p><strong>注意：</strong> 因为中心仓库服务器位于国外，下载速度缓慢，可能在导入依赖时会出现卡顿等问题，我们需要使用国内的镜像仓库服务器来加速访问（镜像仓库与中心仓库自动同步所有依赖，访问速度更快）有两种方式配置：</p>
+<ol>
+<li>
+<p>可以配置IDEA自带的Maven插件远程仓库镜像地址，我们打开IDEA的安装目录，找到<code>安装根目录/plugins/maven/lib/maven3/conf</code>文件夹，找到<code>settings.xml</code>文件，打开编辑，找到mirros标签，添加以下内容：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mirror</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">&gt;</span></span>aliyunmaven<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mirrorOf</span><span class="token punctuation">&gt;</span></span>central<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mirrorOf</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">&gt;</span></span>阿里云公共仓库<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url</span><span class="token punctuation">&gt;</span></span>https://maven.aliyun.com/repository/public<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mirror</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div></li>
+<li>
+<p>自行前往Maven官网并下载最新版的Maven安装，然后将IDEA的Maven配置为我们自行安装的位置（好处是IDEA更新后不需要重新配置）可以一直使用，镜像配置方式同第1步。</p>
+</li>
+</ol>
+<p>这样，我们就将默认的远程仓库地址（国外），配置为国内的阿里云仓库地址了（依赖的下载速度就会快起来了）</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>javaweb - Socket1</title>
       <link>http://ekkosonya.cn/code/javaweb/1-Socket/javaweb1.html</link>
@@ -508,643 +1125,6 @@ MySQL就是一种<strong>关系型数据库</strong>，通过使用关系型数�
 </code></pre></div><p>通过这种方式，<strong>将删除表中全部数据</strong>，我们也可以使用<code>where</code>来添加条件，只删除指定的数据：</p>
 <div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件
 </code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - 数据库3</title>
-      <link>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb5.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - 数据库3</source>
-      <description>数据库 3 数据库查询语言 (DQL) 单表查询 SELECET 单表查询是最简单的一种查询，我们只需要在一张表中去查找数据即可，通过使用select语句来进行单表查询： 我们也可以添加where字句来限定查询目标： 常用where查询条件 一般的比较运算符，包括=、&amp;gt;、&amp;lt;、&amp;gt;=、&amp;lt;=、!=等。 是否在集合中：in、not in 字符模糊匹配：like...</description>
-      <category>code</category>
-      <pubDate>Sun, 23 Mar 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>数据库 3</h2>
-<h2>数据库查询语言 (DQL)</h2>
-<h3>单表查询 <code>SELECET</code></h3>
-<p>单表查询是最简单的一种查询，我们只需要在一张表中去查找数据即可，通过使用<code>select</code>语句来进行单表查询：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 指定查询某一列数据</span>
-<span class="token keyword">SELECT</span> 列名<span class="token punctuation">[</span><span class="token punctuation">,</span>列名<span class="token punctuation">]</span> <span class="token keyword">FROM</span> 表名
-<span class="token comment">-- 会以别名显示此列</span>
-<span class="token keyword">SELECT</span> 列名 别名 <span class="token keyword">FROM</span> 表名
-<span class="token comment">-- 查询所有的列数据</span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名
-<span class="token comment">-- 只查询不重复的值</span>
-<span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> 列名 <span class="token keyword">FROM</span> 表名
-</code></pre></div><p>我们也可以添加<code>where</code>字句来限定查询目标：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件
-</code></pre></div><h4>常用<code>where</code>查询条件</h4>
-<ul>
-<li>
-<p>一般的比较运算符，包括=、&gt;、&lt;、&gt;=、&lt;=、!=等。</p>
-</li>
-<li>
-<p>是否在集合中：in、not in</p>
-</li>
-<li>
-<p>字符模糊匹配：like，not like
-<code>%</code> 表示任意内容
-比如 <code>03%</code> 表示03开头</p>
-</li>
-<li>
-<p>多重条件连接查询：and、or、not</p>
-</li>
-</ul>
-<h4>排序查询 <code>order by</code></h4>
-<p>我们可以通过<code>order by</code>来将查询结果进行排序：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> 列名 <span class="token keyword">ASC</span><span class="token operator">|</span><span class="token keyword">DESC</span>
-</code></pre></div><p>使用ASC表示升序排序，使用DESC表示降序排序，默认为升序。</p>
-<p>我们也可以可以同时添加<strong>多个排序</strong>：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件 <span class="token keyword">ORDER</span> <span class="token keyword">BY</span> 列名<span class="token number">1</span> <span class="token keyword">ASC</span><span class="token operator">|</span><span class="token keyword">DESC</span><span class="token punctuation">,</span> 列名<span class="token number">2</span> <span class="token keyword">ASC</span><span class="token operator">|</span><span class="token keyword">DESC</span>
-</code></pre></div><p>这样会先按照列名1进行排序，每组列名1相同的数据再按照列名2排序。</p>
-<h4>聚集函数</h4>
-<p>聚集函数一般用作统计，包括：</p>
-<ul>
-<li><code>count([distinct]*)</code>统计所有的行数（distinct表示<strong>去重再统计</strong>，下同）</li>
-<li><code>count([distinct]列名)</code>统计某列的值总和</li>
-<li><code>sum([distinct]列名)</code>求一列的和（注意必须是数字类型的）</li>
-<li><code>avg([distinct]列名)</code>求一列的平均值（注意必须是数字类型）</li>
-<li><code>max([distinct]列名)</code>求一列的最大值</li>
-<li><code>min([distinct]列名)</code>求一列的最小值</li>
-</ul>
-<p>一般聚集函数是这样使用的：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> 列名<span class="token punctuation">)</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件
-</code></pre></div><h4>分组和分页查询</h4>
-<p>通过使用<code>group by</code>来对查询结果进行分组，它需要结合聚合函数一起使用：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token function">sum</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件 <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> 列名
-</code></pre></div><p>我们还可以添加<code>having</code>来限制分组条件：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token function">sum</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件 <span class="token keyword">GROUP</span> <span class="token keyword">BY</span> 列名 <span class="token keyword">HAVING</span> 约束条件
-</code></pre></div><p>我们可以通过<code>limit</code>来限制查询的数量，只取前n个结果：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">LIMIT</span> 数量
-</code></pre></div><p>我们也可以进行分页：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">LIMIT</span> 起始位置<span class="token punctuation">,</span>数量
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - 数据库4</title>
-      <link>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb6.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb6.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - 数据库4</source>
-      <description>数据库 4 视图 视图本质就是一个查询的结果，不过我们每次都可以通过打开视图来按照我们想要的样子查看数据。 既然视图本质就是一个查询的结果，那么它本身就是一个虚表，并不是真实存在的，数据实际上还是存放在原来的表中。 对视图的修改就是对基本表的修改，相当于一个指针。 我们可以通过create view来创建视图; WITH CHECK OPTION是指当...</description>
-      <category>code</category>
-      <pubDate>Sun, 23 Mar 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>数据库 4</h2>
-<h2>视图</h2>
-<p>视图本质就是一个查询的结果，不过我们每次都可以通过打开视图来按照我们想要的样子查看数据。</p>
-<p>既然视图本质就是一个查询的结果，那么<strong>它本身就是一个虚表，并不是真实存在的</strong>，<strong>数据实际上还是存放在原来的表中</strong>。
-对视图的修改就是对基本表的修改，相当于一个指针。</p>
-<p>我们可以通过<code>create view</code>来创建视图;</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> 视图名称<span class="token punctuation">(</span>列名<span class="token punctuation">)</span> <span class="token keyword">as</span> 子查询语句 <span class="token punctuation">[</span><span class="token keyword">WITH</span> <span class="token keyword">CHECK</span> <span class="token keyword">OPTION</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-</code></pre></div><p>WITH CHECK OPTION是指当创建后，如果更新视图中的数据，是否要满足子查询中的条件表达式，不满足将无法插入，创建后，我们就可以使用<code>select</code>语句来直接查询视图上的数据了，因此，还能在视图的基础上，导出其他的视图。</p>
-<ol>
-<li>若视图是由两个以上基本表导出的，则此视图不允许更新。</li>
-<li>若视图的字段来自字段表达式或常数，则不允许对此视图执行INSERT和UPDATE操作，但允许执行DELETE操作。</li>
-<li>若视图的字段来自集函数，则此视图不允许更新。</li>
-<li>若视图定义中含有GROUP BY子句，则此视图不允许更新。</li>
-<li>若视图定义中含有DISTINCT短语，则此视图不允许更新。</li>
-<li>若视图定义中有嵌套查询，并且内层查询的FROM子句中涉及的表也是导出该视图的基本表，则此视图不允许更新。例如将成绩在平均成绩之上的元组定义成一个视图GOOD_SC： CREATE VIEW GOOD_SC AS SELECT Sno, Cno, Grade FROM SC WHERE Grade &gt; (SELECT AVG(Grade) FROM SC); 　　导出视图GOOD_SC的基本表是SC，内层查询中涉及的表也是SC，所以视图GOOD_SC是不允许更新的。</li>
-<li>一个不允许更新的视图上定义的视图也不允许更新</li>
-</ol>
-<p>通过<code>drop</code>来删除一个视图：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">drop</span> <span class="token keyword">view</span> apptest
-</code></pre></div><h2>索引</h2>
-<p>在数据量变得非常庞大时，通过创建索引，能够大大提高我们的查询效率，就像Hash表一样，它能够快速地定位元素存放的位置，我们可以通过下面的命令创建索引：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 创建索引</span>
-<span class="token keyword">CREATE</span> <span class="token keyword">INDEX</span> 索引名称 <span class="token keyword">ON</span> 表名 <span class="token punctuation">(</span>列名<span class="token punctuation">)</span>
-<span class="token comment">-- 查看表中的索引</span>
-<span class="token keyword">show</span> <span class="token keyword">INDEX</span> <span class="token keyword">FROM</span> student
-</code></pre></div><p>索引类型包括：<code>NORMAL</code>, <code>UNIQUE</code>, <code>FULLTEST</code>, <code>SPATIAL</code></p>
-<p>索引方法：<code>BTREE</code>, <code>HASH</code></p>
-<p>我们也可以通过下面的命令删除一个索引：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">drop</span> <span class="token keyword">index</span> 索引名称 <span class="token keyword">on</span> 表名
-</code></pre></div><p>虽然添加索引后会使得查询效率更高，但是我们不能过度使用索引，索引为我们带来高速查询效率的同时，也会<strong>在数据更新时产生额外建立索引的开销</strong>，同时<strong>也会占用磁盘资源。</strong></p>
-<h2>触发器</h2>
-<p>触发器就像其名字一样，在<strong>某种条件下会自动触发</strong>，在<code>select</code>/<code>update</code>/<code>delete</code>时，会自动执行我们预先设定的内容，<strong>触发器通常用于检查内容的安全性，相比直接添加约束，触发器显得更加灵活</strong>。</p>
-<p>触发器所依附的表称为<strong>基本表</strong>，当触发器表上发生<code>select</code>/<code>update</code>/<code>delete</code>等操作时，会自动生成两个临时的表（<strong>new表</strong>和<strong>old表</strong>，只能由触发器使用）</p>
-<p>比如在<code>insert</code>操作时，新的内容会被插入到new表中；在<code>delete</code>操作时，旧的内容会被移到old表中，我们仍可在old表中拿到被删除的数据；在<code>update</code>操作时，旧的内容会被移到old表中，新的内容会出现在new表中。</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">TRIGGER</span> 触发器名称 <span class="token punctuation">[</span>BEFORE<span class="token operator">|</span><span class="token keyword">AFTER</span><span class="token punctuation">]</span> <span class="token punctuation">[</span><span class="token keyword">INSERT</span><span class="token operator">|</span><span class="token keyword">UPDATE</span><span class="token operator">|</span><span class="token keyword">DELETE</span><span class="token punctuation">]</span> <span class="token keyword">ON</span> 表名<span class="token operator">/</span>视图名 <span class="token keyword">FOR EACH ROW</span> <span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> student <span class="token keyword">WHERE</span> student<span class="token punctuation">.</span>sno <span class="token operator">=</span> new<span class="token punctuation">.</span>sno
-</code></pre></div><p><code>FOR EACH ROW</code> 表示针对每一行都会生效，无论哪行进行指定操作都会执行触发器！</p>
-<p>通过下面的命令来查看触发器：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SHOW</span> TRIGGERS
-</code></pre></div><p>如果不需要，我们就可以删除此触发器：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DROP</span> <span class="token keyword">TRIGGER</span> 触发器名称
-</code></pre></div><h2>事务</h2>
-<p>当我们要进行的操作非常多时，比如要依次删除很多个表的数据，我们就需要执行大量的SQL语句来完成，这些数据库操作语句就可以构成一个事务！只有<strong>Innodb引擎支持事务</strong>，我们可以这样来查看支持的引擎：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SHOW</span> ENGINES<span class="token punctuation">;</span>
-</code></pre></div><p>MySQL默认采用的是Innodb引擎，我们也可以去修改为其他的引擎。</p>
-<p>事务具有以下特性：</p>
-<ul>
-<li><strong>原子性：</strong> 一个事务（transaction）中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节。事务在执行过程中发生错误，会被回滚（Rollback）到事务开始前的状态，就像这个事务从来没有执行过一样。</li>
-<li><strong>一致性：</strong> 在事务开始之前和事务结束以后，数据库的完整性没有被破坏。这表示写入的资料必须完全符合所有的预设规则，这包含资料的精确度、串联性以及后续数据库可以自发性地完成预定的工作。</li>
-<li><strong>隔离性：</strong> 数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。事务隔离分为不同级别，包括读未提交（Read uncommitted）、读提交（read committed）、可重复读（repeatable read）和串行化（Serializable）。</li>
-<li><strong>持久性：</strong> 事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
-</ul>
-<p>类似 git 的操作？开启事务只有当commit后才能在真正的数据库里看到</p>
-<p>我们通过以下例子来探究以下事务：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">begin</span><span class="token punctuation">;</span>   <span class="token comment">#开始事务</span>
-<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token keyword">rollback</span><span class="token punctuation">;</span>  <span class="token comment">#回滚事务</span>
-<span class="token keyword">savepoint</span> 回滚点<span class="token punctuation">;</span>  <span class="token comment">#添加回滚点</span>
-<span class="token keyword">rollback</span> <span class="token keyword">to</span> 回滚点<span class="token punctuation">;</span> <span class="token comment">#回滚到指定回滚点</span>
-<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token keyword">commit</span><span class="token punctuation">;</span> <span class="token comment">#提交事务</span>
-<span class="token comment">-- 一旦提交，就无法再进行回滚了！</span>
-</code></pre></div><p><strong>函数</strong>和<strong>存储过程</strong>并没有包含在我们的教程当中，但是这并不代表它们就不重要，通过学习它们能够让你的数据库管理能力更上一层楼，它们能够捆绑一组SQL语句运行，并且可以反复使用，大大提高工作效率。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - JAVA与数据库1</title>
-      <link>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb7.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb7.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - JAVA与数据库1</source>
-      <description>主要内容 通过Java如何去使用数据库来帮助我们存储数据 JDBC JDBC英文名为：Java Data Base Connectivity(Java数据库连接)，官方解释它是Java编程语言和广泛的数据库之间独立于数据库的连接标准的Java API，根本上说JDBC是一种规范，它提供的接口，一套完整的，允许便捷式访问底层数据库。可以用JAVA来写不同...</description>
-      <category>code</category>
-      <pubDate>Fri, 23 May 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>主要内容</h2>
-<p>通过Java如何去使用数据库来帮助我们存储数据</p>
-<h2>JDBC</h2>
-<p>JDBC英文名为：Java Data Base Connectivity(Java数据库连接)，官方解释它是Java编程语言和广泛的数据库之间独立于数据库的连接标准的Java API，根本上说JDBC是一种规范，它提供的接口，一套完整的，允许便捷式访问底层数据库。可以用JAVA来写不同类型的可执行文件：JAVA应用程序、JAVA Applets、Java Servlet、JSP等，不同的可执行文件都能通过JDBC访问数据库，又兼备存储的优势。简单说它就是Java与数据库的连接的桥梁或者插件，用Java代码就能操作数据库的增删改查、存储过程、事务等。</p>
-<p>我们可以发现，JDK自带了一个<code>java.sql</code>包，而这里面就定义了大量的接口，不同类型的数据库，都可以通过实现此接口，编写适用于自己数据库的实现类。而不同的数据库厂商实现的这套标准，我们称为<code>数据库驱动</code>。</p>
-<h3>使用JDBC连接数据库</h3>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//注意前两步都放在try()中，因为在最后需要释放资源！</span>
-<span class="token comment">//1. 通过DriverManager来获得数据库连接</span>
-<span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span>
-        <span class="token string">"jdbc:mysql://localhost:3306/study"</span><span class="token punctuation">,</span><span class="token string">"root"</span><span class="token punctuation">,</span><span class="token string">"123456"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token comment">//2. 创建一个用于执行SQL的Statement对象</span>
-      <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token comment">//3. 执行SQL语句，并得到结果集</span>
-    <span class="token class-name">ResultSet</span> set <span class="token operator">=</span> statement<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span><span class="token string">"select * from student"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//4. 查看结果</span>
-    <span class="token keyword">while</span> <span class="token punctuation">(</span>set<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>set<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token comment">//5. 释放资源，try-with-resource语法会自动帮助我们close</span>
-</code></pre></div><p>其中，连接的URL如果记不住格式，我们可以打开idea的数据库连接配置，复制一份即可。（其实idea本质也是使用的JDBC，整个idea程序都是由Java编写的，实际上idea就是一个Java程序）</p>
-<p><strong>注意：</strong> 6.0版本以上，不用手动加载驱动，我们直接使用即可！
-即不需要使用 反射 来加载驱动类</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"com.mysql.jdbc.Driver"</span><span class="token punctuation">)</span>
-</code></pre></div><p>如果加载会提示</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
-</code></pre></div><h3>DriverManager</h3>
-<p>DriverManager是管理我们的数据库驱动的, 来分析我们设定的驱动是否可以连接，如果成功就返回对应的 <code>connection</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">synchronized</span> <span class="token keyword">void</span> <span class="token function">registerDriver</span><span class="token punctuation">(</span><span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>sql<span class="token punctuation">.</span></span>Driver</span> driver<span class="token punctuation">,</span>
-        <span class="token class-name">DriverAction</span> da<span class="token punctuation">)</span>
-    <span class="token keyword">throws</span> <span class="token class-name">SQLException</span> <span class="token punctuation">{</span>
-
-    <span class="token comment">/* Register the driver if it has not already been added to our list */</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>driver <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        registeredDrivers<span class="token punctuation">.</span><span class="token function">addIfAbsent</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">DriverInfo</span><span class="token punctuation">(</span>driver<span class="token punctuation">,</span> da<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//在刚启动时，mysql实现的驱动会被加载，我们可以断点调试一下。</span>
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        <span class="token comment">// This is for compatibility with the original DriverManager</span>
-        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NullPointerException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"registerDriver: "</span> <span class="token operator">+</span> driver<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Connection</span> <span class="token function">getConnection</span><span class="token punctuation">(</span>
-        <span class="token class-name">String</span> url<span class="token punctuation">,</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span>Properties</span> info<span class="token punctuation">,</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> caller<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">SQLException</span> <span class="token punctuation">{</span>
-        <span class="token comment">/*
-         * When callerCl is null, we should check the application's
-         * (which is invoking this class indirectly)
-         * classloader, so that the JDBC driver class outside rt.jar
-         * can be loaded from here.
-         */</span>
-        <span class="token class-name">ClassLoader</span> callerCL <span class="token operator">=</span> caller <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">?</span> caller<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-        <span class="token keyword">synchronized</span><span class="token punctuation">(</span><span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token comment">// synchronize loading of the correct classloader.</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>callerCL <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                callerCL <span class="token operator">=</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token keyword">if</span><span class="token punctuation">(</span>url <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SQLException</span><span class="token punctuation">(</span><span class="token string">"The url cannot be null"</span><span class="token punctuation">,</span> <span class="token string">"08001"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"DriverManager.getConnection(\""</span> <span class="token operator">+</span> url <span class="token operator">+</span> <span class="token string">"\")"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">// Walk through the loaded registeredDrivers attempting to make a connection.</span>
-        <span class="token comment">// Remember the first exception that gets raised so we can reraise it.</span>
-        <span class="token class-name">SQLException</span> reason <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">DriverInfo</span> aDriver <span class="token operator">:</span> registeredDrivers<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token comment">// If the caller does not have permission to load the driver then</span>
-            <span class="token comment">// skip it.</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">isDriverAllowed</span><span class="token punctuation">(</span>aDriver<span class="token punctuation">.</span>driver<span class="token punctuation">,</span> callerCL<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                    <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"    trying "</span> <span class="token operator">+</span> aDriver<span class="token punctuation">.</span>driver<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token class-name">Connection</span> con <span class="token operator">=</span> aDriver<span class="token punctuation">.</span>driver<span class="token punctuation">.</span><span class="token function">connect</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> info<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>con <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                        <span class="token comment">// Success!</span>
-                        <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"getConnection returning "</span> <span class="token operator">+</span> aDriver<span class="token punctuation">.</span>driver<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                        <span class="token keyword">return</span> <span class="token punctuation">(</span>con<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token punctuation">}</span>
-                <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>reason <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                        reason <span class="token operator">=</span> ex<span class="token punctuation">;</span>
-                    <span class="token punctuation">}</span>
-                <span class="token punctuation">}</span>
-
-            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-                <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"    skipping: "</span> <span class="token operator">+</span> aDriver<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-
-        <span class="token punctuation">}</span>
-
-        <span class="token comment">// if we got here nobody could connect.</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>reason <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span>    <span class="token punctuation">{</span>
-            <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"getConnection failed: "</span> <span class="token operator">+</span> reason<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">throw</span> reason<span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"getConnection: no suitable driver found for "</span><span class="token operator">+</span> url<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SQLException</span><span class="token punctuation">(</span><span class="token string">"No suitable driver found for "</span><span class="token operator">+</span> url<span class="token punctuation">,</span> <span class="token string">"08001"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-</code></pre></div><p>我们可以通过调用<code>getConnection()</code>来进行数据库的链接：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@CallerSensitive</span>
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">Connection</span> <span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token class-name">String</span> url<span class="token punctuation">,</span>
-    <span class="token class-name">String</span> user<span class="token punctuation">,</span> <span class="token class-name">String</span> password<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">SQLException</span> <span class="token punctuation">{</span>
-    <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span>Properties</span> info <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span>Properties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>user <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        info<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">,</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>password <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        info<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">,</span> password<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token function">getConnection</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> info<span class="token punctuation">,</span> <span class="token class-name">Reflection</span><span class="token punctuation">.</span><span class="token function">getCallerClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//内部有实现</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们可以手动为驱动管理器添加一个日志打印：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">static</span> <span class="token punctuation">{</span>
-    <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">setLogWriter</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">PrintWriter</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//这里直接设定为控制台输出</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在我们执行的数据库操作日志会在控制台实时打印。</p>
-<h3>了解Connection</h3>
-<p><code>Connection</code>是数据库的连接对象，可以通过连接对象来创建一个<code>Statement</code>用于执行SQL语句：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Statement</span> <span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">SQLException</span><span class="token punctuation">;</span>
-</code></pre></div><p>我们发现除了普通的<code>Statement</code>，还存在<code>PreparedStatement</code>：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">PreparedStatement</span> <span class="token function">prepareStatement</span><span class="token punctuation">(</span><span class="token class-name">String</span> sql<span class="token punctuation">)</span>
-    <span class="token keyword">throws</span> <span class="token class-name">SQLException</span><span class="token punctuation">;</span>
-</code></pre></div><p>在后面我们会详细介绍P<code>reparedStatement</code>的使用，它能够有效地预防SQL注入式攻击。</p>
-<p>它还支持事务的处理，也放到后面来详细进行讲解。</p>
-<h3>了解Statement</h3>
-<p>我们发现，我们之前使用了<code>executeQuery()</code>方法来执行<code>select</code>语句，此方法返回给我们一个<code>ResultSet</code>对象，查询得到的数据，就存放在<code>ResultSet</code>中！</p>
-<p>Statement除了执行这样的DQL语句外，我们还可以使用<code>executeUpdate()</code>方法来执行一个DML或是DDL语句，它会返回一个int类型，表示执行后受影响的行数，可以通过它来判断DML语句是否执行成功。</p>
-<p>也可以通过<code>excute()</code>来执行任意的SQL语句，它会返回一个<code>boolean</code>来表示执行结果是一个ResultSet还是一个int，我们可以通过使用<code>getResultSet()</code>或是<code>getUpdateCount()</code>来获取。</p>
-<figure><figcaption>6</figcaption></figure>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - JAVA与数据库2</title>
-      <link>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb8.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb8.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - JAVA与数据库2</source>
-      <description>JDBC 执行DML操作 executeUpdate() 删除、更新、添加 执行DQL操作 executeQuery() 执行DQL操作会返回一个ResultSet对象，我们来看看如何从ResultSet中去获取数据： 一开始是在第一行上面，可以理解在标题栏 我们在移动行数后，就可以通过set中提供的方法，来获取每一列的数据。 77 执行批处理操作 a...</description>
-      <category>code</category>
-      <pubDate>Mon, 26 May 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>JDBC</h2>
-<h3>执行DML操作 <code>executeUpdate()</code></h3>
-<p>删除、更新、添加</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">PrintWriter</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>sql<span class="token punctuation">.</span></span><span class="token operator">*</span></span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">(</span>
-                <span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"jdbc:mysql://localhost:3306/study"</span><span class="token punctuation">,</span><span class="token string">"root"</span><span class="token punctuation">,</span><span class="token string">"123456"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token keyword">int</span> i <span class="token operator">=</span> statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into student values(4,'monkey','男')"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment">// statement.executeUpdate("delete from student where sid = 4");</span>
-            <span class="token comment">// int i = statement.executeUpdate("update student set name = 'dog' where sid=3");</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"生效了："</span><span class="token operator">+</span>i<span class="token operator">+</span><span class="token string">"行"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>执行DQL操作 <code>executeQuery()</code></h3>
-<p>执行<code>DQL操作</code>会返回一个<code>ResultSet</code>对象，我们来看看如何从<code>ResultSet</code>中去获取数据：
-一开始是在第一行上面，可以理解在标题栏</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//首先要明确，select返回的数据类似于一个excel表格</span>
-<span class="token keyword">while</span> <span class="token punctuation">(</span>set<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token comment">//每调用一次next()就会向下移动一行，首次调用会移动到第一行</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们在移动行数后，就可以通过<code>set</code>中提供的方法，来获取每一列的数据。</p>
-<figure><figcaption>7</figcaption></figure>
-<h3>执行批处理操作 <code>addBatch()</code></h3>
-<p>当我们要执行很多条语句时，可以不用一次一次地提交，而是一口气全部交给数据库处理，这样会节省很多的时间。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-         <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-        statement<span class="token punctuation">.</span><span class="token function">addBatch</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('f', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        statement<span class="token punctuation">.</span><span class="token function">addBatch</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('e', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//添加每一条批处理语句</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeBatch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//一起执行</span>
-
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>将查询结果映射为对象</h3>
-<p>既然我们现在可以从数据库中获取数据了，那么现在就可以将这些数据转换为一个类来进行操作，首先定义我们的实体类：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Integer</span> sid<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> sex<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">Student</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> sid<span class="token punctuation">,</span> <span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token class-name">String</span> sex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>sid <span class="token operator">=</span> sid<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>sex <span class="token operator">=</span> sex<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">say</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我叫："</span><span class="token operator">+</span>name<span class="token operator">+</span><span class="token string">"，学号为："</span><span class="token operator">+</span>sid<span class="token operator">+</span><span class="token string">"，我的性别是："</span><span class="token operator">+</span>sex<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在我们来进行一个转换：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">while</span> <span class="token punctuation">(</span>set<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token class-name">Student</span> student <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Student</span><span class="token punctuation">(</span>set<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> set<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> set<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    student<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p><strong>注意：</strong> 列的下标是从1开始的。</p>
-<p>我们也可以利用<strong>反射机制</strong>来将查询结果映射为对象，使用反射的好处是，无论什么类型都可以通过我们的方法来进行实体类型映射：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token class-name">T</span> <span class="token function">convert</span><span class="token punctuation">(</span><span class="token class-name">ResultSet</span> set<span class="token punctuation">,</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> clazz<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Constructor</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> constructor <span class="token operator">=</span> clazz<span class="token punctuation">.</span><span class="token function">getConstructor</span><span class="token punctuation">(</span>clazz<span class="token punctuation">.</span><span class="token function">getConstructors</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getParameterTypes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//默认获取第一个构造方法</span>
-        <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span> param <span class="token operator">=</span> constructor<span class="token punctuation">.</span><span class="token function">getParameterTypes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//获取参数列表</span>
-        <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> object <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">[</span>param<span class="token punctuation">.</span>length<span class="token punctuation">]</span><span class="token punctuation">;</span>  <span class="token comment">//存放参数</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> param<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>   <span class="token comment">//是从1开始的</span>
-            object<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> set<span class="token punctuation">.</span><span class="token function">getObject</span><span class="token punctuation">(</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span>object<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> param<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
-                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SQLException</span><span class="token punctuation">(</span><span class="token string">"错误的类型转换："</span><span class="token operator">+</span>object<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">" -&gt; "</span><span class="token operator">+</span>param<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">return</span> constructor<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span>object<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">ReflectiveOperationException</span> <span class="token operator">|</span> <span class="token class-name">SQLException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在我们就可以通过我们的方法来将查询结果转换为一个对象了：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">while</span> <span class="token punctuation">(</span>set<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token class-name">Student</span> student <span class="token operator">=</span> <span class="token function">convert</span><span class="token punctuation">(</span>set<span class="token punctuation">,</span> <span class="token class-name">Student</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>student <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> student<span class="token punctuation">.</span><span class="token function">say</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>实际上，在后面我们会学习<strong>Mybatis</strong>框架，它对<code>JDBC</code>进行了深层次的封装，而它就进行类似上面反射的操作来便于我们对数据库数据与实体类的转换。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - JAVA与数据库3</title>
-      <link>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb9.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb9.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - JAVA与数据库3</source>
-      <description>JDBC 实现登陆与SQL注入攻击 在使用之前，我们先来看看如果我们想模拟登陆一个用户，我们该怎么去写： 用户可以通过自己输入用户名和密码来登陆，乍一看好像没啥问题，那如果我输入的是以下内容呢： 1=1一定是true，那么我们原本的SQL语句会变为： 我们发现，如果允许这样的数据插入，那么我们原有的SQL语句结构就遭到了破坏，使得用户能够随意登陆别人的...</description>
-      <category>code</category>
-      <pubDate>Mon, 26 May 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>JDBC</h2>
-<h3>实现登陆与SQL注入攻击</h3>
-<p>在使用之前，我们先来看看如果我们想模拟登陆一个用户，我们该怎么去写：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"URL"</span><span class="token punctuation">,</span><span class="token string">"用户名"</span><span class="token punctuation">,</span><span class="token string">"密码"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-     <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-     <span class="token class-name">Scanner</span> scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token class-name">ResultSet</span> res <span class="token operator">=</span> statement<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span><span class="token string">"select * from user where username='"</span><span class="token operator">+</span>scanner<span class="token punctuation">.</span><span class="token function">nextLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"'and pwd='"</span><span class="token operator">+</span>scanner<span class="token punctuation">.</span><span class="token function">nextLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"';"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">while</span> <span class="token punctuation">(</span>res<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">String</span> username <span class="token operator">=</span> res<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>username<span class="token operator">+</span><span class="token string">" 登陆成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>用户可以通过自己输入用户名和密码来登陆，乍一看好像没啥问题，那如果我输入的是以下内容呢：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code>Test
-<span class="token number">1111</span>' <span class="token operator">or</span> <span class="token number">1</span><span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">-- </span>
-<span class="token comment"># Test 登陆成功！</span>
-</code></pre></div><p>1=1一定是true，那么我们原本的SQL语句会变为：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> <span class="token keyword">user</span> <span class="token keyword">where</span> username<span class="token operator">=</span><span class="token string">'Test'</span> <span class="token operator">and</span> pwd<span class="token operator">=</span><span class="token string">'1111'</span> <span class="token operator">or</span> <span class="token number">1</span><span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">-- '</span>
-</code></pre></div><p>我们发现，如果允许这样的数据插入，那么我们原有的SQL语句结构就遭到了破坏，使得用户能够随意登陆别人的账号。因此我们可能需要限制用户的输入来防止用户输入一些SQL语句关键字，但是关键字非常多，这并不是解决问题的最好办法。</p>
-<h3>使用<code>PreparedStatement</code></h3>
-<p>我们发现，如果单纯地使用Statement来执行SQL命令，会存在严重的SQL注入攻击漏洞！而这种问题，我们可以使用<code>PreparedStatement</code>来解决：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"URL"</span><span class="token punctuation">,</span><span class="token string">"用户名"</span><span class="token punctuation">,</span><span class="token string">"密码"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-         <span class="token class-name">PreparedStatement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">prepareStatement</span><span class="token punctuation">(</span><span class="token string">"select * from user where username= ? and pwd=?;"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-         <span class="token class-name">Scanner</span> scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-        statement<span class="token punctuation">.</span><span class="token function">setString</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> scanner<span class="token punctuation">.</span><span class="token function">nextLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        statement<span class="token punctuation">.</span><span class="token function">setString</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> scanner<span class="token punctuation">.</span><span class="token function">nextLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>statement<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//打印查看一下最终执行的</span>
-        <span class="token class-name">ResultSet</span> res <span class="token operator">=</span> statement<span class="token punctuation">.</span><span class="token function">executeQuery</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span>res<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token class-name">String</span> username <span class="token operator">=</span> res<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>username<span class="token operator">+</span><span class="token string">" 登陆成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们发现，我们需要提前给到PreparedStatement一个SQL语句，并且使用<code>?</code>作为占位符，它会预编译一个SQL语句，通过直接将我们的内容进行替换的方式来填写数据。使用这种方式，我们之前的例子就失效了！我们来看看实际执行的SQL语句是什么：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>com.mysql.cj.jdbc.ClientPreparedStatement: select * from user where username= 'Test' and pwd='123456'' or 1=1; -- ';
-</code></pre></div><p>我们发现，我们输入的参数一旦出现<code>'</code>时，会被变为转义形式<code>\'</code>，而最外层有一个真正的<code>'</code>来将我们输入的内容进行包裹，因此它能够有效地防止SQL注入攻击！</p>
-<h3>管理事务</h3>
-<p>JDBC默认的事务处理行为是<strong>自动提交</strong>，所以前面我们执行一个SQL语句就会被直接提交（相当于没有启动事务），所以JDBC需要进行事务管理时，首先要通过<code>Connection</code>对象调用<code>setAutoCommit(false)</code>方法, 将SQL语句的提交（commit）由驱动程序转交给应用程序负责。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>con<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//关闭自动提交后相当于开启事务。</span>
-<span class="token comment">// SQL语句</span>
-<span class="token comment">// SQL语句</span>
-<span class="token comment">// SQL语句</span>
-con<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>或 con<span class="token punctuation">.</span><span class="token function">rollback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>一旦关闭自动提交，那么现在执行所有的操作如果在最后不进行<code>commit()</code>来提交事务的话，那么所有的操作都会丢失，只有提交之后，所有的操作才会被保存！也可以使用<code>rollback()</code>来手动回滚之前的全部操作！</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"URL"</span><span class="token punctuation">,</span><span class="token string">"用户名"</span><span class="token punctuation">,</span><span class="token string">"密码"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-         <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//关闭自动提交，现在将变为我们手动提交</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('a', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('b', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('c', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//如果前面任何操作出现异常，将不会执行commit()，之前的操作也就不会生效</span>
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们来接着尝试一下使用回滚操作：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"URL"</span><span class="token punctuation">,</span><span class="token string">"用户名"</span><span class="token punctuation">,</span><span class="token string">"密码"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-         <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//关闭自动提交，现在将变为我们手动提交</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('a', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('b', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">rollback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//回滚，撤销前面全部操作</span>
-
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('c', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//提交事务（注意，回滚之前的内容都没了）</span>
-
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>同样的，我们也可以去创建一个回滚点来实现定点回滚：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"URL"</span><span class="token punctuation">,</span><span class="token string">"用户名"</span><span class="token punctuation">,</span><span class="token string">"密码"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-         <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//关闭自动提交，现在将变为我们手动提交</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('a', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        
-        <span class="token class-name">Savepoint</span> savepoint <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">setSavepoint</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//创建回滚点</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('b', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">rollback</span><span class="token punctuation">(</span>savepoint<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//回滚到回滚点，撤销前面全部操作</span>
-
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('c', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//提交事务（注意，回滚之前的内容都没了）</span>
-
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>通过开启事务，我们就可以更加谨慎地进行一些操作了，如果我们想从事务模式切换为原有的自动提交模式，我们可以直接将其设置回去：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Connection</span> connection <span class="token operator">=</span> <span class="token class-name">DriverManager</span><span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token string">"URL"</span><span class="token punctuation">,</span><span class="token string">"用户名"</span><span class="token punctuation">,</span><span class="token string">"密码"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-         <span class="token class-name">Statement</span> statement <span class="token operator">=</span> connection<span class="token punctuation">.</span><span class="token function">createStatement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-
-        connection<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//关闭自动提交，现在将变为我们手动提交</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('a', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        connection<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//重新开启自动提交，开启时把之前的事务模式下的内容给提交了</span>
-        statement<span class="token punctuation">.</span><span class="token function">executeUpdate</span><span class="token punctuation">(</span><span class="token string">"insert into user values ('d', 1234)"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//没有commit也成功了！</span>
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Lombok1</title>
-      <link>http://ekkosonya.cn/code/javaweb/3-Lombok/javaweb10.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/3-Lombok/javaweb10.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Lombok1</source>
-      <description>Lombok1 我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的get/set方法，这不仅使得我们类定义中充满了get和set方法，同时如果字段名称发生改变，又要挨个进行修改，甚至当字段变得很多时，构造方法的编写会非常麻烦！ 通过使用 Lombok（小辣椒）就可以解决这样的问题！ imgimg 使用原生方式和小辣椒方式编写...</description>
-      <category>code</category>
-      <pubDate>Mon, 26 May 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Lombok1</h2>
-<p>我们发现，在以往编写项目时，尤其是在类进行类内部成员字段封装时，需要编写大量的<code>get/set</code>方法，这不仅使得我们类定义中充满了get和set方法，同时如果字段名称发生改变，又要挨个进行修改，甚至当字段变得很多时，构造方法的编写会非常麻烦！</p>
-<p>通过使用 Lombok（小辣椒）就可以解决这样的问题！</p>
-<figure><figcaption>img</figcaption></figure>
-<p>使用原生方式和小辣椒方式编写类的区别，首先是传统方式：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
-    <span class="token keyword">private</span> <span class="token class-name">Integer</span> sid<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> sex<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">Student</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> sid<span class="token punctuation">,</span> <span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token class-name">String</span> sex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>sid <span class="token operator">=</span> sid<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>sex <span class="token operator">=</span> sex<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">Integer</span> <span class="token function">getSid</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>             <span class="token comment">//长！</span>
-        <span class="token keyword">return</span> sid<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setSid</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> sid<span class="token punctuation">)</span> <span class="token punctuation">{</span>     <span class="token comment">//到！</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>sid <span class="token operator">=</span> sid<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>             <span class="token comment">//爆！</span>
-        <span class="token keyword">return</span> name<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setName</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>    <span class="token comment">//炸！</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">getSex</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> sex<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setSex</span><span class="token punctuation">(</span><span class="token class-name">String</span> sex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>sex <span class="token operator">=</span> sex<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>而使用Lombok之后：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Getter</span>
-<span class="token annotation punctuation">@Setter</span>
-<span class="token annotation punctuation">@AllArgsConstructor</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
-    <span class="token keyword">private</span> <span class="token class-name">Integer</span> sid<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> sex<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们发现，使用Lombok之后，<strong>只需要添加几个注解</strong>，就能够解决掉我们之前长长的一串代码！</p>
-<h3>配置Lombok</h3>
-<ul>
-<li>首先我们需要导入Lombok的jar依赖，和jdbc依赖是一样的，放在项目目录下直接导入就行了。可以在这里进行下载：<a href="https://projectlombok.org/download" target="_blank" rel="noopener noreferrer">https://projectlombok.org/download</a></li>
-<li>然后我们要安装一下Lombok插件，由于IDEA默认都安装了Lombok的插件，因此直接导入依赖后就可以使用了。</li>
-<li>重启IDEA</li>
-</ul>
-<p>Lombok 是一种插件化注解API，是通过<strong>添加注解</strong>来实现的，然后在<code>javac</code>进行编译的时候，进行处理(<strong>编译阶段处理</strong>)。</p>
-<p>Java的编译过程可以分成三个阶段：
-</p>
-<ol>
-<li>所有源文件会被解析成语法树。</li>
-<li>调用注解处理器。如果注解处理器产生了新的源文件，新文件也要进行编译。</li>
-<li>最后，语法树会被分析并转化成类文件。</li>
-</ol>
-<p>实际上在上述的第二阶段，会执行*<a href="https://github.com/rzwitserloot/lombok/blob/master/src/core/lombok/core/AnnotationProcessor.java" target="_blank" rel="noopener noreferrer">lombok.core.AnnotationProcessor</a>*，它所做的工作就是我们上面所说的，修改语法树。</p>
-<h3>使用Lombok</h3>
-<p>我们通过实战来演示一下Lombok的实用注解：</p>
-<ul>
-<li>
-<p>我们通过添加<code>@Getter</code>和<code>@Setter</code>来为当前类的所有字段生成<code>get/set</code>方法，他们可以添加到类或是字段上，注意静态字段不会生成，final字段无法生成set方法。</p>
-<ul>
-<li>我们还可以使用<code>@Accessors</code>来控制生成<code>Getter</code>和<code>Setter</code>的样式。</li>
-</ul>
-</li>
-<li>
-<p>我们通过添加<code>@ToString</code>来为当前类生成预设的toString方法。</p>
-</li>
-<li>
-<p>我们可以通过添加<code>@EqualsAndHashCode</code>来快速生成比较和哈希值方法。</p>
-</li>
-<li>
-<p>我们可以通过添加<code>@AllArgsConstructor</code>和<code>@NoArgsConstructor</code>来快速生成全参构造和无参构造。</p>
-</li>
-<li>
-<p>我们可以添加<code>@RequiredArgsConstructor</code>来快速生成参数只包含<code>final</code>或被标记为<code>@NonNull</code>的成员字段。</p>
-</li>
-<li>
-<p>使用<code>@Data</code>能代表<code>@Setter</code>、<code>@Getter</code>、<code>@RequiredArgsConstructor</code>、<code>@ToString</code>、<code>@EqualsAndHashCode</code>全部注解。</p>
-<ul>
-<li>一旦使用<code>@Data</code>就不建议此类有继承关系，因为<code>equal</code>方法可能不符合预期结果（尤其是仅比较子类属性）。</li>
-</ul>
-</li>
-<li>
-<p>使用<code>@Value</code>与<code>@Data</code>类似，但是并不会生成setter并且成员属性都是final的。</p>
-</li>
-<li>
-<p>使用<code>@SneakyThrows</code>来自动生成try-catch代码块。</p>
-</li>
-<li>
-<p>使用<code>@Cleanup</code>作用与局部变量，在最后自动调用其<code>close()</code>方法（可以自由更换）</p>
-</li>
-<li>
-<p>使用<code>@Builder</code>来快速生成<strong>建造者模式</strong>。</p>
-<ul>
-<li>通过使用<code>@Builder.Default</code>来指定默认值。</li>
-<li>通过使用<code>@Builder.ObtainVia</code>来指定默认值的获取方式。</li>
-</ul>
-</li>
-</ul>
-]]></content:encoded>
     </item>
   </channel>
 </rss>

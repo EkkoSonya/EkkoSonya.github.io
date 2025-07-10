@@ -6,11 +6,429 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 09 Jul 2025 16:44:20 GMT</pubDate>
-    <lastBuildDate>Wed, 09 Jul 2025 16:44:20 GMT</lastBuildDate>
+    <pubDate>Thu, 10 Jul 2025 09:30:56 GMT</pubDate>
+    <lastBuildDate>Thu, 10 Jul 2025 09:30:56 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Maven3 - 依赖作用域</title>
+      <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven3.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Maven3 - 依赖作用域</source>
+      <description>Maven3 - 依赖作用域 Maven依赖作用域 除了三个基本的属性用于定位坐标外，依赖还可以添加以下属性： type：依赖的类型，对于项目坐标定义的packaging。 大部分情况下，该元素不必声明，其默认值为jar scope：依赖的范围（作用域，着重讲解） optional：标记依赖是否可选 exclusions：用来排除传递性依赖（一个项目有...</description>
+      <category>code</category>
+      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Maven3 - 依赖作用域</h2>
+<h3>Maven依赖作用域</h3>
+<p>除了三个基本的属性用于定位坐标外，依赖还可以添加以下属性：</p>
+<ul>
+<li><strong>type</strong>：依赖的类型，对于项目坐标定义的packaging。
+大部分情况下，该元素不必声明，其默认值为jar</li>
+<li><strong>scope</strong>：依赖的范围（作用域，着重讲解）</li>
+<li><strong>optional</strong>：标记依赖是否可选</li>
+<li><strong>exclusions</strong>：用来排除传递性依赖（一个项目有可能依赖于其他项目，就像我们的项目，如果别人要用我们的项目作为依赖，那么就需要一起下载我们项目的依赖，如Lombok）</li>
+</ul>
+<h4><code>scope</code> 属性</h4>
+<p>我们着重来讲解一下<code>scope</code>属性，它决定了<strong>依赖的作用域范围</strong>：</p>
+<ul>
+<li>
+<p><strong>compile</strong> ：默认的依赖有效范围，如果在定义依赖关系的时候，没有明确指定依赖有效范围的话，则默认采用该依赖有效范围，<strong>此范围表示在编译、运行、测试时均有效。</strong></p>
+</li>
+<li>
+<p><strong>provided</strong> ：仅在<strong>编译、测试</strong>时有效，但是在<strong>运行时无效</strong>，也就是说，<strong>项目在运行时，不需要此依赖</strong>
+比如我们上面的Lombok，我们只需要在编译阶段使用它，编译完成后，实际上已经转换为对应的代码了，因此<strong>Lombok不需要在项目运行时也存在</strong>。</p>
+</li>
+<li>
+<p><strong>runtime</strong> ：在<strong>运行、测试</strong>时有效，但是在<strong>编译代码</strong>时无效。
+比如JDBC驱动就是典型的只需要运行时使用，因为JDBC驱动由数据库厂商开发，我们使用的始终是JDK中提供的接口，不需要直接使用特定驱动中的类或是方法，因此只需在运行时包含即可。</p>
+</li>
+<li>
+<p><strong>test</strong> ：<strong>只在测试时有效</strong>
+例如：JUnit框架，我们一般只会在测试阶段使用JUnit，而实际项目运行时，我们就用不到测试了，所以这个选项非常适合测试相关的框架。</p>
+</li>
+</ul>
+<h5>测试导入</h5>
+<p>这里我们来测试一下JUnit，我们可以在网站上搜索JUnit的依赖，我们这里导入最新的JUnit5作为依赖：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.junit.jupiter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>junit-jupiter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>5.8.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>我们所有的测试用例全部编写到Maven项目给我们划分的test目录下，位于此目录下的内容不会在最后被打包到项目中，只用作开发阶段测试使用：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"测试"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//Assert在JUnit5时名称发生了变化Assertions</span>
+        <span class="token class-name">Assertions</span><span class="token punctuation">.</span><span class="token function">assertArrayEquals</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>因此，一般仅用作测试的依赖如JUnit只保留在测试中即可，那么现在我们再来添加JDBC和Mybatis的依赖：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>mysql<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mysql-connector-java<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>8.0.27<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.5.7<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>我们发现，Maven还给我们提供了一个<code>resource</code>目标，我们可以将一些静态资源，比如配置文件，放入到这个文件夹中，项目在打包时会将资源文件夹中文件一起打包的Jar中，比如我们在这里编写一个Mybatis的配置文件：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
+<span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">configuration</span>
+        <span class="token name">PUBLIC</span> <span class="token string">"-//mybatis.org//DTD Config 3.0//EN"</span>
+        <span class="token string">"http://mybatis.org/dtd/mybatis-3-config.dtd"</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>settings</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>setting</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>mapUnderscoreToCamelCase<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>setting</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>cacheEnabled<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>setting</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>logImpl<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JDK_LOGGING<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>settings</span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment">&lt;!-- 需要在environments的上方 --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>typeAliases</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>package</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.entity<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>typeAliases</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>environments</span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>development<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>environment</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>development<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>transactionManager</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>JDBC<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dataSource</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>POOLED<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>driver<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.mysql.cj.jdbc.Driver<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>url<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>jdbc:mysql://localhost:3306/web_study<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>test<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>123456<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dataSource</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>environment</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>environments</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mappers</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mapper</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.test.mapper.TestMapper<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mappers</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>现在我们创建一下测试用例，顺便带大家回顾一下JUnit5的使用：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">//因为配置文件位于内部，我们需要使用Resources类的getResourceAsStream来获取内部的资源文件</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">SqlSessionFactory</span> factory<span class="token punctuation">;</span>
+
+    <span class="token comment">//在JUnit5中@Before被废弃，它被细分了：</span>
+    <span class="token annotation punctuation">@BeforeAll</span> 
+    <span class="token comment">// 一次性开启所有测试案例只会执行一次 (方法必须是static)</span>
+    <span class="token comment">// @BeforeEach 一次性开启所有测试案例每个案例开始之前都会执行一次</span>
+    <span class="token annotation punctuation">@SneakyThrows</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">before</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        factory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SqlSessionFactoryBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token class-name">Resources</span><span class="token punctuation">.</span><span class="token function">getResourceAsStream</span><span class="token punctuation">(</span><span class="token string">"mybatis.xml"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+
+    <span class="token annotation punctuation">@DisplayName</span><span class="token punctuation">(</span><span class="token string">"Mybatis数据库测试"</span><span class="token punctuation">)</span>  <span class="token comment">//自定义测试名称</span>
+    <span class="token annotation punctuation">@RepeatedTest</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>  <span class="token comment">//自动执行多次测试</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">SqlSession</span> sqlSession <span class="token operator">=</span> factory<span class="token punctuation">.</span><span class="token function">openSession</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token class-name">TestMapper</span> testMapper <span class="token operator">=</span> sqlSession<span class="token punctuation">.</span><span class="token function">getMapper</span><span class="token punctuation">(</span><span class="token class-name">TestMapper</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>testMapper<span class="token punctuation">.</span><span class="token function">getStudentBySid</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>第四个作用域 - 导入本地jar包</h5>
+<p>那么就有人提问了，如果我需要的依赖没有上传的远程仓库，而是只有一个Jar怎么办呢？</p>
+<p>我们可以使用第四种作用域：</p>
+<ul>
+<li><strong>system</strong>：作用域和provided是一样的，但是它不是从远程仓库获取，而是直接导入本地Jar包。</li>
+</ul>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>javax.jntm<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>lbwnb<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>2.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>system<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>systemPath</span><span class="token punctuation">&gt;</span></span>C://学习资料/4K高清无码/test.jar<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>systemPath</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>比如上面的例子，如果scope为system，那么我们需要添加一个systemPath来指定jar文件的位置，这里就不再演示了。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Maven4 - 导入本地依赖</title>
+      <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven4.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Maven4 - 导入本地依赖</source>
+      <description>Maven4 - 导入本地依赖 Maven项目导入自己项目 mvn install 如何在其他项目中引入我们自己编写的Maven项目作为依赖使用。 这里我们创建一个用于测试的简单项目： 接着我们点击右上角的Maven选项 然后执行install或直接在命令行中输入mvn install来安装我们自己的项目到本地Maven仓库中。 接着我们就可以在需要使...</description>
+      <category>code</category>
+      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Maven4 - 导入本地依赖</h2>
+<h3>Maven项目导入自己项目 <code>mvn install</code></h3>
+<p>如何在其他项目中引入我们自己编写的Maven项目作为依赖使用。</p>
+<p>这里我们创建一个用于测试的简单项目：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>modelVersion</span><span class="token punctuation">&gt;</span></span>4.0.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>modelVersion</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>TestMaven<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+
+    ...
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestUtils</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"抛开事实不谈，你们就没有一点错吗？"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>接着我们点击右上角的Maven选项</p>
+<p>然后执行<code>install</code>或直接在命令行中输入<code>mvn install</code>来安装我们自己的项目到本地Maven仓库中。</p>
+<p>接着我们就可以<strong>在需要使用此项目作为依赖的其他项目中使用它</strong>了，只需要填写和这边一样的坐标：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>TestMaven<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>接着我们就可以在项目中直接使用了：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">TestUtils</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>依赖传递</h4>
+<p>注意，如果我们的旧项目中引入了一些其他的依赖，那么此依赖是<strong>会一起被传递的</strong></p>
+<p>比如这里我们添加了MyBatis的依赖到原项目中：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.5.16<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>此时在引入此项目的其他项目中，此依赖也被一起传递</p>
+<p>也就是说，当我们的项目依赖于其他内容时，为了保证完整性，<strong>默认情况下会一并引入所有此项目包含的依赖项</strong>。</p>
+<h4>可选依赖 <code>optional</code></h4>
+<p><strong>作用在被导入的项目中</strong></p>
+<p>在某些情况下，可能我们并不希望某些依赖直接被项目连带引入，因此，当项目中的某些依赖不希望被使用此项目作为依赖的项目使用时，我们可以给依赖添加<code>optional</code>标签表示此依赖是可选的</p>
+<p>默认在导入依赖时，不会导入可选的依赖：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">&gt;</span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>比如Mybatis的POM文件中，就存在大量的可选依赖：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.slf4j<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>slf4j-api<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.7.30<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">&gt;</span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.slf4j<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>slf4j-log4j12<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.7.30<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">&gt;</span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>log4j<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>log4j<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.2.17<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">&gt;</span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+ ...
+</code></pre></div><p>由于Mybatis要支持多种类型的日志，需要用到很多种不同的日志框架，因此需要导入这些依赖来做兼容，但是我们项目中并不一定会使用这些日志框架作为Mybatis的日志打印器，<strong>因此这些日志框架仅Mybatis内部做兼容需要导入使用</strong>，而我们可以选择不使用这些框架或是选择其中一个即可，也就是说<strong>我们导入Mybatis之后想用什么日志框架再自己加就可以了。</strong></p>
+<h4>排除依赖中的不必要依赖 <code>exclusion</code></h4>
+<p><strong>作用在我们自己的项目中</strong></p>
+<p>现在我们可以让使用此项目作为依赖的项目不使用可选依赖，但是如果别人的项目中没有将我们不希望的依赖作为可选依赖，这就导致我们还是会连带引入这些依赖</p>
+<p>这个时候我们就可以通过排除依赖来防止添加不必要的依赖，只需添加<code>exclusion</code>标签即可：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>TestMaven<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.1-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusions</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token comment">&lt;!--  可以不指定版本号，只需要组名和项目名称  --&gt;</span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>此时我们通过这种方式手动排除了Test项目中包含的MyBatis依赖，这样项目中就不会包含此依赖了。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Maven5 - 继承和多模块 + 测试和打包</title>
+      <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven5.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven5.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Maven5 - 继承和多模块 + 测试和打包</source>
+      <description>Maven5 - 继承、多模块 + 测试和打包 Maven继承和多模块 继承 一个Maven项目可以继承自另一个Maven项目 比如多个子项目都需要父项目的依赖，我们就可以使用继承关系来快速配置。 在我们学习到SpringBoot或是SpringCloud开发时，很多项目往往都会采用这种多模块子项目的形式的去编写，来更加合理地对项目中代码进行职责划分。...</description>
+      <category>code</category>
+      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Maven5 - 继承、多模块 + 测试和打包</h2>
+<h3>Maven继承和多模块</h3>
+<h4>继承</h4>
+<p><strong>一个Maven项目可以继承自另一个Maven项目</strong></p>
+<p>比如多个子项目都需要父项目的依赖，我们就可以使用继承关系来快速配置。</p>
+<p>在我们学习到SpringBoot或是SpringCloud开发时，很多项目往往都会采用这种<strong>多模块子项目</strong>的形式的去编写，来更加合理地对项目中代码进行职责划分。</p>
+<p>(在一个项目内部在创建一个项目就行)
+要创建一个子项目非常简单，我们只需右键左侧栏，新建模块，来创建一个子项目：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
+         <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>parent</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>MavenTest<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.example<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>parent</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>modelVersion</span><span class="token punctuation">&gt;</span></span>4.0.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>modelVersion</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>ChildModel<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.source</span><span class="token punctuation">&gt;</span></span>17<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.source</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.target</span><span class="token punctuation">&gt;</span></span>17<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.target</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>我们可以看到，IDEA默认给我们添加了一个<code>parent</code>节点，表示此Maven项目是父Maven项目的子项目</p>
+<p>子项目直接继承父项目的<code>groupId</code>，子项目会继承父项目的所有依赖，我们来编写一个测试用例尝试一下:</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span>extern<span class="token punctuation">.</span>java<span class="token punctuation">.</span></span><span class="token class-name">Log</span></span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Log</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"我是日志信息"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>可以看到，子项目也成功继承了Lombok依赖。</p>
+<h4>多模块 <code>dependencyManagement</code></h4>
+<p>我们还可以让父Maven项目<strong>统一管理所有的依赖，包括版本号等</strong>，子项目可以选取需要的作为依赖，而版本全由父项目管理</p>
+<p>我们可以将<code>dependencies</code>全部放入<code>dependencyManagement</code>节点，这样父项目就完全作为依赖统一管理。</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencyManagement</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.projectlombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>lombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.18.22<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>provided<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.junit.jupiter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>junit-jupiter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>5.8.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>mysql<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mysql-connector-java<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>8.0.27<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mybatis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.5.7<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencyManagement</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>我们发现，子项目的依赖失效了，因为现在父项目没有依赖，而是将所有的依赖进行集中管理，<strong>子项目需要什么再拿什么即可</strong>，同时子项目无需指定版本，<strong>所有的版本全部由父项目决定</strong>，子项目只需要使用即可：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.projectlombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>lombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>provided<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>当然，<strong>父项目如果还存在dependencies节点的话，里面的内依赖依然是直接继承</strong>：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.junit.jupiter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>junit-jupiter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>5.8.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencyManagement</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
+      ...
+</code></pre></div><h3>Maven测试和打包</h3>
+<p>我们可以看到在IDEA右上角Maven板块中，每个Maven项目都有一个<strong>生命周期</strong></p>
+<p>实际上这些是Maven的一些插件，每个插件都有各自的功能，比如：</p>
+<ul>
+<li>
+<p><code>clean</code>命令，执行后会清理整个<code>target</code>文件夹，在之后编写Springboot项目时可以解决一些缓存没更新的问题。</p>
+</li>
+<li>
+<p><code>validate</code>命令可以验证项目的可用性。</p>
+</li>
+<li>
+<p><code>compile</code>命令可以将项目编译为.class文件。</p>
+</li>
+<li>
+<p><code>install</code>命令可以将当前项目安装到本地仓库，以供其他项目导入作为依赖使用</p>
+</li>
+<li>
+<p><code>verify</code>命令可以按顺序执行每个默认生命周期阶段（<code>validate</code>，<code>compile</code>，<code>package</code>等）</p>
+</li>
+</ul>
+<p>所有的命令在执行完成之后都会显示BUILD SUCCESS，否则就是在执行过程中出现了什么错误。</p>
+<h4><code>test</code> 命令</h4>
+<p>除了上述介绍的几种命令外，我们还可以通过使用<code>test</code>命令，一键测试所有位于test目录下的测试案例，但是请注意默认的<code>test</code>命令有以下要求：</p>
+<ul>
+<li>测试类的名称必须是以<code>Test</code>结尾，比如<code>MainTest</code></li>
+<li>测试方法上必须标注<code>@Test</code>注解或是其他标记JUnit测试案例的注解</li>
+</ul>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是测试"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><figure><figcaption></figcaption></figure>
+<h4><code>package</code> 命令</h4>
+<p>我们接着来看<code>package</code>命令，它用于<strong>将我们的项目打包为jar文件</strong>，以供其他项目作为依赖引入，或是作为一个可执行的Java应用程序运行。</p>
+<p>我们可以直接点击<code>package</code>来进行打包操作。</p>
+<p>注意，在使用<code>package</code>命令打包之前也会自动执行一次<code>test</code>命令，来保证项目能够正常运行，当测试出现问题时，打包将无法完成，我们也可以手动跳过</p>
+<p>选择<code>执行Maven目标</code>来手动执行Maven命令，输入<code>mvn package -Dmaven.test.skip=true</code>来以跳过测试的方式进行打包。</p>
+<p>接着在target目录下会出现我们打包完成的jar包，在JavaSE中我们就给大家介绍过</p>
+<p>一个jar包实际上就是<strong>对我们生成的字节码文件进行的压缩打包</strong>，因此，我们也可以使用常见的压缩工具打开jar包查看其内部文件。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>此时jar包中已经包含了我们项目中编写的类了，可以直接被其他项目导入使用。</p>
+<h4>打包成可执行文件 <code>maven-assembly-plugin</code></h4>
+<p>当然，以上方式存在一定的问题，比如这里并没有包含项目中用到的一些其他依赖，如果我们需要打包一个可执行文件，那么我不仅需要将自己编写的类打包到Jar中，同时还需要将依赖也一并打包到Jar中，因为我们使用了别人为我们提供的框架，自然也需要运行别人的代码，我们需要使用另一个插件来实现一起打包：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>build</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugins</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugin</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>maven-assembly-plugin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.1.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>descriptorRefs</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>descriptorRef</span><span class="token punctuation">&gt;</span></span>jar-with-dependencies<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>descriptorRef</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>descriptorRefs</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>archive</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>manifest</span><span class="token punctuation">&gt;</span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>addClasspath</span><span class="token punctuation">&gt;</span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>addClasspath</span><span class="token punctuation">&gt;</span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mainClass</span><span class="token punctuation">&gt;</span></span>com.test.Main<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mainClass</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>manifest</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>archive</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>executions</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>execution</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">&gt;</span></span>make-assembly<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>phase</span><span class="token punctuation">&gt;</span></span>package<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>phase</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>goals</span><span class="token punctuation">&gt;</span></span>
+                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>goal</span><span class="token punctuation">&gt;</span></span>single<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>goal</span><span class="token punctuation">&gt;</span></span>
+                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>goals</span><span class="token punctuation">&gt;</span></span>
+                <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>execution</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>executions</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugin</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugins</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>build</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>导入插件后，我们可以重新进行一次打包任务，等待打包完成即可得到我们的Jar文件，此时会出现两个文件</p>
+<p>其中一个是之前的正常打包得到的jar文件，还有一个就是包含了所有依赖以及配置了主类的jar文件。</p>
+<p>我们只需要执行<code>java -jar</code>命令即可运行打包好的Java程序</p>
+<h4>多模块测试打包</h4>
+<p>对父项目执行的任何操作除了作用于本身，还会作用于他的所有子项目。</p>
+<p>多模块下父项目存在一个<code>packing</code>打包类型标签，所有的父级项目的<code>packing</code>都为<code>pom</code> (此时父项目不会打包成 <code>jar</code>)</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>packaging</span><span class="token punctuation">&gt;</span></span>pom<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>packaging</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p><code>packing</code>默认是<code>jar</code>类型，如果不作配置，maven会将该项目打成jar包：</p>
+<p>作为父级项目，还有一个重要的属性，那就是modules，通过modules标签将项目的所有子项目引用进来，在<code>build</code>父级项目时，会根据子模块的相互依赖关系整理一个<code>build</code>顺序，然后依次<code>build</code>直到所有任务都完成。</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>hint - 对象问题</title>
       <link>http://ekkosonya.cn/code/java_hint/hint2.html</link>
@@ -501,14 +919,14 @@
 ]]></content:encoded>
     </item>
     <item>
-      <title>javaweb - Maven1</title>
+      <title>Maven1 - 简介与项目结构</title>
       <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven1.html</link>
       <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Maven1</source>
-      <description>Maven1 简介 Maven 翻译为&amp;quot;专家&amp;quot;、&amp;quot;内行&amp;quot;，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。 Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种项目，例如 C#，R...</description>
+      <source url="http://ekkosonya.cn/rss.xml">Maven1 - 简介与项目结构</source>
+      <description>Maven1 - 简介与项目结构 简介 Maven 翻译为&amp;quot;专家&amp;quot;、&amp;quot;内行&amp;quot;，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。 Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种...</description>
       <category>code</category>
       <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Maven1</h2>
+      <content:encoded><![CDATA[<h2>Maven1 - 简介与项目结构</h2>
 <h3>简介</h3>
 <p>Maven 翻译为"专家"、"内行"，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
 <p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。</p>
@@ -565,10 +983,10 @@
 ]]></content:encoded>
     </item>
     <item>
-      <title>javaweb - Maven2</title>
+      <title>Maven2 - 依赖导入</title>
       <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven2.html</link>
       <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Maven2</source>
+      <source url="http://ekkosonya.cn/rss.xml">Maven2 - 依赖导入</source>
       <description>Maven2 Maven依赖导入 我们尝试使用Maven来帮助我们快速导入依赖，我们需要导入之前的JDBC驱动依赖、JUnit依赖、Mybatis依赖、Lombok依赖，那么如何使用Maven来管理依赖呢？ 我们可以创建一个dependencies节点： 那么现在就可以向节点中填写依赖了，那么我们如何知道每个依赖的坐标呢？ 我们可以在：https://...</description>
       <category>code</category>
       <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
@@ -768,363 +1186,6 @@ socket<span class="token punctuation">.</span><span class="token function">shutd
 </code></pre></div></li>
 </ol>
 ]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Socket2</title>
-      <link>http://ekkosonya.cn/code/javaweb/1-Socket/javaweb2.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/1-Socket/javaweb2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Socket2</source>
-      <description>Socket2 Socket 传输文件 其实本质上都差不多，主要掌握几种流之间的操作，和 socket 的用法 一般 xxxOutputStream 的操作是往对应的xxx流内写入一些东西；xxxInputStream 的操作是从对应的xxx流内获取一些东西。 使用浏览器访问Socket服务器 Http请求是基于TCP协议，不会保持长久连接，在收到响应...</description>
-      <category>code</category>
-      <pubDate>Sat, 22 Mar 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Socket2</h2>
-<h3>Socket 传输文件</h3>
-<p>其实本质上都差不多，主要掌握几种流之间的操作，和 <code>socket</code> 的用法</p>
-<ol>
-<li>一般 <code>xxxOutputStream</code> 的操作是往对应的xxx流内写入一些东西；<code>xxxInputStream</code> 的操作是从对应的xxx流内获取一些东西。</li>
-</ol>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Server.java</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Server</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> server <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerSocket</span><span class="token punctuation">(</span><span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">FileOutputStream</span> fileOutputStream <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token string">"net/data.txt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token class-name">Socket</span> socket <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">InputStream</span> inputstream <span class="token operator">=</span> socket<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bytes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-            <span class="token keyword">int</span> i<span class="token punctuation">;</span>
-            <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token punctuation">(</span>i <span class="token operator">=</span> inputstream<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                fileOutputStream<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-            fileOutputStream<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            socket<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Client.java</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Client</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Socket</span> socket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Socket</span><span class="token punctuation">(</span><span class="token string">"localhost"</span><span class="token punctuation">,</span> <span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token class-name">FileInputStream</span> fileInputStream <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token string">"1.txt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">OutputStream</span> stream <span class="token operator">=</span> socket<span class="token punctuation">.</span><span class="token function">getOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bytes <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-            <span class="token keyword">int</span> i<span class="token punctuation">;</span>
-            <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token punctuation">(</span>i <span class="token operator">=</span> fileInputStream<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                stream<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>bytes<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-            stream<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"服务端连接失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>使用浏览器访问Socket服务器</h3>
-<ol>
-<li>Http请求是基于TCP协议，不会保持长久连接，在收到响应的数据后会立即关闭TCP连接。</li>
-<li>尝试自己写的http相应时，要保持服务器一直在线，不能一个<code>socket</code>之后就done了，因为浏览器访问时会不止发一个请求，所以如果没有始终在线，浏览器会显示无法访问。</li>
-</ol>
-<p>查看浏览器发起的请求</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> server <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerSocket</span><span class="token punctuation">(</span><span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>    <span class="token comment">//将服务端创建在端口8080上</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"正在等待客户端连接..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">Socket</span> socket <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"客户端已连接，IP地址为："</span><span class="token operator">+</span>socket<span class="token punctuation">.</span><span class="token function">getInetAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHostAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">InputStream</span> in <span class="token operator">=</span> socket<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//通过</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"接收到客户端数据："</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token keyword">int</span> i <span class="token operator">=</span> in<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">if</span><span class="token punctuation">(</span>i <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">break</span><span class="token punctuation">;</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">)</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-</code></pre></div><p>通过访问 <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer">http://localhost:8080</a> 或是 <a href="http://127.0.0.1:8080" target="_blank" rel="noopener noreferrer">http://127.0.0.1:8080</a>, 来连接我们本地端口的服务器。</p>
-<p>我们发现浏览器是无法打开这个链接的，但是我们服务端却收到了不少的信息：</p>
-<div class="language-http" data-ext="http" data-title="http"><pre class="language-http"><code><span class="token request-line"><span class="token method property">GET</span> <span class="token request-target url">/</span> <span class="token http-version property">HTTP/1.1</span></span>
-<span class="token header"><span class="token header-name keyword">Host</span><span class="token punctuation">:</span> <span class="token header-value">127.0.0.1:8080</span></span>
-<span class="token header"><span class="token header-name keyword">Connection</span><span class="token punctuation">:</span> <span class="token header-value">keep-alive</span></span>
-<span class="token header"><span class="token header-name keyword">Cache-Control</span><span class="token punctuation">:</span> <span class="token header-value">max-age=0</span></span>
-<span class="token header"><span class="token header-name keyword">sec-ch-ua</span><span class="token punctuation">:</span> <span class="token header-value">"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"</span></span>
-<span class="token header"><span class="token header-name keyword">sec-ch-ua-mobile</span><span class="token punctuation">:</span> <span class="token header-value">?0</span></span>
-<span class="token header"><span class="token header-name keyword">sec-ch-ua-platform</span><span class="token punctuation">:</span> <span class="token header-value">"macOS"</span></span>
-<span class="token header"><span class="token header-name keyword">Upgrade-Insecure-Requests</span><span class="token punctuation">:</span> <span class="token header-value">1</span></span>
-<span class="token header"><span class="token header-name keyword">User-Agent</span><span class="token punctuation">:</span> <span class="token header-value">Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36</span></span>
-<span class="token header"><span class="token header-name keyword">Accept</span><span class="token punctuation">:</span> <span class="token header-value">text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span></span>
-<span class="token header"><span class="token header-name keyword">Sec-Fetch-Site</span><span class="token punctuation">:</span> <span class="token header-value">none</span></span>
-<span class="token header"><span class="token header-name keyword">Sec-Fetch-Mode</span><span class="token punctuation">:</span> <span class="token header-value">navigate</span></span>
-<span class="token header"><span class="token header-name keyword">Sec-Fetch-User</span><span class="token punctuation">:</span> <span class="token header-value">?1</span></span>
-<span class="token header"><span class="token header-name keyword">Sec-Fetch-Dest</span><span class="token punctuation">:</span> <span class="token header-value">document</span></span>
-<span class="token header"><span class="token header-name keyword">Accept-Encoding</span><span class="token punctuation">:</span> <span class="token header-value">gzip, deflate, br</span></span>
-<span class="token header"><span class="token header-name keyword">Accept-Language</span><span class="token punctuation">:</span> <span class="token header-value">zh-CN,zh;q=0.9,und;q=0.8,en;q=0.7</span></span>
-</code></pre></div><p>实际上这些内容都是<code>Http</code>协议规定的请求头内容。HTTP是一种应用层协议，全称为超文本传输协议，它本质也是<strong>基于TCP协议进行数据传输</strong>，因此我们的服务端能够读取HTTP请求。<strong>但是Http协议并不会保持长连接，在得到我们响应的数据后会立即关闭TCP连接。</strong></p>
-<p>既然使用的是Http连接，如果我们的服务器要支持响应HTTP请求，那么就需要按照HTTP协议的规则，返回一个规范的响应文本，首先是响应头，它至少要包含一个响应码：</p>
-<div class="language-http" data-ext="http" data-title="http"><pre class="language-http"><code><span class="token response-status"><span class="token http-version property">HTTP/1.1</span> <span class="token status-code number">200</span> <span class="token reason-phrase string">Accpeted</span></span>
-</code></pre></div><p>然后就是响应内容（注意一定要换行再写），对应支持HTTP协议的响应内容：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Server</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> server <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerSocket</span><span class="token punctuation">(</span><span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token comment">// 必须加 while(true) 因为浏览器不止发一个请求</span>
-            <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"正在等待客户端连接..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name">Socket</span> socket <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"客户端已连接，IP地址为："</span><span class="token operator">+</span>socket<span class="token punctuation">.</span><span class="token function">getInetAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHostAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                <span class="token class-name">OutputStreamWriter</span> writer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OutputStreamWriter</span><span class="token punctuation">(</span>socket<span class="token punctuation">.</span><span class="token function">getOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                writer<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"HTTP/1.1 200 Accepted\r\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                writer<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"\r\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                writer<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"Penguin!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                writer<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                socket<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-
-        <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - 数据库1</title>
-      <link>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb3.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - 数据库1</source>
-      <description>数据库 1 简介 数据库是数据管理的有效技术，是由一批数据构成的有序集合，这些数据被存放在结构化的数据表里。数据表之间相互关联，反映客观事物间的本质联系。数据库能有效地帮助一个组织或企业科学地管理各类信息资源。简而言之，我们的数据可以交给数据库来帮助我们进行管理，同时数据库能够为我们提供高效的访问性能。 常见的数据库有很多种，包括但不限于： MySQL...</description>
-      <category>code</category>
-      <pubDate>Sun, 23 Mar 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>数据库 1</h2>
-<h3>简介</h3>
-<p>数据库是数据管理的有效技术，是由一批数据构成的有序集合，这些数据被存放在结构化的数据表里。数据表之间相互关联，反映客观事物间的本质联系。数据库能有效地帮助一个组织或企业科学地管理各类信息资源。简而言之，我们的数据可以交给数据库来帮助我们进行管理，同时数据库能够为我们提供高效的访问性能。</p>
-<p>常见的数据库有很多种，包括但不限于：</p>
-<p>MySQL - 免费，用的最多的，开源数据库，适用于中小型
-Microsoft SQL Server - 收钱的，但是提供技术支持，适用于Windows Server
-Oracle - 收钱的，大型数据库系统</p>
-<h3>数据模型</h3>
-<p>数据模型与现实世界中的模型一样，是对现实世界数据特征的一种抽象。实际上，我们之前学习的类就是对现实世界数据的一种抽象，比如一个学生的特征包括姓名，年龄，年级，学号，专业等，这些特征也称为实体的一种属性，属性具有以下特点：</p>
-<ul>
-<li>属性不可再分</li>
-<li>一个实体的属性可以有很多个</li>
-<li>用于唯一区分不同实体的的属性，称为<strong>Key</strong>，比如每个同学的学号都是不一样的</li>
-<li>属性取值可以有一定的约束，比如性别只能是男或是女</li>
-</ul>
-<p>实体或是属性之间可以具有一定的联系，比如一个老师可以教很多个学生，而学生相对于老师就是被教授的关系；又比如每个同学都有一个学号与其唯一对应，因此学号和学生之间也有一种联系。而像一个老师教多个学生的联系就是一种一对多的联系（1:n），而学号唯一对应，就是一种一对一的联系（1:1）；每一个老师不仅可以教多个学生，每一个学生也可以有多个教师，这就是一种多对多的联系（n:m）
-MySQL就是一种<strong>关系型数据库</strong>，通过使用关系型数据库，我们就可以很好地存储这样带有一定联系的数据。</p>
-<p>通过构建一个ER图，我们就能很好地理清不同数据模型之间的关系和特点。</p>
-<figure><figcaption>1</figcaption></figure>
-<h3>数据库创建</h3>
-<p>既然了解了属性和联系，那么我们就来尝试创建一个数据库，并在数据库中添加用于存放数据的表，每一张表都代表一种实体的数据。首先我们要明确，我们需要创建什么样子的表：</p>
-<ul>
-<li>学生表：用于存放所有学生的数据，学生（<u>学号</u>，姓名，性别）</li>
-<li>教师表：用于存放所有教师的数据，教师（<u>教师号</u>，姓名）</li>
-<li>授课表：用于存放教师与学生的授课信息，授课（<u>学号</u>，教师号）</li>
-</ul>
-<p>其中，标注下划线的属性，作为Key，用于区别于其他实体数据的唯一标记。</p>
-<h3>数据库的规范化</h3>
-<p>要去设计存放一个实体的表，我们就需要了解数据库的关系规范化，尽可能减少“不好”的关系存在，如何设计一个优良的关系模型是最关键的内容！简而言之，我们要学习一下每一个表该如何去设计。</p>
-<p><strong>1NF</strong>对表中每一列进行约束，<strong>2NF</strong>对主属性和其他属性的依赖关系产生约束，<strong>3NF</strong>对依赖关系进一步加强，<strong>BCNF</strong>则是对主键的选取进行唯一确定</p>
-<h4>第一范式（1NF）</h4>
-<p>第一范式是指数据库的每一列都是不可分割的基本数据项，而下面这样的就存在可分割的情况：</p>
-<ul>
-<li>学生（姓名，电话号码）</li>
-</ul>
-<p>电话号码实际上包括了<code>家用座机电话</code>和<code>移动电话</code>，因此它可以被拆分为：</p>
-<ul>
-<li>学生（姓名，座机号码，手机号码）</li>
-</ul>
-<p>满足第一范式是关系型数据库最基本的要求！</p>
-<h4>第二范式（2NF）</h4>
-<p>第二范式要求表中必须存在主键，且其他的属性必须完全依赖于主键，比如：</p>
-<ul>
-<li>学生（<u>学号</u>，姓名，性别）</li>
-</ul>
-<p>学号是每个学生的唯一标识，每个学生都有着不同的学号，因此此表中存在一个主键，并且每个学生的所有属性都依赖于学号，学号发生改变就代表学生发生改变，姓名和性别都会因此发生改变，所有此表满足第二范式。</p>
-<h4>第三范式（3NF）</h4>
-<p>在满足第二范式的情况下，所有的属性都不传递依赖于主键，满足第三范式。</p>
-<ul>
-<li>学生借书情况（<u>借阅编号</u>，学生学号，书籍编号，书籍名称，书籍作者）</li>
-</ul>
-<p>实际上<strong>书籍编号依赖于借阅编号</strong>，而<strong>书籍名称和书籍作者依赖于书籍编号</strong>，因此存在传递依赖的情况，<strong>我们可以将书籍信息进行单独拆分为另一张表</strong>：</p>
-<ul>
-<li>学生借书情况（<u>借阅编号</u>，学生学号，书籍编号）</li>
-<li>书籍（<u>书籍编号</u>，书籍名称，书籍作者）</li>
-</ul>
-<p>这样就<strong>消除了传递依赖</strong>，从而满足第三范式。</p>
-<h4>BCNF</h4>
-<p>BCNF作为第三范式的补充，假设仓库管理关系表为StorehouseManage(仓库ID, 存储物品ID, 管理员ID, 数量)，且有一个管理员只在一个仓库工作；一个仓库可以存储多种物品。这个数据库表中存在如下决定关系：</p>
-<p>(仓库ID, 存储物品ID) →(管理员ID, 数量)</p>
-<p>(管理员ID, 存储物品ID) → (仓库ID, 数量)</p>
-<p>所以，(仓库ID, 存储物品ID)和(管理员ID, 存储物品ID)都是StorehouseManage的候选关键字，表中的唯一非关键字段为数量，它是符合第三范式的。但是，由于存在如下决定关系：</p>
-<p>(仓库ID) → (管理员ID)</p>
-<p>(管理员ID) → (仓库ID)</p>
-<p>即存在关键字段决定关键字段的情况，如果修改管理员ID，那么就必须逐一进行修改，所以其不符合BCNF范式。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - 数据库2</title>
-      <link>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb4.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/2-%E6%95%B0%E6%8D%AE%E5%BA%93/javaweb4.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - 数据库2</source>
-      <description>数据库 2 SQL 语句 结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。 SQL语句不区分大小写（关键字推荐使用大写），它支持多行，并且需要使用;进行结尾！ SQL也支持注释，通...</description>
-      <category>code</category>
-      <pubDate>Sun, 23 Mar 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>数据库 2</h2>
-<h2>SQL 语句</h2>
-<p>结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。</p>
-<p>SQL语句<strong>不区分大小写</strong>（关键字推荐使用大写），它支持多行，并且需要使用<code>;</code>进行结尾！</p>
-<p>SQL也支持注释，通过使用<code>--</code>或是<code>#</code>来编写注释内容，也可以使用<code>/*</code>来进行多行注释。</p>
-<p>我们要学习的就是以下四种类型的SQL语言：</p>
-<ul>
-<li>
-<p>数据查询语言（Data Query Language, DQL）
-基本结构是由<code>SELECT</code>子句，<code>FROM</code>子句，<code>WHERE</code>子句组成的查询块。</p>
-</li>
-<li>
-<p>数据操纵语言（Data Manipulation Language, DML）是SQL语言中，负责对数据库对象运行数据访问工作的指令集，
-以<code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>三种指令为核心，分别代表插入、更新与删除，是开发以数据为中心的应用程序必定会使用到的指令。</p>
-</li>
-<li>
-<p>数据库定义语言DDL(Data Definition Language)，是用于描述数据库中要存储的现实世界实体的语言。</p>
-</li>
-<li>
-<p>DCL（Data Control Language）是数据库控制语言。
-是用来设置或更改数据库用户或角色权限的语句
-包括（grant,deny,revoke等）语句。在默认状态下，只有sysadmin,dbcreator,db_owner或db_securityadmin等人员才有权力执行DCL。</p>
-</li>
-</ul>
-<p>我们平时所说的CRUD其实就是增删改查（Create/Retrieve/Update/Delete）</p>
-<h3>数据库定义语言（DDL）</h3>
-<h4>SQL数据类型</h4>
-<p>以下的数据类型用于字符串存储：</p>
-<ul>
-<li><code>char(n)</code>可以存储任意字符串，但是是<strong>固定长度为n</strong>，如果插入的长度小于定义长度时，则用空格填充。</li>
-<li><code>varchar(n)</code>也可以存储任意数量字符串，<strong>长度不固定</strong>，但<strong>不能超过n</strong>，不会用空格填充。</li>
-</ul>
-<p>以下数据类型用于存储数字：</p>
-<ul>
-<li><code>smallint</code>用于存储小的整数，范围在 (-32768，32767)</li>
-<li><code>int</code>用于存储一般的整数，范围在 (-2147483648，2147483647)</li>
-<li><code>bigint</code>用于存储大型整数，范围在 (-9,223,372,036,854,775,808，9,223,372,036,854,775,807)</li>
-<li><code>float</code>用于存储单精度小数</li>
-<li><code>double</code>用于存储双精度的小数</li>
-</ul>
-<p>以下数据类型用于存储时间：</p>
-<ul>
-<li><code>date</code>存储日期</li>
-<li><code>time</code>存储时间</li>
-<li><code>year</code>存储年份</li>
-<li><code>datetime</code>用于混合存储日期+时间</li>
-</ul>
-<h4>列级约束条件</h4>
-<p>列级约束有六种：</p>
-<ul>
-<li>
-<p>主键 Primary key
-确保列中的每个值都是唯一的，并且不能为空。一个表只能有一个主键，主键列的值用来唯一标识每一行数据。在主键列中，不允许有重复的值和空值。</p>
-<p><code>id INT PRIMARY KEY</code> 表示 <code>id</code> 列是主键，且不能为空且唯一。</p>
-</li>
-<li>
-<p>外键 foreign key
-用于建立和维护两表之间的关系，确保列中的值必须存在于另一表的主键或唯一约束列中。它保证数据的参照完整性。即外键列中的数据值必须对应于另一表的主键或唯一列中的某个值。</p>
-<p><code>FOREIGN KEY (department_id) REFERENCES departments(id)</code>，表示 <code>department_id</code> 列是外键，参照 <code>departments</code> 表的 <code>id</code> 列。</p>
-</li>
-<li>
-<p>唯一 unique
-确保列中的每个值都是唯一的，但允许空值。与主键类似，唯一约束保证列中所有的非空数据都是唯一的。一个表可以有多个唯一约束，不同于主键，唯一约束允许有空值。</p>
-<p><code>email VARCHAR(255) UNIQUE</code> 表示 <code>email</code> 列的值是唯一的。</p>
-</li>
-<li>
-<p>检查 check （MySQL不支持）
-用于定义列的值必须满足某些条件。检查约束通常用于限制某些特定的数值范围或模式。</p>
-<p><code>age INT CHECK (age &gt;= 18)</code>，表示 <code>age</code> 列的值必须大于或等于 18。</p>
-</li>
-<li>
-<p>默认 default
-用于为列指定默认值。如果在插入数据时没有为该列提供值，则会使用默认值。默认值仅在插入数据时使用，如果插入时该列有明确值，则默认值不会生效。</p>
-<p><code>status VARCHAR(10) DEFAULT 'active'</code>，表示 <code>status</code> 列在未指定值时默认值为 'active'。</p>
-</li>
-<li>
-<p>非空/空值 not null/ null
-用于定义列是否可以为空。NOT NULL 约束要求该列的每一行必须有一个非空值，而 NULL 允许列中的某些行没有值。</p>
-<p><code>name VARCHAR(100) NOT NULL</code> 表示 <code>name</code> 列不能为 <code>NULL</code>，每一行必须有值。</p>
-</li>
-</ul>
-<h4>表级约束条件</h4>
-<p>表级约束有四种：主键、外键、唯一、检查</p>
-<ul>
-<li>
-<p>主键
-主键约束保证表中的每一行数据都有唯一的标识符，且该列的值不能为空。一个表只能有一个主键。</p>
-<p><code>CONSTRAINT pk_primary_key PRIMARY KEY (id)</code></p>
-</li>
-<li>
-<p>外键
-外键约束用于<strong>在两个表之间建立参照完整性关系</strong>，确保某列的值必须存在于另一表的主键或唯一约束列中。</p>
-</li>
-</ul>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> Departments <span class="token punctuation">(</span>
-    DepartmentID <span class="token keyword">INT</span><span class="token punctuation">,</span>
-    DepartmentName <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span><span class="token punctuation">,</span>
-    Location <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    ManagerID <span class="token keyword">INT</span><span class="token punctuation">,</span>
-    Budget <span class="token keyword">DECIMAL</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-
-    <span class="token keyword">CONSTRAINT</span> PK_Departments <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>DepartmentID<span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token keyword">CONSTRAINT</span> UC_DepartmentName <span class="token keyword">UNIQUE</span> <span class="token punctuation">(</span>DepartmentName<span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token keyword">CONSTRAINT</span> CK_BudgetPositive <span class="token keyword">CHECK</span> <span class="token punctuation">(</span>Budget <span class="token operator">&gt;=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token keyword">CONSTRAINT</span> FK_Manager <span class="token keyword">FOREIGN</span> <span class="token keyword">KEY</span> <span class="token punctuation">(</span>ManagerID<span class="token punctuation">)</span> <span class="token keyword">REFERENCES</span> Employees<span class="token punctuation">(</span>EmployeeID<span class="token punctuation">)</span><span class="token punctuation">,</span>
-    <span class="token keyword">CONSTRAINT</span> DF_Location <span class="token keyword">DEFAULT</span> <span class="token string">'Headquarters'</span> <span class="token keyword">FOR</span> Location
-<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-</code></pre></div><h4>数据库操作</h4>
-<p>我们可以通过<code>create database</code>来创建一个数据库：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">DATABASE</span> 数据库名
-</code></pre></div><p>为了能够支持中文，我们在创建时可以设定编码格式：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">DATABASE</span> <span class="token keyword">IF</span> <span class="token operator">NOT</span> <span class="token keyword">EXISTS</span> 数据库名 <span class="token keyword">DEFAULT</span> <span class="token keyword">CHARSET</span> utf8 <span class="token keyword">COLLATE</span> utf8_general_ci<span class="token punctuation">;</span>
-</code></pre></div><p>如果我们创建错误了，我们可以将此数据库删除，通过使用<code>drop database</code>来删除一个数据库：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DROP</span> <span class="token keyword">DATABASE</span> 数据库名
-</code></pre></div><h4>创建表 <code>CREATE</code></h4>
-<p>在创建表之前，一定要先切换到我们要创建表的数据库内 <code>use xxxx;</code>，默认并不是你创建的数据库。</p>
-<p>数据库创建完成后，我们一般通过<code>create table</code>语句来创建一张表：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">create</span> <span class="token keyword">table</span> 表名<span class="token punctuation">(</span>列名 数据类型<span class="token punctuation">[</span>列级约束条件<span class="token punctuation">]</span><span class="token punctuation">,</span>
-             列名 数据类型<span class="token punctuation">[</span>列级约束条件<span class="token punctuation">]</span><span class="token punctuation">,</span>
-             <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-             <span class="token punctuation">[</span><span class="token punctuation">,</span>表级约束条件<span class="token punctuation">]</span><span class="token punctuation">)</span>
-</code></pre></div><h4>修改表 <code>ALTER</code></h4>
-<p>如果我们想修改表结构，我们可以通过<code>alter table</code>来进行修改：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> 表名 <span class="token punctuation">[</span><span class="token keyword">ADD</span> 新列名 数据类型<span class="token punctuation">[</span>列级约束条件<span class="token punctuation">]</span><span class="token punctuation">]</span>
-                <span class="token punctuation">[</span><span class="token keyword">DROP</span> <span class="token keyword">COLUMN</span> 列名<span class="token punctuation">[</span><span class="token keyword">restrict</span><span class="token operator">|</span><span class="token keyword">cascade</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
-                <span class="token punctuation">[</span><span class="token keyword">ALTER</span> <span class="token keyword">COLUMN</span> 列名 新数据类型<span class="token punctuation">]</span>
-</code></pre></div><p>我们可以通过<code>ADD</code>来添加一个新的列，通过<code>DROP</code>来删除一个列，不过我们可以添加<code>restrict</code>或<code>cascade</code>，默认是<code>restrict</code>，表示如果此列作为其他表的约束或视图引用到此列时，将无法删除，而<code>cascade</code>会强制连带引用此列的约束、视图一起删除。还可以通过<code>ALTER</code>来修改此列的属性。</p>
-<h4>删除表 <code>DROP</code></h4>
-<p>我们可以通过<code>drop table</code>来删除一个表：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DROP</span> <span class="token keyword">TABLE</span> 表名<span class="token punctuation">[</span><span class="token keyword">restrict</span><span class="token operator">|</span><span class="token keyword">cascade</span><span class="token punctuation">]</span>
-</code></pre></div><p>其中restrict和cascade上面的效果一致。</p>
-<h3>数据库操纵语言 (DML)</h3>
-<h4>插入数据 <code>INSERT INTO</code></h4>
-<p>通过使用<code>insert into</code>语句来向数据库中插入一条数据（一条记录）：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> 表名 <span class="token keyword">VALUES</span><span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">,</span> 值<span class="token number">3</span><span class="token punctuation">)</span>
-</code></pre></div><p>如果插入的数据与列一一对应，那么可以省略列名，但是如果希望向指定列上插入数据，就需要给出列名：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> 表名<span class="token punctuation">(</span>列名<span class="token number">1</span><span class="token punctuation">,</span> 列名<span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span><span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span>
-</code></pre></div><p>我们也可以一次性向数据库中插入多条数据：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> 表名<span class="token punctuation">(</span>列名<span class="token number">1</span><span class="token punctuation">,</span> 列名<span class="token number">2</span><span class="token punctuation">)</span> <span class="token keyword">VALUES</span><span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>值<span class="token number">1</span><span class="token punctuation">,</span> 值<span class="token number">2</span><span class="token punctuation">)</span>
-</code></pre></div><p>我们来试试看向我们刚刚创建的表中添加三条数据。</p>
-<h4>修改数据 <code>UPDATE</code></h4>
-<p>我们可以通过<code>update</code>语句来更新表中的数据：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">UPDATE</span> 表名 <span class="token keyword">SET</span> 列名<span class="token operator">=</span>值<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token keyword">WHERE</span> 条件
-</code></pre></div><p>注意，SQL语句中的等于判断是<code>=</code></p>
-<p><strong>警告：</strong> 如果忘记添加<code>WHERE</code>字句来限定条件，<strong>将使得整个表中此列的所有数据都被修改</strong>！</p>
-<h4>删除数据</h4>
-<p>我们可以通过使用<code>delete</code>来删除表中的数据：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> 表名
-</code></pre></div><p>通过这种方式，<strong>将删除表中全部数据</strong>，我们也可以使用<code>where</code>来添加条件，只删除指定的数据：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> 表名 <span class="token keyword">WHERE</span> 条件
-</code></pre></div>]]></content:encoded>
     </item>
   </channel>
 </rss>

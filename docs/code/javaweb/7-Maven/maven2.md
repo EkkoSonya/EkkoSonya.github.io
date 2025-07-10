@@ -1,5 +1,5 @@
 ---
-title: javaweb - Maven2
+title: Maven2 - 依赖导入
 date: 2025-07-10
 category:
   - code

@@ -1,5 +1,5 @@
 ---
-title: javaweb - Maven1
+title: Maven1 - 简介与项目结构
 date: 2025-07-08
 category:
   - code
@@ -11,7 +11,7 @@ tag:
 order: -0.7470
 ---
 
-## Maven1
+## Maven1 - 简介与项目结构
 
 ### 简介
 

@@ -6,11 +6,354 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Thu, 10 Jul 2025 09:30:56 GMT</pubDate>
-    <lastBuildDate>Thu, 10 Jul 2025 09:30:56 GMT</lastBuildDate>
+    <pubDate>Sun, 20 Jul 2025 17:44:49 GMT</pubDate>
+    <lastBuildDate>Sun, 20 Jul 2025 17:44:49 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Content1 - 网络基础1</title>
+      <link>http://ekkosonya.cn/code/javaweb/8-%E7%BD%91%E7%BB%9C%E5%86%85%E5%AE%B9/javainfo.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/8-%E7%BD%91%E7%BB%9C%E5%86%85%E5%AE%B9/javainfo.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Content1 - 网络基础1</source>
+      <description>网络基础1 在计算机网络（谢希仁 第七版 第264页）中，是这样描述万维网的： 万维网（World Wide Web）并非是某种特殊的计算机网络，万维网是一个大规模的联机式信息储藏所，英文简称Web，万维网用链接的方法，能够非常方便地从互联网上的一个站点访问另一个站点，从而主动地按需求获取丰富的信息。 万维网以客户服务器的方式工作，浏览器就是安装在用户...</description>
+      <category>code</category>
+      <pubDate>Sun, 20 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>网络基础1</h2>
+<p>在计算机网络（谢希仁 第七版 第264页）中，是这样描述万维网的：</p>
+<blockquote>
+<p>万维网（World Wide Web）并非是某种特殊的计算机网络，万维网是一个大规模的联机式信息储藏所，英文简称<code>Web</code>，万维网用<strong>链接</strong>的方法，能够非常方便地从互联网上的一个站点访问另一个站点，从而主动地按需求获取丰富的信息。
+万维网以客户服务器的方式工作，浏览器就是安装在用户主机上的万维网客户程序，万维网文档所驻留的主机则运行服务器程序，因此这台主机也称为万维网服务器。<strong>客户程序向服务器程序发出请求，服务器程序向客户程序送回客户所要的万维网文档</strong>，在一个客户程序主窗口上显示出的万维网文档称为页面。</p>
+</blockquote>
+<p>URL的格式为：</p>
+<blockquote>
+<p>&lt;协议&gt;://&lt;主机&gt;:&lt;端口&gt;/&lt;路径&gt;</p>
+<p>协议是指采用什么协议来访问服务器，不同的协议决定了服务器返回信息的格式，我们一般使用HTTP协议。</p>
+<p>主机可以是一个域名，也可以是一个IP地址（实际上域名最后会被解析为IP地址进行访问）</p>
+<p>端口是当前服务器上Web应用程序开启的端口，我们前面学习TCP通信的时候已经介绍过了，HTTP协议默认使用80端口，因此有时候可以省略。</p>
+<p>路径就是我们希望去访问此服务器上的某个文件，不同的路径代表访问不同的资源。</p>
+</blockquote>
+<p>接着了解一下什么是HTTP协议：</p>
+<blockquote>
+<p>HTTP是面向事务的应用层协议，它是万维网上能够可靠交换文件的重要基础。HTTP不仅传送完成超文本跳转所需的必须信息，而且也传送任何可从互联网上得到的信息，如文本、超文本、声音和图像。</p>
+</blockquote>
+<p>HTTP的传输原理：</p>
+<blockquote>
+<p>HTTP使用了面向连接的TCP作为运输层协议，保证了数据的可靠传输。HTTP不必考虑数据在传输过程中被丢弃后又怎样被重传。但是HTTP协议本身是无连接的。也就是说，HTTP虽然使用了TCP连接，但是通信的双方在交换HTTP报文之前不需要先建立HTTP连接。1997年以前使用的是HTTP/1.0协议，之后就是HTTP/1.1协议了。</p>
+</blockquote>
+<p>HTTP是基于TCP进行通信的，我们首先来回顾一下TCP的通信原理：</p>
+<figure><figcaption>点击查看源网页</figcaption></figure>
+<p>TCP协议实际上是经历了三次握手再进行通信，也就是说保证整个通信是稳定的，才可以进行数据交换，并且在连接已经建立的过程中，双方随时可以互相发送数据，直到有一方主动关闭连接，这时在进行四次挥手，完成整个TCP通信。</p>
+<p>而HTTP和TCP并不是一个层次的通信协议，TCP是传输层协议，而HTTP是应用层协议，因此，实际上HTTP的内容会作为TCP协议的报文被封装，并继续向下一层进行传递，而传输到客户端时，会依次进行解包，还原为最开始的HTTP数据。</p>
+<figure><figcaption>点击查看源网页</figcaption></figure>
+<p>HTTP使用TCP协议是为了使得数据传输更加可靠，既然它是依靠TCP协议进行数据传输，那么为什么说它本身是无连接的呢？</p>
+<p>我们来看一下HTTP的传输过程：</p>
+<figure><figcaption>点击查看源网页</figcaption></figure>
+<blockquote>
+<p>用户在点击鼠标链接某个万维网文档时，HTTP协议首先要和服务器建立TCP连接。这需要使用三报文握手。
+当建立TCP连接的三报文握手的前两部分完成后（即经过了一个RTT时间后），万维网客户就把<strong>HTTP请求报文作为建立TCP连接的三报文握手中的第三个报文的数据，发送给万维网服务器</strong>。
+服务器收到HTTP请求报文后，就把所请求的文档作为响应报文返回给客户。</p>
+</blockquote>
+<p>因此，我们的浏览器请求一个页面，需要两倍的往返时间。</p>
+<p>最后，我们再来了解一下HTTP的报文结构：</p>
+<figure><figcaption>image-20230306164008613</figcaption></figure>
+<p>由客户端向服务端发送是报文称为请求报文，而服务端返回给客户端的称为响应报文，实际上，整个报文全部是以文本形式发送的，通过使用空格和换行来完成分段。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Content2 - Tomact</title>
+      <link>http://ekkosonya.cn/code/javaweb/8-%E7%BD%91%E7%BB%9C%E5%86%85%E5%AE%B9/javainfo2.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/8-%E7%BD%91%E7%BB%9C%E5%86%85%E5%AE%B9/javainfo2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Content2 - Tomact</source>
+      <description>网络基础2 Tomact 安装 Tomcat（汤姆猫）就是一个典型的Web应用服务器软件，通过运行Tomcat服务器，我们就可以快速部署我们的Web项目，并交由Tomcat进行管理，我们只需要直接通过浏览器访问我们的项目即可。 那么首先，我们需要进行一个简单的环境搭建，我们需要在Tomcat官网下载最新的Tomcat服务端程序：https://tomc...</description>
+      <category>code</category>
+      <pubDate>Sun, 20 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>网络基础2</h2>
+<h3>Tomact 安装</h3>
+<p>Tomcat（汤姆猫）就是一个典型的Web应用服务器软件，通过运行Tomcat服务器，我们就可以快速部署我们的Web项目，并交由Tomcat进行管理，我们只需要直接通过浏览器访问我们的项目即可。</p>
+<p>那么首先，我们需要进行一个简单的环境搭建，我们需要在Tomcat官网下载最新的Tomcat服务端程序：<a href="https://tomcat.apache.org/download-10.cgi" target="_blank" rel="noopener noreferrer">https://tomcat.apache.org/download-10.cgi</a></p>
+<ul>
+<li>下载：64-bit Windows zip</li>
+</ul>
+<p>下载完成后，解压，并放入桌面，接下来需要配置一下环境变量，打开<code>高级系统设置</code>，打开<code>环境变量</code>，添加一个新的系统变量，变量名称为<code>JRE_HOME</code>，填写JDK的安装目录+/jre，比如Zulujdk默认就是：C:\Program Files\Zulu\zulu-8\jre</p>
+<p>设置完成后，我们进入tomcat文件夹bin目录下，并在当前位置打开CMD窗口，将startup.sh拖入窗口按回车运行，如果环境变量配置有误，会提示，若没问题，服务器则正常启动。</p>
+<p>如果出现乱码，说明编码格式配置有问题，我们修改一下服务器的配置文件，打开<code>conf</code>文件夹，找到<code>logging.properties</code>文件，这就是日志的配置文件（我们在前面已经给大家讲解过了）将ConsoleHandler的默认编码格式修改为GBK编码格式：</p>
+<div class="language-properties" data-ext="properties" data-title="properties"><pre class="language-properties"><code><span class="token key attr-name">java.util.logging.ConsoleHandler.encoding</span> <span class="token punctuation">=</span> <span class="token value attr-value">GBK</span>
+</code></pre></div><p>现在重新启动服务器，就可以正常显示中文了。</p>
+<p>服务器启动成功之后，不要关闭，我们打开浏览器，在浏览器中访问：<a href="http://localhost:8080/" target="_blank" rel="noopener noreferrer">http://localhost:8080/</a></p>
+<p>Tomcat服务器默认是使用8080端口（可以在配置文件中修改），访问成功说明我们的Tomcat环境已经部署成功了。</p>
+<p>整个Tomcat目录下，我们已经认识了bin目录（所有可执行文件，包括启动和关闭服务器的脚本）以及conf目录（服务器配置文件目录），那么我们接着来看其他的文件夹：</p>
+<ul>
+<li>lib目录：Tomcat服务端运行的一些依赖，不用关心。</li>
+<li>logs目录：所有的日志信息都在这里。</li>
+<li>temp目录：存放运行时产生的一些临时文件，不用关心。</li>
+<li>work目录：工作目录，Tomcat会将jsp文件转换为java文件（我们后面会讲到，这里暂时不提及）</li>
+<li>webapp目录：所有的Web项目都在这里，每个文件夹都是一个Web应用程序：</li>
+</ul>
+<p>我们发现，官方已经给我们预设了一些项目了，访问后默认使用的项目为ROOT项目，也就是我们默认打开的网站。</p>
+<p>我们也可以访问example项目，只需要在后面填写路径即可：<a href="http://localhost:8080/examples/" target="_blank" rel="noopener noreferrer">http://localhost:8080/examples/</a></p>
+<p>或是docs项目（这个是Tomcat的一些文档）<a href="http://localhost:8080/docs/" target="_blank" rel="noopener noreferrer">http://localhost:8080/docs/</a></p>
+<p>Tomcat还自带管理页面，我们打开：<a href="http://localhost:8080/manager" target="_blank" rel="noopener noreferrer">http://localhost:8080/manager</a></p>
+<p>提示需要用户名和密码，由于不知道是什么，我们先点击取消，页面中出现如下内容：</p>
+<blockquote>
+<p>You are not authorized to view this page. If you have not changed any configuration files, please examine the file <code>conf/tomcat-users.xml</code> in your installation. That file must contain the credentials to let you use this webapp.</p>
+<p>For example, to add the <code>manager-gui</code> role to a user named <code>tomcat</code> with a password of <code>s3cret</code>, add the following to the config file listed above.</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>&lt;role rolename="manager-gui"/&gt;
+&lt;user username="tomcat" password="s3cret" roles="manager-gui"/&gt;
+</code></pre></div><p>Note that for Tomcat 7 onwards, the roles required to use the manager application were changed from the single <code>manager</code> role to the following four roles. You will need to assign the role(s) required for the functionality you wish to access.</p>
+<ul>
+<li><code>manager-gui</code> - allows access to the HTML GUI and the status pages</li>
+<li><code>manager-script</code> - allows access to the text interface and the status pages</li>
+<li><code>manager-jmx</code> - allows access to the JMX proxy and the status pages</li>
+<li><code>manager-status</code> - allows access to the status pages only</li>
+</ul>
+<p>The HTML interface is protected against CSRF but the text and JMX interfaces are not. To maintain the CSRF protection:</p>
+<ul>
+<li>Users with the <code>manager-gui</code> role should not be granted either the <code>manager-script</code> or <code>manager-jmx</code> roles.</li>
+<li>If the text or jmx interfaces are accessed through a browser (e.g. for testing since these interfaces are intended for tools not humans) then the browser must be closed afterwards to terminate the session.</li>
+</ul>
+<p>For more information - please see the <a href="http://localhost:8080/docs/manager-howto.html" target="_blank" rel="noopener noreferrer">Manager App How-To</a>.</p>
+</blockquote>
+<p>现在我们按照上面的提示，去配置文件中进行修改：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>role</span> <span class="token attr-name">rolename</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>manager-gui<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>user</span> <span class="token attr-name">username</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>admin<span class="token punctuation">"</span></span> <span class="token attr-name">password</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>admin<span class="token punctuation">"</span></span> <span class="token attr-name">roles</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>manager-gui<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
+</code></pre></div><p>现在再次打开管理页面，已经可以成功使用此用户进行登陆了。登录后，展示给我们的是一个图形化界面，我们可以快速预览当前服务器的一些信息，包括已经在运行的Web应用程序，甚至还可以查看当前的Web应用程序有没有出现内存泄露。</p>
+<p>同样的，还有一个虚拟主机管理页面，用于一台主机搭建多个Web站点，一般情况下使用不到，这里就不做演示了。</p>
+<p>我们可以将我们自己的项目也放到webapp文件夹中，这样就可以直接访问到了，我们在webapp目录下新建test文件夹，将我们之前编写的前端代码全部放入其中（包括html文件、js、css、icon等），重启服务器。</p>
+<p>我们可以直接通过 <a href="http://localhost:8080/test/" target="_blank" rel="noopener noreferrer">http://localhost:8080/test/</a> 来进行访问。</p>
+<h3>IDEA MAVEN 构建 web 项目</h3>
+<p>新建项目，选择 Java Enterprise 项目名称随便，项目模板选择Web应用程序，然后我们需要配置Web应用程序服务器，将我们的Tomcat服务器集成到IDEA中。配置很简单，首先点击新建，然后设置Tomcat主目录即可，配置完成后，点击下一步即可，依赖项使用默认即可，然后点击完成，之后IDEA会自动帮助我们创建Maven项目。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Content3 - Servlet</title>
+      <link>http://ekkosonya.cn/code/javaweb/8-%E7%BD%91%E7%BB%9C%E5%86%85%E5%AE%B9/javainfo3.html</link>
+      <guid>http://ekkosonya.cn/code/javaweb/8-%E7%BD%91%E7%BB%9C%E5%86%85%E5%AE%B9/javainfo3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Content3 - Servlet</source>
+      <description>网络基础3 Servlet Servlet 是 Java EE的一个标准，大部分的Web服务器都支持此标准，包括Tomcat，就像之前的JDBC一样，由官方定义了一系列接口，而具体实现由我们来编写，最后交给Web服务器（如Tomcat）来运行我们编写的 Servlet。 我们可以通过实现 Servlet 来进行动态网页响应，使用Servlet，不再是直...</description>
+      <category>code</category>
+      <pubDate>Sun, 20 Jul 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>网络基础3</h2>
+<h3>Servlet</h3>
+<p>Servlet 是 Java EE的一个标准，大部分的Web服务器都支持此标准，包括Tomcat，就像之前的JDBC一样，由官方定义了一系列接口，而具体实现由我们来编写，最后交给Web服务器（如Tomcat）来运行我们编写的 Servlet。</p>
+<p>我们可以通过实现 Servlet 来进行动态网页响应，使用Servlet，不再是直接由Tomcat 服务器发送我们编写好的静态网页内容（HTML文件），而是由我们通过Java 代码进行动态拼接的结果，它能够很好地实现动态网页的返回。</p>
+<p>当然，Servlet并不是专用于HTTP协议通信，也可以用于其他的通信，但是一般都是用于 HTTP。</p>
+<h4>创建Servlet</h4>
+<p>那么如何创建一个Servlet呢，非常简单，我们只需要实现<code>Servlet</code>类即可，并添加注解<code>@WebServlet</code>来进行注册。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@WebServlet</span><span class="token punctuation">(</span><span class="token string">"/test"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestServlet</span> <span class="token keyword">implements</span> <span class="token class-name">Servlet</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">init</span><span class="token punctuation">(</span><span class="token class-name">ServletConfig</span> servletConfig<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span> <span class="token punctuation">{</span>
+        
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">ServletConfig</span> <span class="token function">getServletConfig</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">service</span><span class="token punctuation">(</span><span class="token class-name">ServletRequest</span> servletRequest<span class="token punctuation">,</span> <span class="token class-name">ServletResponse</span> servletResponse<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">getServletInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>除了直接编写一个类，我们也可以在<code>web.xml</code>中进行注册，现将类上<code>@WebServlet</code>的注解去掉：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-name</span><span class="token punctuation">&gt;</span></span>test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-name</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-class</span><span class="token punctuation">&gt;</span></span>com.example.webtest.TestServlet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-class</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-name</span><span class="token punctuation">&gt;</span></span>test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-name</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url-pattern</span><span class="token punctuation">&gt;</span></span>/test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url-pattern</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>这样的方式也能注册Servlet，但是显然直接使用注解更加方便，因此之后我们一律使用注解进行开发。只有比较新的版本才支持此注解，老的版本是不支持的哦。</p>
+<p>实际上，Tomcat服务器会为我们提供一些默认的Servlet，也就是说在服务器启动后，即使我们什么都不编写，Tomcat也自带了几个默认的Servlet，他们编写在conf目录下的web.xml中：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token comment">&lt;!-- The mapping for the default servlet --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-name</span><span class="token punctuation">&gt;</span></span>default<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-name</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url-pattern</span><span class="token punctuation">&gt;</span></span>/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url-pattern</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
+
+    <span class="token comment">&lt;!-- The mappings for the JSP servlet --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-name</span><span class="token punctuation">&gt;</span></span>jsp<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-name</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url-pattern</span><span class="token punctuation">&gt;</span></span>*.jsp<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url-pattern</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url-pattern</span><span class="token punctuation">&gt;</span></span>*.jspx<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url-pattern</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
+
+</code></pre></div><p>我们发现，默认的Servlet实际上可以帮助我们去访问一些静态资源，这也是为什么我们启动Tomcat服务器之后，能够直接访问webapp目录下的静态页面。</p>
+<p>我们可以将之前编写的页面放入到webapp目录下，来测试一下是否能直接访问。</p>
+<h3>Servlet 的生命周期</h3>
+<p>我们可以多次尝试去访问此页面，但是init和构造方法只会执行一次，而每次访问都会执行的是<code>service</code>方法，因此，一个Servlet的生命周期为：</p>
+<ul>
+<li>首先执行<strong>构造方法</strong>完成 Servlet 初始化</li>
+<li>Servlet 初始化后调用 <strong>init ()</strong> 方法。</li>
+<li>Servlet 调用 <strong>service()</strong> 方法来处理客户端的请求。</li>
+<li>Servlet 销毁前调用 <strong>destroy()</strong> 方法。</li>
+<li>最后，Servlet 是由 JVM 的垃圾回收器进行垃圾回收的。</li>
+</ul>
+<p>现在我们发现，实际上在Web应用程序运行时，每当浏览器向服务器发起一个请求时，都会创建一个线程执行一次<code>service</code>方法，来让我们处理用户的请求，并将结果响应给用户。</p>
+<h4><code>service</code> 方法</h4>
+<p>每次访问对应的 url 时，都会单独创建一个线程来处理执行 <code>sevice</code> 函数。</p>
+<p>在 <code>service</code> 方法 中，还有两个参数，<code>ServletRequest</code>和<code>ServletResponse</code></p>
+<p>实际上，用户发起的HTTP请求，就被Tomcat服务器封装为了一个<code>ServletRequest</code>对象，我们得到是其实是Tomcat服务器帮助我们创建的一个实现类，我们可以从 <code>ServletRequest</code> 获取所有的请求内容。</p>
+<p>HTTP请求报文中的所有内容，都可以从<code>ServletRequest</code>对象中获取，同理，<code>ServletResponse</code>就是我们需要返回给浏览器的HTTP响应报文实体类封装。</p>
+<h5><code>ServletRequest</code> 内容</h5>
+<p>对应用户发起的请求信息，我们可以获取请求的一些信息：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">service</span><span class="token punctuation">(</span><span class="token class-name">ServletRequest</span> servletRequest<span class="token punctuation">,</span> <span class="token class-name">ServletResponse</span> servletResponse<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token comment">//首先将其转换为HttpServletRequest（继承自ServletRequest，一般是此接口实现）</span>
+        <span class="token class-name">HttpServletRequest</span> request <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span><span class="token punctuation">)</span> servletRequest<span class="token punctuation">;</span>
+        
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">getProtocol</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+        <span class="token comment">//获取协议版本</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">getRemoteAddr</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+        <span class="token comment">//获取访问者的IP地址</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+        <span class="token comment">//获取请求方法</span>
+        <span class="token comment">//获取头部信息</span>
+        <span class="token class-name">Enumeration</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> enumeration <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getHeaderNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>enumeration<span class="token punctuation">.</span><span class="token function">hasMoreElements</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token class-name">String</span> name <span class="token operator">=</span> enumeration<span class="token punctuation">.</span><span class="token function">nextElement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>name <span class="token operator">+</span> <span class="token string">": "</span> <span class="token operator">+</span> request<span class="token punctuation">.</span><span class="token function">getHeader</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>我们发现，整个HTTP请求报文中的所有内容，都可以通过<code>HttpServletRequest</code>对象来获取，当然，它的作用肯定不仅仅是获取头部信息，我们还可以使用它来完成更多操作，后面会一一讲解。</p>
+<h5><code>ServletResponse</code> 内容</h5>
+<p>用来传回信息给用户</p>
+<p>再来看看<code>ServletResponse</code>，这个是<strong>服务端的响应内容</strong>，我们可以在这里填写我们想要发送给浏览器显示的内容：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//转换为HttpServletResponse（同上）</span>
+<span class="token class-name">HttpServletResponse</span> response <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">HttpServletResponse</span><span class="token punctuation">)</span> servletResponse<span class="token punctuation">;</span>
+<span class="token comment">//设定内容类型以及编码格式（普通HTML文本使用text/html，之后会讲解文件传输）</span>
+response<span class="token punctuation">.</span><span class="token function">setHeader</span><span class="token punctuation">(</span><span class="token string">"Content-type"</span><span class="token punctuation">,</span> <span class="token string">"text/html;charset=UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//获取Writer直接写入内容</span>
+response<span class="token punctuation">.</span><span class="token function">getWriter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"我是响应内容！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">//所有内容写入完成之后，再发送给浏览器</span>
+</code></pre></div><p>现在我们在浏览器中打开此页面，就能够收到服务器发来的响应内容了。其中，响应头部分，是由Tomcat帮助我们生成的一个默认响应头。</p>
+<figure><figcaption>点击查看源网页</figcaption></figure>
+<p>首先 tomcat 里面有许多 servlet 容器，客户端会请求对应的容器中的某些资源或者实例，如果该容器找到了对应的需要的实例就会采用该服务然后返回</p>
+<h3><code>HttpServlet</code></h3>
+<p>首先<code>Servlet</code>有一个直接实现抽象类<code>GenericServlet</code></p>
+<p>这个类完善了配置文件读取和Servlet信息相关的的操作，但是依然没有去实现<code>service</code>方法，因此此类仅仅是用于完善一个Servlet的基本操作</p>
+<p>接着来看<code>HttpServlet</code>，它是遵循HTTP协议的一种Servlet，继承自<code>GenericServlet</code>，它根据HTTP协议的规则，完善了service方法。</p>
+<p>对应的 <code>service</code> 方法，先看对应请求是否支持Http协议的实现，是的话进行转化 <code>HttpServletRequest</code> 以及 <code>HttpServletResponse</code>，然后去 <code>this.service</code> 来实现具体对应方法的请求，我们只需要重写这些具体方法就行</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">service</span><span class="token punctuation">(</span><span class="token class-name">ServletRequest</span> req<span class="token punctuation">,</span> <span class="token class-name">ServletResponse</span> res<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>req <span class="token keyword">instanceof</span> <span class="token class-name">HttpServletRequest</span> <span class="token operator">&amp;&amp;</span> res <span class="token keyword">instanceof</span> <span class="token class-name">HttpServletResponse</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">HttpServletRequest</span> request <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span><span class="token punctuation">)</span>req<span class="token punctuation">;</span>
+        <span class="token class-name">HttpServletResponse</span> response <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">HttpServletResponse</span><span class="token punctuation">)</span>res<span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">service</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ServletException</span><span class="token punctuation">(</span><span class="token string">"non-HTTP request or response"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">service</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> req<span class="token punctuation">,</span> <span class="token class-name">HttpServletResponse</span> resp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> method <span class="token operator">=</span> req<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"GET"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">long</span> lastModified <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getLastModified</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>lastModified <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1L</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doGet</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token keyword">long</span> ifModifiedSince <span class="token operator">=</span> req<span class="token punctuation">.</span><span class="token function">getDateHeader</span><span class="token punctuation">(</span><span class="token string">"If-Modified-Since"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>ifModifiedSince <span class="token operator">&lt;</span> lastModified<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">maybeSetLastModified</span><span class="token punctuation">(</span>resp<span class="token punctuation">,</span> lastModified<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doGet</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                resp<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">304</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"HEAD"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">long</span> lastModified <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getLastModified</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">maybeSetLastModified</span><span class="token punctuation">(</span>resp<span class="token punctuation">,</span> lastModified<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doHead</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"POST"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doPost</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"PUT"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doPut</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"DELETE"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doDelete</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"OPTIONS"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doOptions</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"TRACE"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doTrace</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"PATCH"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">doPatch</span><span class="token punctuation">(</span>req<span class="token punctuation">,</span> resp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token class-name">String</span> errMsg <span class="token operator">=</span> lStrings<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"http.method_not_implemented"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token punctuation">]</span> errArgs <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+        errArgs<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> method<span class="token punctuation">;</span>
+        errMsg <span class="token operator">=</span> <span class="token class-name">MessageFormat</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>errMsg<span class="token punctuation">,</span> errArgs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        resp<span class="token punctuation">.</span><span class="token function">sendError</span><span class="token punctuation">(</span><span class="token number">501</span><span class="token punctuation">,</span> errMsg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在阅读了HttpServlet源码之后，我们发现，其实我们只需要继承HttpServlet来编写我们的Servlet就可以了，并且它已经帮助我们提前实现了一些操作，这样就会给我们省去很多的时间。</p>
+<p>在 <code>HttpServlet</code> 源码中已经配置好了对应的 <code>Get</code>, <code>Post</code>, <code>Put</code> 等操作函数和代码，只不过并没有写具体操作，如果直接调用是默认提示没有支持该方法的</p>
+<p>以 <code>doGet</code> 为例</p>
+<p>在 <code>HttpServlet</code> 源码中</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">doGet</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> req<span class="token punctuation">,</span> <span class="token class-name">HttpServletResponse</span> resp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+    <span class="token class-name">String</span> protocol <span class="token operator">=</span> req<span class="token punctuation">.</span><span class="token function">getProtocol</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> msg <span class="token operator">=</span> lStrings<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"http.method_get_not_supported"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    resp<span class="token punctuation">.</span><span class="token function">sendError</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getMethodNotSupportedCode</span><span class="token punctuation">(</span>protocol<span class="token punctuation">)</span><span class="token punctuation">,</span> msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>显然表示此时不支持，现在，我们只需要在对应的 <code>Servlet</code> 中重写对应的请求方式，就可以快速完成Servlet的编写。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Log</span>
+<span class="token annotation punctuation">@WebServlet</span><span class="token punctuation">(</span><span class="token string">"/test"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestServlet</span> <span class="token keyword">extends</span> <span class="token class-name">HttpServlet</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">doGet</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> req<span class="token punctuation">,</span> <span class="token class-name">HttpServletResponse</span> resp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+        resp<span class="token punctuation">.</span><span class="token function">setContentType</span><span class="token punctuation">(</span><span class="token string">"text/html;charset=UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        resp<span class="token punctuation">.</span><span class="token function">getWriter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"&lt;h1&gt;恭喜你解锁了全新玩法&lt;/h1&gt;"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>@WebServlet注解详解</h3>
+<p>我们接着来看WebServlet注解，我们前面已经得知，可以直接使用此注解来快速注册一个Servlet，那么我们来想细看看此注解还有什么其他的玩法。</p>
+<h4>不同路径配置</h4>
+<p>首先name属性就是Servlet名称，而urlPatterns和value实际上是同样功能，就是代表当前Servlet的访问路径，<strong>它不仅仅可以是一个固定值，还可以进行通配符匹配</strong>：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@WebServlet</span><span class="token punctuation">(</span><span class="token string">"/test/*"</span><span class="token punctuation">)</span>
+</code></pre></div><p>上面的路径表示，所有匹配<code>/test/随便什么</code>的路径名称，都可以访问此Servlet，我们可以在浏览器中尝试一下。</p>
+<p>也可以进行某个扩展名称的匹配：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@WebServlet</span><span class="token punctuation">(</span><span class="token string">"*.js"</span><span class="token punctuation">)</span>
+</code></pre></div><p>这样的话，获取任何以js结尾的文件，都会由我们自己定义的Servlet处理。</p>
+<h4>替换默认路径</h4>
+<p>那么如果我们的路径为<code>/</code>呢？</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@WebServlet</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span>
+</code></pre></div><p>此路径和Tomcat默认为我们提供的Servlet冲突，<strong>会直接替换掉默认的</strong>，而使用我们的</p>
+<p>此路径的意思为，<strong>如果没有找到匹配当前访问路径的Servlet，那么就会使用此Servlet进行处理</strong>。</p>
+<h4>配置多个访问路径</h4>
+<p>我们还可以为一个Servlet配置多个访问路径：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@WebServlet</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token string">"/test1"</span><span class="token punctuation">,</span> <span class="token string">"/test2"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h4><code>loadOnStartup</code> 属性</h4>
+<p>我们接着来看loadOnStartup属性，此属性决定了是否在Tomcat启动时就加载此Servlet</p>
+<p>默认情况下，Servlet只有在被访问时才会加载，它的默认值为-1，表示不在启动时加载，我们可以将其修改为大于等于0的数，来开启启动时加载。并且数字的大小决定了此Servlet的启动优先级。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Log</span>
+<span class="token annotation punctuation">@WebServlet</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"/test"</span><span class="token punctuation">,</span> loadOnStartup <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestServlet</span> <span class="token keyword">extends</span> <span class="token class-name">HttpServlet</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"我被初始化了！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">doGet</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> req<span class="token punctuation">,</span> <span class="token class-name">HttpServletResponse</span> resp<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span><span class="token punctuation">,</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
+        resp<span class="token punctuation">.</span><span class="token function">setContentType</span><span class="token punctuation">(</span><span class="token string">"text/html;charset=UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        resp<span class="token punctuation">.</span><span class="token function">getWriter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"&lt;h1&gt;恭喜你解锁了全新玩法&lt;/h1&gt;"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
+    </item>
     <item>
       <title>Maven3 - 依赖作用域</title>
       <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven3.html</link>
@@ -430,15 +773,39 @@
 ]]></content:encoded>
     </item>
     <item>
-      <title>hint - 对象问题</title>
+      <title>hint2</title>
       <link>http://ekkosonya.cn/code/java_hint/hint2.html</link>
       <guid>http://ekkosonya.cn/code/java_hint/hint2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">hint - 对象问题</source>
-      <description> -128 到 +127 以内的int值都是自动包装好，所以对象都是一个 alt text </description>
+      <source url="http://ekkosonya.cn/rss.xml">hint2</source>
+      <description> -128 到 +127 以内的int值都是自动包装好，所以对象都是一个 alt text Scanner 的 nextInt Scanner scanner = new Scanner(System.in); scanner.nextInt() 只读整数，不读换行符（\n） 换行符仍然留在输入缓冲区中，需要清理对应的换行符 Java 中 finall...</description>
       <category>code</category>
       <pubDate>Mon, 16 Jun 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<ol>
-<li>-128 到 +127 以内的int值都是自动包装好，所以对象都是一个
+<li>
+<p>-128 到 +127 以内的int值都是自动包装好，所以对象都是一个
+</p>
+</li>
+<li>
+<p><code>Scanner</code> 的 <code>nextInt</code>
+<code>Scanner scanner = new Scanner(System.in);</code>
+<code>scanner.nextInt()</code> 只读整数，不读换行符（\n）
+换行符仍然留在输入缓冲区中，需要清理对应的换行符</p>
+</li>
+<li>
+<p>Java 中 finally 的行为</p>
+<p>不论 try 里是正常结束、遇到 return、遇到异常，finally 块里的内容都会被执行。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>prompt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> scanner<span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InputMismatchException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>err<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"输入的不是数字，重新输入"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+      scanner<span class="token punctuation">.</span><span class="token function">nextLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 关键：清除输入缓冲区的换行符</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><p>即使这样，也会执行 <code>finally</code>，这样解决了缓冲区存在 <code>\n</code> 的问题</p>
+</li>
+<li>
+<p>consume</p>
 </li>
 </ol>
 ]]></content:encoded>
@@ -916,275 +1283,6 @@
 <span class="token punctuation">}</span>
 </code></pre></div><p>当然，JUnit还支持从CSV表格中导入或自定义参数提供器等，这里就不做详细介绍了</p>
 <p>官方文档：<a href="https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-sources-ArgumentsSource" target="_blank" rel="noopener noreferrer">https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-sources-ArgumentsSource</a></p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Maven1 - 简介与项目结构</title>
-      <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven1.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Maven1 - 简介与项目结构</source>
-      <description>Maven1 - 简介与项目结构 简介 Maven 翻译为&amp;quot;专家&amp;quot;、&amp;quot;内行&amp;quot;，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。 Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种...</description>
-      <category>code</category>
-      <pubDate>Tue, 08 Jul 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Maven1 - 简介与项目结构</h2>
-<h3>简介</h3>
-<p>Maven 翻译为"专家"、"内行"，是 Apache 下的一个纯 Java 开发的开源项目。基于项目对象模型（缩写：POM）概念，Maven利用一个中央信息片断能管理一个项目的构建、报告和文档等步骤。</p>
-<p>Maven 是一个项目管理工具，可以对 Java 项目进行构建、依赖管理。Maven 也可被用于构建和管理各种项目，例如 C#，Ruby，Scala 和其他语言编写的项目。</p>
-<p>Maven 曾是 Jakarta 项目的子项目，现为由 Apache 软件基金会主持的独立 Apache 项目。</p>
-<p>通过Maven，可以帮助我们做：</p>
-<ul>
-<li>项目的自动构建，包括代码的编译、测试、打包、安装、部署等操作。</li>
-<li>依赖管理，项目使用到哪些依赖，可以快速完成导入，不需要手动导入jar包。</li>
-</ul>
-<p>Maven也需要安装环境，但是IDEA已经自带了Maven环境，因此我们不需要再去进行额外的环境安装。</p>
-<h3>Maven项目结构</h3>
-<p>Maven就很好地解决了这个问题，我们可以先来看一下，一个Maven项目和我们普通的项目有什么区别：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>其中src目录下存放我们的源代码和测试代码，分别位于main和test目录下</p>
-<p>而test和main目录下又具有java、resources目录，它们分别用于存放Java源代码、静态资源（如配置文件、图片等），测试代码不会打包到项目里面，只仅用于测试。</p>
-<p>很多JavaWeb项目可能还会用到webapp目录。</p>
-<h4>核心配置 <code>pom.xml</code></h4>
-<p>而下面的<code>pom.xml</code>则是Maven的核心配置，也是整个项目的所有依赖、插件、以及各种配置的集合，它也是使用XML格式编写的，一个标准的pom配置长这样：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0<span class="token punctuation">"</span></span>
-         <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-         <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>modelVersion</span><span class="token punctuation">&gt;</span></span>4.0.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>modelVersion</span><span class="token punctuation">&gt;</span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>HelloWorld<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.0-SNAPSHOT<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.source</span><span class="token punctuation">&gt;</span></span>17<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.source</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>maven.compiler.target</span><span class="token punctuation">&gt;</span></span>17<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>maven.compiler.target</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>project.build.sourceEncoding</span><span class="token punctuation">&gt;</span></span>UTF-8<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project.build.sourceEncoding</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">&gt;</span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>project</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>我们可以看到，Maven的配置文件是以<code>project</code>为根节点，而<code>modelVersion</code>定义了当前模型的版本，一般是4.0.0，我们不用去修改。</p>
-<h5>项目标识</h5>
-<p><code>groupId</code>、<code>artifactId</code>、<code>version</code>这三个元素合在一起，用于唯一区别每个项目</p>
-<p>别人如果需要将我们编写的代码作为依赖，那么就必须通过这三个元素来定位我们的项目，我们称为一个项目的基本坐标</p>
-<p>所有的项目一般都有自己的Maven坐标</p>
-<p><strong>因此我们通过Maven导入其他的依赖只需要填写这三个基本元素就可以了，无需再下载Jar文件，而是Maven自动帮助我们下载</strong>依赖并导入：</p>
-<ul>
-<li>
-<p><code>groupId</code> 一般用于指定组名称，命名规则一般和包名一致，比如我们这里使用的是<code>org.example</code>，一个组下面可以有很多个项目。</p>
-</li>
-<li>
-<p><code>artifactId</code> 一般用于指定项目在当前组中的唯一名称，也就是说在组中用于区分于其他项目的标记。</p>
-</li>
-<li>
-<p><code>version</code> 代表项目版本，随着我们项目的开发和改进，版本号也会不断更新，就像LOL一样，每次赛季更新都会有一个大版本更新，我们的Maven项目也是这样，我们可以手动指定当前项目的版本号，其他人使用我们的项目作为依赖时，也可以根本版本号进行选择（这里的SNAPSHOT代表快照，一般表示这是一个处于开发中的项目，正式发布项目一般只带版本号）</p>
-</li>
-</ul>
-<p><code>properties</code>中一般都是一些变量和选项的配置，我们这里指定了JDK的源代码和编译版本为17，同时下面的源代码编码格式为UTF-8，无需进行修改。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Maven2 - 依赖导入</title>
-      <link>http://ekkosonya.cn/code/javaweb/7-Maven/maven2.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/7-Maven/maven2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Maven2 - 依赖导入</source>
-      <description>Maven2 Maven依赖导入 我们尝试使用Maven来帮助我们快速导入依赖，我们需要导入之前的JDBC驱动依赖、JUnit依赖、Mybatis依赖、Lombok依赖，那么如何使用Maven来管理依赖呢？ 我们可以创建一个dependencies节点： 那么现在就可以向节点中填写依赖了，那么我们如何知道每个依赖的坐标呢？ 我们可以在：https://...</description>
-      <category>code</category>
-      <pubDate>Thu, 10 Jul 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Maven2</h2>
-<h3>Maven依赖导入</h3>
-<p>我们尝试使用Maven来帮助我们快速导入依赖，我们需要导入之前的JDBC驱动依赖、JUnit依赖、Mybatis依赖、Lombok依赖，那么如何使用Maven来管理依赖呢？</p>
-<p>我们可以创建一个<code>dependencies</code>节点：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
-    //里面填写的就是所有的依赖
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>那么现在就可以向节点中填写依赖了，那么我们如何知道每个依赖的坐标呢？</p>
-<p>我们可以在：<a href="https://central.sonatype.com" target="_blank" rel="noopener noreferrer">https://central.sonatype.com</a> 进行查询</p>
-<p>直接搜索Lombok即可，打开后可以看到已经给我们写出了依赖的坐标：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.projectlombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>lombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>1.18.36<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>我们直接将其添加到<code>dependencies</code>节点中即可</p>
-<p>现在我们来编写一个测试用例看看依赖导入成功了没有：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Student</span> student <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Student</span><span class="token punctuation">(</span><span class="token string">"小明"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>student<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
-<span class="token annotation punctuation">@AllArgsConstructor</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> age<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>项目运行成功，表示成功导入了依赖。</p>
-<h3>Maven依赖管理原理</h3>
-<p>那么，Maven是如何进行依赖管理呢，以致于如此便捷的导入依赖，我们来看看Maven项目的依赖管理流程：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>通过流程图我们得知，一个项目依赖一般是存储在中央仓库中，也有可能存储在一些其他的远程仓库（可以自行搭建私服）</p>
-<p>几乎所有的依赖都被放到了中央仓库中，因此，Maven可以直接从中央仓库中下载大部分的依赖（因此Maven<strong>第一次导入依赖是需要联网</strong>的，否则无法下载）</p>
-<p>远程仓库中下载之后 ，会暂时存储在本地仓库，我们会发现我们本地存在一个<code>.m2</code>文件夹，这就是Maven本地仓库文件夹，<strong>默认建立在C盘</strong>，如果你C盘空间不足，会出现问题。</p>
-<p>在下次导入依赖时，如果Maven发现<strong>本地仓库中就已经存在某个依赖，那么就不会再去远程仓库下载了</strong>。</p>
-<h4>修改国内镜像源</h4>
-<p><strong>注意：</strong> 因为中心仓库服务器位于国外，下载速度缓慢，可能在导入依赖时会出现卡顿等问题，我们需要使用国内的镜像仓库服务器来加速访问（镜像仓库与中心仓库自动同步所有依赖，访问速度更快）有两种方式配置：</p>
-<ol>
-<li>
-<p>可以配置IDEA自带的Maven插件远程仓库镜像地址，我们打开IDEA的安装目录，找到<code>安装根目录/plugins/maven/lib/maven3/conf</code>文件夹，找到<code>settings.xml</code>文件，打开编辑，找到mirros标签，添加以下内容：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mirror</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">&gt;</span></span>aliyunmaven<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mirrorOf</span><span class="token punctuation">&gt;</span></span>central<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mirrorOf</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">&gt;</span></span>阿里云公共仓库<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url</span><span class="token punctuation">&gt;</span></span>https://maven.aliyun.com/repository/public<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mirror</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div></li>
-<li>
-<p>自行前往Maven官网并下载最新版的Maven安装，然后将IDEA的Maven配置为我们自行安装的位置（好处是IDEA更新后不需要重新配置）可以一直使用，镜像配置方式同第1步。</p>
-</li>
-</ol>
-<p>这样，我们就将默认的远程仓库地址（国外），配置为国内的阿里云仓库地址了（依赖的下载速度就会快起来了）</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>javaweb - Socket1</title>
-      <link>http://ekkosonya.cn/code/javaweb/1-Socket/javaweb1.html</link>
-      <guid>http://ekkosonya.cn/code/javaweb/1-Socket/javaweb1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">javaweb - Socket1</source>
-      <description>Socket 通过Socket技术（它是计算机之间进行通信的一种约定或一种方式），我们就可以实现两台计算机之间的通信，Socket也被翻译为套接字，是操作系统底层提供的一项通信技术，它支持TCP和UDP。而Java就对socket底层支持进行了一套完整的封装，我们可以通过Java来实现Socket通信。 socket 连接示例 实际上它就是一个TCP连...</description>
-      <category>code</category>
-      <pubDate>Fri, 21 Mar 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Socket</h2>
-<p>通过Socket技术（它是计算机之间进行通信的一种约定或一种方式），我们就可以实现两台计算机之间的通信，Socket也被翻译为套接字，是操作系统底层提供的一项通信技术，它支持TCP和UDP。而Java就对socket底层支持进行了一套完整的封装，我们可以通过Java来实现Socket通信。</p>
-<h3>socket 连接示例</h3>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//服务端</span>
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> server <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerSocket</span><span class="token punctuation">(</span><span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>    
-        <span class="token comment">//将服务端创建在端口8080上</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"正在等待客户端连接..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Socket</span> socket <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
-        <span class="token comment">//当没有客户端连接时，线程会阻塞，直到有客户端连接为止</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"客户端已连接，IP地址为："</span><span class="token operator">+</span>socket<span class="token punctuation">.</span><span class="token function">getInetAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHostAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//由于继承了Autocloseble 省略 socket.close()</span>
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//客户端</span>
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Socket</span> socket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Socket</span><span class="token punctuation">(</span><span class="token string">"localhost"</span><span class="token punctuation">,</span> <span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"已连接到服务端！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"服务端连接失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>实际上它就是一个TCP连接的建立过程：</p>
-<figure><figcaption>20250319235934</figcaption></figure>
-<p>一旦TCP连接建立，服务端和客户端之间就可以相互发送数据，直到客户端主动关闭连接。当然，服务端不仅仅只可以让一个客户端进行连接，我们可以尝试让服务端一直运行来不断接受客户端的连接：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> server <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerSocket</span><span class="token punctuation">(</span><span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>    <span class="token comment">//将服务端创建在端口8080上</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"正在等待客户端连接..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>   <span class="token comment">//无限循环等待客户端连接</span>
-            <span class="token class-name">Socket</span> socket <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"客户端已连接，IP地址为："</span><span class="token operator">+</span>socket<span class="token punctuation">.</span><span class="token function">getInetAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHostAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>使用Socket进行数据传输</h3>
-<p>通过Socket对象，我们就可以获取到对应的I/O流进行网络数据传输：</p>
-<p>注意：</p>
-<ol>
-<li>如果服务端是 <code>Socket socket = server.accept();</code>  最后需要 <code>socket.close</code> 不然会报错</li>
-<li>如果接收端读取的是 <code>reader.readLine()</code>, 注意需要添加 <code>\n</code>，<code>writer.write(text+ "\n");</code>, <code>writer</code>不会主动加 <code>\n</code></li>
-<li><code>OutputStream</code> 是把东西先到对应的流里  <code>InputStream</code> 是获取对应流的内容</li>
-</ol>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Server.java</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Server</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span><span class="token punctuation">(</span><span class="token class-name">ServerSocket</span> server <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServerSocket</span><span class="token punctuation">(</span><span class="token number">8080</span><span class="token punctuation">)</span>
-        <span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"正在等待客户端连接..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">Socket</span> socket <span class="token operator">=</span> server<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//当没有客户端连接时，线程会阻塞，直到有客户端连接为止</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"客户端已连接，IP地址为："</span><span class="token operator">+</span>socket<span class="token punctuation">.</span><span class="token function">getInetAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getHostAddress</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-            <span class="token class-name">BufferedReader</span> reader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BufferedReader</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span>socket<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token string">"接收到客户端数据："</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>reader<span class="token punctuation">.</span><span class="token function">readLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-            <span class="token comment">//向客户端发请求</span>
-            <span class="token class-name">OutputStreamWriter</span> writer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OutputStreamWriter</span><span class="token punctuation">(</span>socket<span class="token punctuation">.</span><span class="token function">getOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            writer<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"receiver!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            writer<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-            socket<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Client.java</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Client</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Socket</span> socket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Socket</span><span class="token punctuation">(</span><span class="token string">"localhost"</span><span class="token punctuation">,</span> <span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-             <span class="token class-name">Scanner</span> scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"已连接到服务端！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">OutputStream</span> stream <span class="token operator">=</span> socket<span class="token punctuation">.</span><span class="token function">getOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">OutputStreamWriter</span> writer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OutputStreamWriter</span><span class="token punctuation">(</span>stream<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"请输入要发送给服务端的内容："</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">String</span> text <span class="token operator">=</span> scanner<span class="token punctuation">.</span><span class="token function">nextLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            writer<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>text<span class="token operator">+</span> <span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            writer<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"数据已发送："</span><span class="token operator">+</span>text<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-            <span class="token class-name">BufferedReader</span> reader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BufferedReader</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span>socket<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"收到服务器返回："</span><span class="token operator">+</span>reader<span class="token punctuation">.</span><span class="token function">readLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"服务端连接失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-</code></pre></div><h4>杂项</h4>
-<ol>
-<li>
-<p>我们可以手动关闭单向的流：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>socket<span class="token punctuation">.</span><span class="token function">shutdownOutput</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//关闭输出方向的流</span>
-socket<span class="token punctuation">.</span><span class="token function">shutdownInput</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//关闭输入方向的流</span>
-</code></pre></div></li>
-<li>
-<p>如果我们不希望服务端等待太长的时间，我们可以通过调用<code>setSoTimeout()</code>方法来设定IO超时时间：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code> socket<span class="token punctuation">.</span><span class="token function">setSoTimeout</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>当超过设定时间都依然没有收到客户端或是服务端的数据时，会抛出异常：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>    <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>net<span class="token punctuation">.</span></span>SocketTimeoutException</span><span class="token operator">:</span> <span class="token class-name">Read</span> timed out
-</code></pre></div></li>
-<li>
-<p>我们之前使用的都是通过构造方法直接连接服务端，那么是否可以等到我们想要的时候再去连接 <code>connect</code> 方法，调用无参构造方法不会自动连接。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">try</span> <span class="token punctuation">(</span><span class="token class-name">Socket</span> socket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Socket</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-<span class="token comment">//调用无参构造不会自动连接</span>
-    <span class="token class-name">Scanner</span> scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Scanner</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>in<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span> 
-    socket<span class="token punctuation">.</span><span class="token function">connect</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InetSocketAddress</span><span class="token punctuation">(</span><span class="token string">"localhost"</span><span class="token punctuation">,</span> <span class="token number">8080</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//手动调用connect方法进行连接</span>
-<span class="token punctuation">}</span>
-</code></pre></div></li>
-<li>
-<p>如果连接的双方发生意外而通知不到对方，导致一方还持有连接，这样就会占用资源，因此我们可以使用<code>setKeepAlive()</code>方法来防止此类情况发生：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>socket<span class="token punctuation">.</span><span class="token function">setKeepAlive</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>当客户端连接后，如果设置了keeplive为 true，当对方没有发送任何数据过来，超过一个时间(看系统内核参数配置)，那么我们这边会发送一个ack探测包发到对方，探测双方的TCP/IP连接是否有效。</p>
-</li>
-<li>
-<p>TCP在传输过程中，实际上会有一个缓冲区用于数据的发送和接收：
-
-此缓冲区大小为：8192，我们可以手动调整其大小来优化传输效率：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code> socket<span class="token punctuation">.</span><span class="token function">setReceiveBufferSize</span><span class="token punctuation">(</span><span class="token number">25565</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//TCP接收缓冲区</span>
- socket<span class="token punctuation">.</span><span class="token function">setSendBufferSize</span><span class="token punctuation">(</span><span class="token number">25565</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//TCP发送缓冲区</span>
-</code></pre></div></li>
-</ol>
 ]]></content:encoded>
     </item>
   </channel>

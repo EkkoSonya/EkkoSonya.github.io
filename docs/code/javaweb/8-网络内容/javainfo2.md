@@ -1,5 +1,5 @@
 ---
-title: Content2 - Tomact
+title: Content - Tomact
 date: 2025-07-20
 category:
   - code

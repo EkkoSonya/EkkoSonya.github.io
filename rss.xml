@@ -6,11 +6,197 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 06 Aug 2025 16:08:57 GMT</pubDate>
-    <lastBuildDate>Wed, 06 Aug 2025 16:08:57 GMT</lastBuildDate>
+    <pubDate>Mon, 11 Aug 2025 16:25:13 GMT</pubDate>
+    <lastBuildDate>Mon, 11 Aug 2025 16:25:13 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Javassm - Spring高级特性 (Aware接口+任务调度+监听器)</title>
+      <link>http://ekkosonya.cn/code/java_ssm/Spring/spring6.html</link>
+      <guid>http://ekkosonya.cn/code/java_ssm/Spring/spring6.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - Spring高级特性 (Aware接口+任务调度+监听器)</source>
+      <description>Spring高级特性1 Bean Aware 在Spring中提供了一些以Aware结尾的接口，实现了Aware接口的bean在被初始化之后，可以获取相应资源。 Aware的中文意思为感知。 简单来说，他就是一个标识，实现此接口的类会获得某些感知能力，Spring容器会在Bean被加载时，根据类实现的感知接口，会调用类中实现的对应感知方法。 比如Bea...</description>
+      <category>code</category>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Spring高级特性1</h2>
+<h3>Bean Aware</h3>
+<p>在Spring中提供了一些以<code>Aware</code>结尾的接口，实现了<code>Aware</code>接口的<code>bean</code>在被初始化之后，可以获取相应资源。</p>
+<p>Aware的中文意思为<strong>感知</strong>。</p>
+<p>简单来说，他就是一个标识，实现此接口的类会获得某些感知能力，Spring容器会<strong>在Bean被加载时</strong>，根据类实现的感知接口，<strong>会调用类中实现的对应感知方法</strong>。</p>
+<p>比如<code>BeanNameAware</code>之类的以<code>Aware</code>结尾的接口，这个接口获取的资源就是<code>BeanName</code>：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token keyword">implements</span> <span class="token class-name">BeanNameAware</span> <span class="token punctuation">{</span>
+    <span class="token comment">//我们只需要实现这个接口就可以了</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setBeanName</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>   
+        <span class="token comment">//Bean在加载的时候，容器就会自动调用此方法，将Bean的名称给到我们</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我在加载阶段获得了Bean名字："</span><span class="token operator">+</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>又比如<code>BeanClassLoaderAware</code>，那么它能够使得我们可以在<code>Bean</code>加载阶段就获取到当前Bean的类加载器：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token keyword">implements</span> <span class="token class-name">BeanClassLoaderAware</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setBeanClassLoader</span><span class="token punctuation">(</span><span class="token class-name">ClassLoader</span> classLoader<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>classLoader<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>任务调度</h3>
+<p>为了执行某些任务，我们可能需要一些非常规的操作</p>
+<p>比如我们希望使用多线程来处理我们的结果或是执行一些定时任务，到达指定时间再去执行。</p>
+<p>这时我们首先想到的就是创建一个新的线程来处理，或是使用TimerTask来完成定时任务</p>
+<p>但是我们有了Spring框架之后，就不用这样了，因为Spring框架为我们提供了更加便捷的方式进行任务调度。</p>
+<h4>异步任务执行 <code>@Async</code></h4>
+<p>我们需要在配置类上添加<code>@EnableAsync</code>注解。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@EnableAsync</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span><span class="token string">"com.test.bean"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainConfiguration</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>接着我们只需要在需要异步执行的方法上，添加<code>@Async</code>注解即可将此方法标记为异步，当此方法被调用时，会异步执行，也就是新开一个线程执行，而不是在当前线程执行。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">syncTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"我是同步执行的方法，开始..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是同步执行的方法，结束！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Async</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">asyncTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"我是异步执行的方法，开始..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">3000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是异步执行的方法，结束！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>现在我们在主方法中分别调用一下试试看：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+    <span class="token class-name">AnnotationConfigApplicationContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token class-name">MainConfiguration</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Student</span> student <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">Student</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    student<span class="token punctuation">.</span><span class="token function">asyncTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//异步执行</span>
+    student<span class="token punctuation">.</span><span class="token function">syncTest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//同步执行</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>执行结果为：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>很明显，异步执行的任务并不是在当前线程启动的，而是在其他线程启动的，所以说并不会在当前线程阻塞，可以看到马上就开始执行下一行代码，调用同步执行的任务了。</p>
+<p>因此，当我们要将<code>Bean</code>的某个方法设计为异步执行时，就可以直接添加这个注解。</p>
+<p>但是需要注意，添加此注解要求方法的<strong>返回值只能是void或是Future类型</strong>才可以</p>
+<p>还有，在使用时，可能还会出现这样的信息：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>虽然出现了这样的信息，但是我们的程序依然可以正常运行，这是因为Spring默认会从容器中选择一个<code>Executor</code>类型（JUC有关）的实例，并使用它来创建线程执行任务</p>
+<p>这是Spring推荐的方式，当然，如果没有找到，那么会使用自带的 <code>SimpleAsyncTaskExecutor</code> 处理异步方法调用。</p>
+<h5>原理</h5>
+<p>这个方法很明显我们并没有去编写异步执行的逻辑，那么为什么会异步执行呢？</p>
+<p>这里很明显是同步调用的方法。的确，如果这个Bean只是一个简简单单的Student类型的对象，确实做不到。但是它真的只是一个简简单单的Student类型对象吗？</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Student</span> student <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">Student</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>student<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+<span class="token comment">//这里我们通过getClass来获取一下类型，你会发现惊喜</span>
+</code></pre></div><p>我们来看看结果：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>实际上Spring帮助我们动态生成的一个<strong>代理类</strong>，我们原本的类代码已经被修改了，当然，这只是冰山一角，能做到这样的操作，这其实都是<code>AOP</code>的功劳。</p>
+<h4>定时任务 <code>@Scheduled</code></h4>
+<p>定时任务其实就是指定在哪个时候再去执行，在JavaSE阶段使用过<code>TimerTask</code>来执行定时任务。</p>
+<p>Spring中的定时任务是<strong>全局性质</strong>的，当我们的Spring程序启动后，那么定时任务也就跟着启动了，我们可以在配置类上添加<code>@EnableScheduling</code>注解：</p>
+<p>不需要调用，默认启动就会运行</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@EnableScheduling</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span><span class="token string">"com.test.bean"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainConfiguration</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>接着我们可以直接在配置类里面编写定时任务，把我们要做的任务写成方法，并添加<code>@Scheduled</code>注解：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Scheduled</span><span class="token punctuation">(</span>fixedRate <span class="token operator">=</span> <span class="token number">2000</span><span class="token punctuation">)</span>   <span class="token comment">//单位依然是毫秒，这里是每两秒钟打印一次</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">task</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是定时任务！"</span><span class="token operator">+</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>我们注意到<code>@Scheduled</code>中有很多参数</p>
+<p>我们需要指定'cron', 'fixedDelay(String)', or 'fixedRate(String)'的其中一个，否则无法创建定时任务，他们的区别如下：</p>
+<ul>
+<li>fixedDelay：在上一次定时任务执行完之后，间隔多久继续执行。</li>
+<li>fixedRate：无论上一次定时任务有没有执行完成，两次任务之间的时间间隔。</li>
+<li>cron：如果嫌上面两个不够灵活，你还可以使用cron表达式来指定任务计划。</li>
+</ul>
+<p>这里简单讲解一下cron表达式：<a href="https://blog.csdn.net/sunnyzyq/article/details/98597252" target="_blank" rel="noopener noreferrer">https://blog.csdn.net/sunnyzyq/article/details/98597252</a></p>
+<h3>监听器 <code>ApplicationListener&lt;xxx&gt;</code></h3>
+<p>监听实际上就是<strong>等待某个事件的触发</strong>，当事件触发时，<strong>对应事件的监听器就会被通知</strong></p>
+<p>监听器可是很关键的，只不过在Spring中用的不是很频繁罢了。</p>
+<p>但是这里还是要简单介绍一下：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestListener</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">ContextRefreshedEvent</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span><span class="token class-name">ContextRefreshedEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>event<span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//可以直接通过事件获取到事件相关的东西</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>要编写监听器，我们只需要让<code>Bean</code>继承<code>ApplicationListener</code>就可以了，并且将类型指定为对应的<code>Event</code>事件</p>
+<p>这样，当发生某个事件时就会通知我们，比如<code>ContextRefreshedEvent</code>，这个事件<strong>会在Spring容器初始化完成会触发一次</strong>：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>自定义事件 <code>ApplicationEvent</code></h4>
+<p>Spring内部有各种各样的事件</p>
+<p>我们也可以自己编写事件，然后在某个时刻发布这个事件到所有的监听器：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestEvent</span> <span class="token keyword">extends</span> <span class="token class-name">ApplicationEvent</span> <span class="token punctuation">{</span>   
+    <span class="token comment">// 自定义事件需要继承ApplicationEvent</span>
+    <span class="token keyword">public</span> <span class="token class-name">TestEvent</span><span class="token punctuation">(</span><span class="token class-name">Object</span> source<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span>source<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>对应设置监听器</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestListener</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">TestEvent</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span><span class="token class-name">TestEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"发生了一次自定义事件，成功监听到！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>比如现在我们希望在定时任务中每秒钟发生一次这个事件：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TaskComponent</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationEventPublisherAware</span> <span class="token punctuation">{</span>  
+    <span class="token comment">// 要发布事件，需要拿到ApplicationEventPublisher</span>
+    <span class="token comment">// 这里我们通过Aware在初始化的时候拿到</span>
+    <span class="token comment">// 实际上我们的ApplicationContext</span>
+    <span class="token comment">// 就是ApplicationEventPublisher的实现类</span>
+    <span class="token comment">// 这里拿到的就是 我们创建的ApplicationContext对象</span>
+    <span class="token class-name">ApplicationEventPublisher</span> publisher<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Scheduled</span><span class="token punctuation">(</span>fixedRate <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">)</span>   <span class="token comment">//一秒一次</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">task</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment">// 直接通过ApplicationEventPublisher的publishEvent方法发布事件</span>
+        <span class="token comment">// 这样，所有这个事件的监听器，都会监听到这个事件发生了</span>
+        publisher<span class="token punctuation">.</span><span class="token function">publishEvent</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TestEvent</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setApplicationEventPublisher</span><span class="token punctuation">(</span><span class="token class-name">ApplicationEventPublisher</span> publisher<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>publisher <span class="token operator">=</span> publisher<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>根据提示，其实我们可以在<code>main</code>里面直接发布事件：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">InterruptedException</span> <span class="token punctuation">{</span>
+        <span class="token class-name">ApplicationContext</span> context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token class-name">MainConfiguration</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        context<span class="token punctuation">.</span><span class="token function">publishEvent</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TestEvent</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">Student</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>对应的事件的<code>source</code>参数随便给一个对象就行，表示这个事件的源头</p>
+<figure><figcaption>alt text</figcaption></figure>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - SpringEL表达式1</title>
+      <link>http://ekkosonya.cn/code/java_ssm/Spring/spring7.html</link>
+      <guid>http://ekkosonya.cn/code/java_ssm/Spring/spring7.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - SpringEL表达式1</source>
+      <description>SpringEL表达式 </description>
+      <category>code</category>
+      <pubDate>Tue, 12 Aug 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>SpringEL表达式</h2>
+]]></content:encoded>
+    </item>
     <item>
       <title>Javassm - Spring1</title>
       <link>http://ekkosonya.cn/code/java_ssm/Spring/spring1.html</link>
@@ -1868,409 +2054,6 @@ thread<span class="token punctuation">.</span><span class="token function">start
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">ofNullable</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">orElse</span><span class="token punctuation">(</span><span class="token string">"VVV"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token comment">//orElse表示如果为空就返回里面的内容</span>
 </code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Java9 - 模块机制</title>
-      <link>http://ekkosonya.cn/code/java%209-17/javainfo2.html</link>
-      <guid>http://ekkosonya.cn/code/java%209-17/javainfo2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Java9 - 模块机制</source>
-      <description>Java9 Java 9的主要特性有，全新的模块机制、接口的private方法等。 模块机制 简介 当我们导入一个jar包作为依赖时（包括JDK官方库），实际上很多功能我们并不会用到，但是由于它们是属于同一个依赖捆绑在一起，这样就会导致我们可能只用到一部分内容，但是需要引用一个完整的类库 实际上我们可以把用不到的类库排除掉，大大降低依赖库的规模。 于是...</description>
-      <category>code</category>
-      <pubDate>Sun, 27 Jul 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Java9</h2>
-<p>Java 9的主要特性有，全新的模块机制、接口的private方法等。</p>
-<h3>模块机制</h3>
-<h4>简介</h4>
-<p>当我们导入一个<code>jar</code>包作为依赖时（包括JDK官方库），实际上很多功能我们并不会用到，但是由于它们是属于同一个依赖捆绑在一起，这样就会导致我们可能只用到一部分内容，但是需要引用一个完整的类库</p>
-<p>实际上我们可以把用不到的类库排除掉，大大降低依赖库的规模。</p>
-<p>于是，Java 9引入了<strong>模块机制</strong>来对这种情况进行优化，在之前的我们的项目是这样的：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>而在引入模块机制之后：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>可以看到，模块可以由一个或者多个在一起的 Java 包组成，通过将这些包分出不同的模块，我们就可以按照模块的方式进行管理了。</p>
-<h5>实现包的分离管理</h5>
-<p>这里我们创建一个新的项目，并在<code>src</code>目录下，新建<code>module-info.java</code>文件表示此项目采用模块管理机制：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token class-name">NewHelloWorld</span> <span class="token punctuation">{</span>  <span class="token comment">//模块名称随便起一个就可以，但是注意必须是唯一的，以及模块内的包名也得是唯一的，即使模块不同</span>
-    
-<span class="token punctuation">}</span>
-</code></pre></div><p>接着我们来创建一个主类：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>package com.ekko;
-
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello World");
-    }
-}
-
-</code></pre></div><p>程序可以正常运行，貌似和之前没啥区别，不过我们发现，JDK为我们提供的某些框架不见了</p>
-<p>Java为我们提供的<code>logging</code>相关日志库，即 <code>java.util.loggin</code></p>
-<p>我们发现现在不见了，实际上它就是被作为一个模块单独存在，这里我们需进行<strong>模块导入</strong>：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token class-name">NewHelloWorld</span> <span class="token punctuation">{</span>  <span class="token comment">//模块名称随便起一个就可以</span>
-    <span class="token keyword">requires</span> <span class="token namespace">java<span class="token punctuation">.</span>logging</span><span class="token punctuation">;</span>   
-    <span class="token comment">//除了JDK的一些常用包之外，只有我们明确需要的模块才会导入依赖库</span>
-    <span class="token comment">//当然如果要导入JavaSE的所有依赖，想之前一样的话，直接 requires java.se;  即可</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这里我们导入java.logging相关模块后，就可以正常使用Logger了</p>
-<p>否则，如果未在 <code>module-info.java</code> 中导入，会提示找不到</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>模块化机制提供了另一个级别的Java代码可见性、可访问性的控制。</p>
-<h5>提高安全性</h5>
-<p>尝试通过反射获取JDK提供的类中的字段：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//Java17版本的String类</span>
-<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">String</span>
-    <span class="token keyword">implements</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span>Serializable</span><span class="token punctuation">,</span> <span class="token class-name">Comparable</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">,</span> <span class="token class-name">CharSequence</span><span class="token punctuation">,</span>
-               <span class="token class-name">Constable</span><span class="token punctuation">,</span> <span class="token class-name">ConstantDesc</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Stable</span>
-    <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> value<span class="token punctuation">;</span> 
-     <span class="token comment">//自JDK9后，为了提高性能，String底层数据存放的是byte[]而不是char[]</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">NoSuchFieldException</span><span class="token punctuation">,</span> <span class="token class-name">IllegalAccessException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> stringClass <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">;</span>
-    <span class="token class-name">Field</span> field <span class="token operator">=</span> stringClass<span class="token punctuation">.</span><span class="token function">getDeclaredField</span><span class="token punctuation">(</span><span class="token string">"value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//这里我们通过反射来获取String类中的value字段</span>
-    field<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//由于是private访问权限，所以我们修改一下</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>field<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"ABCD"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>但是我们发现，在程序运行之后，修改操作被阻止了：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>反射 API 的 Java 9 封装和安全性得到了改进，如果模块没有明确授权给其他模块使用反射的权限，那么其他模块是不允许使用反射进行修改的。</p>
-<h4>介绍</h4>
-<p>首先模块具有四种类型：</p>
-<ul>
-<li>
-<p><strong>系统模块：</strong> 来自JDK和JRE的模块（官方提供的模块，比如我们上面用的）
-我们也可以直接使用<code>java --list-modules</code>命令来列出所有的模块，不同的模块会导出不同的包供我们使用。</p>
-</li>
-<li>
-<p><strong>应用程序模块：</strong> 我们自己写的Java模块项目。</p>
-</li>
-<li>
-<p><strong>自动模块：</strong> 可能有些库并不是Java 9以上的模块项目，这种时候就需要做兼容了，默认情况下是<strong>直接导出所有的包</strong>，可以访问所有其他模块提供的类，不然之前版本的库就用不了了。</p>
-</li>
-<li>
-<p><strong>未命名模块：</strong> 我们自己创建的一个Java项目，如果没有创建<code>module-info.java</code>，那么会按照未命名模块进行处理
-未命名模块同样可以访问所有其他模块提供的类，这样我们之前写的Java 8代码才能正常地在Java 9以及之后的版本下运行。
-不过，由于没有使用Java 9的模块新特性，未命名模块只能<strong>默认暴露给其他未命名的模块和自动模块</strong>，应用程序模块无法访问这些类（实际上就是传统Java 8以下的编程模式，因为没有模块只需要导包就行）</p>
-</li>
-</ul>
-<h4>例子</h4>
-<p>这里我们就来创建两个项目，看看如何使用模块机制</p>
-<p>首先我们在项目A中，添加一个<code>User</code>类，然后在项目B使用：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> age<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token keyword">int</span> age<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>age <span class="token operator">=</span> age<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> name<span class="token operator">+</span><span class="token string">" ("</span><span class="token operator">+</span>age<span class="token operator">+</span><span class="token string">"岁)"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>接着我们编写一下项目A的模块设置：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a <span class="token punctuation">{</span>
-    <span class="token keyword">exports</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这里我们将<code>com.test</code>包下所有内容都暴露出去，默认情况下<strong>所有的包都是私有</strong>的，就算其他项目将此项目作为依赖也无法使用。</p>
-<p>接着我们现在想要在项目B中使用项目A的User类，我们需要进行导入：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b <span class="token punctuation">{</span>
-    <span class="token keyword">requires</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在我们就可以在Main类中使用模块<code>module.a</code>中暴露出来的包内容了：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>test<span class="token punctuation">.</span></span><span class="token class-name">User</span></span><span class="token punctuation">;</span>   
-<span class="token comment">//如果模块module.a不暴露，那么将无法导入</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">User</span> user <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"penguin"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>当然除了普通的<code>exports</code>进行包的暴露之外，我们也可以直接指定将包暴露给<strong>指定的模块</strong>：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a <span class="token punctuation">{</span>
-    <span class="token keyword">exports</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token keyword">to</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b<span class="token punctuation">;</span>   
-    <span class="token comment">//这里我们将com.test包暴露给指定的模块module.b，非指定的模块即使导入也无法使用</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>依赖传递 <code>transitive</code></h5>
-<p>如果模块<code>module.a</code>依赖于其他模块，那么会不会传递给依赖于模块<code>module.a</code>的模块呢？</p>
-<p>默认是不传递的</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a <span class="token punctuation">{</span>
-    <span class="token keyword">exports</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token keyword">to</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b<span class="token punctuation">;</span>   <span class="token comment">//使用exports将com.test包下所有内容暴露出去，这样其他模块才能导入</span>
-    <span class="token keyword">requires</span> <span class="token namespace">java<span class="token punctuation">.</span>logging</span><span class="token punctuation">;</span>   <span class="token comment">//这里添加一个模块的依赖</span>
-<span class="token punctuation">}</span>
-</code></pre></div><figure><figcaption>alt text</figcaption></figure>
-<p>可以看到，在模块<code>module.b</code>中，并<strong>没有进行依赖传递</strong>，说明哪个模块导入的依赖只能哪个模块用</p>
-<p>但是现在我们希望依赖可以传递，就是哪个模块用了什么依赖，依赖此模块的模块也会自动进行依赖，我们可以通过一个关键字解决：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a <span class="token punctuation">{</span>
-    <span class="token keyword">exports</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token keyword">to</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b<span class="token punctuation">;</span>   
-    <span class="token comment">//使用exports将com.test包下所有内容暴露出去，这样其他模块才能导入</span>
-    <span class="token keyword">requires</span> <span class="token keyword">transitive</span> <span class="token namespace">java<span class="token punctuation">.</span>logging</span><span class="token punctuation">;</span>   
-    <span class="token comment">//使用transitive来向其他模块传递此依赖</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在就可以使用了：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>开启反射 <code>open</code></h5>
-<p>还有我们前面演示的反射，我们发现如果我们依赖了一个模块，是没办法直接进行反射操作的</p>
-<p>那么怎么样才可以使用反射呢？我们可以为其他模块开放某些运行使用反射的类：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">open</span> <span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a <span class="token punctuation">{</span>   
-  <span class="token comment">//直接添加open关键字开放整个模块的反射权限</span>
-    <span class="token keyword">exports</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token keyword">to</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a <span class="token punctuation">{</span>
-    <span class="token keyword">exports</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token keyword">to</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b<span class="token punctuation">;</span>
-    <span class="token keyword">opens</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>   
-    <span class="token comment">//通过使用opens关键字来为其他模块开放反射权限</span>
-    <span class="token comment">//也可以指定目标开放反射 opens com.test to module.b;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>指定实现 <code>uses</code> + <code>provides</code></h5>
-<p>我们还可以指定模块需要使用的抽象类或是接口实现：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Test</span> <span class="token punctuation">{</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">open</span> <span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a <span class="token punctuation">{</span>
-    <span class="token keyword">exports</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token keyword">to</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b<span class="token punctuation">;</span>
-    <span class="token keyword">uses</span> <span class="token namespace">com<span class="token punctuation">.</span>test<span class="token punctuation">.</span></span><span class="token class-name">Test</span><span class="token punctuation">;</span>  
-    <span class="token comment">//使用uses指定，Test是一个接口（比如需要的服务等），模块需要使用到</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们可以在模块B中去实现一下，然后声明我们提供了实现类：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>main</span><span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>test<span class="token punctuation">.</span></span><span class="token class-name">Test</span></span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestImpl</span> <span class="token keyword">implements</span> <span class="token class-name">Test</span> <span class="token punctuation">{</span>
-
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token keyword">module</span><span class="token punctuation">.</span>b <span class="token punctuation">{</span>
-    <span class="token keyword">requires</span> <span class="token keyword">module</span><span class="token punctuation">.</span>a<span class="token punctuation">;</span>   <span class="token comment">//导入项目A的模块，此模块暴露了com.test包</span>
-    <span class="token keyword">provides</span> <span class="token namespace">com<span class="token punctuation">.</span>test<span class="token punctuation">.</span></span><span class="token class-name">Test</span> <span class="token keyword">with</span> <span class="token namespace">com<span class="token punctuation">.</span>main<span class="token punctuation">.</span></span><span class="token class-name">TestImpl</span><span class="token punctuation">;</span>  <span class="token comment">//声明此模块提供了Test的实现类</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>简单使用</h5>
-<p>了解了以上的相关知识后，我们就可以简单地进行模块的使用了。比如现在我们创建了一个新的Maven项目</p>
-<p>然后我们导入了lombok框架的依赖，如果我们不创建<code>module-info.java</code>文件，那么就是一个未命名模块，未命名模块默认可以使用其他所有模块提供的类，实际上就是我们之前的开发模式：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span>extern<span class="token punctuation">.</span>java<span class="token punctuation">.</span></span><span class="token class-name">Log</span></span><span class="token punctuation">;</span>
-
-<span class="token annotation punctuation">@Log</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//使用lombok提供的注解，可以正常运行</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在我们希望按照全新的模块化开发模式来进行开发，将我们的项目从未命名模块改进为应用程序模块，所以我们先创建好<code>module-info.java</code>文件：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token punctuation">{</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们还需要去依赖对应的模块：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">module</span> <span class="token namespace">com<span class="token punctuation">.</span>test</span> <span class="token punctuation">{</span>
-    <span class="token keyword">requires</span> <span class="token namespace">lombok</span><span class="token punctuation">;</span>   <span class="token comment">//lombok模块</span>
-    <span class="token keyword">requires</span> <span class="token namespace">java<span class="token punctuation">.</span>logging</span><span class="token punctuation">;</span>    <span class="token comment">//JUL日志模块，也需要使用到</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这样我们就可以正常使用了。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Java9 - 2</title>
-      <link>http://ekkosonya.cn/code/java%209-17/javainfo3.html</link>
-      <guid>http://ekkosonya.cn/code/java%209-17/javainfo3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Java9 - 2</source>
-      <description>Java9 JShell交互式编程 Java 9为我们通过了一种交互式编程工具JShell alt textalt text 环境配置完成后，我们只需要输入jshell命令即可开启交互式编程了，它支持我们一条一条命令进行操作。 比如我们来做一个简单的计算： alt textalt text 我们一次输入一行（可以不加分号），先定义一个a=10和b=10...</description>
-      <category>code</category>
-      <pubDate>Sun, 27 Jul 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Java9</h2>
-<h3>JShell交互式编程</h3>
-<p>Java 9为我们通过了一种交互式编程工具<code>JShell</code></p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>环境配置完成后，我们只需要输入<code>jshell</code>命令即可开启交互式编程了，它支持我们一条一条命令进行操作。</p>
-<p>比如我们来做一个简单的计算：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>我们一次输入一行（可以不加分号），先定义一个a=10和b=10，然后定义c并得到a+b的结果，可以看到还是非常方便的，但是注意语法还是和Java是一样的。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>我们也可以快速创建一个方法供后续的调用。当我们按下Tab键还可以进行自动补全：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>除了直接运行我们写进去的代码之外，它还支持使用命令，输入<code>help</code>来查看命令列表：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>比如我们可以使用<code>/vars</code>命令来展示当前定义的变量列表：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>当我们不想使用jshell时，直接输入<code>/exit</code>退出即可</p>
-<h3>接口中的private方法</h3>
-<p>接口中的方法默认是 <code>public abstract</code></p>
-<p>在Java 8中，接口中 的方法支持添加<code>default</code>关键字来添加默认实现：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Test</span> <span class="token punctuation">{</span>
-    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是test方法默认实现"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>而在Java 9中，接口再次得到强化，现在接口中可以存在<strong>私有方法</strong>了：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Test</span> <span class="token punctuation">{</span>
-    <span class="token keyword">default</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是test方法默认实现"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
-        <span class="token comment">//接口中方法的默认实现可以直接调用接口中的私有方法</span>
-    <span class="token punctuation">}</span>
-    
-    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">inner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>   
-        <span class="token comment">//声明一个私有方法</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是接口中的私有方法！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>注意私有方法必须要提供方法体，因为权限为私有的，也只有这里能进行方法的具体实现了，并且此方法只能被接口中的其他私有方法或是默认实现调用。</p>
-<h3>集合类新增工厂方法 <code>xx.of()</code></h3>
-<p>在之前，如果我们想要快速创建一个Map只能：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//要快速使用Map，需要先创建一个Map对象，然后再添加数据</span>
-    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"AAA"</span><span class="token punctuation">,</span> <span class="token number">19</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"BBB"</span><span class="token punctuation">,</span> <span class="token number">23</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>而在Java 9之后，我们可以直接通过<code>of</code>方法来快速创建了：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"AAA"</span><span class="token punctuation">,</span> <span class="token number">18</span><span class="token punctuation">,</span> <span class="token string">"BBB"</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//直接一句搞定</span>
-
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>是不是感觉非常方便，of方法还被重载了很多次，分别适用于快速创建包含0~10对键值对的Map：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>但是注意，通过这种方式创建的Map和通过Arrays创建的List比较类似，也是<strong>无法进行修改</strong>的。</p>
-<p>当然，除了Map之外，其他的集合类都有相应的<code>of</code>方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> set <span class="token operator">=</span> <span class="token class-name">Set</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"BBB"</span><span class="token punctuation">,</span> <span class="token string">"CCC"</span><span class="token punctuation">,</span> <span class="token string">"AAA"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//注意Set中元素顺序并不一定你的添加顺序</span>
-    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"AAA"</span><span class="token punctuation">,</span> <span class="token string">"CCC"</span><span class="token punctuation">,</span> <span class="token string">"BBB"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//好耶，再也不用Arrays了</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>改进的 Stream API</h3>
-<p>这里不是指进行IO操作的流，而是JDK1.8新增的Stream API，通过它大大方便了我们的编程。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Stream</span>
-            <span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"A"</span><span class="token punctuation">,</span> <span class="token string">"B"</span><span class="token punctuation">,</span> <span class="token string">"B"</span><span class="token punctuation">,</span> <span class="token string">"C"</span><span class="token punctuation">)</span>
-            <span class="token comment">//这里我们可以直接将一些元素封装到Stream中</span>
-            <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>s <span class="token operator">-&gt;</span> s<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"B"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-            <span class="token comment">//通过过滤器过滤</span>
-            <span class="token punctuation">.</span><span class="token function">distinct</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-            <span class="token comment">//去重</span>
-            <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//最后打印</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>自从有了Stream，我们对于集合的一些操作就大大地简化了，对集合中元素的批量处理，只需要在Stream中一气呵成</p>
-<p>如此方便的框架，在Java 9得到了进一步的增强：</p>
-<h4><code>ofNullable</code></h4>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Stream</span>
-            <span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span>   <span class="token comment">//如果传入null会报错</span>
-            <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">Stream</span>
-            <span class="token punctuation">.</span><span class="token function">ofNullable</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span> 
-            <span class="token comment">//使用新增的ofNullable方法，这样就不会了，不过这样的话流里面就没东西了</span>
-            <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>利用 <code>Stream</code> 来迭代生成数据 <code>iterate</code></h4>
-<p>还有，我们可以通过迭代快速生成一组数据（实际上Java 8就有了，这里新增的是允许结束迭代的）：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Stream</span>
-            <span class="token punctuation">.</span><span class="token function">iterate</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i <span class="token operator">-&gt;</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>   <span class="token comment">//Java8只能像这样生成无限的流，第一个参数是种子，就是后面的UnaryOperator的参数i一开始的值，最后会返回一个值作为i的新值，每一轮都会执行UnaryOperator并生成一个新值到流中，这个是源源不断的，如果不加limit()进行限制的话，将无限生成下去。</span>
-            <span class="token punctuation">.</span><span class="token function">limit</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span>   <span class="token comment">//这里限制生成20个</span>
-            <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Stream</span>
-            <span class="token comment">//不知道怎么写？参考一下：for (int i = 0;i &lt; 20;i++)</span>
-            <span class="token punctuation">.</span><span class="token function">iterate</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i <span class="token operator">-&gt;</span> i <span class="token operator">&lt;</span> <span class="token number">20</span><span class="token punctuation">,</span> i <span class="token operator">-&gt;</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment">//快速生成一组0~19的int数据，中间可以添加一个断言，表示什么时候结束生成</span>
-            <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>数据截断 <code>takeWhile</code> + <code>dropWhile</code></h4>
-<p>Stream还新增了对数据的截断操作，比如我们希望在读取到某个元素时截断，不再继续操作后面的元素：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Stream</span>
-            <span class="token punctuation">.</span><span class="token function">iterate</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i <span class="token operator">-&gt;</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">limit</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">takeWhile</span><span class="token punctuation">(</span>i <span class="token operator">-&gt;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">)</span>   <span class="token comment">//当i小于10时正常通过，一旦大于等于10直接截断</span>
-            <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Stream</span>
-            <span class="token punctuation">.</span><span class="token function">iterate</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> i <span class="token operator">-&gt;</span> i <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">limit</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">dropWhile</span><span class="token punctuation">(</span>i <span class="token operator">-&gt;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">)</span>   
-            <span class="token comment">//和上面相反，上来就是截断状态，只有当满足条件时再开始通过</span>
-            <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>但实际上还是遍历了20个，只不过会删除其他不符合条件的</p>
-<h3>其他小型变动</h3>
-<p><code>Try-with-resource</code>语法现在不需要再完整的声明一个变量了，我们可以直接将现有的变量丢进去：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">InputStream</span> inputStream <span class="token operator">=</span> <span class="token class-name">Files</span><span class="token punctuation">.</span><span class="token function">newInputStream</span><span class="token punctuation">(</span><span class="token class-name">Paths</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"pom.xml"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span> <span class="token punctuation">(</span>inputStream<span class="token punctuation">)</span> <span class="token punctuation">{</span>   <span class="token comment">//单独丢进try中，效果是一样的</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">100</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">)</span> inputStream<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在Java 8中引入了<code>Optional</code>类，它很好的解决了判空问题：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
-    <span class="token function">test</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token class-name">String</span> s<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token comment">//比如现在我们想执行 System.out.println(str.toLowerCase())</span>
-    <span class="token comment">//但是由于我们不清楚给进来的str到底是不是null，如果是null的话会引起空指针异常</span>
-    <span class="token comment">//但是去单独进行一次null判断写起来又不太简洁，这时我们可以考虑使用Optional进行包装</span>
-    <span class="token class-name">Optional</span>
-            <span class="token punctuation">.</span><span class="token function">ofNullable</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">ifPresent</span><span class="token punctuation">(</span>str <span class="token operator">-&gt;</span> <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这种写法就有点像Kotlin或是JS中的语法：</p>
-<div class="language-kotlin" data-ext="kt" data-title="kt"><pre class="language-kotlin"><code><span class="token keyword">fun</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token function">test</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">fun</span> <span class="token function">test</span><span class="token punctuation">(</span>str <span class="token operator">:</span> String<span class="token operator">?</span><span class="token punctuation">)</span><span class="token punctuation">{</span>   <span class="token comment">//传入的String对象可能为null，这里类型写为String?</span>
-    <span class="token function">println</span><span class="token punctuation">(</span>str<span class="token operator">?</span><span class="token punctuation">.</span><span class="token function">lowercase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>   <span class="token comment">// ?.表示只有不为空才进行调用</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在Java 9新增了一些更加方便的操作：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> str <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-    <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">ofNullable</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">ifPresentOrElse</span><span class="token punctuation">(</span>s <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>  <span class="token comment">//通过使用ifPresentOrElse，我们同时处理两种情况</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"被包装的元素为："</span><span class="token operator">+</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">//第一种情况和ifPresent是一样的</span>
-    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"被包装的元素为null"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//第二种情况是如果为null的情况</span>
-    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们也可以使用<code>or()</code>方法快速替换为另一个Optional类：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> str <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-    <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">ofNullable</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span>
-      <span class="token punctuation">.</span><span class="token function">or</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token class-name">Optional</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"AAA"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>   <span class="token comment">//如果当前被包装的类不是null，依然返回自己，但是如果是null，那就返回Supplier提供的另一个Optional包装</span>
-      <span class="token punctuation">.</span><span class="token function">ifPresent</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token operator">::</span><span class="token function">println</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>当然还支持直接转换为Stream，这里就不多说了。</p>
-<p>在Java 8及之前，匿名内部类是没办法使用钻石运算符进行自动类型推断的：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">Test</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">{</span>   <span class="token comment">//这里我们写一个泛型类</span>
-    <span class="token keyword">public</span> <span class="token class-name">T</span> t<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token class-name">Test</span><span class="token punctuation">(</span><span class="token class-name">T</span> t<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">this</span><span class="token punctuation">.</span>t <span class="token operator">=</span> t<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token class-name">T</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IOException</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Test</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> test <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Test</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token string">"AAA"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">//在低版本这样写是会直接报错的，因为匿名内部类不支持自动类型推断，但是很明显我们这里给的参数是String类型的，所以明明有机会进行类型推断，却还是要我们自己填类型，就很蠢</span>
-        <span class="token comment">//在Java 9之后，这样的写法终于可以编译通过了</span>
-        <span class="token annotation punctuation">@Override</span>
-        <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">return</span> t<span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>当然除了以上的特性之外还有Java 9的多版本JAR包支持、CompletableFuture API的改进等，因为不太常用，这里就不做介绍了。</p>
-]]></content:encoded>
     </item>
   </channel>
 </rss>

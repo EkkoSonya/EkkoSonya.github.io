@@ -9,7 +9,7 @@ tag:
   - SpringEL
 # star: true
 # sticky: true
-order: -0.5992
+order: -0.5991
 ---
 
 ## 数据库框架整合2
@@ -198,13 +198,15 @@ public class MainConfiguration {
 
 从这里开始，通过IoC容器，Mybatis已经**不再需要使用配置文件**了，在我们之后的学习中，基于Spring的开发**将不会再出现Mybatis的配置文件**。
 
-### 使用HikariCP连接池
+### HikariCP连接池
 
-前面我们提到了数据源还有其他实现，比如C3P0、Druid等，它们都是非常优秀的数据源实现（可以自行了解），不过我们这里要介绍的，是之后在SpringBoot中还会遇到的HikariCP连接池。
+数据源还有其他实现，比如`C3P0`、`Druid`等，都是非常优秀的数据源实现
+
+这里要介绍的，是在`SpringBoot`中还会遇到的`HikariCP`连接池。
 
 > HikariCP是由日本程序员开源的一个数据库连接池组件，代码非常轻量，并且速度非常的快。根据官方提供的数据，在酷睿i7开启32个线程32个连接的情况下，进行随机数据库读写操作，HikariCP的速度是现在常用的C3P0数据库连接池的数百倍。在SpringBoot 3.0中，官方也是推荐使用HikariCP。
 
-![image-20221217145126777](https://oss.itbaima.cn/internal/markdown/2022/12/17/Q6gPI9RVe1X7Noq.png)
+![alt text](img/1.png)
 
 首先，我们需要导入依赖：
 
@@ -216,7 +218,9 @@ public class MainConfiguration {
 </dependency>
 ```
 
-要更换数据源实现，非常简单，我们可以直接声明一个Bean：
+要更换数据源实现，非常简单
+
+可以直接声明一个`Bean`：
 
 ```java
 @Bean
@@ -238,7 +242,11 @@ SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See http://www.slf4j.org/codes.html#noProviders for further details.
 ```
 
-此数据源实际上是采用了SLF4J日志框架打印日志信息，但是现在没有任何的日志实现（slf4j只是一个API标准，它规范了多种日志框架的操作，统一使用SLF4J定义的方法来操作不同的日志框架，我们会在SpringBoot篇进行详细介绍）我们这里就使用JUL作为日志实现，我们需要导入另一个依赖：
+此数据源实际上是采用了SLF4J日志框架打印日志信息，但是现在没有任何的日志实现
+
+(slf4j只是一个API标准，它规范了多种日志框架的操作，统一使用SLF4J定义的方法来操作不同的日志框架)
+
+我们这里就使用JUL作为日志实现，我们需要导入另一个依赖：
 
 ```xml
 <dependency>
@@ -246,22 +254,25 @@ SLF4J: See http://www.slf4j.org/codes.html#noProviders for further details.
     <artifactId>slf4j-jdk14</artifactId>
     <version>1.7.25</version>
 </dependency>
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.25</version>
+</dependency>
 ```
 
-注意版本一定要和`slf4j-api`保持一致，我们可以在这里直接查看：
-
-![image-20221217154216832](https://oss.itbaima.cn/internal/markdown/2022/12/17/93OSknRKXwdZsp7.png)
+注意版本一定要和`slf4j-api`保持一致
 
 这样，HikariCP数据源的启动日志就可以正常打印出来了：
 
 ```
-12月 17, 2022 3:41:38 下午 com.zaxxer.hikari.HikariDataSource getConnection
+8月 21, 2025 12:10:11 下午 com.zaxxer.hikari.HikariDataSource getConnection
 信息: HikariPool-1 - Starting...
-12月 17, 2022 3:41:38 下午 com.zaxxer.hikari.pool.HikariPool checkFailFast
-信息: HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4f8969b0
-12月 17, 2022 3:41:38 下午 com.zaxxer.hikari.HikariDataSource getConnection
+8月 21, 2025 12:10:12 下午 com.zaxxer.hikari.pool.HikariPool checkFailFast
+信息: HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@18245eb0
+8月 21, 2025 12:10:12 下午 com.zaxxer.hikari.HikariDataSource getConnection
 信息: HikariPool-1 - Start completed.
-Student(sid=1, name=小明, sex=男)
+Student(sid=1, name=penguin, sex=男)
 ```
 
 在SpringBoot阶段，我们还会遇到`HikariPool-1 - Starting...`和`HikariPool-1 - Start completed.`同款日志信息。
@@ -279,4 +290,6 @@ public class Main {
 }
 ```
 
-是不是感觉特别方便？
+自动在 Main 类中生成一个名为 log 的 Logger 对象（类型是 `org.slf4j.Logger`）
+
+使用时可以直接调用 `log.info(...)`、`log.debug(...)`、`log.error(...)` 等方法来打印日志。

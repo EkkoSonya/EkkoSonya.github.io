@@ -1,6 +1,6 @@
 ---
 title: Javassm - 数据库框架整合1
-date: 2025-08-16
+date: 2025-08-20
 category:
   - code
 tag:
@@ -9,7 +9,7 @@ tag:
   - SpringEL
 # star: true
 # sticky: true
-order: -0.5994
+order: -0.5993
 ---
 
 ## 数据库框架整合1

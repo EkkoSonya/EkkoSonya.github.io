@@ -158,8 +158,6 @@ public static void main(String[] args) {
 }
 ```
 
-![image-20221216165625372](https://oss.itbaima.cn/internal/markdown/2022/12/16/KpiXcdNt7BglYQh.png)
-
 ##### 添加`JoinPoint`参数
 
 同样的，我们可以为其添加`JoinPoint`参数来获取切入点信息，使用方法跟之前一样：

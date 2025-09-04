@@ -168,7 +168,17 @@ public class HelloController {
 
 Tomcat会在类路径中查找实现 `ServletContainerInitializer` 接口的类，如果发现的话，就用它来配置Servlet容器
 
-Spring提供了这个接口的实现类 `SpringServletContainerInitializer`, 
+Spring提供了这个接口的实现类 `SpringServletContainerInitializer`
+
+```java
+@HandlesTypes({WebApplicationInitializer.class})
+public class SpringServletContainerInitializer implements ServletContainerInitializer {
+    public void onStartup(@Nullable Set<Class<?>> webAppInitializerClasses, ServletContext servletContext) throws ServletException {
+        List<WebApplicationInitializer> initializers = Collections.emptyList();
+        ...
+    }
+}
+```
 
 通过`@HandlesTypes(WebApplicationInitializer.class)`设置，这个类反过来会查找实现 `WebApplicationInitializer` 的类，并将配置的任务交给他们来完成，
 
@@ -185,6 +195,8 @@ Spring提供了这个接口的实现类 `SpringServletContainerInitializer`,
 ```
 
 #### 配置初始化接口
+
+这里的 `AbstractAnnotationConfigDispatcherServletInitializer` 类 不断往上找最终继承的就是 `WebApplicationInitializer` 的类
 
 因此直接实现接口即可：
 
@@ -208,17 +220,32 @@ public class MainInitializer extends AbstractAnnotationConfigDispatcherServletIn
 }
 ```
 
-#### 配置相应配置类
+#### 配置相应配置类 `@EnableWebMvc`
 
 接着我们需要再配置类中添加一些必要的注解：
 
 ```java
 @Configuration
-@EnableWebMvc   //快速配置SpringMvc注解，如果不添加此注解会导致后续无法通过实现WebMvcConfigurer接口进行自定义配置
+@EnableWebMvc   
+//快速配置SpringMvc注解，如果不添加此注解会导致后续无法通过实现WebMvcConfigurer接口进行自定义配置
 @ComponentScan("com.example.controller")
 public class WebConfiguration {
 }
 ```
+
+`@EnableWebMvc` 来启动 SpringMV
+
+- `@EnableWebMvc` 的本质是导入 `DelegatingWebMvcConfiguration`；
+
+- 它会注册 Spring MVC 的 核心 Bean（`HandlerMapping`、`HandlerAdapter`、`MessageConverter`等）；
+
+- 同时允许你通过实现 `WebMvcConfigurer` 去扩展默认配置；
+
+- 在 Spring Boot 里一般不用加，否则会屏蔽自动配置；
+
+- 在 传统 Spring MVC 项目里必须加，否则注解模式跑不起来。
+
+![alt text](img/7.png)
 
 #### 编写对应`Controller`
 
@@ -236,3 +263,5 @@ public class MainController {
 这样我们同样可以正常访问
 
 之后为了方便，我们就统一使用全注解形式编写。
+
+![alt text](img/8.png)

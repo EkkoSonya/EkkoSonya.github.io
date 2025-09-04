@@ -13,6 +13,8 @@ order: -0.6
 
 ## Controller控制器1
 
+![alt text](img/9.png)
+
 ![alt text](img/6.png)
 
 有了SpringMVC之后，我们不必再像之前那样一个请求地址创建一个Servlet了
@@ -61,7 +63,19 @@ SpringMVC自带了一些视图解析器，但是只适用于JSP页面，我们�
 
 #### 编写配置项
 
-配置视图解析器非常简单，我们只需要将对应的`ViewResolver`注册为Bean即可，这里我们直接在配置类中编写：
+配置视图解析器非常简单，我们只需要将对应的`ViewResolver`注册为Bean即可
+
+因为 `ThymeleafViewResolver` 实现了 SpringMVC 的`ViewResolver`接口，所以：
+
+- Spring MVC 启动时，`DispatcherServlet` 去容器里找所有 `ViewResolver` 类型的 `Bean`。
+
+- 发现 `thymeleafViewResolver`，加入解析链。
+
+- 请求返回时，如果 Controller 返回 String "index"，Spring MVC 会调用这些 ViewResolver，直到有一个能把 "index" 解析成一个真正的 View 对象（Thymeleaf 模板）。
+
+- 最终渲染视图 → 输出到浏览器。
+
+这里我们直接在配置类中编写：
 
 ```java
 @Configuration

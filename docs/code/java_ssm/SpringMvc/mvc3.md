@@ -1,5 +1,5 @@
 ---
-title: Javassm - SpringMVC2
+title: Javassm - SpringMVC3
 date: 2025-09-04
 category:
   - code

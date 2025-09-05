@@ -39,7 +39,7 @@ MVC详细解释如下：
 - V是指用户界面（View）：一般指的是前端页面。
 - C则是控制器（Controller）：控制器就相当于Servlet的基本功能，处理请求，返回响应。
 
-![alt text](img/2)
+![alt text](img/2.png)
 
 SpringMVC正是希望这三者之间进行解耦，实现各干各的，更加精细地划分对应的职责。
 

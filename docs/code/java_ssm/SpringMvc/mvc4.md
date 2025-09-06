@@ -212,16 +212,54 @@ public void addInterceptors(InterceptorRegistry registry) {
 
 ## 异常处理
 
-当我们的请求映射方法中出现异常时，会直接展示在前端页面，这是因为SpringMVC为我们提供了默认的异常处理页面，当出现异常时，我们的请求会被直接转交给专门用于异常处理的控制器进行处理。
+当我们的请求映射方法中出现异常时，会直接展示在前端页面，这是因为SpringMVC为我们提供了**默认的异常处理页面**
+
+当出现异常时，我们的请求会被直接转交给专门用于异常处理的控制器进行处理。
+
+`@ControllerAdvice`，是Spring3.2提供的新注解，它是一个Controller增强器，可对controller进行增强处理。
+
+- 配合`@ExceptionHandler`注解，进行全局异常处理。
+
+- 配合`@InitBinder`注解，用来设置WebDataBinder，用于自动绑定前台请求参数到Model中，全局数据预处理，多用于表单提交数据或者url传参。
+
+- 配合`@ModelAttribute`注解，让Controller类中所有的方法都可以获取到通过@ModelAttribute注解设置的值，进行全局数据绑定。
+
+### `@ControllerAdvice`
+
+作用：这是 Spring MVC 提供的“全局控制器增强”注解。
+
+特点：
+
+可以用来定义全局的异常处理（Exception Handling）、全局数据绑定（Data Binding）、全局数据预处理（Model Attribute）等。
+
+一旦在类上加了 `@ControllerAdvice`，该类就能拦截所有带有 `@Controller` 或 `@RestController` 的控制器请求，做统一处理。
+
+常见用法就是集中定义全局异常处理逻辑。
+
+### `@ExceptionHandler(Exception.class)`
+
+作用：这是 Spring MVC 提供的异常处理注解。
+
+特点：
+
+标注在方法上，表示该方法用来捕获并处理指定类型的异常。
+
+上例中 `@ExceptionHandler(Exception.class)` 表示 捕获所有 `Exception` 及其子类异常。
+
+当控制器方法抛出异常时，会优先匹配合适的 @ExceptionHandler 方法进行处理。
+
+方法返回值可以是一个视图名（如 "500"），也可以是一个 JSON 对象（常与 `@ResponseBody` 或 `@RestControllerAdvice` 配合使用）。
+
+### 应用
 
 我们可以自定义一个异常处理控制器，一旦出现指定异常，就会转接到此控制器执行：
 
 ```java
 @ControllerAdvice
 public class ErrorController {
-
     @ExceptionHandler(Exception.class)
-    public String error(Exception e, Model model){  //可以直接添加形参来获取异常
+    public String error(Exception e, Model model){  
+        //可以直接添加形参来获取异常
         e.printStackTrace();
         model.addAttribute("e", e);
         return "500";

@@ -123,7 +123,7 @@ order: -0.599
 
 主要文件结构为：
 
-![alt text](image.png)
+![alt text](img/17.png)
 
 1. `pom`配置
 2. `initialize` 和 `config`

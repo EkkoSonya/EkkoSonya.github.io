@@ -6,11 +6,190 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Mon, 13 Oct 2025 12:57:42 GMT</pubDate>
-    <lastBuildDate>Mon, 13 Oct 2025 12:57:42 GMT</lastBuildDate>
+    <pubDate>Thu, 16 Oct 2025 18:01:55 GMT</pubDate>
+    <lastBuildDate>Thu, 16 Oct 2025 18:01:55 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Javassm - item1-1 (项目介绍+环境搭建)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article1.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-1 (项目介绍+环境搭建)</source>
+      <description>苍穹外卖 介绍 功能架构 alt textalt text 管理端功能 员工登录/退出 , 员工信息管理 , 分类管理 , 菜品管理 , 套餐管理 , 菜品口味管理 , 订单管理 ，数据统计，来单提醒。 用户端功能 微信登录 , 收件人地址管理 , 用户历史订单查询 , 菜品规格查询 , 购物车功能 , 下单 , 支付、分类及菜品浏览。 整体结构 al...</description>
+      <category>code</category>
+      <pubDate>Fri, 17 Oct 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
+<h3>介绍</h3>
+<h4>功能架构</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>管理端功能</h5>
+<p>员工登录/退出 , 员工信息管理 , 分类管理 , 菜品管理 , 套餐管理 , 菜品口味管理 , 订单管理 ，数据统计，来单提醒。</p>
+<h5>用户端功能</h5>
+<p>微信登录 , 收件人地址管理 , 用户历史订单查询 , 菜品规格查询 , 购物车功能 , 下单 , 支付、分类及菜品浏览。</p>
+<h4>整体结构</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>技术选型</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>(1). 用户层
+本项目中在构建系统管理后台的前端页面，我们会用到H5、Vue.js、ElementUI、apache echarts(展示图表)等技术。而在构建移动端应用时，我们会使用到微信小程序。</p>
+<p>(2). 网关层
+Nginx是一个服务器，主要用来作为Http服务器，部署静态资源，访问性能高。在Nginx中还有两个比较重要的作用： 反向代理和负载均衡， 在进行项目部署时，要实现Tomcat的负载均衡，就可以通过Nginx来实现。</p>
+<p>(3). 应用层
+SpringBoot： 快速构建Spring项目, 采用 "约定优于配置" 的思想, 简化Spring项目的配置开发。 SpringMVC：SpringMVC是spring框架的一个模块，springmvc和spring无需通过中间整合层进行整合，可以无缝集成。 Spring Task: 由Spring提供的定时任务框架。 httpclient: 主要实现了对http请求的发送。 Spring Cache: 由Spring提供的数据缓存框架 JWT: 用于对应用程序上的用户进行身份验证的标记。 阿里云OSS: 对象存储服务，在项目中主要存储文件，如图片等。 Swagger： 可以自动的帮助开发人员生成接口文档，并对接口进行测试。 POI: 封装了对Excel表格的常用操作。 WebSocket: 一种通信网络协议，使客户端和服务器之间的数据交换更加简单，用于项目的来单、催单功能实现。</p>
+<p>(4). 数据层
+MySQL： 关系型数据库, 本项目的核心业务数据都会采用MySQL进行存储。 Redis： 基于key-value格式存储的内存数据库, 访问速度快, 经常使用它做缓存。 Mybatis： 本项目持久层将会使用Mybatis开发。 pagehelper: 分页插件。 spring data redis: 简化java代码操作Redis的API。</p>
+<p>(5). 工具
+git: 版本控制工具, 在团队协作中, 使用该工具对项目中的代码进行管理。 maven: 项目构建工具。 junit：单元测试工具，开发人员功能实现完毕后，需要通过junit对功能进行单元测试。 postman: 接口测工具，模拟用户发起的各类HTTP请求，获取对应的响应结果。</p>
+<h3>后端搭建</h3>
+<h4>碰到问题</h4>
+<p>找不到符号 (更该jdk版本23——&gt;17)</p>
+<p>配置属性类</p>
+<h4>项目结构</h4>
+<p>基于maven进行项目构建，进行分模块开发</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>sky-common</h5>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>sky-pojo</h5>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>sky-server</h5>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>nginx反向代理和负载均衡</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>1. nginx反向代理</h5>
+<p>这种就是通过nginx来反向代理，将前端发送的动态请求由 nginx 转发到后端服务器，从而避免跨域等问题</p>
+<p><strong>nginx 反向代理的好处：</strong></p>
+<ul>
+<li>
+<p>提高访问速度</p>
+<p>因为nginx本身可以进行缓存，如果访问的同一接口，并且做了数据缓存，nginx就直接可把数据返回，不需要真正地访问服务端，从而提高访问速度。</p>
+</li>
+<li>
+<p>进行负载均衡</p>
+<p>所谓负载均衡,就是把大量的请求按照我们指定的方式均衡的分配给集群中的每台服务器。</p>
+</li>
+<li>
+<p>保证后端服务安全</p>
+<p>因为一般后台服务地址不会暴露，所以使用浏览器不能直接访问，可以把nginx作为请求访问的入口，请求到达nginx后转发到具体的服务中，从而保证后端服务的安全。</p>
+</li>
+</ul>
+<p><strong>nginx 反向代理的配置方式：</strong></p>
+<div class="language-nginx" data-ext="nginx" data-title="nginx"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">server</span></span><span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">server_name</span> localhost</span><span class="token punctuation">;</span>
+    
+    <span class="token directive"><span class="token keyword">location</span> /api/</span><span class="token punctuation">{</span>
+        <span class="token directive"><span class="token keyword">proxy_pass</span> http://localhost:8080/admin/</span><span class="token punctuation">;</span> <span class="token comment">#反向代理</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><strong>proxy_pass</strong>: 该指令是用来设置代理服务器的地址，可以是主机名称，IP地址加端口号等形式。</p>
+<p>如上代码的含义是：监听80端口号， 然后当我们访问 <a href="http://localhost:80/api/../.." target="_blank" rel="noopener noreferrer">http://localhost:80/api/../..</a> 这样的接口的时候，它会通过 location /api/ {} 这样的反向代理到 <a href="http://localhost:8080/admin/" target="_blank" rel="noopener noreferrer">http://localhost:8080/admin/</a> 上来。</p>
+<h5>2. 负载均衡</h5>
+<p>当如果服务以集群的方式进行部署时，那nginx在转发请求到服务器时就需要做相应的负载均衡。其实，负载均衡从本质上来说也是基于反向代理来实现的，最终都是转发请求。</p>
+<p><strong>nginx 负载均衡的配置方式：</strong></p>
+<div class="language-nginx" data-ext="nginx" data-title="nginx"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">upstream</span> webservers</span><span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">server</span> 192.168.100.128:8080</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">server</span> 192.168.100.129:8080</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token directive"><span class="token keyword">server</span></span><span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">server_name</span> localhost</span><span class="token punctuation">;</span>
+    
+    <span class="token directive"><span class="token keyword">location</span> /api/</span><span class="token punctuation">{</span>
+        <span class="token directive"><span class="token keyword">proxy_pass</span> http://webservers/admin</span><span class="token punctuation">;</span><span class="token comment">#负载均衡</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><strong>upstream</strong>: 如果代理服务器是一组服务器的话，我们可以使用upstream指令配置后端服务器组。</p>
+<p>如上代码的含义是：监听80端口号， 然后当我们访问 <a href="http://localhost:80/api/../.." target="_blank" rel="noopener noreferrer">http://localhost:80/api/../..</a> 这样的接口的时候，它会通过 location /api/ {} 这样的反向代理到 <a href="http://webservers/admin" target="_blank" rel="noopener noreferrer">http://webservers/admin</a>，根据webservers名称找到一组服务器，根据设置的负载均衡策略(默认是轮询)转发到具体的服务器。</p>
+<p>**注：**upstream后面的名称可自定义，但要上下保持一致。</p>
+<p><strong>nginx 负载均衡策略：</strong></p>
+<p>| <strong>名称</strong>   | <strong>说明</strong>                                               |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-2 (接口文档导入)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article2.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-2 (接口文档导入)</source>
+      <description>苍穹外卖 接口文档导入 前企业主流的前后端分离开发方式，那么这种方式就要求我们之前需要先将接口定义好，这样前后端人员才能并行开发。其实，在真实的企业开发中，接口设计过程其实是一个非常漫长的过程，可能需要多次开会讨论调整，甚至在开发的过程中才会发现某些接口定义还需要再调整，这种情况其实是非常常见的 前后端分离开发流程： alt textalt text ...</description>
+      <category>code</category>
+      <pubDate>Sat, 18 Oct 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
+<h3>接口文档导入</h3>
+<p>前企业主流的前后端分离开发方式，那么这种方式就要求我们之前需要先将接口定义好，这样前后端人员才能并行开发。其实，在真实的企业开发中，接口设计过程其实是一个非常漫长的过程，可能需要多次开会讨论调整，甚至在开发的过程中才会发现某些接口定义还需要再调整，这种情况其实是非常常见的</p>
+<p><strong>前后端分离开发流程</strong>：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>接口管理平台</h4>
+<p>将课程资料中提供的项目接口导入YApi。访问地址：<a href="https://yapi.pro/" target="_blank" rel="noopener noreferrer">https://yapi.pro/</a></p>
+<h4>Swagger  (knife4j)</h4>
+<p>Swagger 是一个规范和完整的框架，用于生成、描述、调用和可视化 RESTful 风格的 Web 服务(<a href="https://swagger.io/" target="_blank" rel="noopener noreferrer">https://swagger.io/</a>)。 它的主要作用是：</p>
+<ol>
+<li>
+<p>使得前后端分离开发更加方便，有利于团队协作</p>
+</li>
+<li>
+<p>接口的文档在线自动生成，降低后端开发人员编写接口文档的负担</p>
+</li>
+<li>
+<p>功能测试</p>
+<p>Spring已经将Swagger纳入自身的标准，建立了Spring-swagger项目，现在叫Springfox。通过在项目中引入Springfox ，即可非常简单快捷的使用Swagger。</p>
+</li>
+</ol>
+<p>knife4j是为Java MVC框架集成Swagger生成Api文档的增强解决方案,前身是swagger-bootstrap-ui,取名kni4j是希望它能像一把匕首一样小巧,轻量,并且功能强悍!</p>
+<p>目前，一般都使用knife4j框架。</p>
+<h5>使用步骤</h5>
+<ol>
+<li>
+<p>导入 knife4j 的maven坐标</p>
+<p>在pom.xml中添加依赖</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.github.xiaoymin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>knife4j-spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div></li>
+<li>
+<p>在配置类中加入 knife4j 相关配置</p>
+<p>WebMvcConfiguration.java</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+     * 通过knife4j生成接口文档
+     * <span class="token keyword">@return</span>
+*/</span>
+ <span class="token annotation punctuation">@Bean</span>
+ <span class="token keyword">public</span> <span class="token class-name">Docket</span> <span class="token function">docket</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+     <span class="token class-name">ApiInfo</span> apiInfo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ApiInfoBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">title</span><span class="token punctuation">(</span><span class="token string">"苍穹外卖项目接口文档"</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">version</span><span class="token punctuation">(</span><span class="token string">"2.0"</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">"苍穹外卖项目接口文档"</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token class-name">Docket</span> docket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Docket</span><span class="token punctuation">(</span><span class="token class-name">DocumentationType</span><span class="token punctuation">.</span><span class="token constant">SWAGGER_2</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">apiInfo</span><span class="token punctuation">(</span>apiInfo<span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">apis</span><span class="token punctuation">(</span><span class="token class-name">RequestHandlerSelectors</span><span class="token punctuation">.</span><span class="token function">basePackage</span><span class="token punctuation">(</span><span class="token string">"com.sky.controller"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">paths</span><span class="token punctuation">(</span><span class="token class-name">PathSelectors</span><span class="token punctuation">.</span><span class="token function">any</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+             <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+     <span class="token keyword">return</span> docket<span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+</code></pre></div></li>
+<li>
+<p>设置静态资源映射，否则接口文档页面无法访问</p>
+<p>WebMvcConfiguration.java</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+     * 设置静态资源映射
+     * <span class="token keyword">@param</span> <span class="token parameter">registry</span>
+*/</span>
+<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">addResourceHandlers</span><span class="token punctuation">(</span><span class="token class-name">ResourceHandlerRegistry</span> registry<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        registry<span class="token punctuation">.</span><span class="token function">addResourceHandler</span><span class="token punctuation">(</span><span class="token string">"/doc.html"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addResourceLocations</span><span class="token punctuation">(</span><span class="token string">"classpath:/META-INF/resources/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        registry<span class="token punctuation">.</span><span class="token function">addResourceHandler</span><span class="token punctuation">(</span><span class="token string">"/webjars/**"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addResourceLocations</span><span class="token punctuation">(</span><span class="token string">"classpath:/META-INF/resources/webjars/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div></li>
+</ol>
+<h5>Swagger 常用注解</h5>
+<p>通过注解可以控制生成的接口文档，使接口文档拥有更好的可读性，常用注解如下：</p>
+<p>| <strong>注解</strong>          | <strong>说明</strong>                                               |
+|</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>hint - 跨域</title>
       <link>http://ekkosonya.cn/code/java_hint/hint4.html</link>
@@ -2058,585 +2237,6 @@
 | :</p>
 ]]></content:encoded>
       <enclosure url="https://s2.loli.net/2023/07/16/sL56YdmgGblfFjo.png" type="image/png"/>
-    </item>
-    <item>
-      <title>Javassm - SpringBoot1</title>
-      <link>http://ekkosonya.cn/code/java_ssm/4-SpringBoot/boot1.html</link>
-      <guid>http://ekkosonya.cn/code/java_ssm/4-SpringBoot/boot1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - SpringBoot1</source>
-      <description>简介 Spring Boot让您可以轻松地创建独立的、生产级别的Spring应用程序，并“直接运行”这些应用程序。 SpringBoot为大量的第三方库添加了支持，能够做到开箱即用，简化大量繁琐配置，用最少的配置快速构建你想要的项目。 在2023年，SpringBoot迎来了它的第三个大版本，随着SpringBoot 3的正式发布，整个生态也迎来了一次...</description>
-      <category>code</category>
-      <pubDate>Tue, 23 Sep 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>简介</h2>
-<p>Spring Boot让您可以轻松地创建独立的、生产级别的Spring应用程序，并“直接运行”这些应用程序。</p>
-<p>SpringBoot为大量的第三方库添加了支持，能够做到开箱即用，简化大量繁琐配置，用最少的配置快速构建你想要的项目。</p>
-<p>在2023年，SpringBoot迎来了它的第三个大版本，随着SpringBoot 3的正式发布，整个生态也迎来了一次重大革新。</p>
-<p>目前的最新版本以及对应的维护情况：</p>
-<figure><figcaption>image-20230710174659973</figcaption></figure>
-<p>可以看到，曾经的SpringBoot 2.5版本将会在2023年8月底终止商业支持，届时将不会再对这类旧版本进行任何维护，因此，将我们的老版本SpringBoot项目进行升级已经迫在眉睫，目前最强的3.1正式版会维护到2025年中旬。</p>
-<p>在3.X之后的变化相比2.X可以说是相当大，尤其是其生态下的SpringSecurity框架，旧版本项目在升级之后API已经完全发生改变；以及内置Tomcat服务器的升级，Servlet也升级到5以上，从<code>javax</code>全新升级到<code>jakarta</code>新包名；包括在3.X得到的大量新特性，如支持GraalVM打包本地镜像运行等；并且Java版本也强制要求为17版本。迁移到新版本不仅可以享受到免费维护支持，也可以感受Java17带来的全新体验。</p>
-<p>介绍了这么多，我们首先还是来看看SpringBoot功能有哪些：</p>
-<ul>
-<li>能够创建独立的Spring应用程序</li>
-<li>内嵌Tomcat、Jetty或Undertow服务器（无需单独部署WAR包，打包成Jar本身就是一个可以运行的应用程序）</li>
-<li>提供一站式的“starter”依赖项，以简化Maven配置（需要整合什么框架，直接导对应框架的starter依赖）</li>
-<li>尽可能自动配置Spring和第三方库（除非特殊情况，否则几乎不需要进行任何配置）</li>
-<li>提供生产环境下相关功能，如指标、运行状况检查和外部化配置</li>
-<li>没有任何代码生成，也不需要任何XML配置（XML是什么，好吃吗）</li>
-</ul>
-<p>SpringBoot是现在最主流的开发框架，国内的公司基本都在使用，也是我们出去找工作一定要会的框架，它提供了一站式的开发体验，能够大幅度提高我们的开发效率。</p>
-<p>在SSM阶段，当我们需要搭建一个基于Spring全家桶的Web应用程序时，我们不得不做大量的依赖导入和框架整合相关的Bean定义，光是整合框架就花费了我们大量的时间，但是实际上我们发现，整合框架其实基本都是一些固定流程，我们每创建一个新的Web应用程序，基本都会使用同样的方式去整合框架，我们完全可以将一些重复的配置作为约定，只要框架遵守这个约定，为我们提供默认的配置就好，这样就不用我们再去配置了，<strong>约定优于配置</strong>！</p>
-<p>而SpringBoot正是将这些过程大幅度进行了简化，它可以自动进行配置，我们只需要导入对应的启动器（starter）依赖即可。</p>
-<h2>快速上手</h2>
-<p>要感受SpringBoot带来的快速开发体验，我们就从创建一个项目开始。</p>
-<h3>极速创建项目</h3>
-<p>在过去，我们创建一个SSM项目，需要先导入各种依赖，进行大量的配置</p>
-<p>现在，有了SpringBoot，我们可以享受超快的项目创建体验，只需要前往官网进行少量配置就能快速为你生成一个SpringBoot项目模版：<a href="https://start.spring.io/" target="_blank" rel="noopener noreferrer">https://start.spring.io/</a></p>
-<p>不过，为了方便，IDEA已经将这个工具集成到内部了，我们可以直接在IDEA中进行创建，效果是一样的</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>接着我们就可以配置项目的语言，并且选择项目需要使用的模块，这里我们简单选择两个依赖：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>如果一开始不清楚自己需要哪些模块，我们也可以后续自己手动添加对应模块的starter依赖，使用非常简单。</p>
-<p>项目自动生成之后，可以看到Spring相关的依赖已经全部自动导入</p>
-<p>并且也自动为我们创建了一个主类用于运行我们的SpringBoot项目</p>
-<p>我们可以一键启动我们的SpringBoot项目：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>只不过由于我们没有添加任何有用的模块，也没有编写什么操作，因此启动之后项目就直接停止了。</p>
-<h3>常用模块快速整合</h3>
-<p>前面我们说了，SpringBoot的核心思想就是<strong>约定大于配置</strong>，能在一开始默认的就直接默认，不用我们自己来进行配置，我们只需要配置某些特殊的部分即可。</p>
-<p>我们来尝试将我们之前使用过的模块进行一下快速整合，可以看到在一开始的时候，我们没有勾选其他的依赖</p>
-<h4><code>spring-boot-starter</code></h4>
-<p>因此这里只导入了最基本的<code>spring-boot-starter</code>依赖：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>所有的SpringBoot依赖都是以starter的形式命名的，之后我们需要导入其他模块也是导入<code>spring-boot-starter-xxxx</code>这种名称格式的依赖。</p>
-<h5>SpringMvc相关依赖</h5>
-<p>首先我们还是从SpringMvc相关依赖开始。</p>
-<p>SpringBoot为我们提供了<strong>包含内置Tomcat服务器的Web模块</strong>，我们只需要导入依赖就能直接运行服务器：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-web<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>我们不需要进行任何配置，直接点击启动</p>
-<p>它真的做到了开箱即用，我们现在可以直接访问这个网站：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>可以看到成功响应了404页面，相比之前的大量配置，可以说方便了很多，我们到目前为止仅仅是导入了一个依赖，就可以做到直接启动我们的Web服务器并正常访问。</p>
-<h5>自动包扫描</h5>
-<p>SpringBoot支持<strong>自动包扫描</strong>，我们不需要编写任何配置，直接在任意路径（但是不能跑到主类所在包外面去了）下创建的组件（如Controller、Service、Component、Configuration等）都可以生效</p>
-<p>比如我们这里创建一个测试的Controller试试看：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Controller</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestController</span> <span class="token punctuation">{</span>
-    
-    <span class="token annotation punctuation">@ResponseBody</span>
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token string">"Hello World"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>重启之后，可以看到直接就能访问到，而这期间我们只是创建了对应的Controller却没有进行任何配置，这真的太方便了</p>
-<h5>自动转换JSON</h5>
-<p>包括一个对象现在也可以直接以JSON形式返回给客户端，无需任何配置：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Student</span> <span class="token punctuation">{</span>
-    <span class="token keyword">int</span> sid<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> sex<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ResponseBody</span>
-<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">Student</span> <span class="token function">index</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token class-name">Student</span> student <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Student</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    student<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">"小明"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    student<span class="token punctuation">.</span><span class="token function">setSex</span><span class="token punctuation">(</span><span class="token string">"男"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    student<span class="token punctuation">.</span><span class="token function">setSid</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> student<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>最后浏览器能够直接得到<code>application/json</code>的响应数据，就是这么方便，这都得归功于SpringBoot对应的start帮助我们自动将处理JSON数据的Converter进行了配置，我们不需要再单独去配置Converter了。</p>
-<p>不过SpringBoot官方默认使用的是<code>Jackson</code>和<code>Gson</code> 的HttpMessageConverter来进行配置，不是我们之前教程中使用的FastJSON框架。</p>
-<h5>相关依赖</h5>
-<p>我们最后来看看这个Start包含了哪些依赖：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.1.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-json<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.1.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-tomcat<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.1.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-web<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>6.0.10<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-webmvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>6.0.10<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>compile<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>里面包含了以下内容：</p>
-<ul>
-<li>spring-boot-starter  基础依赖starter</li>
-<li>spring-boot-starter-json  配置JSON转换的starter</li>
-<li>spring-boot-starter-tomcat   内置Tomcat服务器</li>
-<li>spring-web、spring-webmvc    不用多说了吧，之前已经讲过了</li>
-</ul>
-<h4>配置类添加</h4>
-<p>如果需要像之前一样添加WebMvc的配置类，方法是一样的，直接创建即可：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//只需要添加Configuration用于注册配置类，不需要其他任何注解，已经自动配置好了</span>
-<span class="token annotation punctuation">@Configuration</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebConfiguration</span> <span class="token keyword">implements</span> <span class="token class-name">WebMvcConfigurer</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addInterceptors</span><span class="token punctuation">(</span><span class="token class-name">InterceptorRegistry</span> registry<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        registry<span class="token punctuation">.</span><span class="token function">addInterceptor</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">HandlerInterceptor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">preHandle</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> request<span class="token punctuation">,</span> <span class="token class-name">HttpServletResponse</span> response<span class="token punctuation">,</span> <span class="token class-name">Object</span> handler<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
-                <span class="token keyword">return</span> <span class="token class-name">HandlerInterceptor</span><span class="token punctuation">.</span><span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">preHandle</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> handler<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4><code>SpringSecurity</code></h4>
-<p>同样的，我们来看看SpringSecurity框架如何进行整合，也是非常简单，我们只需要直接导入即可：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-security<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>导入完成后，再次访问网站，就可以看到熟悉的登录界面了</p>
-<p>我们没有进行任何配置，而是对应的Starter帮助我们完成了默认的配置，并且在启动时，就已经帮助我们配置了一个随机密码的用户可以直接登录使用</p>
-<p>密码直接展示在启动日志中，而默认用户名称为<code>user</code>，我们可以直接登录</p>
-<p>同样没有进行任何配置，我们只需要添加对应的starter就能做到开箱即用，并且内置一套默认配置，自动帮助我们创建一个测试用户，方便我们快速搭建项目</p>
-<h5>添加配置类</h5>
-<p>同样的，如果要进行额外配置，我们只需要直接添加配置类即可：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">//依然只需要Configuration注解即可，不需要其他配置</span>
-<span class="token annotation punctuation">@Configuration</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SecurityConfiguration</span> <span class="token punctuation">{</span>
-
-    <span class="token comment">//配置方式跟之前SSM阶段是一样的</span>
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">SecurityFilterChain</span> <span class="token function">filterChain</span><span class="token punctuation">(</span><span class="token class-name">HttpSecurity</span> http<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> http
-                <span class="token punctuation">.</span><span class="token function">authorizeHttpRequests</span><span class="token punctuation">(</span>auth <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-                    auth<span class="token punctuation">.</span><span class="token function">anyRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">authenticated</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span><span class="token punctuation">)</span>
-                <span class="token punctuation">.</span><span class="token function">formLogin</span><span class="token punctuation">(</span>conf <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-                    conf<span class="token punctuation">.</span><span class="token function">loginPage</span><span class="token punctuation">(</span><span class="token string">"/login"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    conf<span class="token punctuation">.</span><span class="token function">loginProcessingUrl</span><span class="token punctuation">(</span><span class="token string">"/doLogin"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    conf<span class="token punctuation">.</span><span class="token function">defaultSuccessUrl</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    conf<span class="token punctuation">.</span><span class="token function">permitAll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span><span class="token punctuation">)</span>
-                <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4><code>Thymeleaf</code></h4>
-<p>同样的，我们也可以快速整合之前使用的模版引擎，比如Thymeleaf框架，直接上对应的Starter即可：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-thymeleaf<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>在默认情况下，我们需要在<code>resources</code>目录下创建两个目录：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>这两个目录是默认配置下需要的，名字必须是这个：</p>
-<ul>
-<li><code>templates</code> - 所有模版文件都存放在这里</li>
-<li><code>static</code> - 所有静态资源都存放在这里</li>
-</ul>
-<p>我们只需要按照上面的样子放入我们之前的前端模版，就可以正常使用模版引擎了，同样不需要进入任何的配置，当然后续也可以进行修改。</p>
-<p>我们不需要在controller中写任何内容，它默认会将index.html作为首页文件，我们直接访问服务器地址就能展示首页了：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Controller</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestController</span> <span class="token punctuation">{</span>
-  <span class="token comment">//什么都不用写</span>
-<span class="token punctuation">}</span>
-</code></pre></div><figure><img src="https://s2.loli.net/2023/07/15/thnN29vz4fuYRFW.png" alt="image-20230715230152860" tabindex="0" loading="lazy"><figcaption>image-20230715230152860</figcaption></figure>
-<p>这都是得益于<strong>约定大于配置</strong>的思想。</p>
-<h4><code>Mybatis</code></h4>
-<p>我们最后再来看看Mybatis如何进行整合，同样只需要一个starter即可，这里顺便把MySQL的驱动加上：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.mybatis.spring.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mybatis-spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.0.2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.mysql<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>mysql-connector-j<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>runtime<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>注意这里的<code>mybatis-spring-boot-starter</code>版本需要我们自己指定，因为它没有被父工程默认管理。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>启动服务器时，我们发现这里出现了问题，导致无法启动。</p>
-<p>这是因为我们没有<strong>配置数据源</strong>导致的，虽然SpringBoot采用约定大于配置的思想，但是数据库信息只有我们自己清楚，而且变化多样，根本没有办法提前完成约定，所以说这里我们还是需要再配置文件中编写。</p>
-<h3>自定义运行器</h3>
-<p>在项目中，可能会遇到这样一个问题：我们需要在项目启动完成之后，紧接着执行一段代码。</p>
-<p>我们可以编写自定义的ApplicationRunner来解决，它会在项目启动完成后执行：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestRunner</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationRunner</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">ApplicationArguments</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我是自定义执行！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>当然也可以使用CommandLineRunner，它也支持使用@Order或是实现Ordered接口来支持优先级执行。</p>
-<h3>配置文件介绍</h3>
-<p>前面我们已经体验了SpringBoot带来的快捷开发体验，不过我们发现有些东西还是需要我们自己来编写配置才可以，不然SpringBoot项目无法正常启动，我们来看看如何编写配置。</p>
-<h4><code>application.properties</code></h4>
-<p>我们可以直接在<code>application.properties</code>中进行配置编写，它是整个SpringBoot的配置文件，比如要修改服务器的默认端口：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>这些配置其实都是各种Starter提供的，部分配置在Starter中具有默认值，我们即使不配置也会使用默认值，比如这里的8080就是我们服务器的默认端口，我们也可以手动修改它，来变成我们需要的。</p>
-<h5>自定义的配置</h5>
-<p>除了配置已经存在的选项，我们也可以添加自定义的配置，来方便我们程序中使用，比如我们这里创建一个测试数据：</p>
-<div class="language-properties" data-ext="properties" data-title="properties"><pre class="language-properties"><code><span class="token key attr-name">test.data</span><span class="token punctuation">=</span><span class="token value attr-value">100</span>
-</code></pre></div><p>我们可以直接在程序中通过<code>@Value</code>来访问到（跟我们之前Spring基础篇讲的是一样的）</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Controller</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestController</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Value</span><span class="token punctuation">(</span><span class="token string">"${test.data}"</span><span class="token punctuation">)</span>
-    <span class="token keyword">int</span> data<span class="token punctuation">;</span>   <span class="token comment">//直接从配置中去取</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>yaml格式</h4>
-<p>配置文件除了使用<code>properties</code>格式以外，还有一种叫做<code>yaml</code>格式，它的语法如下：</p>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">一级目录</span><span class="token punctuation">:</span>
-    <span class="token key atrule">二级目录</span><span class="token punctuation">:</span>
-      <span class="token key atrule">三级目录1</span><span class="token punctuation">:</span> 值
-      <span class="token key atrule">三级目录2</span><span class="token punctuation">:</span> 值
-      <span class="token key atrule">三级目录List</span><span class="token punctuation">:</span> 
-      <span class="token punctuation">-</span> 元素1
-      <span class="token punctuation">-</span> 元素2
-      <span class="token punctuation">-</span> 元素3
-</code></pre></div><p><strong>缩进只能空格，键和值之间要有空格</strong></p>
-<p>我们可以看到，每一级目录都是通过缩进（不能使用Tab，只能使用空格）区分，并且<strong>键和值之间</strong>需要添加<strong>冒号+空格</strong>来表示。</p>
-<p>SpringBoot也支持这种格式的配置文件，我们可以将<code>application.properties</code>修改为<code>application.yml</code>或是<code>application.yaml</code>来使用YAML语法编写配置：</p>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">server</span><span class="token punctuation">:</span>
-  <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">80</span>
-</code></pre></div><h5>配置数据源</h5>
-<p>现在我们来尝试为之前的数据源进行一下配置，这样才能正常启动我们的服务器：</p>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">spring</span><span class="token punctuation">:</span>
-  <span class="token key atrule">datasource</span><span class="token punctuation">:</span>
-    <span class="token key atrule">url</span><span class="token punctuation">:</span> jdbc<span class="token punctuation">:</span>mysql<span class="token punctuation">:</span>//localhost<span class="token punctuation">:</span>3306/test
-    <span class="token key atrule">username</span><span class="token punctuation">:</span> root
-    <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token number">123456</span>
-    <span class="token key atrule">driver-class-name</span><span class="token punctuation">:</span> com.mysql.cj.jdbc.Driver
-</code></pre></div><p>配置完成后，我们就可以正常启动服务器了。</p>
-<h4>测试<code>MyBatis</code></h4>
-<p>这里我们接续来测试一下MyBatis的配置，想要在SpringBoot中使用Mybatis也很简单，不需要进行任何配置，我们直接编写Mapper即可，这里我们随便创建一个表试试看：</p>
-<figure><img src="https://s2.loli.net/2023/07/16/ygRp98mDKafXkw1.png" alt="image-20230716000431492" tabindex="0" loading="lazy"><figcaption>image-20230716000431492</figcaption></figure>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
-    <span class="token keyword">int</span> id<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> email<span class="token punctuation">;</span>
-    <span class="token class-name">String</span> password<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>注意，在SpringBoot整合之后，我们只需要直接在配置类上添加<code>@MapperScan</code>注解即可，跟我们之前的使用方法是一样的：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Configuration</span>
-<span class="token annotation punctuation">@MapperScan</span><span class="token punctuation">(</span><span class="token string">"com.example.mapper"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebConfiguration</span> <span class="token keyword">implements</span> <span class="token class-name">WebMvcConfigurer</span> <span class="token punctuation">{</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-</code></pre></div><p>不过，为了方便，我们也可以直接为需要注册为Mapper的接口添加<code>@Mapper</code>注解，来表示这个接口作为Mapper使用：</p>
-<figure><img src="https://s2.loli.net/2023/07/16/lTrXepw1c38IdSv.png" alt="image-20230716000755756" tabindex="0" loading="lazy"><figcaption>image-20230716000755756</figcaption></figure>
-<p>这样，即使不配置MapperScan也能直接注册为Mapper正常使用，是不是感觉特别方便？</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Mapper</span>
-<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserMapper</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from user where id = #{id}"</span><span class="token punctuation">)</span>
-    <span class="token class-name">User</span> <span class="token function">findUserById</span><span class="token punctuation">(</span><span class="token keyword">int</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ResponseBody</span>
-<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/test"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token keyword">return</span> mapper<span class="token punctuation">.</span><span class="token function">findUserById</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>访问接口测试一下：</p>
-<figure><img src="https://s2.loli.net/2023/07/16/PSfpylWGCs3bzZj.png" alt="image-20230716001311316" tabindex="0" loading="lazy"><figcaption>image-20230716001311316</figcaption></figure>
-<h4>常见配置项</h4>
-<p>最后，我们再来介绍一下常见的配置项，比如SpringSecurity和SpringBootMvc配置：</p>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">spring</span><span class="token punctuation">:</span>  
-  <span class="token comment">#  Spring Mvc相关配置</span>
-  <span class="token key atrule">mvc</span><span class="token punctuation">:</span>
-    <span class="token key atrule">static-path-pattern</span><span class="token punctuation">:</span> /static/<span class="token important">**</span>   <span class="token comment">#静态资源解析地址</span>
-  <span class="token comment"># Spring Security 相关配置</span>
-  <span class="token key atrule">security</span><span class="token punctuation">:</span>
-    <span class="token key atrule">filter</span><span class="token punctuation">:</span>
-      <span class="token key atrule">order</span><span class="token punctuation">:</span> <span class="token number">-100</span> <span class="token comment">#Spring Security 过滤器优先级</span>
-    <span class="token key atrule">user</span><span class="token punctuation">:</span>
-      <span class="token key atrule">name</span><span class="token punctuation">:</span> <span class="token string">'admin'</span>   <span class="token comment">#默认登录用户名</span>
-      <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token string">'123456'</span>   <span class="token comment">#默认登录密码</span>
-      <span class="token key atrule">roles</span><span class="token punctuation">:</span>    <span class="token comment">#默认用户的角色</span>
-        <span class="token punctuation">-</span> admin
-        <span class="token punctuation">-</span> user
-</code></pre></div><p>更多的配置我们可以在后续的学习中继续认识，这些配置其实都是由Starter提供的，确实极大程度简化了我们对于框架的使用。</p>
-<h3>轻松打包运行</h3>
-<p>前面我们介绍了一个SpringBoot如何快捷整合其他框架以及进行配置编写，我们接着来看如何打包我们的SpringBoot项目使其可以正常运行</p>
-<p>SpringBoot提供了一个非常便捷的打包插件，能够直接将我们的项目打包成一个jar包，然后使用java命令直接运行</p>
-<p>我们直接点击Maven中的：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>点击之后项目会自动打包构建</p>
-<p>打包完成之后，会在target目录下出现一个打包好的jar文件</p>
-<p>我们可以直接在命令行中运行这个程序，在CMD中进入到target目录，然后输入：</p>
-<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token function">java</span> <span class="token parameter variable">-jar</span> demo-0.0.1-SNAPSHOT.jar
-</code></pre></div><p>这样就可以直接运行了</p>
-<p>现在，我们的SpringBoot项目就可以快速部署到任何计算机了，只要能够安装JRE环境，都可以通过命令一键运行。</p>
-<h4>war包运行</h4>
-<p>当然，可能也会有小伙伴好奇，怎么才能像之前一样在我们的Tomcat服务器中运行呢？我们也可以将其打包为War包的形式部署到我们自己环境中的Tomcat服务器或是其他任何支持Servlet的服务器中，但是这种做法相对比较复杂，不太推荐采用这种方式进行项目部署，不过我们这里还是介绍一下。</p>
-<p>首先我们需要排除掉<code>spring-boot-starter-web</code>中自带的Tomcat服务器依赖：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-web<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusions</span><span class="token punctuation">&gt;</span></span>
-          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">&gt;</span></span>
-             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-             <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-tomcat<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">&gt;</span></span>
-       <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>然后自行添加Servlet依赖：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>jakarta.servlet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>jakarta.servlet-api<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>scope</span><span class="token punctuation">&gt;</span></span>provided<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>scope</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>最后将打包方式修改为war包：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>packaging</span><span class="token punctuation">&gt;</span></span>war<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>packaging</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>接着我们需要修改主类，将其继承<code>SpringBoot</code>需要的<code>Initializer</code>（又回到SSM阶段那烦人的配置了，所以说一点不推荐这种部署方式）</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@SpringBootApplication</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DemoApplication</span> <span class="token keyword">extends</span> <span class="token class-name">SpringBootServletInitializer</span> <span class="token punctuation">{</span>  
-    <span class="token comment">//继承专用的初始化器</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">SpringApplication</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">DemoApplication</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token comment">//重写configure方法，完成启动类配置</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">protected</span> <span class="token class-name">SpringApplicationBuilder</span> <span class="token function">configure</span><span class="token punctuation">(</span><span class="token class-name">SpringApplicationBuilder</span> builder<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> builder<span class="token punctuation">.</span><span class="token function">sources</span><span class="token punctuation">(</span><span class="token class-name">DemoApplication</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>最后，我们再次运行Maven 的package指令就可以打包为war包了</p>
-<p>我们可以直接将其部署到Tomcat服务器中（webapps目录下）</p>
-<p>接着启动服务器就能正常访问了</p>
-<h5>在<code>war</code>情况下的IDEA运行</h5>
-<p>如果各位小伙伴需要在IDEA中进行调试运行，我们需要像之前一样配置一个Tomcat运行环境：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>这样就可以跟之前一样使用外部Tomcat服务器了：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h3>新特性 - <code>GraalVM</code> (了解)</h3>
-<p>最后，我们需要特别介绍一下新的特性，在SpringBoot3之后，特别对GraalVM进行了支持：</p>
-<blockquote>
-<p>GraalVM 是一种通用的虚拟机，最初由 Oracle 开发。它支持多种编程语言（例如 Java、JavaScript、Python 等），可以在不同的环境中运行，并提供高性能和低内存消耗。</p>
-<p>GraalVM的核心是一个即时编译器，它能够将各种语言的代码直接编译成本地机器码，以获得更高的性能。此外，GraalVM 还提供了一个强大的运行时环境，包括垃圾回收器、即时编译器、线程管理器等，可以提供更好的性能和可扩展性。</p>
-<p>GraalVM 的一个重要特性是它的跨语言互操作性。GraalVM 可以使不同语言之间的互操作更加容易。例如，你可以在 Java 代码中直接调用 JavaScript 函数，或者在 JavaScript 代码中直接调用 Java 类。这使得在不同语言之间共享和复用代码变得更加容易。</p>
-<p>总的来说，GraalVM 是一个开创性的技术，可以提供出色的性能和灵活性，同时也为多语言开发提供了更好的支持。它是一个非常有潜力的工具，可以用于构建高效的应用程序和解决方案。</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<p>简而言之，我们的SpringBoot项目除了打包为传统的Jar包基于JVM运行之外，我们也可以将其直接编译为操作系统原生的程序来进行使用（这样会大幅提升程序的运行效率，但是由于编译为操作系统原生程序，这将<strong>无法支持跨平台</strong>）</p>
-<p>首先我们需要安装GraalVM的环境才可以，这跟安装普通JDK的操作是完全一样的，下载地址：<a href="https://github.com/graalvm/graalvm-ce-builds/releases/tag/jdk-17.0.7" target="_blank" rel="noopener noreferrer">https://github.com/graalvm/graalvm-ce-builds/releases/tag/jdk-17.0.7</a></p>
-<p>下载好对应系统架构的GraalVM环境之后，就可以安装部署了</p>
-<p>首先我们需要为GraalVM配置环境变量，将GRAALVM_HOME作为环境变量指向你的安装目录的bin目录下</p>
-<p>接着我们就可以开始进行打包了（注意，SpringBoot项目必须在创建的时候添加了Native支持才可以，否则无法正常打包）</p>
-<p>注意，一定要将<code>GRAALVM_HOME</code>配置到环境变量中，否则会报错</p>
-<p>一切无误后，我们直接在IDEA中或是命令行中输入：</p>
-<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>mvn <span class="token parameter variable">-Pnative</span> <span class="token parameter variable">-DskipTests</span> native:compile
-</code></pre></div><p>接着会自动安装<code>native-image</code>组件，然后进行本地镜像的编译（建议挂梯，不然卡一天都下不动）</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>编译过程中比较消耗资源，建议CPU选择6核及以上，不然速度会很慢</p>
-<p>这样一个系统原生的SpringBoot项目就打包好了，我们可以直接运行这个程序：</p>
-<figure><figcaption>alt text</figcaption></figure>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - SpringMVC1</title>
-      <link>http://ekkosonya.cn/code/java_ssm/2-SpringMvc/mvc1.html</link>
-      <guid>http://ekkosonya.cn/code/java_ssm/2-SpringMvc/mvc1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - SpringMVC1</source>
-      <description>MVC理论基础 SpringMVC - 表示层框架 MVC三层架构包括： alt textalt text 每一层都有着各自的职责 其中最关键的当属表示层，因为它相当于就是直接与用户的浏览器打交道的一层 并且所有的请求都会经过它进行解析，然后再告知业务层进行处理，任何页面的返回和数据填充也全靠表示层来完成，因此它实际上是整个三层架构中最关键的一层 而在...</description>
-      <category>code</category>
-      <pubDate>Tue, 02 Sep 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>MVC理论基础</h2>
-<p>SpringMVC - 表示层框架</p>
-<p>MVC三层架构包括：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>每一层都有着各自的职责</p>
-<p>其中最关键的当属表示层，因为它相当于就是直接与用户的浏览器打交道的一层</p>
-<p>并且所有的请求都会经过它进行解析，然后再告知业务层进行处理，任何页面的返回和数据填充也全靠表示层来完成，因此它实际上是整个三层架构中最关键的一层</p>
-<p>而在之前的实战开发中，我们编写了大量的Servlet（也就是表示层实现）来处理来自浏览器的各种请求，但是我们发现，仅仅是几个很小的功能，以及几个很基本的页面，我们都要编写将近十个Servlet</p>
-<p>如果是更加大型的网站系统，比如淘宝、B站，光是一个页面中可能就包含了几十甚至上百个功能，想想那样的话写起来得多恐怖。</p>
-<p>因此，SpringMVC正是为了解决这种问题而生的，它是一个<strong>非常优秀的表示层框架</strong>，采用MVC思想设计实现。</p>
-<h3>MVC介绍</h3>
-<p>MVC详细解释如下：</p>
-<ul>
-<li>M是指业务模型（Model）：通俗的讲就是我们之前用于封装数据传递的实体类。</li>
-<li>V是指用户界面（View）：一般指的是前端页面。</li>
-<li>C则是控制器（Controller）：控制器就相当于Servlet的基本功能，处理请求，返回响应。</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<p>SpringMVC正是希望这三者之间进行解耦，实现各干各的，更加精细地划分对应的职责。</p>
-<p>最后再将View和Model进行渲染，得到最终的页面并返回给前端（就像之前使用Thymeleaf那样，把实体数据对象和前端页面都给到Thymeleaf，然后它会将其进行整合渲染得到最终有数据的页面</p>
-<h2>配置环境并搭建项目</h2>
-<p>这里我们继续使用之前的Tomcat10服务器，Spring6之后要求必须使用Tomcat10或更高版本</p>
-<p>我们直接创建一个新的JakartaEE项目。</p>
-<p>创建完成后会自动生成相关文件，但是还是请注意检查运行配置中的URL和应用程序上下文名称是否一致。</p>
-<h3>传统XML配置形式</h3>
-<p>SpringMvc项目依然支持多种配置形式，这里我们首先讲解最传统的XML配置形式。</p>
-<h4>添加依赖</h4>
-<p>首先我们需要添加Mvc相关依赖：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-webmvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>6.1.13<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h4>配置 <code>web.xml</code></h4>
-<p>用 <code>DispatcherServlet</code> 来替换 Tomcat自带的Servlet</p>
-<p>这里url-pattern需要写为<code>/</code>，即可完成替换：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>web-app</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://jakarta.ee/xml/ns/jakartaee<span class="token punctuation">"</span></span>
-         <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-         <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd<span class="token punctuation">"</span></span>
-         <span class="token attr-name">version</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5.0<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-name</span><span class="token punctuation">&gt;</span></span>mvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-name</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-class</span><span class="token punctuation">&gt;</span></span>org.springframework.web.servlet.DispatcherServlet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-class</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-name</span><span class="token punctuation">&gt;</span></span>mvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-name</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>url-pattern</span><span class="token punctuation">&gt;</span></span>/<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>url-pattern</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-mapping</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>web-app</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h4>配置Spring上下文环境</h4>
-<p>接着需要为整个Web应用程序配置一个Spring上下文环境（也就是容器），因为SpringMVC是基于Spring开发的，它直接利用Spring提供的容器来实现各种功能</p>
-<h5><code>resource/spring.xml</code></h5>
-<p>那么第一步依然跟之前一样，需要编写一个配置文件(在 <code>resource/spring.xml</code>)：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h5><code>webapp/WRB-INF/web.xml</code></h5>
-<p>接着我们需要为DispatcherServlet配置一些初始化参数来指定刚刚创建的配置文件：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-name</span><span class="token punctuation">&gt;</span></span>mvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-name</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>servlet-class</span><span class="token punctuation">&gt;</span></span>org.springframework.web.servlet.DispatcherServlet<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet-class</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>init-param</span><span class="token punctuation">&gt;</span></span>
-        <span class="token comment">&lt;!--     指定我们刚刚创建在类路径下的XML配置文件       --&gt;</span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param-name</span><span class="token punctuation">&gt;</span></span>contextConfigLocation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>param-name</span><span class="token punctuation">&gt;</span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param-value</span><span class="token punctuation">&gt;</span></span>classpath:spring.xml<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>param-value</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>init-param</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>servlet</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h4>测试，编写<code>Controller</code></h4>
-<p>这样我们就完成了基本的配置，现在我们可以来测试一下是否配置正确</p>
-<p>我们删除项目自带的Servlet类，创建一个Mvc中使用的<code>Controller</code>类：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Controller</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloController</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@ResponseBody</span>
-    <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token string">"HelloWorld!"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>接着我们需要将这个类注册为Bean才能正常使用，我们来编写一下Spring的配置文件，这里我们直接配置包扫描，XML下的包扫描需要这样开启：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>context</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/context<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-    <span class="token comment">&lt;!-- 需要先引入context命名空间，然后直接配置base-package属性就可以了 --&gt;</span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">context:</span>component-scan</span> <span class="token attr-name">base-package</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.ekko<span class="token punctuation">"</span></span><span class="token punctuation">/&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>如果可以成功在浏览器中出现HelloWorld则说明配置成功</p>
-<p>实际上我们上面编写的Controller就是负责Servlet基本功能的，比如这里我们返回的是HelloWorld字符串，那么我们在访问这个地址的时候，的到的就是这里返回的字符串</p>
-<p>可以看到写法非常简洁，至于这是怎么做到的的，怎么使用，我们会在本章进行详细介绍。</p>
-<h3>全注解配置形式</h3>
-<p>如果你希望完完全全丢弃配置文件，使用纯注解开发，可以直接添加一个类</p>
-<p>Tomcat会在类路径中查找实现 <code>ServletContainerInitializer</code> 接口的类，如果发现的话，就用它来配置Servlet容器</p>
-<p>Spring提供了这个接口的实现类 <code>SpringServletContainerInitializer</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@HandlesTypes</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token class-name">WebApplicationInitializer</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SpringServletContainerInitializer</span> <span class="token keyword">implements</span> <span class="token class-name">ServletContainerInitializer</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onStartup</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> <span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Class</span><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> webAppInitializerClasses<span class="token punctuation">,</span> <span class="token class-name">ServletContext</span> servletContext<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ServletException</span> <span class="token punctuation">{</span>
-        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">WebApplicationInitializer</span><span class="token punctuation">&gt;</span></span> initializers <span class="token operator">=</span> <span class="token class-name">Collections</span><span class="token punctuation">.</span><span class="token function">emptyList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>通过<code>@HandlesTypes(WebApplicationInitializer.class)</code>设置，这个类反过来会查找实现 <code>WebApplicationInitializer</code> 的类，并将配置的任务交给他们来完成，</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>添加依赖1</h4>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-webmvc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>6.1.13<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h4>配置初始化接口</h4>
-<p>这里的 <code>AbstractAnnotationConfigDispatcherServletInitializer</code> 类 不断往上找最终继承的就是 <code>WebApplicationInitializer</code> 的类</p>
-<p>因此直接实现接口即可：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainInitializer</span> <span class="token keyword">extends</span> <span class="token class-name">AbstractAnnotationConfigDispatcherServletInitializer</span> <span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">protected</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">getRootConfigClasses</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Class</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token class-name">WebConfiguration</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">}</span><span class="token punctuation">;</span>   <span class="token comment">//基本的Spring配置类，一般用于业务层配置</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">protected</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">getServletConfigClasses</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Class</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>  <span class="token comment">//配置DispatcherServlet的配置类、主要用于Controller等配置，这里为了教学简单，就不分这么详细了，只使用上面的基本配置类</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">protected</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">getServletMappings</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token string">"/"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>    <span class="token comment">//匹配路径，与上面一致</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>配置相应配置类 <code>@EnableWebMvc</code></h4>
-<p>接着我们需要再配置类中添加一些必要的注解：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Configuration</span>
-<span class="token annotation punctuation">@EnableWebMvc</span>   
-<span class="token comment">//快速配置SpringMvc注解，如果不添加此注解会导致后续无法通过实现WebMvcConfigurer接口进行自定义配置</span>
-<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span><span class="token string">"com.example.controller"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebConfiguration</span> <span class="token punctuation">{</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p><code>@EnableWebMvc</code> 来启动 SpringMV</p>
-<ul>
-<li>
-<p><code>@EnableWebMvc</code> 的本质是导入 <code>DelegatingWebMvcConfiguration</code>；</p>
-</li>
-<li>
-<p>它会注册 Spring MVC 的 核心 Bean（<code>HandlerMapping</code>、<code>HandlerAdapter</code>、<code>MessageConverter</code>等）；</p>
-</li>
-<li>
-<p>同时允许你通过实现 <code>WebMvcConfigurer</code> 去扩展默认配置；</p>
-</li>
-<li>
-<p>在 Spring Boot 里一般不用加，否则会屏蔽自动配置；</p>
-</li>
-<li>
-<p>在 传统 Spring MVC 项目里必须加，否则注解模式跑不起来。</p>
-</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>编写对应<code>Controller</code></h4>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Controller</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainController</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@ResponseBody</span>
-    <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token string">"HelloWorld!"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这样我们同样可以正常访问</p>
-<p>之后为了方便，我们就统一使用全注解形式编写。</p>
-<figure><figcaption>alt text</figcaption></figure>
-]]></content:encoded>
     </item>
   </channel>
 </rss>

@@ -6,11 +6,281 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Thu, 16 Oct 2025 18:01:55 GMT</pubDate>
-    <lastBuildDate>Thu, 16 Oct 2025 18:01:55 GMT</lastBuildDate>
+    <pubDate>Sun, 19 Oct 2025 16:02:22 GMT</pubDate>
+    <lastBuildDate>Sun, 19 Oct 2025 16:02:22 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Javassm - item1-3 (新增员工 + 员工分页查询)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article3.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-3 (新增员工 + 员工分页查询)</source>
+      <description>苍穹外卖 实现功能 新增员工 员工分页查询 启用禁用员工账号 编辑员工 导入分类模块功能代码 1. 新增员工 /admin/employee 产品原型 alt textalt text 账号必须是唯一的 手机号为合法的11位手机号码 身份证号为合法的18位身份证号码 密码默认为123456 接口设计 alt textalt text 明确新增员工接口的...</description>
+      <category>code</category>
+      <pubDate>Sat, 18 Oct 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
+<h3>实现功能</h3>
+<ul>
+<li>新增员工</li>
+<li>员工分页查询</li>
+<li>启用禁用员工账号</li>
+<li>编辑员工</li>
+<li>导入分类模块功能代码</li>
+</ul>
+<h3>1. 新增员工 <code>/admin/employee</code></h3>
+<h4>产品原型</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<ol>
+<li>账号必须是唯一的</li>
+<li>手机号为合法的11位手机号码</li>
+<li>身份证号为合法的18位身份证号码</li>
+<li>密码默认为123456</li>
+</ol>
+<h4>接口设计</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>明确新增员工接口的<strong>请求路径、请求方式、请求参数、返回数据</strong>。</p>
+<p>约定：</p>
+<ul>
+<li><strong>管理端</strong>发出的请求，统一使用**/admin**作为前缀。</li>
+<li><strong>用户端</strong>发出的请求，统一使用**/user**作为前缀。</li>
+</ul>
+<h4>表设计</h4>
+<p>新增员工，其实就是将我们新增页面录入的员工数据插入到employee表。</p>
+<p><strong>employee表结构：</strong></p>
+<p>| <strong>字段名</strong>  | <strong>数据类型</strong> | <strong>说明</strong>     | <strong>备注</strong>    |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-4 ()</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article4.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-4 ()</source>
+      <description>苍穹外卖 实现功能 新增员工 员工分页查询 启用禁用员工账号 编辑员工 导入分类模块功能代码 3. 启用禁用员工账号 /admin/employee/status/{status} 产品原型 alt textalt text 业务规则： 可以对状态为“启用” 的员工账号进行“禁用”操作 可以对状态为“禁用”的员工账号进行“启用”操作 状态为“禁用”的员...</description>
+      <category>code</category>
+      <pubDate>Sat, 18 Oct 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
+<h3>实现功能</h3>
+<ul>
+<li>新增员工</li>
+<li>员工分页查询</li>
+<li>启用禁用员工账号</li>
+<li>编辑员工</li>
+<li>导入分类模块功能代码</li>
+</ul>
+<h3>3. 启用禁用员工账号 <code>/admin/employee/status/{status}</code></h3>
+<h4>产品原型</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>业务规则：</strong></p>
+<ul>
+<li>可以对状态为“启用” 的员工账号进行“禁用”操作</li>
+<li>可以对状态为“禁用”的员工账号进行“启用”操作</li>
+<li>状态为“禁用”的员工账号不能登录系统</li>
+</ul>
+<h4>接口设计</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>1). 路径参数携带状态值。
+2). 同时，把id传递过去，明确对哪个用户进行操作。
+3). 返回数据code状态是必须，其它是非必须。</p>
+<h4>代码开发</h4>
+<h5>Controller层</h5>
+<p>在sky-server模块中，根据接口设计中的请求参数形式对应的在 EmployeeController 中创建启用禁用员工账号的方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 启用禁用员工账号
+ * <span class="token keyword">@param</span> <span class="token parameter">status</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/status/{status}"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"启用禁用员工账号"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">startOrStop</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Integer</span> status<span class="token punctuation">,</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"启用禁用员工账号：{},{}"</span><span class="token punctuation">,</span>status<span class="token punctuation">,</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    employeeService<span class="token punctuation">.</span><span class="token function">startOrStop</span><span class="token punctuation">(</span>status<span class="token punctuation">,</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//后绪步骤定义</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>Service层接口</h5>
+<p>在 EmployeeService 接口中声明启用禁用员工账号的业务方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 启用禁用员工账号
+ * <span class="token keyword">@param</span> <span class="token parameter">status</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ */</span>
+<span class="token keyword">void</span> <span class="token function">startOrStop</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> status<span class="token punctuation">,</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>Service层实现类</h5>
+<p>在 EmployeeServiceImpl 中实现启用禁用员工账号的业务方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 启用禁用员工账号
+ *
+ * <span class="token keyword">@param</span> <span class="token parameter">status</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">startOrStop</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> status<span class="token punctuation">,</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> <span class="token class-name">Employee</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">id</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    employeeMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>Mapper层</h5>
+<p>在 EmployeeMapper 接口中声明 update 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>    <span class="token doc-comment comment">/**
+     * 根据主键动态修改属性
+     * <span class="token keyword">@param</span> <span class="token parameter">employee</span>
+     */</span>
+    <span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">Employee</span> employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>在 EmployeeMapper.xml 中编写SQL：</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token operator">&lt;</span><span class="token keyword">update</span> id<span class="token operator">=</span><span class="token string">"update"</span> parameterType<span class="token operator">=</span><span class="token string">"Employee"</span><span class="token operator">&gt;</span>
+        <span class="token keyword">update</span> employee
+    <span class="token operator">&lt;</span><span class="token keyword">set</span><span class="token operator">&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"name != null"</span><span class="token operator">&gt;</span>name <span class="token operator">=</span> <span class="token comment">#{name},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"username != null"</span><span class="token operator">&gt;</span>username <span class="token operator">=</span> <span class="token comment">#{username},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"password != null"</span><span class="token operator">&gt;</span>password <span class="token operator">=</span> <span class="token comment">#{password},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"phone != null"</span><span class="token operator">&gt;</span>phone <span class="token operator">=</span> <span class="token comment">#{phone},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"sex != null"</span><span class="token operator">&gt;</span>sex <span class="token operator">=</span> <span class="token comment">#{sex},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"idNumber != null"</span><span class="token operator">&gt;</span>id_Number <span class="token operator">=</span> <span class="token comment">#{idNumber},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"updateTime != null"</span><span class="token operator">&gt;</span>update_Time <span class="token operator">=</span> <span class="token comment">#{updateTime},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"updateUser != null"</span><span class="token operator">&gt;</span>update_User <span class="token operator">=</span> <span class="token comment">#{updateUser},&lt;/if&gt;</span>
+        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"status != null"</span><span class="token operator">&gt;</span><span class="token keyword">status</span> <span class="token operator">=</span> <span class="token comment">#{status},&lt;/if&gt;</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">set</span><span class="token operator">&gt;</span>
+    <span class="token keyword">where</span> id <span class="token operator">=</span> <span class="token comment">#{id}</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">update</span><span class="token operator">&gt;</span>
+</code></pre></div><h5>登录时根据status限制登录</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">if</span> <span class="token punctuation">(</span>employee<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token class-name">StatusConstant</span><span class="token punctuation">.</span><span class="token constant">DISABLE</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">//账号被锁定</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">AccountLockedException</span><span class="token punctuation">(</span><span class="token class-name">MessageConstant</span><span class="token punctuation">.</span><span class="token constant">ACCOUNT_LOCKED</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>4. 编辑员工</h3>
+<h4>产品原型</h4>
+<p>在员工管理列表页面点击 "编辑" 按钮，跳转到编辑页面，在编辑页面<strong>回显</strong>员工信息并进行修改，最后点击 "保存" 按钮完成编辑操作。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>接口设计</h4>
+<p>根据上述原型图分析，编辑员工功能涉及到两个接口：</p>
+<ul>
+<li>根据id查询员工信息 <code>/admin/employee/{id}</code></li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li>编辑员工信息 <code>/admin/employee</code> (<code>PUT</code>)</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>代码开发</h4>
+<h5>1. 信息回显</h5>
+<h6><code>Controller</code>层</h6>
+<p>在 EmployeeController 中创建 getById 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据id查询员工信息
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/{id}"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"根据id查询员工信息"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Employee</span><span class="token punctuation">&gt;</span></span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> employeeService<span class="token punctuation">.</span><span class="token function">getById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h6>Service层接口</h6>
+<p>在 EmployeeService 接口中声明 getById 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据id查询员工
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token class-name">Employee</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h6>Service层实现类</h6>
+<p>在 EmployeeServiceImpl 中实现 getById 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据id查询员工
+ *
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token keyword">public</span> <span class="token class-name">Employee</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> employeeMapper<span class="token punctuation">.</span><span class="token function">getById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    employee<span class="token punctuation">.</span><span class="token function">setPassword</span><span class="token punctuation">(</span><span class="token string">"****"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> employee<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h6>Mapper层</h6>
+<p>在 EmployeeMapper 接口中声明 getById 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据id查询员工信息
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from employee where id = #{id}"</span><span class="token punctuation">)</span>
+<span class="token class-name">Employee</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>2. 信息修改</h5>
+<h6><code>Controller</code>层</h6>
+<p>在 EmployeeController 中创建 update 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 编辑员工信息
+ * <span class="token keyword">@param</span> <span class="token parameter">employeeDTO</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@PutMapping</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"编辑员工信息"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">EmployeeDTO</span> employeeDTO<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"编辑员工信息：{}"</span><span class="token punctuation">,</span> employeeDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    employeeService<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>employeeDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h6>Service层接口</h6>
+<p>在 EmployeeService 接口中声明 getById 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 编辑员工信息
+ * <span class="token keyword">@param</span> <span class="token parameter">employeeDTO</span>
+ */</span>
+<span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">EmployeeDTO</span> employeeDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h6>Service层实现类</h6>
+<p>在 EmployeeServiceImpl 中实现 update 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 编辑员工信息
+ *
+ * <span class="token keyword">@param</span> <span class="token parameter">employeeDTO</span>
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">EmployeeDTO</span> employeeDTO<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">BeanUtils</span><span class="token punctuation">.</span><span class="token function">copyProperties</span><span class="token punctuation">(</span>employeeDTO<span class="token punctuation">,</span> employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    employee<span class="token punctuation">.</span><span class="token function">setUpdateTime</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    employee<span class="token punctuation">.</span><span class="token function">setUpdateUser</span><span class="token punctuation">(</span><span class="token class-name">BaseContext</span><span class="token punctuation">.</span><span class="token function">getCurrentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    employeeMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在实现<strong>启用禁用员工账号</strong>功能时，已实现<code>employeeMapper.update(employee)</code>，在此不需写Mapper层代码。</p>
+<h3>5. 分类模块功能代码 (与员工管理模块类似)</h3>
+<h4>产品原型</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>后台系统中可以管理分类信息，分类包括两种类型，分别是 <strong>菜品分类</strong> 和 <strong>套餐分类</strong> 。</p>
+<p>先来分析<strong>菜品分类</strong>相关功能。</p>
+<p><strong>新增菜品分类</strong>：当我们在后台系统中添加菜品时需要选择一个菜品分类，在移动端也会按照菜品分类来展示对应的菜品。</p>
+<p><strong>菜品分类分页查询</strong>：系统中的分类很多的时候，如果在一个页面中全部展示出来会显得比较乱，不便于查看，所以一般的系统中都会以分页的方式来展示列表数据。</p>
+<p><strong>根据id删除菜品分类</strong>：在分类管理列表页面，可以对某个分类进行删除操作。需要注意的是当分类关联了菜品或者套餐时，此分类不允许删除。</p>
+<p><strong>修改菜品分类</strong>：在分类管理列表页面点击修改按钮，弹出修改窗口，在修改窗口回显分类信息并进行修改，最后点击确定按钮完成修改操作。</p>
+<p><strong>启用禁用菜品分类</strong>：在分类管理列表页面，可以对某个分类进行启用或者禁用操作。</p>
+<p><strong>分类类型查询</strong>：当点击分类类型下拉框时，从数据库中查询所有的菜品分类数据进行展示。</p>
+<p><strong>业务规则：</strong></p>
+<ul>
+<li>分类名称必须是唯一的</li>
+<li>分类按照类型可以分为菜品分类和套餐分类</li>
+<li>新添加的分类状态默认为“禁用”</li>
+</ul>
+<h4>相关接口</h4>
+<p>根据上述原型图分析，菜品分类模块共涉及6个接口。</p>
+<ul>
+<li>新增分类</li>
+<li>分类分页查询</li>
+<li>根据id删除分类</li>
+<li>修改分类</li>
+<li>启用禁用分类</li>
+<li>根据类型查询分类</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>数据表设计 <code>category</code>表</h4>
+<p>| <strong>字段名</strong>  | <strong>数据类型</strong> | <strong>说明</strong>     | <strong>备注</strong>            |
+|</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>Javassm - item1-1 (项目介绍+环境搭建)</title>
       <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article1.html</link>
@@ -2006,237 +2276,6 @@ git: 版本控制工具, 在团队协作中, 使用该工具对项目中的代�
 <h2>Elasticsearch交互</h2>
 ]]></content:encoded>
       <enclosure url="https://s2.loli.net/2023/07/21/dUAkeOP9FfVarRL.png" type="image/png"/>
-    </item>
-    <item>
-      <title>Javassm - SpringBoot2</title>
-      <link>http://ekkosonya.cn/code/java_ssm/4-SpringBoot/boot2.html</link>
-      <guid>http://ekkosonya.cn/code/java_ssm/4-SpringBoot/boot2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - SpringBoot2</source>
-      <description>日志系统介绍 SpringBoot为我们提供了丰富的日志系统，它几乎是开箱即用的。我们在之前学习SSM时，如果不配置日志，就会报错，但是到了SpringBoot阶段之后似乎这个问题就不见了，日志打印得也非常统一，这是为什么呢？ 日志门面和日志实现 我们首先要区分一下，什么是日志门面（Facade），什么是日志实现 我们之前学习的JUL实际上就是一种日志...</description>
-      <category>code</category>
-      <pubDate>Thu, 25 Sep 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>日志系统介绍</h2>
-<p>SpringBoot为我们提供了丰富的日志系统，它几乎是开箱即用的。我们在之前学习SSM时，如果不配置日志，就会报错，但是到了SpringBoot阶段之后似乎这个问题就不见了，日志打印得也非常统一，这是为什么呢？</p>
-<h3>日志门面和日志实现</h3>
-<p>我们首先要区分一下，什么是日志门面（Facade），什么是日志实现</p>
-<p>我们之前学习的JUL实际上就是一种日志实现，我们可以直接使用JUL为我们提供的日志框架来规范化打印日志。</p>
-<p>而日志门面，如<code>Slf4j</code>，是把不同的日志系统的实现进行了具体的抽象化，只提供了统一的日志使用接口，使用时只需要按照其提供的接口方法进行调用即可</p>
-<p>由于它只是一个接口，并不是一个具体的可以直接单独使用的日志框架，所以最终日志的格式、记录级别、输出方式等都要通过接口绑定的具体的日志系统来实现，这些具体的日志系统就有log4j、logback、java.util.logging等，它们才实现了具体的日志系统的功能。</p>
-<p>日志门面和日志实现就像JDBC和数据库驱动一样，一个是画大饼的，一个是真的去做饼的。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>但是现在有一个问题就是，不同的框架可能使用了不同的日志框架，如果这个时候出现众多日志框架并存的情况，我们现在希望的是所有的框架一律使用日志门面（Slf4j）进行日志打印，这时该怎么去解决？</p>
-<p>我们不可能将其他框架依赖的日志框架替换掉，直接更换为Slf4j吧，这样显然不现实。</p>
-<p>这时，可以采取类似于偷梁换柱的做法，只保留不同日志框架的接口和类定义等关键信息，而将实现全部定向为Slf4j调用。</p>
-<p>相当于有着和原有日志框架一样的外壳，对于其他框架来说依然可以使用对应的类进行操作，而具体如何执行，真正的内心已经是Slf4j的了。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>所以，SpringBoot为了统一日志框架的使用，做了这些事情：</p>
-<ul>
-<li>直接将其他依赖以前的日志框架剔除</li>
-<li>导入对应日志框架的Slf4j中间包</li>
-<li>导入自己官方指定的日志实现，并作为Slf4j的日志实现层</li>
-</ul>
-<h3>打印项目日志信息</h3>
-<p>SpringBoot使用的是Slf4j作为日志门面，Logback（<a href="http://logback.qos.ch/" target="_blank" rel="noopener noreferrer">Logback</a> 是log4j 框架的作者开发的新一代日志框架，它效率更高、能够适应诸多的运行环境，同时天然支持SLF4J）作为日志实现</p>
-<p>对应的依赖为：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-logging<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>此依赖已经被包含了，所以我们如果需要打印日志，可以像这样：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ResponseBody</span>
-<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/test"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token class-name">Logger</span> logger <span class="token operator">=</span> <span class="token class-name">LoggerFactory</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token class-name">TestController</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"用户访问了一次测试数据"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> mapper<span class="token punctuation">.</span><span class="token function">findUserById</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>因为我们使用了Lombok，所以直接一个注解 <code>@Slf4j</code>：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Slf4j</span>
-<span class="token annotation punctuation">@Controller</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainController</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@ResponseBody</span>
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/test"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-      log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"用户访问了一次测试数据"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">return</span> mapper<span class="token punctuation">.</span><span class="token function">findUserById</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>日志级别从低到高分为<code>TRACE &lt; DEBUG &lt; INFO &lt; WARN &lt; ERROR &lt; FAT</code>AL，SpringBoot默认只会打印INFO以上级别的信息</p>
-<h3>配置Logback日志</h3>
-<p>Logback官网：<a href="https://logback.qos.ch/" target="_blank" rel="noopener noreferrer">https://logback.qos.ch</a></p>
-<p>和JUL一样，Logback也能实现定制化，我们可以编写对应的配置文件，</p>
-<p>SpringBoot推荐将配置文件名称命名为 <code>logback-spring.xml</code>, 表示这是SpringBoot下Logback专用的配置 (默认也会去尝试读取这个文件)</p>
-<p>可以使用 SpringBoot 的高级Proﬁle功能，它的内容类似于这样：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">&gt;</span></span>
-    <span class="token comment">&lt;!-- 配置 --&gt;</span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>最外层由<code>configuration</code>包裹，一旦编写，那么就会替换默认的配置</p>
-<p>所以如果内部什么都不写的话，那么会导致我们的SpringBoot项目没有配置任何日志输出方式，控制台也不会打印日志。</p>
-<p>本质上就是<code>appender</code>来处理输出，然后<code>root</code>来追加使用哪些<code>appender</code></p>
-<h4>设置配置</h4>
-<p>我们接着来看如何配置一个控制台日志打印</p>
-<p>我们可以直接导入并使用SpringBoot为我们预设好的日志格式，在<code>org/springframework/boot/logging/logback/defaults.xml</code>中已经帮我们把日志的输出格式定义好了</p>
-<p>我们只需要设置对应的<code>appender</code>即可：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>included</span><span class="token punctuation">&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>conversionRule</span> <span class="token attr-name">conversionWord</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>clr<span class="token punctuation">"</span></span> <span class="token attr-name">converterClass</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>org.springframework.boot.logging.logback.ColorConverter<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>conversionRule</span> <span class="token attr-name">conversionWord</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wex<span class="token punctuation">"</span></span> <span class="token attr-name">converterClass</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>conversionRule</span> <span class="token attr-name">conversionWord</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wEx<span class="token punctuation">"</span></span> <span class="token attr-name">converterClass</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
-
-   &lt;property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - SpringBoot3</title>
-      <link>http://ekkosonya.cn/code/java_ssm/4-SpringBoot/boot3.html</link>
-      <guid>http://ekkosonya.cn/code/java_ssm/4-SpringBoot/boot3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - SpringBoot3</source>
-      <description>常用框架介绍 前面我们介绍了SpringBoot项目的基本搭建，相信各位小伙伴已经体验到SpringBoot 3带来的超强便捷性了，不过光靠这些还不够，我们还需要了解更多框架来丰富我们的网站，通过了解其他的SpringBoot整合框架，我们就可以在我们自己的Web服务器上实现更多更高级的功能，同时也是为了给我们后续学习前后端分离项目做准备。 邮件发送模...</description>
-      <category>code</category>
-      <pubDate>Thu, 25 Sep 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>常用框架介绍</h2>
-<p>前面我们介绍了SpringBoot项目的基本搭建，相信各位小伙伴已经体验到SpringBoot 3带来的超强便捷性了，不过光靠这些还不够，我们还需要了解更多框架来丰富我们的网站，通过了解其他的SpringBoot整合框架，我们就可以在我们自己的Web服务器上实现更多更高级的功能，同时也是为了给我们后续学习前后端分离项目做准备。</p>
-<h3>邮件发送模块</h3>
-<p>都什么年代了，还在发传统邮件，我们来看看电子邮件。</p>
-<p>我们在注册很多的网站时，都会遇到邮件或是手机号验证，也就是通过你的邮箱或是手机短信去接受网站发给你的注册验证信息，填写验证码之后，就可以完成注册了，同时，网站也会绑定你的手机号或是邮箱。</p>
-<p>那么，像这样的功能，我们如何实现呢？SpringBoot已经给我们提供了封装好的邮件模块使用：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-mail<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>在学习邮件发送之前，我们需要先了解一下什么是电子邮件。</p>
-<blockquote>
-<p>电子邮件也是一种通信方式，是互联网应用最广的服务。通过网络的电子邮件系统，用户可以以非常低廉的价格（不管发送到哪里，都只需负担网费，实际上就是把信息发送到对方服务器而已）、非常快速的方式，与世界上任何一个地方的电子邮箱用户联系。</p>
-</blockquote>
-<p>虽说方便倒是方便，虽然是曾经的霸主，不过现在这个时代，QQ微信横行，手机短信和电子邮箱貌似就只剩收验证码这一个功能了。</p>
-<p>要在Internet上提供电子邮件功能，必须有专门的电子邮件服务器。例如现在Internet很多提供邮件服务的厂商：新浪、搜狐、163、QQ邮箱等，他们都有自己的邮件服务器。这些服务器类似于现实生活中的邮局，它主要负责接收用户投递过来的邮件，并把邮件投递到邮件接收者的电子邮箱中。</p>
-<p>所有的用户都可以在电子邮件服务器上申请一个账号用于邮件发送和接收，那么邮件是以什么样的格式发送的呢？实际上和Http一样，邮件发送也有自己的协议，也就是约定邮件数据长啥样以及如何通信。</p>
-<figure><img src="https://s2.loli.net/2023/07/16/sL56YdmgGblfFjo.png" alt="image-20230716172901937" tabindex="0" loading="lazy"><figcaption>image-20230716172901937</figcaption></figure>
-<p>比较常用的协议有两种：</p>
-<ol>
-<li>SMTP协议（主要用于发送邮件 Simple Mail Transfer Protocol）</li>
-<li>POP3协议（主要用于接收邮件 Post Office Protocol 3）</li>
-</ol>
-<p>整个发送/接收流程大致如下：</p>
-<figure><img src="https://s2.loli.net/2023/07/16/sOyWQguFonJKXNw.jpg" alt="img" tabindex="0" loading="lazy"><figcaption>img</figcaption></figure>
-<p>实际上每个邮箱服务器都有一个smtp发送服务器和pop3接收服务器，比如要从QQ邮箱发送邮件到163邮箱，那么我们只需要通过QQ邮箱客户端告知QQ邮箱的smtp服务器我们需要发送邮件，以及邮件的相关信息，然后QQ邮箱的smtp服务器就会帮助我们发送到163邮箱的pop3服务器上，163邮箱会通过163邮箱客户端告知对应用户收到一封新邮件。</p>
-<p>而我们如果想要实现给别人发送邮件，那么就需要连接到对应电子邮箱的smtp服务器上，并告知其我们要发送邮件。而SpringBoot已经帮助我们将最基本的底层通信全部实现了，我们只需要关心smtp服务器的地址以及我们要发送的邮件长啥样即可。</p>
-<p>这里以163邮箱 <a href="https://mail.163.com/" target="_blank" rel="noopener noreferrer">https://mail.163.com</a> 为例，我们需要在配置文件中告诉SpringBootMail我们的smtp服务器的地址以及你的邮箱账号和密码，首先我们要去设置中开启smtp/pop3服务才可以，开启后会得到一个随机生成的密钥，这个就是我们的密码。</p>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">spring</span><span class="token punctuation">:</span>
-  <span class="token key atrule">mail</span><span class="token punctuation">:</span>
-      <span class="token comment"># 163邮箱的地址为smtp.163.com，直接填写即可</span>
-    <span class="token key atrule">host</span><span class="token punctuation">:</span> smtp.163.com
-    <span class="token comment"># 你申请的163邮箱</span>
-    <span class="token key atrule">username</span><span class="token punctuation">:</span> javastudy111@163.com
-    <span class="token comment"># 注意密码是在开启smtp/pop3时自动生成的，记得保存一下，不然就找不到了</span>
-    <span class="token key atrule">password</span><span class="token punctuation">:</span> AZJTOAWZESLMHTNI
-</code></pre></div><p>配置完成后，接着我们来进行一下测试：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@SpringBootTest</span>
-<span class="token keyword">class</span> <span class="token class-name">SpringBootTestApplicationTests</span> <span class="token punctuation">{</span>
-
-      <span class="token comment">//JavaMailSender是专门用于发送邮件的对象，自动配置类已经提供了Bean</span>
-    <span class="token annotation punctuation">@Autowired</span>
-    <span class="token class-name">JavaMailSender</span> sender<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@Test</span>
-    <span class="token keyword">void</span> <span class="token function">contextLoads</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token comment">//SimpleMailMessage是一个比较简易的邮件封装，支持设置一些比较简单内容</span>
-        <span class="token class-name">SimpleMailMessage</span> message <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SimpleMailMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token comment">//设置邮件标题</span>
-        message<span class="token punctuation">.</span><span class="token function">setSubject</span><span class="token punctuation">(</span><span class="token string">"【电子科技大学教务处】关于近期学校对您的处分决定"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token comment">//设置邮件内容</span>
-        message<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token string">"XXX同学您好，经监控和教务巡查发现，您近期存在旷课、迟到、早退、上课刷抖音行为，"</span> <span class="token operator">+</span>
-                <span class="token string">"现已通知相关辅导员，请手写5000字书面检讨，并在2022年4月1日17点前交到辅导员办公室。"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token comment">//设置邮件发送给谁，可以多个，这里就发给你的QQ邮箱</span>
-        message<span class="token punctuation">.</span><span class="token function">setTo</span><span class="token punctuation">(</span><span class="token string">"你的QQ号@qq.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token comment">//邮件发送者，这里要与配置文件中的保持一致</span>
-        message<span class="token punctuation">.</span><span class="token function">setFrom</span><span class="token punctuation">(</span><span class="token string">"javastudy111@163.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token comment">//OK，万事俱备只欠发送</span>
-        sender<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-<span class="token punctuation">}</span>
-</code></pre></div><p>如果需要添加附件等更多功能，可以使用MimeMessageHelper来帮助我们完成：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
-<span class="token keyword">void</span> <span class="token function">contextLoads</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">MessagingException</span> <span class="token punctuation">{</span>
-      <span class="token comment">//创建一个MimeMessage</span>
-    <span class="token class-name">MimeMessage</span> message <span class="token operator">=</span> sender<span class="token punctuation">.</span><span class="token function">createMimeMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token comment">//使用MimeMessageHelper来帮我们修改MimeMessage中的信息</span>
-    <span class="token class-name">MimeMessageHelper</span> helper <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MimeMessageHelper</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    helper<span class="token punctuation">.</span><span class="token function">setSubject</span><span class="token punctuation">(</span><span class="token string">"Test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    helper<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token string">"lbwnb"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    helper<span class="token punctuation">.</span><span class="token function">setTo</span><span class="token punctuation">(</span><span class="token string">"你的QQ号@qq.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    helper<span class="token punctuation">.</span><span class="token function">setFrom</span><span class="token punctuation">(</span><span class="token string">"javastudy111@163.com"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token comment">//发送修改好的MimeMessage</span>
-    sender<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>最后，我们来尝试为我们的网站实现一个邮件注册功能，首先明确验证流程：请求验证码 -&gt; 生成验证码（临时有效，注意设定过期时间） -&gt; 用户输入验证码并填写注册信息 -&gt; 验证通过注册成功！</p>
-<p>接着我们就来着手写一下。</p>
-<h3>接口规则校验</h3>
-<p>通常我们在使用SpringMvc框架编写接口时，很有可能用户发送的数据存在一些问题，比如下面这个接口：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ResponseBody</span>
-<span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/submit"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">submit</span><span class="token punctuation">(</span><span class="token class-name">String</span> username<span class="token punctuation">,</span>
-                     <span class="token class-name">String</span> password<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>username<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>password<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token string">"请求成功!"</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这个接口中，我们需要将用户名和密码分割然后打印，在正常情况下，因为用户名长度规定不小于5，如果用户发送的数据是没有问题的，那么就可以正常运行，这也是我们所希望的情况，但是如果用户发送的数据并不是按照规定的，那么就会直接报错：</p>
-<figure><img src="https://s2.loli.net/2023/07/16/n1FMADOiQCRcGw6.png" alt="image-20230716215850225" tabindex="0" loading="lazy"><figcaption>image-20230716215850225</figcaption></figure>
-<p>这个时候，我们就需要在请求进来之前进行校验了，最简单的办法就是判断一下：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ResponseBody</span>
-<span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/submit"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">submit</span><span class="token punctuation">(</span><span class="token class-name">String</span> username<span class="token punctuation">,</span>
-                     <span class="token class-name">String</span> password<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token keyword">if</span><span class="token punctuation">(</span>username<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">3</span> <span class="token operator">&amp;&amp;</span> password<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>username<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>password<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token string">"请求成功!"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token string">"请求失败"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>虽然这样就能直接解决问题，但是如果我们的每一个接口都需要这样去进行配置，那么是不是太麻烦了一点？SpringBoot为我们提供了很方便的接口校验框架：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-validation<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>现在，我们可以直接使用注解完成全部接口的校验：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Slf4j</span>
-<span class="token annotation punctuation">@Validated</span>   <span class="token comment">//首先在Controller上开启接口校验</span>
-<span class="token annotation punctuation">@Controller</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TestController</span> <span class="token punctuation">{</span>
-
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-
-    <span class="token annotation punctuation">@ResponseBody</span>
-    <span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/submit"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">submit</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Length</span><span class="token punctuation">(</span>min <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token class-name">String</span> username<span class="token punctuation">,</span>  <span class="token comment">//使用@Length注解一步到位</span>
-                         <span class="token annotation punctuation">@Length</span><span class="token punctuation">(</span>min <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span> <span class="token class-name">String</span> password<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>username<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>password<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token string">"请求成功!"</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在，我们的接口校验就可以快速进行配置了，一个接口就能搞定：</p>
-<figure><img src="https://s2.loli.net/2023/07/16/EibCc4sHWflywek.png" alt="image-20230716220839816" tabindex="0" loading="lazy"><figcaption>image-20230716220839816</figcaption></figure>
-<p>不过这样依然会抛出一个异常，对用户不太友好，我们可以稍微处理一下，这里我们可以直接使用之前在SSM阶段中学习的异常处理Controller来自行处理这类异常：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@ControllerAdvice</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ValidationController</span> <span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@ResponseBody</span>
-    <span class="token annotation punctuation">@ExceptionHandler</span><span class="token punctuation">(</span><span class="token class-name">ConstraintViolationException</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">error</span><span class="token punctuation">(</span><span class="token class-name">ValidationException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//出现异常直接返回消息</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><figure><img src="https://s2.loli.net/2023/07/16/7JH6BzOhlUe9gkG.png" alt="image-20230716221420324" tabindex="0" loading="lazy"><figcaption>image-20230716221420324</figcaption></figure>
-<p>除了@Length之外，我们也可以使用其他的接口来实现各种数据校验：</p>
-<p>|   验证注解   |                        验证的数据类型                        |                           说明                           |
-| :</p>
-]]></content:encoded>
-      <enclosure url="https://s2.loli.net/2023/07/16/sL56YdmgGblfFjo.png" type="image/png"/>
     </item>
   </channel>
 </rss>

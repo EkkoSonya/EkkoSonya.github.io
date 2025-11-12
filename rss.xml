@@ -6,8 +6,8 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 12 Nov 2025 18:12:58 GMT</pubDate>
-    <lastBuildDate>Wed, 12 Nov 2025 18:12:58 GMT</lastBuildDate>
+    <pubDate>Wed, 12 Nov 2025 18:18:11 GMT</pubDate>
+    <lastBuildDate>Wed, 12 Nov 2025 18:18:11 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
@@ -394,11 +394,11 @@
 </ul>
 <p>因为访问路径不一致，故分为两个接口实现</p>
 <h5>设置营业状态 <code>/admin/shop/{status}</code></h5>
-
+<figure><figcaption>alt text</figcaption></figure>
 <h5>管理端查询营业状态 <code>/admin/shop/status</code></h5>
-
+<figure><figcaption>alt text</figcaption></figure>
 <h5>用户端查询营业状态 <code>/user/shop/status</code></h5>
-
+<figure><figcaption>alt text</figcaption></figure>
 <h4>营业状态存储方式</h4>
 <p>虽然，可以通过一张表来存储营业状态数据，但整个表中只有一个字段，所以意义不大。</p>
 <p>营业状态数据存储方式：基于Redis的字符串来进行存储</p>

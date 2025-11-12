@@ -41,15 +41,15 @@ order: -0.6
 
 ##### 设置营业状态 `/admin/shop/{status}`
 
-<img src="img/39.png" alt="image-20221130220037713" style="zoom:50%;" />
+![alt text](img/39.png)
 
 ##### 管理端查询营业状态 `/admin/shop/status`
 
-<img src="img/40.png" alt="image-20221130220037713" style="zoom:50%;" />
+![alt text](img/40.png)
 
 ##### 用户端查询营业状态 `/user/shop/status`
 
-<img src="img/41.png" alt="image-20221130220037713" style="zoom:50%;" />
+![alt text](img/41.png)
 
 #### 营业状态存储方式
 

@@ -6,11 +6,193 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 12 Nov 2025 18:18:11 GMT</pubDate>
-    <lastBuildDate>Wed, 12 Nov 2025 18:18:11 GMT</lastBuildDate>
+    <pubDate>Sun, 16 Nov 2025 17:00:23 GMT</pubDate>
+    <lastBuildDate>Sun, 16 Nov 2025 17:00:23 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Javassm - item1-10 (微信登录 + 商品浏览 1)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article10.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article10.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-10 (微信登录 + 商品浏览 1)</source>
+      <description>HTTPClient HttpClient 是Apache Jakarta Common 下的子项目，可以用来提供高效的、最新的、功能丰富的支持 HTTP 协议的客户端编程工具包，并且它支持 HTTP 协议最新的版本和建议 HttpClient作用 发送HTTP请求 接收响应数据 应用场景 当我们在使用扫描支付、查看地图、获取验证码、查看天气等功能时，...</description>
+      <category>code</category>
+      <pubDate>Thu, 13 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>HTTPClient</h2>
+<p>HttpClient 是Apache Jakarta Common 下的子项目，可以用来提供高效的、最新的、功能丰富的支持 HTTP 协议的客户端编程工具包，并且它支持 HTTP 协议最新的版本和建议</p>
+<p><strong>HttpClient作用</strong></p>
+<ul>
+<li>发送HTTP请求</li>
+<li>接收响应数据</li>
+</ul>
+<h3>应用场景</h3>
+<p>当我们在使用扫描支付、查看地图、获取验证码、查看天气等功能时，其实，应用程序本身并未实现这些功能，都是在应用程序里访问提供这些功能的服务，访问这些服务需要发送HTTP请求，并且接收响应数据，可通过HttpClient来实现</p>
+<h3><code>maven</code>坐标</h3>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.apache.httpcomponents<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>httpclient<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>4.5.13<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h3>HttpClient的核心API</h3>
+<ul>
+<li>HttpClient：Http客户端对象类型，使用该类型对象可发起Http请求。</li>
+<li>HttpClients：可认为是构建器，可创建HttpClient对象。</li>
+<li>CloseableHttpClient：实现类，实现了HttpClient接口。</li>
+<li>HttpGet：Get方式请求类型。</li>
+<li>HttpPost：Post方式请求类型。</li>
+</ul>
+<h3>HttpClient发送请求步骤</h3>
+<ul>
+<li>创建HttpClient对象</li>
+<li>创建Http请求对象</li>
+<li>调用HttpClient的execute方法发送请求</li>
+</ul>
+<h3>简单案例</h3>
+<h4>1. GET方式请求</h4>
+<p>进入到sky-server模块，编写测试代码，发送GET请求。</p>
+<p><strong>实现步骤：</strong></p>
+<ol>
+<li>创建HttpClient对象</li>
+<li>创建请求对象</li>
+<li>发送请求，接受响应结果</li>
+<li>解析结果</li>
+<li>关闭资源</li>
+</ol>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@SpringBootTest</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HttpClientTest</span> <span class="token punctuation">{</span>
+    <span class="token doc-comment comment">/**
+     * 测试通过httpclient发送GET方式的请求
+     */</span>
+    <span class="token annotation punctuation">@Test</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testGET</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>
+        <span class="token comment">//创建httpclient对象</span>
+        <span class="token class-name">CloseableHttpClient</span> httpClient <span class="token operator">=</span> <span class="token class-name">HttpClients</span><span class="token punctuation">.</span><span class="token function">createDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//创建请求对象</span>
+        <span class="token class-name">HttpGet</span> httpGet <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HttpGet</span><span class="token punctuation">(</span><span class="token string">"http://localhost:8080/user/shop/status"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//发送请求，接受响应结果</span>
+        <span class="token class-name">CloseableHttpResponse</span> response <span class="token operator">=</span> httpClient<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>httpGet<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//获取服务端返回的状态码</span>
+        <span class="token keyword">int</span> statusCode <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getStatusLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"服务端返回的状态码为："</span> <span class="token operator">+</span> statusCode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">HttpEntity</span> entity <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getEntity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">String</span> body <span class="token operator">=</span> <span class="token class-name">EntityUtils</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>entity<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"服务端返回的数据为："</span> <span class="token operator">+</span> body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//关闭资源</span>
+        response<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        httpClient<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>2. POST方式请求</h4>
+<p>在HttpClientTest中添加POST方式请求方法</p>
+<p>相比GET请求来说，POST请求若携带参数需要封装请求体对象，并将该对象设置在请求对象中。</p>
+<p><strong>实现步骤</strong></p>
+<ol>
+<li>创建HttpClient对象</li>
+<li>创建请求对象</li>
+<li>发送请求，接收响应结果</li>
+<li>解析响应结果</li>
+<li>关闭资源</li>
+</ol>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 测试通过httpclient发送POST方式的请求
+ */</span>
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testPOST</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>
+    <span class="token comment">// 创建httpclient对象</span>
+    <span class="token class-name">CloseableHttpClient</span> httpClient <span class="token operator">=</span> <span class="token class-name">HttpClients</span><span class="token punctuation">.</span><span class="token function">createDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//创建请求对象</span>
+    <span class="token class-name">HttpPost</span> httpPost <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HttpPost</span><span class="token punctuation">(</span><span class="token string">"http://localhost:8080/admin/employee/login"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token class-name">JSONObject</span> jsonObject <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jsonObject<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"username"</span><span class="token punctuation">,</span><span class="token string">"admin"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jsonObject<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">,</span><span class="token string">"123456"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token class-name">StringEntity</span> entity <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringEntity</span><span class="token punctuation">(</span>jsonObject<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//指定请求编码方式</span>
+    entity<span class="token punctuation">.</span><span class="token function">setContentEncoding</span><span class="token punctuation">(</span><span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//数据格式</span>
+    entity<span class="token punctuation">.</span><span class="token function">setContentType</span><span class="token punctuation">(</span><span class="token string">"application/json"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    httpPost<span class="token punctuation">.</span><span class="token function">setEntity</span><span class="token punctuation">(</span>entity<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//发送请求</span>
+    <span class="token class-name">CloseableHttpResponse</span> response <span class="token operator">=</span> httpClient<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>httpPost<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//解析返回结果</span>
+    <span class="token keyword">int</span> statusCode <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getStatusLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getStatusCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"响应码为："</span> <span class="token operator">+</span> statusCode<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token class-name">HttpEntity</span> entity1 <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getEntity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> body <span class="token operator">=</span> <span class="token class-name">EntityUtils</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>entity1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"响应数据为："</span> <span class="token operator">+</span> body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//关闭资源</span>
+    response<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    httpClient<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-11 (微信登录 + 商品浏览 2)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article11.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article11.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-11 (微信登录 + 商品浏览 2)</source>
+      <description>微信小程序开发 小程序是一种新的开放能力，开发者可以快速地开发一个小程序。可以在微信内被便捷地获取和传播，同时具有出色的使用体验 入门案例 实际上，小程序的开发本质上属于前端开发，主要使用JavaScript开发，咱们现在的定位主要还是在后端，所以，对于小程序开发简单了解即可 在进行小程序开发时，需要先去注册一个小程序，在注册的时候，它实际上又分成了不...</description>
+      <category>code</category>
+      <pubDate>Fri, 14 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>微信小程序开发</h2>
+<p>小程序是一种新的开放能力，开发者可以快速地开发一个小程序。可以在微信内被便捷地获取和传播，同时具有出色的使用体验</p>
+<h3>入门案例</h3>
+<p>实际上，小程序的开发本质上属于前端开发，主要使用JavaScript开发，咱们现在的定位主要还是在后端，所以，对于小程序开发简单了解即可</p>
+<p>在进行小程序开发时，需要先去注册一个小程序，在注册的时候，它实际上又分成了不同的注册的主体。我们可以以个人的身份来注册一个小程序，当然，也可以以企业政府、媒体或者其他组织的方式来注册小程序。那么，不同的主体注册小程序，最终开放的权限也是不一样的。比如以个人身份来注册小程序，是无法开通支付权限的。若要提供支付功能，必须是企业、政府或者其它组织等。所以，不同的主体注册小程序后，可开发的功能是不一样的。</p>
+<p>小程序包含一个描述整体程序的 app 和多个描述各自页面的 page。一个小程序主体部分由三个文件组成，必须放在项目的根目录</p>
+<p><strong>app.js</strong>：必须存在，主要存放小程序的逻辑代码</p>
+<p><strong>app.json</strong>：必须存在，小程序配置文件，主要存放小程序的公共配置</p>
+<p><strong>app.wxss</strong>：非必须存在，主要存放小程序公共样式表，类似于前端的CSS样式</p>
+<p>对小程序主体三个文件了解后，其实一个小程序又有多个页面。比如说，有商品浏览页面、购物车的页面、订单支付的页面、商品的详情页面等等，存放在pages目录</p>
+<p>主要编写语法可以看文档，类似Vue</p>
+<h3>实现微信登录</h3>
+<h4>微信登录流程</h4>
+<p>微信登录：<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html" target="_blank" rel="noopener noreferrer">https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html</a></p>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>步骤分析</h5>
+<ol>
+<li>小程序端，调用<code>wx.login()</code>获取code，就是授权码。</li>
+<li>小程序端，调用<code>wx.request()</code>发送请求并携带code，请求开发者服务器(自己编写的后端服务)。</li>
+<li>开发者服务端，通过<code>HttpClient</code>向微信接口服务发送请求，并携带appId+appsecret+code三个参数。</li>
+<li>开发者服务端，接收微信接口服务返回的数据，<code>session_key</code>+<code>opendId</code>等。<code>opendId</code>是微信用户的唯一标识。</li>
+<li>开发者服务端，自定义登录态，生成令牌(token)和openid等数据返回给小程序端，方便后绪请求身份校验。</li>
+<li>小程序端，收到自定义登录态，存储storage。</li>
+<li>小程序端，后绪通过<code>wx.request()</code>发起业务请求时，携带<code>token</code>。</li>
+<li>开发者服务端，收到请求后，通过携带的<code>token</code>，解析当前登录用户的id。</li>
+<li>开发者服务端，身份校验通过后，继续相关的业务逻辑处理，最终返回业务数据。</li>
+</ol>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>需求分析</h4>
+<p>用户进入到小程序的时候，微信授权登录之后才能点餐。需要获取当前微信用户的相关信息，比如昵称、头像等，这样才能够进入到小程序进行下单操作。是基于微信登录来实现小程序的登录功能，没有采用传统账户密码登录的方式。若第一次使用小程序来点餐，就是一个新用户，需要把这个新的用户保存到数据库当中完成自动注册。</p>
+<p><strong>业务规则</strong></p>
+<ul>
+<li>基于微信登录实现小程序的登录功能</li>
+<li>如果是新用户需要自动完成注册</li>
+</ul>
+<h4>接口设计</h4>
+<p>通过微信登录的流程，如果要完成微信登录的话，最终就要获得微信用户的openid。</p>
+<p>在小程序端获取授权码后，向后端服务发送请求，并携带授权码，这样后端服务在收到授权码后，就可以去请求微信接口服务。最终，后端向小程序返回openid和token等数据</p>
+<p>基于上述的登录流程，就可以设计出该接口的<strong>请求参数</strong>和<strong>返回数据</strong></p>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>说明</strong>：请求路径<code>/user/user/login</code>,第一个user代表用户端，第二个user代表用户模块。</p>
+<h4>表设计</h4>
+<p>当用户第一次使用小程序时，会完成自动注册，把用户信息存储到<strong>user</strong>表中</p>
+<p>| <strong>字段名</strong>  | <strong>数据类型</strong> | <strong>说明</strong>           | <strong>备注</strong> |
+|</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>Javassm - item1-7 (营业状态设置1)</title>
       <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article7.html</link>
@@ -988,185 +1170,6 @@
 <figure><figcaption>alt text</figcaption></figure>
 <h4>数据表设计 <code>category</code>表</h4>
 <p>| <strong>字段名</strong>  | <strong>数据类型</strong> | <strong>说明</strong>     | <strong>备注</strong>            |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-1 (项目介绍+环境搭建)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article1.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-1 (项目介绍+环境搭建)</source>
-      <description>苍穹外卖 介绍 功能架构 alt textalt text 管理端功能 员工登录/退出 , 员工信息管理 , 分类管理 , 菜品管理 , 套餐管理 , 菜品口味管理 , 订单管理 ，数据统计，来单提醒。 用户端功能 微信登录 , 收件人地址管理 , 用户历史订单查询 , 菜品规格查询 , 购物车功能 , 下单 , 支付、分类及菜品浏览。 整体结构 al...</description>
-      <category>code</category>
-      <pubDate>Fri, 17 Oct 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
-<h3>介绍</h3>
-<h4>功能架构</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>管理端功能</h5>
-<p>员工登录/退出 , 员工信息管理 , 分类管理 , 菜品管理 , 套餐管理 , 菜品口味管理 , 订单管理 ，数据统计，来单提醒。</p>
-<h5>用户端功能</h5>
-<p>微信登录 , 收件人地址管理 , 用户历史订单查询 , 菜品规格查询 , 购物车功能 , 下单 , 支付、分类及菜品浏览。</p>
-<h4>整体结构</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>技术选型</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p>(1). 用户层
-本项目中在构建系统管理后台的前端页面，我们会用到H5、Vue.js、ElementUI、apache echarts(展示图表)等技术。而在构建移动端应用时，我们会使用到微信小程序。</p>
-<p>(2). 网关层
-Nginx是一个服务器，主要用来作为Http服务器，部署静态资源，访问性能高。在Nginx中还有两个比较重要的作用： 反向代理和负载均衡， 在进行项目部署时，要实现Tomcat的负载均衡，就可以通过Nginx来实现。</p>
-<p>(3). 应用层
-SpringBoot： 快速构建Spring项目, 采用 "约定优于配置" 的思想, 简化Spring项目的配置开发。 SpringMVC：SpringMVC是spring框架的一个模块，springmvc和spring无需通过中间整合层进行整合，可以无缝集成。 Spring Task: 由Spring提供的定时任务框架。 httpclient: 主要实现了对http请求的发送。 Spring Cache: 由Spring提供的数据缓存框架 JWT: 用于对应用程序上的用户进行身份验证的标记。 阿里云OSS: 对象存储服务，在项目中主要存储文件，如图片等。 Swagger： 可以自动的帮助开发人员生成接口文档，并对接口进行测试。 POI: 封装了对Excel表格的常用操作。 WebSocket: 一种通信网络协议，使客户端和服务器之间的数据交换更加简单，用于项目的来单、催单功能实现。</p>
-<p>(4). 数据层
-MySQL： 关系型数据库, 本项目的核心业务数据都会采用MySQL进行存储。 Redis： 基于key-value格式存储的内存数据库, 访问速度快, 经常使用它做缓存。 Mybatis： 本项目持久层将会使用Mybatis开发。 pagehelper: 分页插件。 spring data redis: 简化java代码操作Redis的API。</p>
-<p>(5). 工具
-git: 版本控制工具, 在团队协作中, 使用该工具对项目中的代码进行管理。 maven: 项目构建工具。 junit：单元测试工具，开发人员功能实现完毕后，需要通过junit对功能进行单元测试。 postman: 接口测工具，模拟用户发起的各类HTTP请求，获取对应的响应结果。</p>
-<h3>后端搭建</h3>
-<h4>碰到问题</h4>
-<p>找不到符号 (更该jdk版本23——&gt;17)</p>
-<p>配置属性类</p>
-<h4>项目结构</h4>
-<p>基于maven进行项目构建，进行分模块开发</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>sky-common</h5>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>sky-pojo</h5>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>sky-server</h5>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>nginx反向代理和负载均衡</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>1. nginx反向代理</h5>
-<p>这种就是通过nginx来反向代理，将前端发送的动态请求由 nginx 转发到后端服务器，从而避免跨域等问题</p>
-<p><strong>nginx 反向代理的好处：</strong></p>
-<ul>
-<li>
-<p>提高访问速度</p>
-<p>因为nginx本身可以进行缓存，如果访问的同一接口，并且做了数据缓存，nginx就直接可把数据返回，不需要真正地访问服务端，从而提高访问速度。</p>
-</li>
-<li>
-<p>进行负载均衡</p>
-<p>所谓负载均衡,就是把大量的请求按照我们指定的方式均衡的分配给集群中的每台服务器。</p>
-</li>
-<li>
-<p>保证后端服务安全</p>
-<p>因为一般后台服务地址不会暴露，所以使用浏览器不能直接访问，可以把nginx作为请求访问的入口，请求到达nginx后转发到具体的服务中，从而保证后端服务的安全。</p>
-</li>
-</ul>
-<p><strong>nginx 反向代理的配置方式：</strong></p>
-<div class="language-nginx" data-ext="nginx" data-title="nginx"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">server</span></span><span class="token punctuation">{</span>
-    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>
-    <span class="token directive"><span class="token keyword">server_name</span> localhost</span><span class="token punctuation">;</span>
-    
-    <span class="token directive"><span class="token keyword">location</span> /api/</span><span class="token punctuation">{</span>
-        <span class="token directive"><span class="token keyword">proxy_pass</span> http://localhost:8080/admin/</span><span class="token punctuation">;</span> <span class="token comment">#反向代理</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p><strong>proxy_pass</strong>: 该指令是用来设置代理服务器的地址，可以是主机名称，IP地址加端口号等形式。</p>
-<p>如上代码的含义是：监听80端口号， 然后当我们访问 <a href="http://localhost:80/api/../.." target="_blank" rel="noopener noreferrer">http://localhost:80/api/../..</a> 这样的接口的时候，它会通过 location /api/ {} 这样的反向代理到 <a href="http://localhost:8080/admin/" target="_blank" rel="noopener noreferrer">http://localhost:8080/admin/</a> 上来。</p>
-<h5>2. 负载均衡</h5>
-<p>当如果服务以集群的方式进行部署时，那nginx在转发请求到服务器时就需要做相应的负载均衡。其实，负载均衡从本质上来说也是基于反向代理来实现的，最终都是转发请求。</p>
-<p><strong>nginx 负载均衡的配置方式：</strong></p>
-<div class="language-nginx" data-ext="nginx" data-title="nginx"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">upstream</span> webservers</span><span class="token punctuation">{</span>
-    <span class="token directive"><span class="token keyword">server</span> 192.168.100.128:8080</span><span class="token punctuation">;</span>
-    <span class="token directive"><span class="token keyword">server</span> 192.168.100.129:8080</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-<span class="token directive"><span class="token keyword">server</span></span><span class="token punctuation">{</span>
-    <span class="token directive"><span class="token keyword">listen</span> <span class="token number">80</span></span><span class="token punctuation">;</span>
-    <span class="token directive"><span class="token keyword">server_name</span> localhost</span><span class="token punctuation">;</span>
-    
-    <span class="token directive"><span class="token keyword">location</span> /api/</span><span class="token punctuation">{</span>
-        <span class="token directive"><span class="token keyword">proxy_pass</span> http://webservers/admin</span><span class="token punctuation">;</span><span class="token comment">#负载均衡</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p><strong>upstream</strong>: 如果代理服务器是一组服务器的话，我们可以使用upstream指令配置后端服务器组。</p>
-<p>如上代码的含义是：监听80端口号， 然后当我们访问 <a href="http://localhost:80/api/../.." target="_blank" rel="noopener noreferrer">http://localhost:80/api/../..</a> 这样的接口的时候，它会通过 location /api/ {} 这样的反向代理到 <a href="http://webservers/admin" target="_blank" rel="noopener noreferrer">http://webservers/admin</a>，根据webservers名称找到一组服务器，根据设置的负载均衡策略(默认是轮询)转发到具体的服务器。</p>
-<p>**注：**upstream后面的名称可自定义，但要上下保持一致。</p>
-<p><strong>nginx 负载均衡策略：</strong></p>
-<p>| <strong>名称</strong>   | <strong>说明</strong>                                               |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-2 (接口文档导入)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article2.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-2 (接口文档导入)</source>
-      <description>苍穹外卖 接口文档导入 前企业主流的前后端分离开发方式，那么这种方式就要求我们之前需要先将接口定义好，这样前后端人员才能并行开发。其实，在真实的企业开发中，接口设计过程其实是一个非常漫长的过程，可能需要多次开会讨论调整，甚至在开发的过程中才会发现某些接口定义还需要再调整，这种情况其实是非常常见的 前后端分离开发流程： alt textalt text ...</description>
-      <category>code</category>
-      <pubDate>Sat, 18 Oct 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
-<h3>接口文档导入</h3>
-<p>前企业主流的前后端分离开发方式，那么这种方式就要求我们之前需要先将接口定义好，这样前后端人员才能并行开发。其实，在真实的企业开发中，接口设计过程其实是一个非常漫长的过程，可能需要多次开会讨论调整，甚至在开发的过程中才会发现某些接口定义还需要再调整，这种情况其实是非常常见的</p>
-<p><strong>前后端分离开发流程</strong>：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>接口管理平台</h4>
-<p>将课程资料中提供的项目接口导入YApi。访问地址：<a href="https://yapi.pro/" target="_blank" rel="noopener noreferrer">https://yapi.pro/</a></p>
-<h4>Swagger  (knife4j)</h4>
-<p>Swagger 是一个规范和完整的框架，用于生成、描述、调用和可视化 RESTful 风格的 Web 服务(<a href="https://swagger.io/" target="_blank" rel="noopener noreferrer">https://swagger.io/</a>)。 它的主要作用是：</p>
-<ol>
-<li>
-<p>使得前后端分离开发更加方便，有利于团队协作</p>
-</li>
-<li>
-<p>接口的文档在线自动生成，降低后端开发人员编写接口文档的负担</p>
-</li>
-<li>
-<p>功能测试</p>
-<p>Spring已经将Swagger纳入自身的标准，建立了Spring-swagger项目，现在叫Springfox。通过在项目中引入Springfox ，即可非常简单快捷的使用Swagger。</p>
-</li>
-</ol>
-<p>knife4j是为Java MVC框架集成Swagger生成Api文档的增强解决方案,前身是swagger-bootstrap-ui,取名kni4j是希望它能像一把匕首一样小巧,轻量,并且功能强悍!</p>
-<p>目前，一般都使用knife4j框架。</p>
-<h5>使用步骤</h5>
-<ol>
-<li>
-<p>导入 knife4j 的maven坐标</p>
-<p>在pom.xml中添加依赖</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>com.github.xiaoymin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-   <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>knife4j-spring-boot-starter<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div></li>
-<li>
-<p>在配置类中加入 knife4j 相关配置</p>
-<p>WebMvcConfiguration.java</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-     * 通过knife4j生成接口文档
-     * <span class="token keyword">@return</span>
-*/</span>
- <span class="token annotation punctuation">@Bean</span>
- <span class="token keyword">public</span> <span class="token class-name">Docket</span> <span class="token function">docket</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-     <span class="token class-name">ApiInfo</span> apiInfo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ApiInfoBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">title</span><span class="token punctuation">(</span><span class="token string">"苍穹外卖项目接口文档"</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">version</span><span class="token punctuation">(</span><span class="token string">"2.0"</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">description</span><span class="token punctuation">(</span><span class="token string">"苍穹外卖项目接口文档"</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-     <span class="token class-name">Docket</span> docket <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Docket</span><span class="token punctuation">(</span><span class="token class-name">DocumentationType</span><span class="token punctuation">.</span><span class="token constant">SWAGGER_2</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">apiInfo</span><span class="token punctuation">(</span>apiInfo<span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">select</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">apis</span><span class="token punctuation">(</span><span class="token class-name">RequestHandlerSelectors</span><span class="token punctuation">.</span><span class="token function">basePackage</span><span class="token punctuation">(</span><span class="token string">"com.sky.controller"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">paths</span><span class="token punctuation">(</span><span class="token class-name">PathSelectors</span><span class="token punctuation">.</span><span class="token function">any</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-             <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-     <span class="token keyword">return</span> docket<span class="token punctuation">;</span>
- <span class="token punctuation">}</span>
-</code></pre></div></li>
-<li>
-<p>设置静态资源映射，否则接口文档页面无法访问</p>
-<p>WebMvcConfiguration.java</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-     * 设置静态资源映射
-     * <span class="token keyword">@param</span> <span class="token parameter">registry</span>
-*/</span>
-<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">addResourceHandlers</span><span class="token punctuation">(</span><span class="token class-name">ResourceHandlerRegistry</span> registry<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        registry<span class="token punctuation">.</span><span class="token function">addResourceHandler</span><span class="token punctuation">(</span><span class="token string">"/doc.html"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addResourceLocations</span><span class="token punctuation">(</span><span class="token string">"classpath:/META-INF/resources/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        registry<span class="token punctuation">.</span><span class="token function">addResourceHandler</span><span class="token punctuation">(</span><span class="token string">"/webjars/**"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addResourceLocations</span><span class="token punctuation">(</span><span class="token string">"classpath:/META-INF/resources/webjars/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div></li>
-</ol>
-<h5>Swagger 常用注解</h5>
-<p>通过注解可以控制生成的接口文档，使接口文档拥有更好的可读性，常用注解如下：</p>
-<p>| <strong>注解</strong>          | <strong>说明</strong>                                               |
 |</p>
 ]]></content:encoded>
     </item>

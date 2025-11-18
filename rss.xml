@@ -6,11 +6,149 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Sun, 16 Nov 2025 17:00:23 GMT</pubDate>
-    <lastBuildDate>Sun, 16 Nov 2025 17:00:23 GMT</lastBuildDate>
+    <pubDate>Tue, 18 Nov 2025 05:45:04 GMT</pubDate>
+    <lastBuildDate>Tue, 18 Nov 2025 05:45:04 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Javassm - item1-12 (缓存商品 + 购物车 1)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article12.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article12.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-12 (缓存商品 + 购物车 1)</source>
+      <description>内容 缓存菜品 缓存套餐 添加购物车 查看购物车 清空购物车 功能实现：缓存商品、购物车 缓存菜品 问题说明 用户端小程序展示的菜品数据都是通过查询数据库获得，如果用户端访问量比较大，数据库访问压力随之增大 实现思路 通过Redis来缓存菜品数据，减少数据库查询操作 alt textalt text 缓存逻辑分析 每个分类下的菜品保存一份缓存数据 数据...</description>
+      <category>code</category>
+      <pubDate>Fri, 14 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>缓存菜品</li>
+<li>缓存套餐</li>
+<li>添加购物车</li>
+<li>查看购物车</li>
+<li>清空购物车</li>
+</ul>
+<p>功能实现：<strong>缓存商品</strong>、<strong>购物车</strong></p>
+<h2>缓存菜品</h2>
+<h3>问题说明</h3>
+<p>用户端小程序展示的菜品数据都是通过查询数据库获得，如果用户端访问量比较大，数据库访问压力随之增大</p>
+<h3>实现思路</h3>
+<p>通过Redis来缓存菜品数据，减少数据库查询操作</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>缓存逻辑分析</strong></p>
+<ul>
+<li>每个分类下的菜品保存一份缓存数据</li>
+<li>数据库中菜品数据有变更时清理缓存数据</li>
+</ul>
+<p>key 为对应分类id, value 为对应菜品列表序列化结果字符串</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>代码开发</h3>
+<h4>1. 修改用户端接口 DishController 的 list 方法，加入缓存处理逻辑</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Autowired</span>
+<span class="token keyword">private</span> <span class="token class-name">RedisTemplate</span> redisTemplate<span class="token punctuation">;</span>
+<span class="token doc-comment comment">/**
+ * 根据分类id查询菜品
+ *
+ * <span class="token keyword">@param</span> <span class="token parameter">categoryId</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/list"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"根据分类id查询菜品"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">DishVO</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> <span class="token function">list</span><span class="token punctuation">(</span><span class="token class-name">Long</span> categoryId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+
+  <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token string">"dish_"</span> <span class="token operator">+</span> categoryId<span class="token punctuation">;</span>
+  <span class="token comment">// 查询 redis 是否存在对应菜品数据</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">DishVO</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">DishVO</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">)</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 存在 就直接返回</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span>list <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>list<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 如果不存在 去对应数据表查找</span>
+  <span class="token class-name">Dish</span> dish <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Dish</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  dish<span class="token punctuation">.</span><span class="token function">setCategoryId</span><span class="token punctuation">(</span>categoryId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  dish<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token class-name">StatusConstant</span><span class="token punctuation">.</span><span class="token constant">ENABLE</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//查询起售中的菜品</span>
+
+  list <span class="token operator">=</span> dishService<span class="token punctuation">.</span><span class="token function">listWithFlavor</span><span class="token punctuation">(</span>dish<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 将查询数据放入 redis 缓存中</span>
+  redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>list<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>2. 数据一致性</h4>
+<p>为了保证<strong>数据库</strong>和<strong>Redis</strong>中的数据保持一致，修改<strong>管理端接口 DishController</strong> 的相关方法，加入清理缓存逻辑。</p>
+<p>需要改造的方法：</p>
+<ul>
+<li>新增菜品</li>
+<li>修改菜品</li>
+<li>批量删除菜品</li>
+<li>起售、停售菜品</li>
+</ul>
+<p><strong>抽取清理缓存的方法：</strong></p>
+<p>在管理端DishController中添加</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">RedisTemplate</span> redisTemplate<span class="token punctuation">;</span>
+<span class="token doc-comment comment">/**
+ * 清理缓存数据
+ * <span class="token keyword">@param</span> <span class="token parameter">pattern</span>
+ */</span>
+<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">cleanCache</span><span class="token punctuation">(</span><span class="token class-name">String</span> pattern<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token class-name">Set</span> keys <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>pattern<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  redisTemplate<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>keys<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>然后就是在对应的方法进行缓存删除，一些复杂的就不考虑情况，直接全删了</p>
+<h2>缓存套餐</h2>
+<h3><code>Spring Cache</code></h3>
+<p>Spring Cache 是一个框架，实现了基于注解的缓存功能，只需要简单地加一个注解，就能实现缓存功能。</p>
+<p>Spring Cache 提供了一层抽象，底层可以切换不同的缓存实现，例如：</p>
+<ul>
+<li>EHCache</li>
+<li>Caffeine</li>
+<li>Redis(常用)</li>
+</ul>
+<h4>起步依赖</h4>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-cache<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>2.7.3<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span> 
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h4>常用注解</h4>
+<p>在SpringCache中提供了很多缓存操作的注解，常见的是以下的几个：</p>
+<p>| <strong>注解</strong>       | <strong>说明</strong>                                                     |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-13 (缓存商品 + 购物车 2)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article13.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article13.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-13 (缓存商品 + 购物车 2)</source>
+      <description>内容 缓存菜品 缓存套餐 添加购物车 查看购物车 清空购物车 功能实现：缓存商品、购物车 添加购物车 用户可以将菜品或者套餐添加到购物车 对于菜品来说，如果设置了口味信息，则需要选择规格后才能加入购物车; 对于套餐来说，可以直接点击 + 号将当前套餐加入购物车 在购物车中可以修改菜品和套餐的数量，也可以清空购物车 接口设计 对应的添加购物车接口 (这是...</description>
+      <category>code</category>
+      <pubDate>Fri, 14 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>缓存菜品</li>
+<li>缓存套餐</li>
+<li>添加购物车</li>
+<li>查看购物车</li>
+<li>清空购物车</li>
+</ul>
+<p>功能实现：<strong>缓存商品</strong>、<strong>购物车</strong></p>
+<h2>添加购物车</h2>
+<p>用户可以将菜品或者套餐添加到购物车</p>
+<p>对于菜品来说，如果设置了口味信息，则需要选择规格后才能加入购物车;</p>
+<p>对于套餐来说，可以直接点击 + 号将当前套餐加入购物车</p>
+<p>在购物车中可以修改菜品和套餐的数量，也可以清空购物车</p>
+<h3>接口设计</h3>
+<p>对应的添加购物车接口 (这是加入购物车，所以一次是加入一个，不会同时存在dishId 和 setmealId)</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>表设计</h3>
+<p>用户的购物车数据，也是需要保存在数据库中的，购物车对应的数据表为shopping_cart表，具体表结构如下：</p>
+<p>| <strong>字段名</strong>  | <strong>数据类型</strong>  | <strong>说明</strong>     | <strong>备注</strong> |
+|</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>Javassm - item1-10 (微信登录 + 商品浏览 1)</title>
       <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article10.html</link>
@@ -902,276 +1040,6 @@
 <span class="token annotation punctuation">@Transactional</span>
 <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">deleteBatch</span><span class="token punctuation">(</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> ids<span class="token punctuation">)</span> <span class="token punctuation">{</span>
   <span class="token comment">//判断当前菜品是否能够删除</span></code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-3 (新增员工 + 员工分页查询)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article3.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-3 (新增员工 + 员工分页查询)</source>
-      <description>苍穹外卖 实现功能 新增员工 员工分页查询 启用禁用员工账号 编辑员工 导入分类模块功能代码 1. 新增员工 /admin/employee 产品原型 alt textalt text 账号必须是唯一的 手机号为合法的11位手机号码 身份证号为合法的18位身份证号码 密码默认为123456 接口设计 alt textalt text 明确新增员工接口的...</description>
-      <category>code</category>
-      <pubDate>Sat, 18 Oct 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
-<h3>实现功能</h3>
-<ul>
-<li>新增员工</li>
-<li>员工分页查询</li>
-<li>启用禁用员工账号</li>
-<li>编辑员工</li>
-<li>导入分类模块功能代码</li>
-</ul>
-<h3>1. 新增员工 <code>/admin/employee</code></h3>
-<h4>产品原型</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<ol>
-<li>账号必须是唯一的</li>
-<li>手机号为合法的11位手机号码</li>
-<li>身份证号为合法的18位身份证号码</li>
-<li>密码默认为123456</li>
-</ol>
-<h4>接口设计</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p>明确新增员工接口的<strong>请求路径、请求方式、请求参数、返回数据</strong>。</p>
-<p>约定：</p>
-<ul>
-<li><strong>管理端</strong>发出的请求，统一使用**/admin**作为前缀。</li>
-<li><strong>用户端</strong>发出的请求，统一使用**/user**作为前缀。</li>
-</ul>
-<h4>表设计</h4>
-<p>新增员工，其实就是将我们新增页面录入的员工数据插入到employee表。</p>
-<p><strong>employee表结构：</strong></p>
-<p>| <strong>字段名</strong>  | <strong>数据类型</strong> | <strong>说明</strong>     | <strong>备注</strong>    |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-4 (员工管理模块 + 套餐分类模块)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article4.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article4.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-4 (员工管理模块 + 套餐分类模块)</source>
-      <description>苍穹外卖 实现功能 新增员工 员工分页查询 启用禁用员工账号 编辑员工 导入分类模块功能代码 3. 启用禁用员工账号 /admin/employee/status/{status} 产品原型 alt textalt text 业务规则： 可以对状态为“启用” 的员工账号进行“禁用”操作 可以对状态为“禁用”的员工账号进行“启用”操作 状态为“禁用”的员...</description>
-      <category>code</category>
-      <pubDate>Sat, 18 Oct 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>苍穹外卖</h2>
-<h3>实现功能</h3>
-<ul>
-<li>新增员工</li>
-<li>员工分页查询</li>
-<li>启用禁用员工账号</li>
-<li>编辑员工</li>
-<li>导入分类模块功能代码</li>
-</ul>
-<h3>3. 启用禁用员工账号 <code>/admin/employee/status/{status}</code></h3>
-<h4>产品原型</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p><strong>业务规则：</strong></p>
-<ul>
-<li>可以对状态为“启用” 的员工账号进行“禁用”操作</li>
-<li>可以对状态为“禁用”的员工账号进行“启用”操作</li>
-<li>状态为“禁用”的员工账号不能登录系统</li>
-</ul>
-<h4>接口设计</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p>1). 路径参数携带状态值。
-2). 同时，把id传递过去，明确对哪个用户进行操作。
-3). 返回数据code状态是必须，其它是非必须。</p>
-<h4>代码开发</h4>
-<h5>Controller层</h5>
-<p>在sky-server模块中，根据接口设计中的请求参数形式对应的在 EmployeeController 中创建启用禁用员工账号的方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 启用禁用员工账号
- * <span class="token keyword">@param</span> <span class="token parameter">status</span>
- * <span class="token keyword">@param</span> <span class="token parameter">id</span>
- * <span class="token keyword">@return</span>
- */</span>
-<span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/status/{status}"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"启用禁用员工账号"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">startOrStop</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Integer</span> status<span class="token punctuation">,</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"启用禁用员工账号：{},{}"</span><span class="token punctuation">,</span>status<span class="token punctuation">,</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    employeeService<span class="token punctuation">.</span><span class="token function">startOrStop</span><span class="token punctuation">(</span>status<span class="token punctuation">,</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//后绪步骤定义</span>
-    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>Service层接口</h5>
-<p>在 EmployeeService 接口中声明启用禁用员工账号的业务方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 启用禁用员工账号
- * <span class="token keyword">@param</span> <span class="token parameter">status</span>
- * <span class="token keyword">@param</span> <span class="token parameter">id</span>
- */</span>
-<span class="token keyword">void</span> <span class="token function">startOrStop</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> status<span class="token punctuation">,</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h5>Service层实现类</h5>
-<p>在 EmployeeServiceImpl 中实现启用禁用员工账号的业务方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 启用禁用员工账号
- *
- * <span class="token keyword">@param</span> <span class="token parameter">status</span>
- * <span class="token keyword">@param</span> <span class="token parameter">id</span>
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">startOrStop</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> status<span class="token punctuation">,</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> <span class="token class-name">Employee</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">id</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
-            <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    employeeMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>Mapper层</h5>
-<p>在 EmployeeMapper 接口中声明 update 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>    <span class="token doc-comment comment">/**
-     * 根据主键动态修改属性
-     * <span class="token keyword">@param</span> <span class="token parameter">employee</span>
-     */</span>
-    <span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">Employee</span> employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>在 EmployeeMapper.xml 中编写SQL：</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token operator">&lt;</span><span class="token keyword">update</span> id<span class="token operator">=</span><span class="token string">"update"</span> parameterType<span class="token operator">=</span><span class="token string">"Employee"</span><span class="token operator">&gt;</span>
-        <span class="token keyword">update</span> employee
-    <span class="token operator">&lt;</span><span class="token keyword">set</span><span class="token operator">&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"name != null"</span><span class="token operator">&gt;</span>name <span class="token operator">=</span> <span class="token comment">#{name},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"username != null"</span><span class="token operator">&gt;</span>username <span class="token operator">=</span> <span class="token comment">#{username},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"password != null"</span><span class="token operator">&gt;</span>password <span class="token operator">=</span> <span class="token comment">#{password},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"phone != null"</span><span class="token operator">&gt;</span>phone <span class="token operator">=</span> <span class="token comment">#{phone},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"sex != null"</span><span class="token operator">&gt;</span>sex <span class="token operator">=</span> <span class="token comment">#{sex},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"idNumber != null"</span><span class="token operator">&gt;</span>id_Number <span class="token operator">=</span> <span class="token comment">#{idNumber},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"updateTime != null"</span><span class="token operator">&gt;</span>update_Time <span class="token operator">=</span> <span class="token comment">#{updateTime},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"updateUser != null"</span><span class="token operator">&gt;</span>update_User <span class="token operator">=</span> <span class="token comment">#{updateUser},&lt;/if&gt;</span>
-        <span class="token operator">&lt;</span><span class="token keyword">if</span> test<span class="token operator">=</span><span class="token string">"status != null"</span><span class="token operator">&gt;</span><span class="token keyword">status</span> <span class="token operator">=</span> <span class="token comment">#{status},&lt;/if&gt;</span>
-    <span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">set</span><span class="token operator">&gt;</span>
-    <span class="token keyword">where</span> id <span class="token operator">=</span> <span class="token comment">#{id}</span>
-<span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">update</span><span class="token operator">&gt;</span>
-</code></pre></div><h5>登录时根据status限制登录</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">if</span> <span class="token punctuation">(</span>employee<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token class-name">StatusConstant</span><span class="token punctuation">.</span><span class="token constant">DISABLE</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">//账号被锁定</span>
-    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">AccountLockedException</span><span class="token punctuation">(</span><span class="token class-name">MessageConstant</span><span class="token punctuation">.</span><span class="token constant">ACCOUNT_LOCKED</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>4. 编辑员工</h3>
-<h4>产品原型</h4>
-<p>在员工管理列表页面点击 "编辑" 按钮，跳转到编辑页面，在编辑页面<strong>回显</strong>员工信息并进行修改，最后点击 "保存" 按钮完成编辑操作。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>接口设计</h4>
-<p>根据上述原型图分析，编辑员工功能涉及到两个接口：</p>
-<ul>
-<li>根据id查询员工信息 <code>/admin/employee/{id}</code></li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<ul>
-<li>编辑员工信息 <code>/admin/employee</code> (<code>PUT</code>)</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>代码开发</h4>
-<h5>1. 信息回显</h5>
-<h6><code>Controller</code>层</h6>
-<p>在 EmployeeController 中创建 getById 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 根据id查询员工信息
- * <span class="token keyword">@param</span> <span class="token parameter">id</span>
- * <span class="token keyword">@return</span>
- */</span>
-<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/{id}"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"根据id查询员工信息"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Employee</span><span class="token punctuation">&gt;</span></span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> employeeService<span class="token punctuation">.</span><span class="token function">getById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h6>Service层接口</h6>
-<p>在 EmployeeService 接口中声明 getById 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 根据id查询员工
- * <span class="token keyword">@param</span> <span class="token parameter">id</span>
- * <span class="token keyword">@return</span>
- */</span>
-<span class="token class-name">Employee</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h6>Service层实现类</h6>
-<p>在 EmployeeServiceImpl 中实现 getById 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 根据id查询员工
- *
- * <span class="token keyword">@param</span> <span class="token parameter">id</span>
- * <span class="token keyword">@return</span>
- */</span>
-<span class="token keyword">public</span> <span class="token class-name">Employee</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> employeeMapper<span class="token punctuation">.</span><span class="token function">getById</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    employee<span class="token punctuation">.</span><span class="token function">setPassword</span><span class="token punctuation">(</span><span class="token string">"****"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> employee<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h6>Mapper层</h6>
-<p>在 EmployeeMapper 接口中声明 getById 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 根据id查询员工信息
- * <span class="token keyword">@param</span> <span class="token parameter">id</span>
- * <span class="token keyword">@return</span>
- */</span>
-<span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from employee where id = #{id}"</span><span class="token punctuation">)</span>
-<span class="token class-name">Employee</span> <span class="token function">getById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h5>2. 信息修改</h5>
-<h6><code>Controller</code>层</h6>
-<p>在 EmployeeController 中创建 update 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 编辑员工信息
- * <span class="token keyword">@param</span> <span class="token parameter">employeeDTO</span>
- * <span class="token keyword">@return</span>
- */</span>
-<span class="token annotation punctuation">@PutMapping</span>
-<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"编辑员工信息"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">EmployeeDTO</span> employeeDTO<span class="token punctuation">)</span><span class="token punctuation">{</span>
-    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"编辑员工信息：{}"</span><span class="token punctuation">,</span> employeeDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    employeeService<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>employeeDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h6>Service层接口</h6>
-<p>在 EmployeeService 接口中声明 getById 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 编辑员工信息
- * <span class="token keyword">@param</span> <span class="token parameter">employeeDTO</span>
- */</span>
-<span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">EmployeeDTO</span> employeeDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h6>Service层实现类</h6>
-<p>在 EmployeeServiceImpl 中实现 update 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 编辑员工信息
- *
- * <span class="token keyword">@param</span> <span class="token parameter">employeeDTO</span>
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">EmployeeDTO</span> employeeDTO<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Employee</span> employee <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">BeanUtils</span><span class="token punctuation">.</span><span class="token function">copyProperties</span><span class="token punctuation">(</span>employeeDTO<span class="token punctuation">,</span> employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    employee<span class="token punctuation">.</span><span class="token function">setUpdateTime</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    employee<span class="token punctuation">.</span><span class="token function">setUpdateUser</span><span class="token punctuation">(</span><span class="token class-name">BaseContext</span><span class="token punctuation">.</span><span class="token function">getCurrentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    employeeMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>employee<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在实现<strong>启用禁用员工账号</strong>功能时，已实现<code>employeeMapper.update(employee)</code>，在此不需写Mapper层代码。</p>
-<h3>5. 分类模块功能代码 (与员工管理模块类似)</h3>
-<h4>产品原型</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p>后台系统中可以管理分类信息，分类包括两种类型，分别是 <strong>菜品分类</strong> 和 <strong>套餐分类</strong> 。</p>
-<p>先来分析<strong>菜品分类</strong>相关功能。</p>
-<p><strong>新增菜品分类</strong>：当我们在后台系统中添加菜品时需要选择一个菜品分类，在移动端也会按照菜品分类来展示对应的菜品。</p>
-<p><strong>菜品分类分页查询</strong>：系统中的分类很多的时候，如果在一个页面中全部展示出来会显得比较乱，不便于查看，所以一般的系统中都会以分页的方式来展示列表数据。</p>
-<p><strong>根据id删除菜品分类</strong>：在分类管理列表页面，可以对某个分类进行删除操作。需要注意的是当分类关联了菜品或者套餐时，此分类不允许删除。</p>
-<p><strong>修改菜品分类</strong>：在分类管理列表页面点击修改按钮，弹出修改窗口，在修改窗口回显分类信息并进行修改，最后点击确定按钮完成修改操作。</p>
-<p><strong>启用禁用菜品分类</strong>：在分类管理列表页面，可以对某个分类进行启用或者禁用操作。</p>
-<p><strong>分类类型查询</strong>：当点击分类类型下拉框时，从数据库中查询所有的菜品分类数据进行展示。</p>
-<p><strong>业务规则：</strong></p>
-<ul>
-<li>分类名称必须是唯一的</li>
-<li>分类按照类型可以分为菜品分类和套餐分类</li>
-<li>新添加的分类状态默认为“禁用”</li>
-</ul>
-<h4>相关接口</h4>
-<p>根据上述原型图分析，菜品分类模块共涉及6个接口。</p>
-<ul>
-<li>新增分类</li>
-<li>分类分页查询</li>
-<li>根据id删除分类</li>
-<li>修改分类</li>
-<li>启用禁用分类</li>
-<li>根据类型查询分类</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>数据表设计 <code>category</code>表</h4>
-<p>| <strong>字段名</strong>  | <strong>数据类型</strong> | <strong>说明</strong>     | <strong>备注</strong>            |
-|</p>
-]]></content:encoded>
     </item>
   </channel>
 </rss>

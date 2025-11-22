@@ -6,11 +6,826 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Tue, 18 Nov 2025 05:45:04 GMT</pubDate>
-    <lastBuildDate>Tue, 18 Nov 2025 05:45:04 GMT</lastBuildDate>
+    <pubDate>Sat, 22 Nov 2025 04:06:50 GMT</pubDate>
+    <lastBuildDate>Sat, 22 Nov 2025 04:06:50 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Javassm - item1-14 (用户下单 + 订单支付 1)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article14.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article14.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-14 (用户下单 + 订单支付 1)</source>
+      <description>内容 导入地址簿功能代码 用户下单 订单支付 导入地址簿功能代码 需求分析 产品原型 地址簿，指的是消费者用户的地址信息，用户登录成功后可以维护自己的地址信息。同一个用户可以有多个地址信息，但是只能有一个默认地址 alt textalt text 对于地址簿管理，我们需要实现以下几个功能： 查询地址列表 新增地址 修改地址 删除地址 设置默认地址 查询...</description>
+      <category>code</category>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>导入地址簿功能代码</li>
+<li>用户下单</li>
+<li>订单支付</li>
+</ul>
+<h2>导入地址簿功能代码</h2>
+<h3>需求分析</h3>
+<h4>产品原型</h4>
+<p>地址簿，指的是消费者用户的地址信息，用户登录成功后可以维护自己的地址信息。同一个用户可以有多个地址信息，但是只能有一个<strong>默认地址</strong></p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>对于地址簿管理，我们需要实现以下几个功能：</p>
+<ul>
+<li>查询地址列表</li>
+<li>新增地址</li>
+<li>修改地址</li>
+<li>删除地址</li>
+<li>设置默认地址</li>
+<li>查询默认地址</li>
+</ul>
+<h4>接口设计</h4>
+<p>根据上述原型图先<strong>粗粒度</strong>设计接口，共包含7个接口</p>
+<p><strong>接口设计：</strong></p>
+<ul>
+<li>新增地址</li>
+<li>查询登录用户所有地址</li>
+<li>查询默认地址</li>
+<li>根据id修改地址</li>
+<li>根据id删除地址</li>
+<li>根据id查询地址</li>
+<li>设置默认地址</li>
+</ul>
+<p>接下来<strong>细粒度</strong>分析每个接口，明确每个接口的请求方式、请求路径、传入参数和返回值</p>
+<p>1). 新增地址 <code>POST /user/addressBook</code></p>
+<p>2). 查询登录用户所有地址 <code>GET /user/addressBook/list</code></p>
+<p>3). 查询默认地址 <code>GET /user/addressBook/default</code></p>
+<p>4). 修改地址 <code>PUT /user/addressBook</code></p>
+<p>5). 根据id删除地址 <code>DELETE /user/addressBook/{id}</code></p>
+<p>6). 根据id查询地址 <code>GET /user/addressBook/{id}</code></p>
+<p>7). 设置默认地址 <code>PUT /user/addressBook/default</code></p>
+<h4>数据表设计 <code>address_book</code></h4>
+<p>用户的地址信息会存储在address_book表，即地址簿表中。具体表结构如下：</p>
+<p>| <strong>字段名</strong>    | <strong>数据类型</strong> | <strong>说明</strong>     | <strong>备注</strong>       |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-15 (用户下单 + 订单支付 2)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article15.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article15.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-15 (用户下单 + 订单支付 2)</source>
+      <description>内容 导入地址簿功能代码 用户下单 订单支付 订单支付 微信支付介绍 前面的课程已经实现了用户下单，那接下来就是订单支付，就是完成付款功能。支付大家应该都不陌生了，在现实生活中经常购买商品并且使用支付功能来付款，在付款的时候可能使用比较多的就是微信支付和支付宝支付了。在苍穹外卖项目中，选择的就是微信支付这种支付方式。 要实现微信支付就需要注册微信支付的...</description>
+      <category>code</category>
+      <pubDate>Wed, 19 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>导入地址簿功能代码</li>
+<li>用户下单</li>
+<li>订单支付</li>
+</ul>
+<h2>订单支付</h2>
+<h3>微信支付介绍</h3>
+<p>前面的课程已经实现了用户下单，那接下来就是订单支付，就是完成付款功能。支付大家应该都不陌生了，在现实生活中经常购买商品并且使用支付功能来付款，在付款的时候可能使用比较多的就是微信支付和支付宝支付了。在苍穹外卖项目中，选择的就是<strong>微信支付</strong>这种支付方式。</p>
+<p>要实现微信支付就需要注册微信支付的一个商户号，这个商户号是必须要有一家企业并且有正规的营业执照。只有具备了这些资质之后，才可以去注册商户号，才能开通支付权限。</p>
+<p>个人不具备这种资质，所以我们在学习微信支付时，最重要的是了解微信支付的流程，并且能够阅读微信官方提供的接口文档，能够和第三方支付平台对接起来就可以了。</p>
+<p>本项目选择<strong>小程序支付</strong></p>
+<p>参考：<a href="https://pay.weixin.qq.com/static/product/product_index.shtml" target="_blank" rel="noopener noreferrer">https://pay.weixin.qq.com/static/product/product_index.shtml</a></p>
+<h4>微信小程序支付时序图</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>用户首先去小程序下单，然后商户系统(后端)会设置订单号什么返回前端，之后用户准备支付时，向后端发起申请，然后后端去调用 <strong>微信下单接口</strong> (JSAPI下单) 微信支付服务后台生成预支付交易单(对应时序图的第5步)</p>
+<p>之后将对应参数返回给前端，然后用户基于此可以进行支付，从而在前端调用了小程序支付(对应时序图的第10步)，最后返回支付结果在前端。</p>
+<p>同时，后端收到来自微信后台的推送，从而进一步更新对应订单的状态</p>
+<h4>微信相关接口</h4>
+<h5>JSAPI下单</h5>
+<p>商户系统调用该接口在微信支付服务后台生成预支付交易单(对应时序图的第5步)</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>微信小程序调起支付 (前端用的)</h5>
+<p>通过JSAPI下单接口获取到发起支付的必要参数prepay_id，然后使用微信支付提供的小程序方法调起小程序支付(对应时序图的第10步)</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>微信支付准备工作</h3>
+<h4>证书设置</h4>
+<p>完成微信支付有两个关键的步骤：</p>
+<p><strong>第一个</strong>就是需要在商户系统当中调用微信后台的一个下单接口，就是生成预支付交易单。</p>
+<p><strong>第二个</strong>就是支付成功之后微信后台会给推送消息。</p>
+<p>这两个接口数据的安全性，要求其实是非常高的。</p>
+<p>**解决：**微信提供的方式就是对数据进行加密、解密、签名多种方式。要完成数据加密解密，需要提前准备相应的一些文件，其实就是一些证书。</p>
+<p>需要两个证书： 微信支付平台证书、商户私钥文件</p>
+<h4>域名设置</h4>
+<p>微信后台会调用到商户系统给推送支付的结果，在这里我们就会遇到一个问题，就是微信后台怎么就能调用到我们这个商户系统呢？因为这个调用过程，其实本质上也是一个HTTP请求。</p>
+<p>目前，商户系统它的ip地址就是当前自己电脑的ip地址，只是一个局域网内的ip地址，微信后台无法调用到。</p>
+<p><strong>解决：<strong>内网穿透。通过</strong>cpolar软件</strong>可以获得一个临时域名，而这个临时域名是一个公网ip，这样，微信后台就可以请求到商户系统了</p>
+<h3>代码导入</h3>
+<h4>微信支付相关配置</h4>
+<p>application-dev.yml</p>
+<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">sky</span><span class="token punctuation">:</span>
+  <span class="token key atrule">wechat</span><span class="token punctuation">:</span>
+    <span class="token key atrule">appid</span><span class="token punctuation">:</span> wxcd2e39f677fd30ba
+    <span class="token key atrule">secret</span><span class="token punctuation">:</span> 84fbfdf5ea288f0c432d829599083637
+    <span class="token key atrule">mchid</span> <span class="token punctuation">:</span> <span class="token number">1561414331</span>
+    <span class="token key atrule">mchSerialNo</span><span class="token punctuation">:</span> 4B3B3DC35414AD50B1B755BAF8DE9CC7CF407606
+    <span class="token key atrule">privateKeyFilePath</span><span class="token punctuation">:</span> D<span class="token punctuation">:</span>\apiclient_key.pem
+    <span class="token key atrule">apiV3Key</span><span class="token punctuation">:</span> CZBK51236435wxpay435434323FFDuv3
+    <span class="token key atrule">weChatPayCertFilePath</span><span class="token punctuation">:</span> D<span class="token punctuation">:</span>\wechatpay_166D96F876F45C7D07CE98952A96EC980368ACFC.pem
+    <span class="token key atrule">notifyUrl</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//www.weixin.qq.com/wxpay/pay.php
+    <span class="token key atrule">refundNotifyUrl</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//www.weixin.qq.com/wxpay/pay.php
+</code></pre></div><p>application.yml</p>
+<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">sky</span><span class="token punctuation">:</span>
+  <span class="token key atrule">wechat</span><span class="token punctuation">:</span>
+    <span class="token key atrule">appid</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.appid<span class="token punctuation">}</span>
+    <span class="token key atrule">secret</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.secret<span class="token punctuation">}</span>
+    <span class="token key atrule">mchid</span> <span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.mchid<span class="token punctuation">}</span>
+    <span class="token key atrule">mchSerialNo</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.mchSerialNo<span class="token punctuation">}</span>
+    <span class="token key atrule">privateKeyFilePath</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.privateKeyFilePath<span class="token punctuation">}</span>
+    <span class="token key atrule">apiV3Key</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.apiV3Key<span class="token punctuation">}</span>
+    <span class="token key atrule">weChatPayCertFilePath</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.weChatPayCertFilePath<span class="token punctuation">}</span>
+    <span class="token key atrule">notifyUrl</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.notifyUrl<span class="token punctuation">}</span>
+    <span class="token key atrule">refundNotifyUrl</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.wechat.refundNotifyUrl<span class="token punctuation">}</span>
+</code></pre></div><p>WeChatProperties.java：读取配置</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>properties</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span></span><span class="token class-name">Data</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Value</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>boot<span class="token punctuation">.</span>context<span class="token punctuation">.</span>properties<span class="token punctuation">.</span></span><span class="token class-name">ConfigurationProperties</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>stereotype<span class="token punctuation">.</span></span><span class="token class-name">Component</span></span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"sky.wechat"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WeChatProperties</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> appid<span class="token punctuation">;</span> <span class="token comment">//小程序的appid</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> secret<span class="token punctuation">;</span> <span class="token comment">//小程序的秘钥</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> mchid<span class="token punctuation">;</span> <span class="token comment">//商户号</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> mchSerialNo<span class="token punctuation">;</span> <span class="token comment">//商户API证书的证书序列号</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> privateKeyFilePath<span class="token punctuation">;</span> <span class="token comment">//商户私钥文件</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> apiV3Key<span class="token punctuation">;</span> <span class="token comment">//证书解密的密钥</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> weChatPayCertFilePath<span class="token punctuation">;</span> <span class="token comment">//平台证书</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> notifyUrl<span class="token punctuation">;</span> <span class="token comment">//支付成功的回调地址</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> refundNotifyUrl<span class="token punctuation">;</span> <span class="token comment">//退款成功的回调地址</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>1. 实现后端预下单功能 (<code>payment</code> JSAPI下单)</h4>
+<h5>Controller层</h5>
+<p>在<code>OrderController.java</code>中添加payment方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+* 订单支付
+*
+* <span class="token keyword">@param</span> <span class="token parameter">ordersPaymentDTO</span>
+* <span class="token keyword">@return</span>
+*/</span>
+<span class="token annotation punctuation">@PutMapping</span><span class="token punctuation">(</span><span class="token string">"/payment"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"订单支付"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">OrderPaymentVO</span><span class="token punctuation">&gt;</span></span> <span class="token function">payment</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">OrdersPaymentDTO</span> ordersPaymentDTO<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"订单支付：{}"</span><span class="token punctuation">,</span> ordersPaymentDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">OrderPaymentVO</span> orderPaymentVO <span class="token operator">=</span> orderService<span class="token punctuation">.</span><span class="token function">payment</span><span class="token punctuation">(</span>ordersPaymentDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"生成预支付交易单：{}"</span><span class="token punctuation">,</span> orderPaymentVO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>orderPaymentVO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>Service层</h5>
+<p>在<code>OrderService.java</code>中添加<code>payment</code>方法定义</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 订单支付
+ * <span class="token keyword">@param</span> <span class="token parameter">ordersPaymentDTO</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token class-name">OrderPaymentVO</span> <span class="token function">payment</span><span class="token punctuation">(</span><span class="token class-name">OrdersPaymentDTO</span> ordersPaymentDTO<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">;</span>
+</code></pre></div><p>在<code>OrderServiceImpl.java</code>中实现<code>payment</code>方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Autowired</span>
+<span class="token keyword">private</span> <span class="token class-name">UserMapper</span> userMapper<span class="token punctuation">;</span>
+<span class="token annotation punctuation">@Autowired</span>
+<span class="token keyword">private</span> <span class="token class-name">WeChatPayUtil</span> weChatPayUtil<span class="token punctuation">;</span>
+<span class="token doc-comment comment">/**
+ * 订单支付
+ *
+ * <span class="token keyword">@param</span> <span class="token parameter">ordersPaymentDTO</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token keyword">public</span> <span class="token class-name">OrderPaymentVO</span> <span class="token function">payment</span><span class="token punctuation">(</span><span class="token class-name">OrdersPaymentDTO</span> ordersPaymentDTO<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 当前登录用户id</span>
+  <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">BaseContext</span><span class="token punctuation">.</span><span class="token function">getCurrentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">User</span> user <span class="token operator">=</span> userMapper<span class="token punctuation">.</span><span class="token function">getById</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">//调用微信支付接口，生成预支付交易单</span>
+  <span class="token class-name">JSONObject</span> jsonObject <span class="token operator">=</span> weChatPayUtil<span class="token punctuation">.</span><span class="token function">pay</span><span class="token punctuation">(</span>
+          ordersPaymentDTO<span class="token punctuation">.</span><span class="token function">getOrderNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">//商户订单号</span>
+          <span class="token keyword">new</span> <span class="token class-name">BigDecimal</span><span class="token punctuation">(</span><span class="token number">0.01</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">//支付金额，单位 元</span>
+          <span class="token string">"苍穹外卖订单"</span><span class="token punctuation">,</span> <span class="token comment">//商品描述</span>
+          user<span class="token punctuation">.</span><span class="token function">getOpenid</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">//微信用户的openid</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>jsonObject<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> jsonObject<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"ORDERPAID"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">OrderBusinessException</span><span class="token punctuation">(</span><span class="token string">"该订单已支付"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token class-name">OrderPaymentVO</span> vo <span class="token operator">=</span> jsonObject<span class="token punctuation">.</span><span class="token function">toJavaObject</span><span class="token punctuation">(</span><span class="token class-name">OrderPaymentVO</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  vo<span class="token punctuation">.</span><span class="token function">setPackageStr</span><span class="token punctuation">(</span>jsonObject<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"package"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> vo<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>2. 实现支付成功后操作 (<code>paySuccess</code>)</h4>
+<h5>Controller层</h5>
+<p><code>PayNotifyController.java</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 支付回调相关接口
+ */</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/notify"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">PayNotifyController</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">OrderService</span> orderService<span class="token punctuation">;</span>
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">WeChatProperties</span> weChatProperties<span class="token punctuation">;</span>
+
+  <span class="token doc-comment comment">/**
+   * 支付成功回调
+   *
+   * <span class="token keyword">@param</span> <span class="token parameter">request</span>
+   */</span>
+  <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/paySuccess"</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">paySuccessNotify</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> request<span class="token punctuation">,</span> <span class="token class-name">HttpServletResponse</span> response<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+      <span class="token comment">//读取数据</span>
+      <span class="token class-name">String</span> body <span class="token operator">=</span> <span class="token function">readData</span><span class="token punctuation">(</span>request<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"支付成功回调：{}"</span><span class="token punctuation">,</span> body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">//数据解密</span>
+      <span class="token class-name">String</span> plainText <span class="token operator">=</span> <span class="token function">decryptData</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"解密后的文本：{}"</span><span class="token punctuation">,</span> plainText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token class-name">JSONObject</span> jsonObject <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parseObject</span><span class="token punctuation">(</span>plainText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> outTradeNo <span class="token operator">=</span> jsonObject<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"out_trade_no"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//商户平台订单号</span>
+      <span class="token class-name">String</span> transactionId <span class="token operator">=</span> jsonObject<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"transaction_id"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//微信支付交易号</span>
+
+      log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"商户平台订单号：{}"</span><span class="token punctuation">,</span> outTradeNo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"微信支付交易号：{}"</span><span class="token punctuation">,</span> transactionId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">//业务处理，修改订单状态、来单提醒</span>
+      orderService<span class="token punctuation">.</span><span class="token function">paySuccess</span><span class="token punctuation">(</span>outTradeNo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">//给微信响应</span>
+      <span class="token function">responseToWeixin</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token doc-comment comment">/**
+   * 读取数据
+   *
+   * <span class="token keyword">@param</span> <span class="token parameter">request</span>
+   * <span class="token keyword">@return</span>
+   * <span class="token keyword">@throws</span> <span class="token reference"><span class="token class-name">Exception</span></span>
+   */</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> <span class="token function">readData</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> request<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+      <span class="token class-name">BufferedReader</span> reader <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getReader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">StringBuilder</span> result <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> line <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>line <span class="token operator">=</span> reader<span class="token punctuation">.</span><span class="token function">readLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>result<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              result<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token punctuation">}</span>
+          result<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> result<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token doc-comment comment">/**
+   * 数据解密
+   *
+   * <span class="token keyword">@param</span> <span class="token parameter">body</span>
+   * <span class="token keyword">@return</span>
+   * <span class="token keyword">@throws</span> <span class="token reference"><span class="token class-name">Exception</span></span>
+   */</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> <span class="token function">decryptData</span><span class="token punctuation">(</span><span class="token class-name">String</span> body<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+      <span class="token class-name">JSONObject</span> resultObject <span class="token operator">=</span> <span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">parseObject</span><span class="token punctuation">(</span>body<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">JSONObject</span> resource <span class="token operator">=</span> resultObject<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token string">"resource"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> ciphertext <span class="token operator">=</span> resource<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"ciphertext"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> nonce <span class="token operator">=</span> resource<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"nonce"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> associatedData <span class="token operator">=</span> resource<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"associated_data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token class-name">AesUtil</span> aesUtil <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AesUtil</span><span class="token punctuation">(</span>weChatProperties<span class="token punctuation">.</span><span class="token function">getApiV3Key</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token class-name">StandardCharsets</span><span class="token punctuation">.</span><span class="token constant">UTF_8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">//密文解密</span>
+      <span class="token class-name">String</span> plainText <span class="token operator">=</span> aesUtil<span class="token punctuation">.</span><span class="token function">decryptToString</span><span class="token punctuation">(</span>associatedData<span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token class-name">StandardCharsets</span><span class="token punctuation">.</span><span class="token constant">UTF_8</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              nonce<span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token class-name">StandardCharsets</span><span class="token punctuation">.</span><span class="token constant">UTF_8</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+              ciphertext<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">return</span> plainText<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token doc-comment comment">/**
+   * 给微信响应
+   * <span class="token keyword">@param</span> <span class="token parameter">response</span>
+   */</span>
+  <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">responseToWeixin</span><span class="token punctuation">(</span><span class="token class-name">HttpServletResponse</span> response<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>
+      response<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token string">"SUCCESS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"SUCCESS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      response<span class="token punctuation">.</span><span class="token function">setHeader</span><span class="token punctuation">(</span><span class="token string">"Content-type"</span><span class="token punctuation">,</span> <span class="token class-name">ContentType</span><span class="token punctuation">.</span><span class="token constant">APPLICATION_JSON</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      response<span class="token punctuation">.</span><span class="token function">getOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token class-name">JSONUtils</span><span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getBytes</span><span class="token punctuation">(</span><span class="token class-name">StandardCharsets</span><span class="token punctuation">.</span><span class="token constant">UTF_8</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      response<span class="token punctuation">.</span><span class="token function">flushBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>Service层</h5>
+<p>在<code>OrderService.java</code>中添加<code>paySuccess</code>方法定义</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 支付成功，修改订单状态
+ * <span class="token keyword">@param</span> <span class="token parameter">outTradeNo</span>
+ */</span>
+<span class="token keyword">void</span> <span class="token function">paySuccess</span><span class="token punctuation">(</span><span class="token class-name">String</span> outTradeNo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>在<code>OrderServiceImpl.java</code>中实现<code>paySuccess</code>方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 支付成功，修改订单状态
+ *
+ * <span class="token keyword">@param</span> <span class="token parameter">outTradeNo</span>
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">paySuccess</span><span class="token punctuation">(</span><span class="token class-name">String</span> outTradeNo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 当前登录用户id</span>
+  <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">BaseContext</span><span class="token punctuation">.</span><span class="token function">getCurrentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 根据订单号查询当前用户的订单</span>
+  <span class="token class-name">Orders</span> ordersDB <span class="token operator">=</span> orderMapper<span class="token punctuation">.</span><span class="token function">getByNumberAndUserId</span><span class="token punctuation">(</span>outTradeNo<span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 根据订单id更新订单的状态、支付方式、支付状态、结账时间</span>
+  <span class="token class-name">Orders</span> orders <span class="token operator">=</span> <span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">id</span><span class="token punctuation">(</span>ordersDB<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">TO_BE_CONFIRMED</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">payStatus</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">PAID</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">checkoutTime</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  orderMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>orders<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>Mapper层</h5>
+<p>在<code>OrderMapper.java</code>中添加<code>getByNumberAndUserId</code>和<code>update</code>两个方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据订单号和用户id查询订单
+ * <span class="token keyword">@param</span> <span class="token parameter">orderNumber</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">userId</span>
+ */</span>
+<span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from orders where number = #{orderNumber} and user_id= #{userId}"</span><span class="token punctuation">)</span>
+<span class="token class-name">Orders</span> <span class="token function">getByNumberAndUserId</span><span class="token punctuation">(</span><span class="token class-name">String</span> orderNumber<span class="token punctuation">,</span> <span class="token class-name">Long</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token doc-comment comment">/**
+ * 修改订单信息
+ * <span class="token keyword">@param</span> <span class="token parameter">orders</span>
+ */</span>
+<span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">Orders</span> orders<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>在<code>OrderMapper.xml</code>中添加</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>update</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>update<span class="token punctuation">"</span></span> <span class="token attr-name">parameterType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.sky.entity.Orders<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  update orders
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>set</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>cancelReason != null and cancelReason!='' <span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          cancel_reason=#{cancelReason},
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>rejectionReason != null and rejectionReason!='' <span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          rejection_reason=#{rejectionReason},
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>cancelTime != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          cancel_time=#{cancelTime},
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>payStatus != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          pay_status=#{payStatus},
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>payMethod != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          pay_method=#{payMethod},
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>checkoutTime != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          checkout_time=#{checkoutTime},
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>status != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          status = #{status},
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>deliveryTime != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          delivery_time = #{deliveryTime}
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>set</span><span class="token punctuation">&gt;</span></span>
+  where id = #{id}
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>update</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-16 (订单定时 来单提醒 客户催单 1)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article16.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article16.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-16 (订单定时 来单提醒 客户催单 1)</source>
+      <description>内容 Spring Task 订单状态定时处理 WebSocket 来单提醒 客户催单 功能实现：订单状态定时处理、来单提醒和客户催单 Spring Task Spring Task 是Spring框架提供的任务调度工具，可以按照约定的时间自动执行某个代码逻辑 定位：定时任务框架 作用：定时自动执行某段Java代码 应用场景 1). 信用卡每月还款提醒...</description>
+      <category>code</category>
+      <pubDate>Fri, 21 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>Spring Task</li>
+<li>订单状态定时处理</li>
+<li>WebSocket</li>
+<li>来单提醒</li>
+<li>客户催单</li>
+</ul>
+<p>功能实现：<strong>订单状态定时处理</strong>、<strong>来单提醒</strong>和<strong>客户催单</strong></p>
+<h2>Spring Task</h2>
+<p><strong>Spring Task</strong> 是Spring框架提供的任务调度工具，可以按照约定的时间自动执行某个代码逻辑</p>
+<p><strong>定位</strong>：定时任务框架</p>
+<p><strong>作用</strong>：定时自动执行某段Java代码</p>
+<h3>应用场景</h3>
+<p>1). 信用卡每月还款提醒</p>
+<p>2). 银行贷款每月还款提醒</p>
+<p>3). 火车票售票系统处理未支付订单</p>
+<p>4). 入职纪念日为用户发送通知</p>
+<p><strong>强调</strong>：只要是需要定时处理的场景都可以使用Spring Task</p>
+<h3>cron表达式</h3>
+<p><strong>cron表达式</strong>其实就是一个字符串，通过cron表达式可以<strong>定义任务触发的时间</strong></p>
+<p>**构成规则：**分为6或7个域，由空格分隔开，每个域代表一个含义</p>
+<p>每个域的含义分别为：秒、分钟、小时、日、月、周、年(可选)</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>举例</strong>：</p>
+<p>2022年10月12日上午9点整 对应的cron表达式为：<strong>0 0 9 12 10 ? 2022</strong></p>
+<p><strong>说明</strong>：一般<strong>日</strong>和<strong>周</strong>的值不同时设置，其中一个设置，另一个用？表示。</p>
+<p><strong>比如</strong>：描述2月份的最后一天，最后一天具体是几号呢？可能是28号，也有可能是29号，所以就不能写具体数字。</p>
+<p>为了描述这些信息，提供一些特殊的字符。这些具体的细节，我们就不用自己去手写，因为这个cron表达式，它其实有在线生成器。</p>
+<p>cron表达式在线生成器：<a href="https://cron.qqe2.com/" target="_blank" rel="noopener noreferrer">https://cron.qqe2.com/</a></p>
+<h4>通配符</h4>
+<ul>
+<li>
+<p><code>*</code> 表示所有值</p>
+</li>
+<li>
+<p><code>?</code> 表示未说明的值，即不关心它为何值</p>
+</li>
+<li>
+<p><code>-</code> 表示一个指定的范围</p>
+</li>
+<li>
+<p><code>,</code> 表示附加一个可能值</p>
+</li>
+<li>
+<p><code>/</code> 符号前表示开始时间，符号后表示每次递增的</p>
+</li>
+</ul>
+<h4>cron表达式案例</h4>
+<ul>
+<li>
+<p><code>23 0 0/1 L * ? *</code> 本月最后一天从0小时开始, 每一小时执行一次</p>
+</li>
+<li>
+<p><code>*/5 * * * * ?</code> 每隔5秒执行一次</p>
+</li>
+<li>
+<p><code>0 */1 * * * ?</code> 每隔1分钟执行一次</p>
+</li>
+<li>
+<p><code>0 0 5-15 * * ?</code> 每天5-15点整点触发</p>
+</li>
+<li>
+<p><code>0 0/3 * * * ?</code> 每三分钟触发一次</p>
+</li>
+<li>
+<p><code>0 0-5 14 * * ?</code> 在每天下午2点到下午2:05期间的每1分钟触发</p>
+</li>
+<li>
+<p><code>0 0/5 14 * * ?</code> 在每天下午2点到下午2:55期间的每5分钟触发</p>
+</li>
+<li>
+<p><code>0 0/5 14,18 * * ?</code> 在每天下午2点到2:55期间和下午6点到6:55期间的每5分钟触发</p>
+</li>
+<li>
+<p><code>0 0/30 9-17 * * ?</code> 朝九晚五工作时间内每半小时</p>
+</li>
+<li>
+<p><code>0 0 10,14,16 * * ?</code> 每天上午10点，下午2点，4点</p>
+</li>
+</ul>
+<h3>简单示例</h3>
+<h4>1. 导入<code>maven</code>坐标 <code>spring-context</code></h4>
+<h4>2. 启动类添加注解开启任务调度 <code>@EnableScheduling</code></h4>
+<h4>3.自定义定时任务类 <code>@Scheduled</code></h4>
+<p>对应方法没有返回值，且名字随意</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 自定义定时任务类
+ */</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyTask</span> <span class="token punctuation">{</span>
+
+    <span class="token doc-comment comment">/**
+     * 定时任务 每隔5秒触发一次
+     */</span>
+    <span class="token annotation punctuation">@Scheduled</span><span class="token punctuation">(</span>cron <span class="token operator">=</span> <span class="token string">"0/5 * * * * ?"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">executeTask</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"定时任务开始执行：{}"</span><span class="token punctuation">,</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2>订单状态定时处理</h2>
+<h3>需求分析</h3>
+<p>用户下单后可能存在的情况：</p>
+<ul>
+<li>下单后未支付，订单一直处于<strong>待支付</strong>状态</li>
+<li>用户收货后管理端未点击完成按钮，订单一直处于<strong>派送中</strong>状态</li>
+</ul>
+<p>对于上面两种情况需要通过<strong>定时任务</strong>来修改订单状态，具体逻辑为：</p>
+<ul>
+<li>通过定时任务每分钟检查一次是否存在支付超时订单（下单后超过15分钟仍未支付则判定为支付超时订单），如果存在则修改订单状态为“已取消”</li>
+<li>通过定时任务每天凌晨1点检查一次是否存在“派送中”的订单，如果存在则修改订单状态为“已完成”</li>
+</ul>
+<h3>代码开发</h3>
+<p>自定义定时任务类<code>OrderTask</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OrderTask</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">OrderMapper</span> orderMapper<span class="token punctuation">;</span>
+
+    <span class="token doc-comment comment">/**
+     * 处理支付超时订单
+     */</span>
+    <span class="token annotation punctuation">@Scheduled</span><span class="token punctuation">(</span>cron <span class="token operator">=</span> <span class="token string">"0 * * * * ?"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">processTimeoutOrder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"处理支付超时订单：{}"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">LocalDateTime</span> time <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plusMinutes</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// select * from orders where status = 1 and order_time &lt; 当前时间-15分钟</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Orders</span><span class="token punctuation">&gt;</span></span> ordersList <span class="token operator">=</span> orderMapper<span class="token punctuation">.</span><span class="token function">getByStatusAndOrderTimeLT</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">PENDING_PAYMENT</span><span class="token punctuation">,</span> time<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>ordersList <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>ordersList<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            ordersList<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>order <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+                order<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">CANCELLED</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                order<span class="token punctuation">.</span><span class="token function">setCancelReason</span><span class="token punctuation">(</span><span class="token string">"支付超时，自动取消"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                order<span class="token punctuation">.</span><span class="token function">setCancelTime</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                orderMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>order<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 处理“派送中”状态的订单
+     */</span>
+    <span class="token annotation punctuation">@Scheduled</span><span class="token punctuation">(</span>cron <span class="token operator">=</span> <span class="token string">"0 0 1 * * ?"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">processDeliveryOrder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"处理派送中订单：{}"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// select * from orders where status = 4 and order_time &lt; 当前时间-1小时</span>
+        <span class="token class-name">LocalDateTime</span> time <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">plusMinutes</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">60</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Orders</span><span class="token punctuation">&gt;</span></span> ordersList <span class="token operator">=</span> orderMapper<span class="token punctuation">.</span><span class="token function">getByStatusAndOrderTimeLT</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">DELIVERY_IN_PROGRESS</span><span class="token punctuation">,</span> time<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">if</span><span class="token punctuation">(</span>ordersList <span class="token operator">!=</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>ordersList<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            ordersList<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>order <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+                order<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">COMPLETED</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                orderMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>order<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>在OrderMapper接口中扩展方法:</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据状态和下单时间查询订单
+ * <span class="token keyword">@param</span> <span class="token parameter">status</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">orderTime</span>
+ */</span>
+<span class="token annotation punctuation">@Select</span><span class="token punctuation">(</span><span class="token string">"select * from orders where status = #{status} and order_time &lt; #{orderTime}"</span><span class="token punctuation">)</span>
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Orders</span><span class="token punctuation">&gt;</span></span> <span class="token function">getByStatusAndOrdertimeLT</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> status<span class="token punctuation">,</span> <span class="token class-name">LocalDateTime</span> orderTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-17 (订单定时 来单提醒 客户催单 2)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article17.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article17.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-17 (订单定时 来单提醒 客户催单 2)</source>
+      <description>内容 Spring Task 订单状态定时处理 WebSocket 来单提醒 客户催单 功能实现：订单状态定时处理、来单提醒和客户催单 WebSocket WebSocket 是基于 TCP 的一种新的网络协议。它实现了浏览器与服务器全双工通信——浏览器和服务器只需要完成一次握手，两者之间就可以创建持久性的连接， 并进行双向数据传输。 HTTP协议和W...</description>
+      <category>code</category>
+      <pubDate>Fri, 21 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>Spring Task</li>
+<li>订单状态定时处理</li>
+<li>WebSocket</li>
+<li>来单提醒</li>
+<li>客户催单</li>
+</ul>
+<p>功能实现：<strong>订单状态定时处理</strong>、<strong>来单提醒</strong>和<strong>客户催单</strong></p>
+<h2>WebSocket</h2>
+<p>WebSocket 是基于 TCP 的一种新的<strong>网络协议</strong>。它实现了浏览器与服务器全双工通信——浏览器和服务器只需要完成一次握手，两者之间就可以创建<strong>持久性</strong>的连接， 并进行<strong>双向</strong>数据传输。</p>
+<p><strong>HTTP协议和WebSocket协议对比</strong></p>
+<ul>
+<li>HTTP是<strong>短连接</strong></li>
+<li>WebSocket是<strong>长连接</strong></li>
+<li>HTTP通信是<strong>单向</strong>的，基于请求响应模式</li>
+<li>WebSocket支持<strong>双向</strong>通信</li>
+<li>HTTP和WebSocket底层都是TCP连接</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>WebSocket缺点</h3>
+<p>服务器长期维护长连接需要一定的成本
+各个浏览器支持程度不一
+WebSocket 是长连接，受网络限制比较大，需要处理好重连</p>
+<p>WebSocket并不能完全取代HTTP，它只适合在特定的场景下使用</p>
+<h3>WebSocket应用场景</h3>
+<p>1). 视频弹幕</p>
+<p>2). 网页聊天</p>
+<p>3). 体育实况更新</p>
+<p>4). 股票基金报价实时更新</p>
+<h3>简单案例</h3>
+<p>实现浏览器与服务器全双工通信。浏览器既可以向服务器发送消息，服务器也可主动向浏览器推送消息</p>
+<h4>1). 导入WebSocket的maven坐标</h4>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-websocket<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h4>2). 导入WebSocket服务端组件WebSocketServer，用于和客户端通信</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * WebSocket服务
+ */</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@ServerEndpoint</span><span class="token punctuation">(</span><span class="token string">"/ws/{sid}"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebSocketServer</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">//存放会话对象</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Session</span><span class="token punctuation">&gt;</span></span> sessionMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token doc-comment comment">/**
+     * 连接建立成功调用的方法
+     */</span>
+    <span class="token annotation punctuation">@OnOpen</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onOpen</span><span class="token punctuation">(</span><span class="token class-name">Session</span> session<span class="token punctuation">,</span> <span class="token annotation punctuation">@PathParam</span><span class="token punctuation">(</span><span class="token string">"sid"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> sid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"客户端："</span> <span class="token operator">+</span> sid <span class="token operator">+</span> <span class="token string">"建立连接"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        sessionMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>sid<span class="token punctuation">,</span> session<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 收到客户端消息后调用的方法
+     *
+     * <span class="token keyword">@param</span> <span class="token parameter">message</span> 客户端发送过来的消息
+     */</span>
+    <span class="token annotation punctuation">@OnMessage</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onMessage</span><span class="token punctuation">(</span><span class="token class-name">String</span> message<span class="token punctuation">,</span> <span class="token annotation punctuation">@PathParam</span><span class="token punctuation">(</span><span class="token string">"sid"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> sid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"收到来自客户端："</span> <span class="token operator">+</span> sid <span class="token operator">+</span> <span class="token string">"的信息:"</span> <span class="token operator">+</span> message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 连接关闭调用的方法
+     *
+     * <span class="token keyword">@param</span> <span class="token parameter">sid</span>
+     */</span>
+    <span class="token annotation punctuation">@OnClose</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClose</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathParam</span><span class="token punctuation">(</span><span class="token string">"sid"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> sid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"连接断开:"</span> <span class="token operator">+</span> sid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        sessionMap<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>sid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token doc-comment comment">/**
+     * 群发
+     *
+     * <span class="token keyword">@param</span> <span class="token parameter">message</span>
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sendToAllClient</span><span class="token punctuation">(</span><span class="token class-name">String</span> message<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">Collection</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Session</span><span class="token punctuation">&gt;</span></span> sessions <span class="token operator">=</span> sessionMap<span class="token punctuation">.</span><span class="token function">values</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Session</span> session <span class="token operator">:</span> sessions<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                <span class="token comment">//服务器向客户端发送消息</span>
+                session<span class="token punctuation">.</span><span class="token function">getBasicRemote</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sendText</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h4>3). 导入配置类<code>WebSocketConfiguration</code>，注册WebSocket的服务端组件</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * WebSocket配置类，用于注册WebSocket的Bean
+ */</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebSocketConfiguration</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">// 作用是将 WebSocket 端点（如 @ServerEndpoint 注解的类）注册为 Spring 管理的 Bean</span>
+    <span class="token comment">// ServerEndpointExporter 会扫描带有 @ServerEndpoint 注解的类，并自动将它们注册为 WebSocket 端点。</span>
+    <span class="token annotation punctuation">@Bean</span>
+    <span class="token keyword">public</span> <span class="token class-name">ServerEndpointExporter</span> <span class="token function">serverEndpointExporter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">ServerEndpointExporter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>4). 导入定时任务类WebSocketTask，定时向客户端推送数据</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebSocketTask</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">WebSocketServer</span> webSocketServer<span class="token punctuation">;</span>
+
+    <span class="token doc-comment comment">/**
+     * 通过WebSocket每隔5秒向客户端发送消息
+     */</span>
+    <span class="token annotation punctuation">@Scheduled</span><span class="token punctuation">(</span>cron <span class="token operator">=</span> <span class="token string">"0/5 * * * * ?"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sendMessageToClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        webSocketServer<span class="token punctuation">.</span><span class="token function">sendToAllClient</span><span class="token punctuation">(</span><span class="token string">"这是来自服务端的消息："</span> <span class="token operator">+</span> <span class="token class-name">DateTimeFormatter</span><span class="token punctuation">.</span><span class="token function">ofPattern</span><span class="token punctuation">(</span><span class="token string">"HH:mm:ss"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2>来单提醒</h2>
+<h3>需求分析和设计</h3>
+<p>用户下单并且支付成功后，需要第一时间通知外卖商家。</p>
+<p>通知的形式有如下两种：</p>
+<ul>
+<li>语音播报</li>
+<li>弹出提示框</li>
+</ul>
+<h4>设计思路</h4>
+<ul>
+<li>通过WebSocket实现管理端页面和服务端保持长连接状态</li>
+<li>当客户支付后，调用WebSocket的相关API实现服务端向管理端页面推送消息</li>
+<li>管理端页面客户浏览器解析服务端推送的消息，判断是来单提醒还是客户催单，进行相应的消息提示和语音播报</li>
+<li>约定服务端发送给管理端浏览器的数据格式为JSON，字段包括：type，orderId，content
+<ul>
+<li>type 为消息类型，1为来单提醒 2为客户催单</li>
+<li>orderId 为订单id</li>
+<li>content 为消息内容</li>
+</ul>
+</li>
+</ul>
+<p>其实就是后端与管理端之间建立<code>socket</code>, 用户端不需要，只是在支付完成时来触发后端通知</p>
+<h3>代码开发</h3>
+<p>在OrderServiceImpl中注入WebSocketServer对象，修改paySuccess方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Autowired</span>
+<span class="token keyword">private</span> <span class="token class-name">WebSocketServer</span> webSocketServer<span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">paySuccess</span><span class="token punctuation">(</span><span class="token class-name">String</span> outTradeNo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 当前登录用户id</span>
+    <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">BaseContext</span><span class="token punctuation">.</span><span class="token function">getCurrentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 根据订单号查询当前用户的订单</span>
+    <span class="token class-name">Orders</span> ordersDB <span class="token operator">=</span> orderMapper<span class="token punctuation">.</span><span class="token function">getByNumberAndUserId</span><span class="token punctuation">(</span>outTradeNo<span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 根据订单id更新订单的状态、支付方式、支付状态、结账时间</span>
+    <span class="token class-name">Orders</span> orders <span class="token operator">=</span> <span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">id</span><span class="token punctuation">(</span>ordersDB<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">TO_BE_CONFIRMED</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">payStatus</span><span class="token punctuation">(</span><span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">PAID</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">checkoutTime</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    orderMapper<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>orders<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"type"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//消息类型，1表示来单提醒</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"orderId"</span><span class="token punctuation">,</span> orders<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"content"</span><span class="token punctuation">,</span> <span class="token string">"订单号："</span> <span class="token operator">+</span> outTradeNo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//通过WebSocket实现来单提醒，向管理端浏览器推送消息</span>
+    webSocketServer<span class="token punctuation">.</span><span class="token function">sendToAllClient</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2>客户催单</h2>
+<h3>需求分析和设计</h3>
+<p>用户在小程序中点击催单按钮后，需要第一时间通知外卖商家。通知的形式有如下两种：</p>
+<ul>
+<li>语音播报</li>
+<li>弹出提示框</li>
+</ul>
+<h3>设计思路</h3>
+<ul>
+<li>通过WebSocket实现管理端页面和服务端保持长连接状态</li>
+<li>当用户点击催单按钮后，调用WebSocket的相关API实现服务端向客户端推送消息</li>
+<li>客户端浏览器解析服务端推送的消息，判断是来单提醒还是客户催单，进行相应的消息提示和语音播报
+约定服务端发送给客户端浏览器的数据格式为JSON，字段包括：type，orderId，content
+<ul>
+<li>type 为消息类型，1为来单提醒 2为客户催单</li>
+<li>orderId 为订单id</li>
+<li>content 为消息内容</li>
+</ul>
+</li>
+</ul>
+<p>当用户点击催单按钮时，向服务端发送请求</p>
+<h4>接口设计(催单)</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>代码开发</h3>
+<h4>Controller层</h4>
+<p>根据用户催单的接口定义，在<code>user/OrderController</code>中创建催单方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 客户催单
+ * <span class="token keyword">@param</span> <span class="token parameter">orderId</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/reminder/{orderId}"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"催单"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Void</span><span class="token punctuation">&gt;</span></span> <span class="token function">reminder</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Long</span> orderId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"客户催单：{}"</span><span class="token punctuation">,</span> orderId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    orderService<span class="token punctuation">.</span><span class="token function">reminder</span><span class="token punctuation">(</span>orderId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Service层</h4>
+<h5>接口层</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 用户催单
+ * <span class="token keyword">@param</span> <span class="token parameter">id</span>
+ */</span>
+<span class="token keyword">void</span> <span class="token function">reminder</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>实现层</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 客户催单
+ * <span class="token keyword">@param</span> <span class="token parameter">orderId</span>
+ */</span>
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">reminder</span><span class="token punctuation">(</span><span class="token class-name">Long</span> orderId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Orders</span> ordersDB <span class="token operator">=</span> orderMapper<span class="token punctuation">.</span><span class="token function">getById</span><span class="token punctuation">(</span>orderId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>ordersDB <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">OrderBusinessException</span><span class="token punctuation">(</span><span class="token class-name">MessageConstant</span><span class="token punctuation">.</span><span class="token constant">ORDER_STATUS_ERROR</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"type"</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//消息类型，2表示客户催单</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"orderId"</span><span class="token punctuation">,</span> orderId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"content"</span><span class="token punctuation">,</span> <span class="token string">"订单号："</span> <span class="token operator">+</span> ordersDB<span class="token punctuation">.</span><span class="token function">getNumber</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">//通过WebSocket实现来单提醒，向管理端浏览器推送消息</span>
+    webSocketServer<span class="token punctuation">.</span><span class="token function">sendToAllClient</span><span class="token punctuation">(</span><span class="token constant">JSON</span><span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
+    </item>
     <item>
       <title>Javassm - item1-12 (缓存商品 + 购物车 1)</title>
       <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article12.html</link>
@@ -125,7 +940,7 @@
       <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-13 (缓存商品 + 购物车 2)</source>
       <description>内容 缓存菜品 缓存套餐 添加购物车 查看购物车 清空购物车 功能实现：缓存商品、购物车 添加购物车 用户可以将菜品或者套餐添加到购物车 对于菜品来说，如果设置了口味信息，则需要选择规格后才能加入购物车; 对于套餐来说，可以直接点击 + 号将当前套餐加入购物车 在购物车中可以修改菜品和套餐的数量，也可以清空购物车 接口设计 对应的添加购物车接口 (这是...</description>
       <category>code</category>
-      <pubDate>Fri, 14 Nov 2025 00:00:00 GMT</pubDate>
+      <pubDate>Mon, 17 Nov 2025 00:00:00 GMT</pubDate>
       <content:encoded><![CDATA[<h2>内容</h2>
 <ul>
 <li>缓存菜品</li>
@@ -684,362 +1499,6 @@
   redisTemplate<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-9 (营业状态设置3)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article9.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article9.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-9 (营业状态设置3)</source>
-      <description>营业状态设置3 需求分析和设计 产品原型 进到苍穹外卖后台，显示餐厅的营业状态，营业状态分为营业中和打烊中，若当前餐厅处于营业状态，自动接收任何订单，客户可在小程序进行下单操作；若当前餐厅处于打烊状态，不接受任何订单，客户便无法在小程序进行下单操作。 点击营业状态按钮时，弹出更改营业状态: 选择营业，设置餐厅为营业中状态; 选择打烊，设置餐厅为打烊中状...</description>
-      <category>code</category>
-      <pubDate>Thu, 13 Nov 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>营业状态设置3</h2>
-<h3>需求分析和设计</h3>
-<h4>产品原型</h4>
-<p>进到苍穹外卖后台，显示餐厅的营业状态，营业状态分为<strong>营业中</strong>和<strong>打烊中</strong>，若当前餐厅处于营业状态，自动接收任何订单，客户可在小程序进行下单操作；若当前餐厅处于打烊状态，不接受任何订单，客户便无法在小程序进行下单操作。</p>
-<p>点击<strong>营业状态</strong>按钮时，弹出更改营业状态: 选择营业，设置餐厅为<strong>营业中</strong>状态; 选择打烊，设置餐厅为<strong>打烊中</strong>状态</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>接口设计</h4>
-<p>根据上述原型图设计接口，共包含3个接口。</p>
-<p><strong>接口设计：</strong></p>
-<ul>
-<li>设置营业状态</li>
-<li>管理端查询营业状态</li>
-<li>用户端查询营业状态</li>
-</ul>
-<p>**注：**从技术层面分析，其实管理端和用户端查询营业状态时，可通过一个接口去实现即可。因为营业状态是一致的。但是，本项目约定：</p>
-<ul>
-<li><strong>管理端</strong>发出的请求，统一使用/admin作为前缀。</li>
-<li><strong>用户端</strong>发出的请求，统一使用/user作为前缀。</li>
-</ul>
-<p>因为访问路径不一致，故分为两个接口实现</p>
-<h5>设置营业状态 <code>/admin/shop/{status}</code></h5>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>管理端查询营业状态 <code>/admin/shop/status</code></h5>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>用户端查询营业状态 <code>/user/shop/status</code></h5>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>营业状态存储方式</h4>
-<p>虽然，可以通过一张表来存储营业状态数据，但整个表中只有一个字段，所以意义不大。</p>
-<p>营业状态数据存储方式：基于Redis的字符串来进行存储</p>
-<p><strong>约定：</strong> 1表示营业 0表示打烊</p>
-<h4>代码开发</h4>
-<h5>管理端设置和获取营业状态</h5>
-<p>在sky-server模块中，创建ShopController.java</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@RestController</span>
-<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/admin/shop"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Slf4j</span>
-<span class="token annotation punctuation">@Api</span><span class="token punctuation">(</span>tags <span class="token operator">=</span> <span class="token string">"状态相关接口"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ShopController</span> <span class="token punctuation">{</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token constant">KEY</span> <span class="token operator">=</span> <span class="token string">"SHOP_STATUS"</span><span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@Autowired</span>
-    <span class="token keyword">private</span> <span class="token class-name">RedisTemplate</span> redisTemplate<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@PutMapping</span><span class="token punctuation">(</span><span class="token string">"/{status}"</span><span class="token punctuation">)</span>
-    <span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"设置店铺的营业状态"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Void</span><span class="token punctuation">&gt;</span></span> <span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Integer</span> status<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"设置店铺状态为：{}"</span><span class="token punctuation">,</span> status <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">?</span> <span class="token string">"营业中"</span> <span class="token operator">:</span> <span class="token string">"打烊中"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token constant">KEY</span><span class="token punctuation">,</span> status<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/status"</span><span class="token punctuation">)</span>
-    <span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"获取店铺的营业状态"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> <span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Integer</span> status <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token punctuation">)</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token constant">KEY</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"获取店铺营业状态"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>用户端获取营业状态</h5>
-<p>创建com.sky.controller.user包，在该包下创建ShopController.java</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@RestController</span><span class="token punctuation">(</span><span class="token string">"userShopController"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/user/shop"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Slf4j</span>
-<span class="token annotation punctuation">@Api</span><span class="token punctuation">(</span>tags <span class="token operator">=</span> <span class="token string">"状态相关接口"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ShopController</span> <span class="token punctuation">{</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token constant">KEY</span> <span class="token operator">=</span> <span class="token string">"SHOP_STATUS"</span><span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@Autowired</span>
-    <span class="token keyword">private</span> <span class="token class-name">RedisTemplate</span> redisTemplate<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/status"</span><span class="token punctuation">)</span>
-    <span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"获取店铺的营业状态"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> <span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Integer</span> status <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token punctuation">)</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token constant">KEY</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"获取店铺营业状态"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>hint - AOP</title>
-      <link>http://ekkosonya.cn/code/java_hint/hint5.html</link>
-      <guid>http://ekkosonya.cn/code/java_hint/hint5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">hint - AOP</source>
-      <description>操作 AOP可以用来实现公共字段填充 1). 自定义注解 AutoFill，用于标识需要进行公共字段自动填充的方法 2). 自定义切面类 AutoFillAspect，统一拦截加入了 AutoFill 注解的方法，通过反射为公共字段赋值 3). 在 Mapper 的方法上加入 AutoFill 注解 在定义切面时，有两步： 定义切点（Pointcut）...</description>
-      <category>code</category>
-      <pubDate>Mon, 13 Oct 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>操作</h2>
-<p>AOP可以用来实现公共字段填充</p>
-<p>1). 自定义注解 AutoFill，用于标识需要进行公共字段自动填充的方法</p>
-<p>2). 自定义切面类 AutoFillAspect，统一拦截加入了 AutoFill 注解的方法，通过反射为公共字段赋值</p>
-<p>3). 在 Mapper 的方法上加入 AutoFill 注解</p>
-<p>在定义切面时，有两步：</p>
-<ol>
-<li>
-<p>定义切点（Pointcut）：告诉 AOP —— 哪些方法需要被拦截；</p>
-</li>
-<li>
-<p>定义通知（Advice）：告诉 AOP —— 拦截到后要做什么。</p>
-</li>
-</ol>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token annotation punctuation">@Pointcut</span><span class="token punctuation">(</span><span class="token string">"execution(* com.sky.mapper.*.*(..)) &amp;&amp; @annotation(com.sky.annotation.AutoFill)"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">autoFillPointCut</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-
-<span class="token annotation punctuation">@Before</span><span class="token punctuation">(</span><span class="token string">"autoFillPointCut()"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">autoFill</span><span class="token punctuation">(</span><span class="token class-name">JoinPoint</span> joinPoint<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"开始进行公共字段自动填充..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">}</span>
-<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-</code></pre></div><p>这样可以方便复用</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-5 (菜品管理模块1)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article5.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-5 (菜品管理模块1)</source>
-      <description>菜品管理模块1 alt textalt text 实现功能 公共字段自动填充 新增菜品 菜品分页查询 删除菜品 修改菜品 1. 公共字段填充 (AOP操作) 问题分析 在上一章节我们已经完成了后台系统的员工管理功能和菜品分类功能的开发，在新增员工或者新增菜品分类时需要设置创建时间、创建人、修改时间、修改人等字段，在编辑员工或者编辑菜品分类时需要设置修改...</description>
-      <category>code</category>
-      <pubDate>Sat, 01 Nov 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>菜品管理模块1</h2>
-<figure><figcaption>alt text</figcaption></figure>
-<h3>实现功能</h3>
-<ul>
-<li>公共字段自动填充</li>
-<li>新增菜品</li>
-<li>菜品分页查询</li>
-<li>删除菜品</li>
-<li>修改菜品</li>
-</ul>
-<h3>1. 公共字段填充 (AOP操作)</h3>
-<h4>问题分析</h4>
-<p>在上一章节我们已经完成了后台系统的<strong>员工管理功能</strong>和<strong>菜品分类功能</strong>的开发，在<strong>新增员工</strong>或者<strong>新增菜品分类</strong>时需要设置创建时间、创建人、修改时间、修改人等字段，在<strong>编辑员工</strong>或者<strong>编辑菜品分类</strong>时需要设置修改时间、修改人等字段。这些字段属于公共字段，也就是也就是在我们的系统中很多表中都会有这些字段，如下：</p>
-<p>| <strong>序号</strong> | <strong>字段名</strong>  | <strong>含义</strong> | <strong>数据类型</strong> |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-6 (菜品管理模块2)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article6.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article6.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-6 (菜品管理模块2)</source>
-      <description>菜品管理模块2 实现功能 公共字段自动填充 新增菜品 菜品分页查询 删除菜品 修改菜品 3. 菜品分页查询 产品原型 alt textalt text 在菜品列表展示时，除了菜品的基本信息(名称、售价、售卖状态、最后操作时间)外，还有两个字段略微特殊，第一个是图片字段，我们从数据库查询出来的仅仅是图片的名字，图片要想在表格中回显展示出来，就需要下载这个...</description>
-      <category>code</category>
-      <pubDate>Mon, 03 Nov 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>菜品管理模块2</h2>
-<h3>实现功能</h3>
-<ul>
-<li>公共字段自动填充</li>
-<li>新增菜品</li>
-<li>菜品分页查询</li>
-<li>删除菜品</li>
-<li>修改菜品</li>
-</ul>
-<h3>3. 菜品分页查询</h3>
-<h4>产品原型</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p>在菜品列表展示时，除了菜品的基本信息(名称、售价、售卖状态、最后操作时间)外，还有两个字段略微特殊，第一个是图片字段，我们从数据库查询出来的仅仅是图片的名字，图片要想在表格中回显展示出来，就需要下载这个图片。</p>
-<p>第二个是菜品分类，这里展示的是分类名称，而不是分类ID，此时我们就需要根据菜品的分类ID，去分类表中查询分类信息，然后在页面展示。</p>
-<p><strong>业务规则：</strong></p>
-<ul>
-<li>根据页码展示菜品信息</li>
-<li>每页展示10条数据</li>
-<li>分页查询时可以根据需要输入菜品名称、菜品分类、菜品状态进行查询</li>
-</ul>
-<h4>接口设计</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>代码开发</h4>
-<h5>1. 对应DTO设计</h5>
-<p>查询Query对应的DTO: <code>DishPageQueryDTO</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>dto</span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span></span><span class="token class-name">Data</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">Serializable</span></span><span class="token punctuation">;</span>
-<span class="token annotation punctuation">@Data</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DishPageQueryDTO</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">{</span>
-    <span class="token keyword">private</span> <span class="token keyword">int</span> page<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token keyword">int</span> pageSize<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">Integer</span> categoryId<span class="token punctuation">;</span> <span class="token comment">//分类id</span>
-    <span class="token keyword">private</span> <span class="token class-name">Integer</span> status<span class="token punctuation">;</span> <span class="token comment">//状态 0表示禁用 1表示启用</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>2. 对应VO设计</h5>
-<p>返回结果<code>records</code>, 设计对应的VO: <code>DishVO</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>vo</span><span class="token punctuation">;</span>
-
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>entity<span class="token punctuation">.</span></span><span class="token class-name">DishFlavor</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span></span><span class="token class-name">AllArgsConstructor</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span></span><span class="token class-name">Builder</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span></span><span class="token class-name">Data</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">lombok<span class="token punctuation">.</span></span><span class="token class-name">NoArgsConstructor</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">Serializable</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>math<span class="token punctuation">.</span></span><span class="token class-name">BigDecimal</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>time<span class="token punctuation">.</span></span><span class="token class-name">LocalDateTime</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">ArrayList</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">List</span></span><span class="token punctuation">;</span>
-
-<span class="token annotation punctuation">@Data</span>
-<span class="token annotation punctuation">@Builder</span>
-<span class="token annotation punctuation">@NoArgsConstructor</span>
-<span class="token annotation punctuation">@AllArgsConstructor</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DishVO</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">{</span>
-
-    <span class="token keyword">private</span> <span class="token class-name">Long</span> id<span class="token punctuation">;</span>
-    <span class="token comment">//菜品名称</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
-    <span class="token comment">//菜品分类id</span>
-    <span class="token keyword">private</span> <span class="token class-name">Long</span> categoryId<span class="token punctuation">;</span>
-    <span class="token comment">//菜品价格</span>
-    <span class="token keyword">private</span> <span class="token class-name">BigDecimal</span> price<span class="token punctuation">;</span>
-    <span class="token comment">//图片</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> image<span class="token punctuation">;</span>
-    <span class="token comment">//描述信息</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> description<span class="token punctuation">;</span>
-    <span class="token comment">//0 停售 1 起售</span>
-    <span class="token keyword">private</span> <span class="token class-name">Integer</span> status<span class="token punctuation">;</span>
-    <span class="token comment">//更新时间</span>
-    <span class="token keyword">private</span> <span class="token class-name">LocalDateTime</span> updateTime<span class="token punctuation">;</span>
-    <span class="token comment">//分类名称</span>
-    <span class="token keyword">private</span> <span class="token class-name">String</span> categoryName<span class="token punctuation">;</span>
-    <span class="token comment">//菜品关联的口味</span>
-    <span class="token keyword">private</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">DishFlavor</span><span class="token punctuation">&gt;</span></span> flavors <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>3. <code>Controller</code>层</h5>
-<p>根据接口定义创建DishController的page分页查询方法</p>
-<p>根据之前设计的 <code>PageResult</code>来设计</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>  <span class="token doc-comment comment">/**
-     * 菜品分页查询
-     *
-     * <span class="token keyword">@param</span> <span class="token parameter">dishPageQueryDTO</span>
-     * <span class="token keyword">@return</span>
-     */</span>
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/page"</span><span class="token punctuation">)</span>
-    <span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"菜品分页查询"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">PageResult</span><span class="token punctuation">&gt;</span></span> <span class="token function">page</span><span class="token punctuation">(</span><span class="token class-name">DishPageQueryDTO</span> dishPageQueryDTO<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"菜品分页查询:{}"</span><span class="token punctuation">,</span> dishPageQueryDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">PageResult</span> pageResult <span class="token operator">=</span> dishService<span class="token punctuation">.</span><span class="token function">pageQuery</span><span class="token punctuation">(</span>dishPageQueryDTO<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//后绪步骤定义</span>
-        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>pageResult<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-</code></pre></div><h5>4. <code>Service</code>层接口</h5>
-<p><strong>在 DishService 中扩展分页查询方法：</strong></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-  * 菜品分页查询
-  *
-  * <span class="token keyword">@param</span> <span class="token parameter">dishPageQueryDTO</span>
-  * <span class="token keyword">@return</span>
-  */</span>
-<span class="token class-name">PageResult</span> <span class="token function">pageQuery</span><span class="token punctuation">(</span><span class="token class-name">DishPageQueryDTO</span> dishPageQueryDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h5>4. <code>Service</code>层实现类</h5>
-<p><strong>在 DishServiceImpl 中实现分页查询方法：</strong></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-* 菜品分页查询
-*
-* <span class="token keyword">@param</span> <span class="token parameter">dishPageQueryDTO</span>
-* <span class="token keyword">@return</span>
-*/</span>
-<span class="token keyword">public</span> <span class="token class-name">PageResult</span> <span class="token function">pageQuery</span><span class="token punctuation">(</span><span class="token class-name">DishPageQueryDTO</span> dishPageQueryDTO<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">PageHelper</span><span class="token punctuation">.</span><span class="token function">startPage</span><span class="token punctuation">(</span>dishPageQueryDTO<span class="token punctuation">.</span><span class="token function">getPage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> dishPageQueryDTO<span class="token punctuation">.</span><span class="token function">getPageSize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Page</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">DishVO</span><span class="token punctuation">&gt;</span></span> page <span class="token operator">=</span> dishMapper<span class="token punctuation">.</span><span class="token function">pageQuery</span><span class="token punctuation">(</span>dishPageQueryDTO<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//后绪步骤实现</span>
-    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">PageResult</span><span class="token punctuation">(</span>page<span class="token punctuation">.</span><span class="token function">getTotal</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> page<span class="token punctuation">.</span><span class="token function">getResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>5. <code>Mapper</code>层</h5>
-<p>在 DishMapper 接口中声明 pageQuery 方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-  * 菜品分页查询
-  *
-  * <span class="token keyword">@param</span> <span class="token parameter">dishPageQueryDTO</span>
-  * <span class="token keyword">@return</span>
-  */</span>
-<span class="token class-name">Page</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">DishVO</span><span class="token punctuation">&gt;</span></span> <span class="token function">pageQuery</span><span class="token punctuation">(</span><span class="token class-name">DishPageQueryDTO</span> dishPageQueryDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p><strong>在 DishMapper.xml 中编写SQL：</strong></p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>pageQuery<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.sky.vo.DishVO<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-  select d.* , c.name as categoryName from dish d left outer join category c on d.category_id = c.id
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>where</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-          and d.name like concat('%',#{name},'%')
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>categoryId != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-          and d.category_id = #{categoryId}
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>status != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
-          and d.status = #{status}
-      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>where</span><span class="token punctuation">&gt;</span></span>
-  order by d.create_time desc
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>这里的SQL设计可以先去测试下，感觉需要了解下，并没有系统仔细学过SQL语句</p>
-<h3>4. 删除菜品</h3>
-<p>在菜品列表页面，每个菜品后面对应的操作分别为<strong>修改</strong>、<strong>删除</strong>、<strong>停售</strong>，可通过删除功能完成对菜品及相关的数据进行删除。</p>
-<h4>产品原型</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p><strong>业务规则：</strong></p>
-<ul>
-<li>可以一次删除一个菜品，也可以批量删除菜品</li>
-<li>起售中的菜品不能删除</li>
-<li>被套餐关联的菜品不能删除</li>
-<li>删除菜品后，关联的口味数据也需要删除掉</li>
-</ul>
-<h4>接口设计 <code>DELETE</code></h4>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>数据库设计</h4>
-<ol>
-<li>删除的菜品需要看是否被套餐关联 (setmeal_dish)</li>
-<li>菜品删除对应的口味也要删除 (dish_flavor)</li>
-</ol>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>代码开发</h4>
-<h5>1. Controller层</h5>
-<p><strong>根据删除菜品的接口定义在DishController中创建方法：</strong></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 菜品批量删除
- *
- * <span class="token keyword">@param</span> <span class="token parameter">ids</span>
- * <span class="token keyword">@return</span>
- */</span>
-<span class="token annotation punctuation">@DeleteMapping</span>
-<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"菜品批量删除"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">delete</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestParam</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> ids<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"菜品批量删除：{}"</span><span class="token punctuation">,</span> ids<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    dishService<span class="token punctuation">.</span><span class="token function">deleteBatch</span><span class="token punctuation">(</span>ids<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//后绪步骤实现</span>
-    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>2. <code>Service</code>层接口</h5>
-<p><strong>在DishService接口中声明deleteBatch方法：</strong></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 菜品批量删除
- *
- * <span class="token keyword">@param</span> <span class="token parameter">ids</span>
- */</span>
-<span class="token keyword">void</span> <span class="token function">deleteBatch</span><span class="token punctuation">(</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> ids<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h5>2. <code>Service</code>层实现类</h5>
-<p><strong>在DishServiceImpl中实现deleteBatch方法：</strong></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Autowired</span>
-<span class="token keyword">private</span> <span class="token class-name">SetmealDishMapper</span> setMealDishMapper<span class="token punctuation">;</span>
-<span class="token doc-comment comment">/**
- * 菜品删除
- * <span class="token keyword">@param</span> <span class="token parameter">ids</span>
- */</span>
-<span class="token annotation punctuation">@Override</span>
-<span class="token annotation punctuation">@Transactional</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">deleteBatch</span><span class="token punctuation">(</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> ids<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">//判断当前菜品是否能够删除</span></code></pre></div>]]></content:encoded>
     </item>
   </channel>
 </rss>

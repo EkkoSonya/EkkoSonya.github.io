@@ -6,11 +6,912 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Sat, 22 Nov 2025 04:06:50 GMT</pubDate>
-    <lastBuildDate>Sat, 22 Nov 2025 04:06:50 GMT</lastBuildDate>
+    <pubDate>Sun, 23 Nov 2025 08:47:20 GMT</pubDate>
+    <lastBuildDate>Sun, 23 Nov 2025 08:47:20 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Javassm - item1-18 (营业额|用户|订单统计1)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article18.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article18.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-18 (营业额|用户|订单统计1)</source>
+      <description>内容 Apache ECharts 营业额统计 用户统计 订单统计 销量排名Top10 功能实现：数据统计 Apache ECharts Apache ECharts 是一款基于 Javascript 的数据可视化图表库，提供直观，生动，可交互，可个性化定制的数据可视化图表 官网地址：https://echarts.apache.org/zh/inde...</description>
+      <category>code</category>
+      <pubDate>Sat, 22 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>Apache ECharts</li>
+<li>营业额统计</li>
+<li>用户统计</li>
+<li>订单统计</li>
+<li>销量排名Top10</li>
+</ul>
+<p>功能实现：<strong>数据统计</strong></p>
+<h2>Apache ECharts</h2>
+<p>Apache ECharts 是一款基于 Javascript 的数据可视化图表库，提供直观，生动，可交互，可个性化定制的数据可视化图表</p>
+<p>官网地址：<a href="https://echarts.apache.org/zh/index.html" target="_blank" rel="noopener noreferrer">https://echarts.apache.org/zh/index.html</a></p>
+<h3>入门案例</h3>
+<p>Apache Echarts官方提供的快速入门：<a href="https://echarts.apache.org/handbook/zh/get-started/" target="_blank" rel="noopener noreferrer">https://echarts.apache.org/handbook/zh/get-started/</a></p>
+<h4>实现步骤</h4>
+<p>1). 引入echarts.js 文件(当天资料已提供)</p>
+<p>2). 为 ECharts 准备一个设置宽高的 DOM</p>
+<p>3). 初始化echarts实例</p>
+<p>4). 指定图表的配置项和数据</p>
+<p>5). 使用指定的配置项和数据显示图表</p>
+<div class="language-html" data-ext="html" data-title="html"><pre class="language-html"><code><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">charset</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>utf-8<span class="token punctuation">"</span></span> <span class="token punctuation">/&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>title</span><span class="token punctuation">&gt;</span></span>ECharts<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>title</span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment">&lt;!-- 引入刚刚下载的 ECharts 文件 --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>echarts.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">&gt;</span></span>
+    <span class="token comment">&lt;!-- 为 ECharts 准备一个定义了宽高的 DOM --&gt;</span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>main<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">width</span><span class="token punctuation">:</span> 600px<span class="token punctuation">;</span><span class="token property">height</span><span class="token punctuation">:</span>400px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text/javascript<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+      <span class="token comment">// 基于准备好的dom，初始化echarts实例</span>
+      <span class="token keyword">var</span> myChart <span class="token operator">=</span> echarts<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span>document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'main'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">// 指定图表的配置项和数据</span>
+      <span class="token keyword">var</span> option <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">title</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token literal-property property">text</span><span class="token operator">:</span> <span class="token string">'ECharts 入门示例'</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">tooltip</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">legend</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'销量'</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">xAxis</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'衬衫'</span><span class="token punctuation">,</span> <span class="token string">'羊毛衫'</span><span class="token punctuation">,</span> <span class="token string">'雪纺衫'</span><span class="token punctuation">,</span> <span class="token string">'裤子'</span><span class="token punctuation">,</span> <span class="token string">'高跟鞋'</span><span class="token punctuation">,</span> <span class="token string">'袜子'</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">yAxis</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token literal-property property">series</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+          <span class="token punctuation">{</span>
+            <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'销量'</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">'bar'</span><span class="token punctuation">,</span>
+            <span class="token literal-property property">data</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">36</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">]</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">]</span>
+      <span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+      <span class="token comment">// 使用刚指定的配置项和数据显示图表。</span>
+      myChart<span class="token punctuation">.</span><span class="token function">setOption</span><span class="token punctuation">(</span>option<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    </span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h4>总结</h4>
+<p>使用Echarts，重点在于研究当前图表所需的数据格式。通常是需要后端提供符合格式要求的动态数据，然后响应给前端来展示图表。</p>
+<h2>营业额统计</h2>
+<h3>分析</h3>
+<p>营业额统计是基于折现图来展现，并且按照天来展示的。</p>
+<p>实际上，就是某一个时间范围之内的每一天的营业额。同时，不管光标放在哪个点上，那么它就会把具体的数值展示出来。并且还需要注意日期并不是固定写死的，是由上边时间选择器来决定。</p>
+<p>比如选择是近7天、或者是近30日，或者是本周，就会把相应这个时间段之内的每一天日期通过横坐标展示</p>
+<h4>业务规则</h4>
+<ul>
+<li>营业额指订单状态为已完成的订单金额合计</li>
+<li>基于可视化报表的折线图展示营业额数据，X轴为日期，Y轴为营业额</li>
+<li>根据时间选择区间，展示每天的营业额数据</li>
+</ul>
+<h4>接口分析</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>注意</strong>：具体返回数据一般由前端来决定，前端展示图表，具体折现图对应数据是什么格式，是有固定的要求的。
+所以说，后端需要去适应前端，它需要什么格式的数据，我们就给它返回什么格式的数据</p>
+<h3>代码开发</h3>
+<h4>VO 设计 <code>UserReportVO</code></h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token annotation punctuation">@Builder</span>
+<span class="token annotation punctuation">@NoArgsConstructor</span>
+<span class="token annotation punctuation">@AllArgsConstructor</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TurnoverReportVO</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">//日期，以逗号分隔，例如：2022-10-01,2022-10-02,2022-10-03</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> dateList<span class="token punctuation">;</span>
+
+    <span class="token comment">//营业额，以逗号分隔，例如：406.0,1520.0,75.0</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> turnoverList<span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Controller 层 <code>ReportController/turnoverStatistics</code></h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 报表
+ */</span>
+<span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/admin/report"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token annotation punctuation">@Api</span><span class="token punctuation">(</span>tags <span class="token operator">=</span> <span class="token string">"统计报表相关接口"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReportController</span> <span class="token punctuation">{</span>
+
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">ReportService</span> reportService<span class="token punctuation">;</span>
+
+    <span class="token doc-comment comment">/**
+     * 营业额数据统计
+     *
+     * <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+     * <span class="token keyword">@param</span> <span class="token parameter">end</span>
+     * <span class="token keyword">@return</span>
+     */</span>
+    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/turnoverStatistics"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"营业额数据统计"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">TurnoverReportVO</span><span class="token punctuation">&gt;</span></span> <span class="token function">turnoverStatistics</span><span class="token punctuation">(</span>
+            <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span>
+                    <span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span>
+            <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span>
+                    <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>reportService<span class="token punctuation">.</span><span class="token function">getTurnover</span><span class="token punctuation">(</span>begin<span class="token punctuation">,</span> end<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Service 层 <code>ReportService</code></h4>
+<h5>接口</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">ReportService</span> <span class="token punctuation">{</span>
+
+    <span class="token doc-comment comment">/**
+     * 根据时间区间统计营业额
+     * <span class="token keyword">@param</span> <span class="token parameter">beginTime</span>
+     * <span class="token keyword">@param</span> <span class="token parameter">endTime</span>
+     * <span class="token keyword">@return</span>
+     */</span>
+    <span class="token class-name">TurnoverReportVO</span> <span class="token function">getTurnover</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> beginTime<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> endTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>实现类 <code>ReportServiceImpl</code></h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>service<span class="token punctuation">.</span>impl</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>entity<span class="token punctuation">.</span></span><span class="token class-name">Orders</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>mapper<span class="token punctuation">.</span></span><span class="token class-name">OrderMapper</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>service<span class="token punctuation">.</span></span><span class="token class-name">ReportService</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>vo<span class="token punctuation">.</span></span><span class="token class-name">TurnoverReportVO</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>commons<span class="token punctuation">.</span>lang3<span class="token punctuation">.</span></span><span class="token class-name">StringUtils</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>beans<span class="token punctuation">.</span>factory<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Autowired</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>stereotype<span class="token punctuation">.</span></span><span class="token class-name">Service</span></span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>time<span class="token punctuation">.</span></span><span class="token class-name">LocalDate</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>time<span class="token punctuation">.</span></span><span class="token class-name">LocalDateTime</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>time<span class="token punctuation">.</span></span><span class="token class-name">LocalTime</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">ArrayList</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">HashMap</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">List</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Map</span></span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReportServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">ReportService</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> <span class="token class-name">OrderMapper</span> orderMapper<span class="token punctuation">;</span>
+
+    <span class="token doc-comment comment">/**
+     * 根据时间区间统计营业额
+     *
+     * <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+     * <span class="token keyword">@param</span> <span class="token parameter">end</span>
+     * <span class="token keyword">@return</span>
+     */</span>
+    <span class="token keyword">public</span> <span class="token class-name">TurnoverReportVO</span> <span class="token function">getTurnover</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">LocalDate</span><span class="token punctuation">&gt;</span></span> dateList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dateList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>begin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>begin<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>end<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            begin <span class="token operator">=</span> begin<span class="token punctuation">.</span><span class="token function">plusDays</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//日期计算，获得指定日期后1天的日期</span>
+            dateList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>begin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Double</span><span class="token punctuation">&gt;</span></span> turnoverList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">LocalDate</span> date <span class="token operator">:</span> dateList<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">LocalDateTime</span> beginTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MIN</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">LocalDateTime</span> endTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MAX</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"status"</span><span class="token punctuation">,</span> <span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">COMPLETED</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"begin"</span><span class="token punctuation">,</span> beginTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"end"</span><span class="token punctuation">,</span> endTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">Double</span> turnover <span class="token operator">=</span> orderMapper<span class="token punctuation">.</span><span class="token function">sumByMap</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            turnover <span class="token operator">=</span> turnover <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">?</span> <span class="token number">0.0</span> <span class="token operator">:</span> turnover<span class="token punctuation">;</span>
+            turnoverList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>turnover<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">//数据封装</span>
+        <span class="token keyword">return</span> <span class="token class-name">TurnoverReportVO</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">dateList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>dateList<span class="token punctuation">,</span> <span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">turnoverList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>turnoverList<span class="token punctuation">,</span> <span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Mapper 层</h4>
+<p><strong>在OrderMapper接口声明sumByMap方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据动态条件统计营业额
+ * <span class="token keyword">@param</span> <span class="token parameter">map</span>
+ */</span>
+<span class="token class-name">Double</span> <span class="token function">sumByMap</span><span class="token punctuation">(</span><span class="token class-name">Map</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>在OrderMapper.xml文件中编写动态SQL</strong></p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>sumByMap<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>java.lang.Double<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        select sum(amount) from orders
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>where</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>status != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                and status = #{status}
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>begin != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                and order_time <span class="token entity named-entity" title=">">&amp;gt;</span>= #{begin}
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>end != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+                and order_time <span class="token entity named-entity" title="<">&amp;lt;</span>= #{end}
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>where</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h2>用户统计</h2>
+<p>所谓用户统计，实际上统计的是用户的数量。</p>
+<p>通过折线图来展示，上面这根蓝色线代表的是用户总量，下边这根绿色线代表的是新增用户数量，是具体到每一天。</p>
+<p>所以说用户统计主要统计<strong>两个数据</strong>，一个是<strong>总的用户数量</strong>，另外一个是<strong>新增用户数量</strong></p>
+<h3>分析</h3>
+<p><strong>业务规则</strong></p>
+<ul>
+<li>基于可视化报表的折线图展示用户数据，X轴为日期，Y轴为用户数</li>
+<li>根据时间选择区间，展示每天的用户总量和新增用户量数据</li>
+</ul>
+<h4>接口设计</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>代码开发</h3>
+<h4>VO设计</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token annotation punctuation">@Builder</span>
+<span class="token annotation punctuation">@NoArgsConstructor</span>
+<span class="token annotation punctuation">@AllArgsConstructor</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserReportVO</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">//日期，以逗号分隔，例如：2022-10-01,2022-10-02,2022-10-03</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> dateList<span class="token punctuation">;</span>
+
+    <span class="token comment">//用户总量，以逗号分隔，例如：200,210,220</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> totalUserList<span class="token punctuation">;</span>
+
+    <span class="token comment">//新增用户，以逗号分隔，例如：20,21,10</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> newUserList<span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Controller层</h4>
+<p>根据接口定义，在ReportController中创建userStatistics方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 用户数据统计
+ * <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">end</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/userStatistics"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"用户数据统计"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">UserReportVO</span><span class="token punctuation">&gt;</span></span> <span class="token function">userStatistics</span><span class="token punctuation">(</span>
+        <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span> <span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>reportService<span class="token punctuation">.</span><span class="token function">getUserStatistics</span><span class="token punctuation">(</span>begin<span class="token punctuation">,</span>end<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Service层</h4>
+<h5>接口</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据时间区间统计用户数量
+ * <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">end</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token class-name">UserReportVO</span> <span class="token function">getUserStatistics</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>实现类</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">UserReportVO</span> <span class="token function">getUserStatistics</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">LocalDate</span><span class="token punctuation">&gt;</span></span> dateList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dateList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>begin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>begin<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>end<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        begin <span class="token operator">=</span> begin<span class="token punctuation">.</span><span class="token function">plusDays</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dateList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>begin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> newUserList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//新增用户数</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> totalUserList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//总用户数</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">LocalDate</span> date <span class="token operator">:</span> dateList<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">LocalDateTime</span> beginTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MIN</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">LocalDateTime</span> endTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MAX</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//新增用户数量 select count(id) from user where create_time &gt; ? and create_time &lt; ?</span>
+        <span class="token class-name">Integer</span> newUser <span class="token operator">=</span> <span class="token function">getUserCount</span><span class="token punctuation">(</span>beginTime<span class="token punctuation">,</span> endTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//总用户数量 select count(id) from user where  create_time &lt; ?</span>
+        <span class="token class-name">Integer</span> totalUser <span class="token operator">=</span> <span class="token function">getUserCount</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">,</span> endTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        newUserList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>newUser<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        totalUserList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>totalUser<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token class-name">UserReportVO</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">dateList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>dateList<span class="token punctuation">,</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">newUserList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>newUserList<span class="token punctuation">,</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">totalUserList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>totalUserList<span class="token punctuation">,</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token doc-comment comment">/**
+ * 根据时间区间统计用户数量
+ * <span class="token keyword">@param</span> <span class="token parameter">beginTime</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">endTime</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token keyword">private</span> <span class="token class-name">Integer</span> <span class="token function">getUserCount</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span> beginTime<span class="token punctuation">,</span> <span class="token class-name">LocalDateTime</span> endTime<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Map</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"begin"</span><span class="token punctuation">,</span>beginTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"end"</span><span class="token punctuation">,</span> endTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> userMapper<span class="token punctuation">.</span><span class="token function">countByMap</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Mapper层</h4>
+<p><strong>在UserMapper接口中声明countByMap方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据动态条件统计用户数量
+ * <span class="token keyword">@param</span> <span class="token parameter">map</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token class-name">Integer</span> <span class="token function">countByMap</span><span class="token punctuation">(</span><span class="token class-name">Map</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>在UserMapper.xml文件中编写动态SQL</strong></p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>countByMap<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>java.lang.Integer<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    select count(id) from user
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>where</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>begin != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+            and create_time <span class="token entity named-entity" title=">">&amp;gt;</span>= #{begin}
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>end != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+            and create_time <span class="token entity named-entity" title="<">&amp;lt;</span>= #{end}
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>where</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-19 (营业额|用户|订单统计2)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article19.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article19.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-19 (营业额|用户|订单统计2)</source>
+      <description>内容 Apache ECharts 营业额统计 用户统计 订单统计 销量排名Top10 功能实现：数据统计 订单统计 订单统计通过一个折现图来展现，折线图上有两根线，这根蓝色的线代表的是订单总数，而下边这根绿色的线代表的是有效订单数，指的就是状态是已完成的订单就属于有效订单，分别反映的是每一天的数据。 alt textalt text 上面还有3个数字...</description>
+      <category>code</category>
+      <pubDate>Sun, 23 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>Apache ECharts</li>
+<li>营业额统计</li>
+<li>用户统计</li>
+<li>订单统计</li>
+<li>销量排名Top10</li>
+</ul>
+<p>功能实现：<strong>数据统计</strong></p>
+<h2>订单统计</h2>
+<p>订单统计通过一个折现图来展现，折线图上有两根线，这根蓝色的线代表的是订单总数，而下边这根绿色的线代表的是有效订单数，指的就是状态是已完成的订单就属于有效订单，分别反映的是每一天的数据。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>上面还有3个数字，分别是订单总数、有效订单、订单完成率，它指的是整个时间区间之内总的数据。</p>
+<h3>分析</h3>
+<p><strong>业务规则</strong></p>
+<ul>
+<li>有效订单指状态为 “已完成” 的订单</li>
+<li>基于可视化报表的折线图展示订单数据，X轴为日期，Y轴为订单数量</li>
+<li>根据时间选择区间，展示每天的订单总数和有效订单数</li>
+<li>展示所选时间区间内的有效订单数、总订单数、订单完成率，订单完成率 = 有效订单数 / 总订单数 * 100%</li>
+</ul>
+<h4>接口设计</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>代码开发</h3>
+<h4>VO设计</h4>
+<p>在sky-pojo模块，OrderReportVO.java已定义</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token annotation punctuation">@Builder</span>
+<span class="token annotation punctuation">@NoArgsConstructor</span>
+<span class="token annotation punctuation">@AllArgsConstructor</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OrderReportVO</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">//日期，以逗号分隔，例如：2022-10-01,2022-10-02,2022-10-03</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> dateList<span class="token punctuation">;</span>
+
+    <span class="token comment">//每日订单数，以逗号分隔，例如：260,210,215</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> orderCountList<span class="token punctuation">;</span>
+
+    <span class="token comment">//每日有效订单数，以逗号分隔，例如：20,21,10</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> validOrderCountList<span class="token punctuation">;</span>
+
+    <span class="token comment">//订单总数</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> totalOrderCount<span class="token punctuation">;</span>
+
+    <span class="token comment">//有效订单数</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> validOrderCount<span class="token punctuation">;</span>
+
+    <span class="token comment">//订单完成率</span>
+    <span class="token keyword">private</span> <span class="token class-name">Double</span> orderCompletionRate<span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Controller层</h4>
+<p><strong>在ReportController中根据订单统计接口创建orderStatistics方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 订单数据统计
+ * <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">end</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/ordersStatistics"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"用户数据统计"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">OrderReportVO</span><span class="token punctuation">&gt;</span></span> <span class="token function">orderStatistics</span><span class="token punctuation">(</span>
+        <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span>
+                <span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span>
+                <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">{</span>
+
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>reportService<span class="token punctuation">.</span><span class="token function">getOrderStatistics</span><span class="token punctuation">(</span>begin<span class="token punctuation">,</span>end<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Service层</h4>
+<h5>接口</h5>
+<p><strong>在ReportService接口中声明getOrderStatistics方法：</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+* 根据时间区间统计订单数量
+* <span class="token keyword">@param</span> <span class="token parameter">begin</span> 
+* <span class="token keyword">@param</span> <span class="token parameter">end</span>
+* <span class="token keyword">@return</span> 
+*/</span>
+<span class="token class-name">OrderReportVO</span> <span class="token function">getOrderStatistics</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>实现类</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 根据时间区间统计订单数量
+ * <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">end</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">OrderReportVO</span> <span class="token function">getOrderStatistics</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">LocalDate</span><span class="token punctuation">&gt;</span></span> dateList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    dateList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>begin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>begin<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>end<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        begin <span class="token operator">=</span> begin<span class="token punctuation">.</span><span class="token function">plusDays</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        dateList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>begin<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">//每天订单总数集合</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> orderCountList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//每天有效订单数集合</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> validOrderCountList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">LocalDate</span> date <span class="token operator">:</span> dateList<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token class-name">LocalDateTime</span> beginTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MIN</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">LocalDateTime</span> endTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MAX</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//查询每天的总订单数 select count(id) from orders where order_time &gt; ? and order_time &lt; ?</span>
+        <span class="token class-name">Integer</span> orderCount <span class="token operator">=</span> <span class="token function">getOrderCount</span><span class="token punctuation">(</span>beginTime<span class="token punctuation">,</span> endTime<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//查询每天的有效订单数 select count(id) from orders where order_time &gt; ? and order_time &lt; ? and status = ?</span>
+        <span class="token class-name">Integer</span> validOrderCount <span class="token operator">=</span> <span class="token function">getOrderCount</span><span class="token punctuation">(</span>beginTime<span class="token punctuation">,</span> endTime<span class="token punctuation">,</span> <span class="token class-name">Orders</span><span class="token punctuation">.</span><span class="token constant">COMPLETED</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        orderCountList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>orderCount<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        validOrderCountList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>validOrderCount<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">//时间区间内的总订单数</span>
+    <span class="token class-name">Integer</span> totalOrderCount <span class="token operator">=</span> orderCountList<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token operator">::</span><span class="token function">sum</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//时间区间内的总有效订单数</span>
+    <span class="token class-name">Integer</span> validOrderCount <span class="token operator">=</span> validOrderCountList<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token class-name">Integer</span><span class="token operator">::</span><span class="token function">sum</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//订单完成率</span>
+    <span class="token class-name">Double</span> orderCompletionRate <span class="token operator">=</span> <span class="token number">0.0</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>totalOrderCount <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        orderCompletionRate <span class="token operator">=</span> validOrderCount<span class="token punctuation">.</span><span class="token function">doubleValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> totalOrderCount<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token class-name">OrderReportVO</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">dateList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>dateList<span class="token punctuation">,</span> <span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">orderCountList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>orderCountList<span class="token punctuation">,</span> <span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">validOrderCountList</span><span class="token punctuation">(</span><span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>validOrderCountList<span class="token punctuation">,</span> <span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">totalOrderCount</span><span class="token punctuation">(</span>totalOrderCount<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">validOrderCount</span><span class="token punctuation">(</span>validOrderCount<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">orderCompletionRate</span><span class="token punctuation">(</span>orderCompletionRate<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+
+<span class="token doc-comment comment">/**
+ * 根据时间区间统计指定状态的订单数量
+ * <span class="token keyword">@param</span> <span class="token parameter">beginTime</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">endTime</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">status</span>
+ * <span class="token keyword">@return</span>
+ */</span>
+<span class="token keyword">private</span> <span class="token class-name">Integer</span> <span class="token function">getOrderCount</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span> beginTime<span class="token punctuation">,</span> <span class="token class-name">LocalDateTime</span> endTime<span class="token punctuation">,</span> <span class="token class-name">Integer</span> status<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Map</span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"status"</span><span class="token punctuation">,</span> status<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"begin"</span><span class="token punctuation">,</span>beginTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"end"</span><span class="token punctuation">,</span> endTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> orderMapper<span class="token punctuation">.</span><span class="token function">countByMap</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Mapper层</h4>
+<p><strong>在OrderMapper接口中声明countByMap方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+*根据动态条件统计订单数量
+* <span class="token keyword">@param</span> <span class="token parameter">map</span>
+*/</span>
+<span class="token class-name">Integer</span> <span class="token function">countByMap</span><span class="token punctuation">(</span><span class="token class-name">Map</span> map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>在OrderMapper.xml文件中编写动态SQL</strong></p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>countByMap<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>java.lang.Integer<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+        select count(id) from orders
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>where</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>status != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          and status = #{status}
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>begin != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          and order_time <span class="token entity named-entity" title=">">&amp;gt;</span>= #{begin}
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>end != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          and order_time <span class="token entity named-entity" title="<">&amp;lt;</span>= #{end}
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>where</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h2>销量排名统计</h2>
+<p>所谓销量排名，销量指的是商品销售的数量。项目当中的商品主要包含两类：一个是<strong>套餐</strong>，一个是<strong>菜品</strong>，所以销量排名其实指的就是菜品和套餐销售的数量排名。</p>
+<p>通过柱形图来展示销量排名，这些销量是按照降序来排列，并且只需要统计销量排名前十的商品</p>
+<h3>分析</h3>
+<p><strong>业务规则</strong></p>
+<ul>
+<li>根据时间选择区间，展示销量前10的商品（包括菜品和套餐）</li>
+<li>基于可视化报表的柱状图降序展示商品销量</li>
+<li>此处的销量为商品销售的份数</li>
+</ul>
+<h4>接口设计</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>代码开发</h3>
+<h4>VO设计</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token annotation punctuation">@Builder</span>
+<span class="token annotation punctuation">@NoArgsConstructor</span>
+<span class="token annotation punctuation">@AllArgsConstructor</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SalesTop10ReportVO</span> <span class="token keyword">implements</span> <span class="token class-name">Serializable</span> <span class="token punctuation">{</span>
+
+    <span class="token comment">//商品名称列表，以逗号分隔，例如：鱼香肉丝,宫保鸡丁,水煮鱼</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> nameList<span class="token punctuation">;</span>
+
+    <span class="token comment">//销量列表，以逗号分隔，例如：260,215,200</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> numberList<span class="token punctuation">;</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Controller层</h4>
+<p><strong>在ReportController中根据销量排名接口创建top10方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+* 销量排名统计
+* <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+* <span class="token keyword">@param</span> <span class="token parameter">end</span>
+* <span class="token keyword">@return</span>
+*/</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/top10"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"销量排名统计"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">SalesTop10ReportVO</span><span class="token punctuation">&gt;</span></span> <span class="token function">top10</span><span class="token punctuation">(</span>
+    <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span> <span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span>
+    <span class="token annotation punctuation">@DateTimeFormat</span><span class="token punctuation">(</span>pattern <span class="token operator">=</span> <span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span>reportService<span class="token punctuation">.</span><span class="token function">getSalesTop10</span><span class="token punctuation">(</span>begin<span class="token punctuation">,</span>end<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Service层</h4>
+<h5>接口</h5>
+<p><strong>在ReportService接口中声明getSalesTop10方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+* 查询指定时间区间内的销量排名top10 
+* <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+* <span class="token keyword">@param</span> <span class="token parameter">end</span>
+* <span class="token keyword">@return</span>
+*/</span>
+<span class="token class-name">SalesTop10ReportVO</span> <span class="token function">getSalesTop10</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>实现类</h5>
+<p><strong>在ReportServiceImpl实现类中实现getSalesTop10方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 查询指定时间区间内的销量排名top10
+ * <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+ * <span class="token keyword">@param</span> <span class="token parameter">end</span>
+ * <span class="token keyword">@return</span>
+ * */</span>
+<span class="token keyword">public</span> <span class="token class-name">SalesTop10ReportVO</span> <span class="token function">getSalesTop10</span><span class="token punctuation">(</span><span class="token class-name">LocalDate</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDate</span> end<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token class-name">LocalDateTime</span> beginTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>begin<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MIN</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">LocalDateTime</span> endTime <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>end<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MAX</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">GoodsSalesDTO</span><span class="token punctuation">&gt;</span></span> goodsSalesDTOList <span class="token operator">=</span> orderMapper<span class="token punctuation">.</span><span class="token function">getSalesTop10</span><span class="token punctuation">(</span>beginTime<span class="token punctuation">,</span> endTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token class-name">String</span> nameList <span class="token operator">=</span> <span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>goodsSalesDTOList<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token class-name">GoodsSalesDTO</span><span class="token operator">::</span><span class="token function">getName</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token class-name">Collectors</span><span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span> numberList <span class="token operator">=</span> <span class="token class-name">StringUtils</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>goodsSalesDTOList<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token class-name">GoodsSalesDTO</span><span class="token operator">::</span><span class="token function">getNumber</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token class-name">Collectors</span><span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token class-name">SalesTop10ReportVO</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">nameList</span><span class="token punctuation">(</span>nameList<span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">numberList</span><span class="token punctuation">(</span>numberList<span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Mapper层</h4>
+<p><strong>在OrderMapper接口中声明getSalesTop10方法：</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+* 查询商品销量排名
+* <span class="token keyword">@param</span> <span class="token parameter">begin</span>
+* <span class="token keyword">@param</span> <span class="token parameter">end</span>
+*/</span>
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">GoodsSalesDTO</span><span class="token punctuation">&gt;</span></span> <span class="token function">getSalesTop10</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span> begin<span class="token punctuation">,</span> <span class="token class-name">LocalDateTime</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>在OrderMapper.xml文件中编写动态SQL：</strong></p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>select</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>getSalesTop10<span class="token punctuation">"</span></span> <span class="token attr-name">resultType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>com.sky.dto.GoodsSalesDTO<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+  select od.name name,sum(od.number) number from order_detail od ,orders o
+  where od.order_id = o.id
+      and o.status = 5
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>begin != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          and order_time <span class="token entity named-entity" title=">">&amp;gt;</span>= #{begin}
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>if</span> <span class="token attr-name">test</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>end != null<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+          and order_time <span class="token entity named-entity" title="<">&amp;lt;</span>= #{end}
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>if</span><span class="token punctuation">&gt;</span></span>
+  group by name
+  order by number desc
+  limit 0, 10
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>select</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Javassm - item1-20 (工作台 + 数据导出)</title>
+      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article20.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article20.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-20 (工作台 + 数据导出)</source>
+      <description>内容 工作台 Apache POI 导出运营数据Excel报表 功能实现：工作台、数据导出 工作台 工作台是系统运营的数据看板，并提供快捷操作入口，可以有效提高商家的工作效率。 工作台展示的数据 今日数据 订单管理 菜品总览 套餐总览 订单信息 alt textalt text 名词解释 营业额：已完成订单的总金额 有效订单：已完成订单的数量 订单完成...</description>
+      <category>code</category>
+      <pubDate>Sun, 23 Nov 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>内容</h2>
+<ul>
+<li>工作台</li>
+<li>Apache POI</li>
+<li>导出运营数据Excel报表</li>
+</ul>
+<p>功能实现：<strong>工作台</strong>、<strong>数据导出</strong></p>
+<h2>工作台</h2>
+<p>工作台是系统运营的数据看板，并提供快捷操作入口，可以有效提高商家的工作效率。</p>
+<p><strong>工作台展示的数据</strong></p>
+<ul>
+<li>今日数据</li>
+<li>订单管理</li>
+<li>菜品总览</li>
+<li>套餐总览</li>
+<li>订单信息</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>名词解释</strong></p>
+<ul>
+<li>营业额：已完成订单的总金额</li>
+<li>有效订单：已完成订单的数量</li>
+<li>订单完成率：有效订单数 / 总订单数 * 100%</li>
+<li>平均客单价：营业额 / 有效订单数</li>
+<li>新增用户：新增用户的数量</li>
+</ul>
+<h3>接口设计</h3>
+<p>共包含6个接口。</p>
+<p><strong>接口设计</strong></p>
+<ul>
+<li>
+<p>今日数据接口</p>
+<figure><figcaption>alt text</figcaption></figure>
+</li>
+<li>
+<p>订单管理接口</p>
+<figure><figcaption>alt text</figcaption></figure>
+</li>
+<li>
+<p>菜品总览接口</p>
+<figure><figcaption>alt text</figcaption></figure>
+</li>
+<li>
+<p>套餐总览接口</p>
+<figure><figcaption>alt text</figcaption></figure>
+</li>
+<li>
+<p>订单搜索（已完成）</p>
+</li>
+<li>
+<p>各个状态的订单数量统计（已完成）</p>
+</li>
+</ul>
+<h2>Apache POI</h2>
+<p>Apache POI 是一个处理Miscrosoft Office各种文件格式的开源项目。简单来说就是，我们可以使用 POI 在 Java 程序中对Miscrosoft Office各种文件进行读写操作</p>
+<p>一般情况下，POI 都是用于操作 Excel 文件</p>
+<p><strong>Apache POI 的应用场景</strong></p>
+<ul>
+<li>银行网银系统导出交易明细</li>
+<li>各种业务系统导出Excel报表</li>
+<li>批量导入业务数据</li>
+</ul>
+<h3>简单示例</h3>
+<h4>1. 导入Apache POI的maven坐标</h4>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.apache.poi<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>poi<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.16<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.apache.poi<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>poi-ooxml<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>3.16<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h4>2 将数据写入Excel文件</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFCell</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFRow</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFSheet</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFWorkbook</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">File</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">FileInputStream</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">FileOutputStream</span></span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">POITest</span> <span class="token punctuation">{</span>
+
+    <span class="token doc-comment comment">/**
+     * 基于POI向Excel文件写入数据
+     * <span class="token keyword">@throws</span> <span class="token reference"><span class="token class-name">Exception</span></span>
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">write</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>
+        <span class="token comment">//在内存中创建一个Excel文件对象</span>
+        <span class="token class-name">XSSFWorkbook</span> excel <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">XSSFWorkbook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//创建Sheet页</span>
+        <span class="token class-name">XSSFSheet</span> sheet <span class="token operator">=</span> excel<span class="token punctuation">.</span><span class="token function">createSheet</span><span class="token punctuation">(</span><span class="token string">"itcast"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//在Sheet页中创建行，0表示第1行</span>
+        <span class="token class-name">XSSFRow</span> row1 <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">createRow</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//创建单元格并在单元格中设置值，单元格编号也是从0开始，1表示第2个单元格</span>
+        row1<span class="token punctuation">.</span><span class="token function">createCell</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span><span class="token string">"姓名"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row1<span class="token punctuation">.</span><span class="token function">createCell</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span><span class="token string">"城市"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">XSSFRow</span> row2 <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">createRow</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row2<span class="token punctuation">.</span><span class="token function">createCell</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span><span class="token string">"张三"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row2<span class="token punctuation">.</span><span class="token function">createCell</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span><span class="token string">"北京"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">XSSFRow</span> row3 <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">createRow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row3<span class="token punctuation">.</span><span class="token function">createCell</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span><span class="token string">"李四"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row3<span class="token punctuation">.</span><span class="token function">createCell</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span><span class="token string">"上海"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token class-name">FileOutputStream</span> out <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"D:\\itcast.xlsx"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//通过输出流将内存中的Excel文件写入到磁盘上</span>
+        excel<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//关闭资源</span>
+        out<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        out<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        excel<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token function">write</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>3. 读取Excel文件中的数据</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>sky<span class="token punctuation">.</span>test</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFCell</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFRow</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFSheet</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>poi<span class="token punctuation">.</span>xssf<span class="token punctuation">.</span>usermodel<span class="token punctuation">.</span></span><span class="token class-name">XSSFWorkbook</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">File</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">FileInputStream</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">FileOutputStream</span></span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">POITest</span> <span class="token punctuation">{</span>
+    <span class="token doc-comment comment">/**
+     * 基于POI读取Excel文件
+     * <span class="token keyword">@throws</span> <span class="token reference"><span class="token class-name">Exception</span></span>
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>
+        <span class="token class-name">FileInputStream</span> in <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"D:\\itcast.xlsx"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//通过输入流读取指定的Excel文件</span>
+        <span class="token class-name">XSSFWorkbook</span> excel <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">XSSFWorkbook</span><span class="token punctuation">(</span>in<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//获取Excel文件的第1个Sheet页</span>
+        <span class="token class-name">XSSFSheet</span> sheet <span class="token operator">=</span> excel<span class="token punctuation">.</span><span class="token function">getSheetAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//获取Sheet页中的最后一行的行号</span>
+        <span class="token keyword">int</span> lastRowNum <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">getLastRowNum</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;=</span> lastRowNum<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">//获取Sheet页中的行</span>
+            <span class="token class-name">XSSFRow</span> titleRow <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">getRow</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//获取行的第2个单元格</span>
+            <span class="token class-name">XSSFCell</span> cell1 <span class="token operator">=</span> titleRow<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//获取单元格中的文本内容</span>
+            <span class="token class-name">String</span> cellValue1 <span class="token operator">=</span> cell1<span class="token punctuation">.</span><span class="token function">getStringCellValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//获取行的第3个单元格</span>
+            <span class="token class-name">XSSFCell</span> cell2 <span class="token operator">=</span> titleRow<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//获取单元格中的文本内容</span>
+            <span class="token class-name">String</span> cellValue2 <span class="token operator">=</span> cell2<span class="token punctuation">.</span><span class="token function">getStringCellValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>cellValue1 <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span>cellValue2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">//关闭资源</span>
+        in<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        excel<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
+        <span class="token function">read</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h2>导出运营数据Excel报表</h2>
+<p>在数据统计页面，有一个数据导出的按钮，点击该按钮时，其实就会下载一个文件。</p>
+<p>这个文件实际上是一个Excel形式的文件，文件中主要包含最近30日运营相关的数据。表格的形式已经固定，主要由概览数据和明细数据两部分组成。真正导出这个报表之后，相对应的数字就会填充在表格中，就可以进行存档。</p>
+<p><strong>业务规则</strong></p>
+<ul>
+<li>导出Excel形式的报表文件</li>
+<li>导出最近30天的运营数据</li>
+</ul>
+<h3>接口分析</h3>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>注意</strong></p>
+<ul>
+<li>
+<p>当前接口没有传递参数，因为导出的是最近30天的运营数据，后端计算即可，所以不需要任何参数</p>
+</li>
+<li>
+<p>当前接口没有返回数据，因为报表导出功能本质上是文件下载，服务端会通过输出流将Excel文件下载到客户端浏览器</p>
+</li>
+</ul>
+<h3>代码开发</h3>
+<h4>实现步骤</h4>
+<p>1). 设计Excel模板文件</p>
+<p>2). 查询近30天的运营数据</p>
+<p>3). 将查询到的运营数据写入模板文件</p>
+<p>4). 通过输出流将Excel文件下载到客户端浏览器</p>
+<h4>Controller层</h4>
+<p><strong>根据接口定义，在ReportController中创建export方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 导出运营数据报表
+ * <span class="token keyword">@param</span> <span class="token parameter">response</span>
+ */</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/export"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@ApiOperation</span><span class="token punctuation">(</span><span class="token string">"导出运营数据报表"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">export</span><span class="token punctuation">(</span><span class="token class-name">HttpServletResponse</span> response<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    reportService<span class="token punctuation">.</span><span class="token function">exportBusinessData</span><span class="token punctuation">(</span>response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>Service层</h4>
+<h5>接口</h5>
+<p><strong>在ReportService接口中声明导出运营数据报表的方法</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 导出近30天的运营数据报表
+ * <span class="token keyword">@param</span> <span class="token parameter">response</span>
+ **/</span>
+<span class="token keyword">void</span> <span class="token function">exportBusinessData</span><span class="token punctuation">(</span><span class="token class-name">HttpServletResponse</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>实现类</h5>
+<p><strong>在ReportServiceImpl实现类中实现导出运营数据报表的方法</strong></p>
+<p>提前将资料中的<strong>运营数据报表模板.xlsx</strong>拷贝到项目的<code>resources/template</code>目录中</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**导出近30天的运营数据报表
+ * <span class="token keyword">@param</span> <span class="token parameter">response</span>
+ **/</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">exportBusinessData</span><span class="token punctuation">(</span><span class="token class-name">HttpServletResponse</span> response<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">LocalDate</span> begin <span class="token operator">=</span> <span class="token class-name">LocalDate</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">minusDays</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">LocalDate</span> end <span class="token operator">=</span> <span class="token class-name">LocalDate</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">minusDays</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//查询概览运营数据，提供给Excel模板文件</span>
+    <span class="token class-name">BusinessDataVO</span> businessData <span class="token operator">=</span> workspaceService<span class="token punctuation">.</span><span class="token function">getBusinessData</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>begin<span class="token punctuation">,</span><span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MIN</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>end<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MAX</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">InputStream</span> inputStream <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getResourceAsStream</span><span class="token punctuation">(</span><span class="token string">"template/运营数据报表模板.xlsx"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token comment">//基于提供好的模板文件创建一个新的Excel表格对象</span>
+        <span class="token class-name">XSSFWorkbook</span> excel <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">XSSFWorkbook</span><span class="token punctuation">(</span>inputStream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//获得Excel文件中的一个Sheet页</span>
+        <span class="token class-name">XSSFSheet</span> sheet <span class="token operator">=</span> excel<span class="token punctuation">.</span><span class="token function">getSheet</span><span class="token punctuation">(</span><span class="token string">"Sheet1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        sheet<span class="token punctuation">.</span><span class="token function">getRow</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>begin <span class="token operator">+</span> <span class="token string">"至"</span> <span class="token operator">+</span> end<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//获得第4行</span>
+        <span class="token class-name">XSSFRow</span> row <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">getRow</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//获取单元格</span>
+        row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getTurnover</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getOrderCompletionRate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getNewUsers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">getRow</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getValidOrderCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getUnitPrice</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">30</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token class-name">LocalDate</span> date <span class="token operator">=</span> begin<span class="token punctuation">.</span><span class="token function">plusDays</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">//准备明细数据</span>
+            businessData <span class="token operator">=</span> workspaceService<span class="token punctuation">.</span><span class="token function">getBusinessData</span><span class="token punctuation">(</span><span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span><span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MIN</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>date<span class="token punctuation">,</span> <span class="token class-name">LocalTime</span><span class="token punctuation">.</span><span class="token constant">MAX</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            row <span class="token operator">=</span> sheet<span class="token punctuation">.</span><span class="token function">getRow</span><span class="token punctuation">(</span><span class="token number">7</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>date<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getTurnover</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getValidOrderCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getOrderCompletionRate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getUnitPrice</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            row<span class="token punctuation">.</span><span class="token function">getCell</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setCellValue</span><span class="token punctuation">(</span>businessData<span class="token punctuation">.</span><span class="token function">getNewUsers</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">//通过输出流将文件下载到客户端浏览器中</span>
+        <span class="token class-name">ServletOutputStream</span> out <span class="token operator">=</span> response<span class="token punctuation">.</span><span class="token function">getOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        excel<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">//关闭资源</span>
+        out<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        out<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        excel<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
+    </item>
     <item>
       <title>Javassm - item1-14 (用户下单 + 订单支付 1)</title>
       <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article14.html</link>
@@ -1088,415 +1989,6 @@ WebSocket 是长连接，受网络限制比较大，需要处理好重连</p>
     <span class="token comment">//关闭资源</span>
     response<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
     httpClient<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-11 (微信登录 + 商品浏览 2)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article11.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article11.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-11 (微信登录 + 商品浏览 2)</source>
-      <description>微信小程序开发 小程序是一种新的开放能力，开发者可以快速地开发一个小程序。可以在微信内被便捷地获取和传播，同时具有出色的使用体验 入门案例 实际上，小程序的开发本质上属于前端开发，主要使用JavaScript开发，咱们现在的定位主要还是在后端，所以，对于小程序开发简单了解即可 在进行小程序开发时，需要先去注册一个小程序，在注册的时候，它实际上又分成了不...</description>
-      <category>code</category>
-      <pubDate>Fri, 14 Nov 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>微信小程序开发</h2>
-<p>小程序是一种新的开放能力，开发者可以快速地开发一个小程序。可以在微信内被便捷地获取和传播，同时具有出色的使用体验</p>
-<h3>入门案例</h3>
-<p>实际上，小程序的开发本质上属于前端开发，主要使用JavaScript开发，咱们现在的定位主要还是在后端，所以，对于小程序开发简单了解即可</p>
-<p>在进行小程序开发时，需要先去注册一个小程序，在注册的时候，它实际上又分成了不同的注册的主体。我们可以以个人的身份来注册一个小程序，当然，也可以以企业政府、媒体或者其他组织的方式来注册小程序。那么，不同的主体注册小程序，最终开放的权限也是不一样的。比如以个人身份来注册小程序，是无法开通支付权限的。若要提供支付功能，必须是企业、政府或者其它组织等。所以，不同的主体注册小程序后，可开发的功能是不一样的。</p>
-<p>小程序包含一个描述整体程序的 app 和多个描述各自页面的 page。一个小程序主体部分由三个文件组成，必须放在项目的根目录</p>
-<p><strong>app.js</strong>：必须存在，主要存放小程序的逻辑代码</p>
-<p><strong>app.json</strong>：必须存在，小程序配置文件，主要存放小程序的公共配置</p>
-<p><strong>app.wxss</strong>：非必须存在，主要存放小程序公共样式表，类似于前端的CSS样式</p>
-<p>对小程序主体三个文件了解后，其实一个小程序又有多个页面。比如说，有商品浏览页面、购物车的页面、订单支付的页面、商品的详情页面等等，存放在pages目录</p>
-<p>主要编写语法可以看文档，类似Vue</p>
-<h3>实现微信登录</h3>
-<h4>微信登录流程</h4>
-<p>微信登录：<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html" target="_blank" rel="noopener noreferrer">https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html</a></p>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>步骤分析</h5>
-<ol>
-<li>小程序端，调用<code>wx.login()</code>获取code，就是授权码。</li>
-<li>小程序端，调用<code>wx.request()</code>发送请求并携带code，请求开发者服务器(自己编写的后端服务)。</li>
-<li>开发者服务端，通过<code>HttpClient</code>向微信接口服务发送请求，并携带appId+appsecret+code三个参数。</li>
-<li>开发者服务端，接收微信接口服务返回的数据，<code>session_key</code>+<code>opendId</code>等。<code>opendId</code>是微信用户的唯一标识。</li>
-<li>开发者服务端，自定义登录态，生成令牌(token)和openid等数据返回给小程序端，方便后绪请求身份校验。</li>
-<li>小程序端，收到自定义登录态，存储storage。</li>
-<li>小程序端，后绪通过<code>wx.request()</code>发起业务请求时，携带<code>token</code>。</li>
-<li>开发者服务端，收到请求后，通过携带的<code>token</code>，解析当前登录用户的id。</li>
-<li>开发者服务端，身份校验通过后，继续相关的业务逻辑处理，最终返回业务数据。</li>
-</ol>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>需求分析</h4>
-<p>用户进入到小程序的时候，微信授权登录之后才能点餐。需要获取当前微信用户的相关信息，比如昵称、头像等，这样才能够进入到小程序进行下单操作。是基于微信登录来实现小程序的登录功能，没有采用传统账户密码登录的方式。若第一次使用小程序来点餐，就是一个新用户，需要把这个新的用户保存到数据库当中完成自动注册。</p>
-<p><strong>业务规则</strong></p>
-<ul>
-<li>基于微信登录实现小程序的登录功能</li>
-<li>如果是新用户需要自动完成注册</li>
-</ul>
-<h4>接口设计</h4>
-<p>通过微信登录的流程，如果要完成微信登录的话，最终就要获得微信用户的openid。</p>
-<p>在小程序端获取授权码后，向后端服务发送请求，并携带授权码，这样后端服务在收到授权码后，就可以去请求微信接口服务。最终，后端向小程序返回openid和token等数据</p>
-<p>基于上述的登录流程，就可以设计出该接口的<strong>请求参数</strong>和<strong>返回数据</strong></p>
-<figure><figcaption>alt text</figcaption></figure>
-<p><strong>说明</strong>：请求路径<code>/user/user/login</code>,第一个user代表用户端，第二个user代表用户模块。</p>
-<h4>表设计</h4>
-<p>当用户第一次使用小程序时，会完成自动注册，把用户信息存储到<strong>user</strong>表中</p>
-<p>| <strong>字段名</strong>  | <strong>数据类型</strong> | <strong>说明</strong>           | <strong>备注</strong> |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-7 (营业状态设置1)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article7.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article7.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-7 (营业状态设置1)</source>
-      <description>营业状态设置1 Redis介绍 Redis是一个基于内存的key-value结构数据库。Redis 是互联网技术领域使用最为广泛的存储中间件。 官网: https://redis.io 中文网: https://www.redis.net.cn/ key-value结构存储： 主要特点： 基于内存存储，读写性能高 适合存储热点数据（热点商品、资讯、新闻...</description>
-      <category>code</category>
-      <pubDate>Wed, 12 Nov 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>营业状态设置1</h2>
-<h3>Redis介绍</h3>
-<p>Redis是一个基于<strong>内存</strong>的key-value结构数据库。Redis 是互联网技术领域使用最为广泛的<strong>存储中间件</strong>。</p>
-<p><strong>官网</strong>: <a href="https://redis.io" target="_blank" rel="noopener noreferrer">https://redis.io</a>
-<strong>中文网</strong>: <a href="https://www.redis.net.cn/" target="_blank" rel="noopener noreferrer">https://www.redis.net.cn/</a></p>
-<p><strong>key-value结构存储：</strong></p>
-<p><strong>主要特点：</strong></p>
-<ul>
-<li>基于内存存储，读写性能高</li>
-<li>适合存储热点数据（热点商品、资讯、新闻）</li>
-<li>企业应用广泛</li>
-</ul>
-<p>Redis是用C语言开发的一个开源的高性能键值对(key-value)数据库，官方提供的数据是可以达到100000+的QPS（每秒内查询次数）。它存储的value类型比较丰富，也被称为结构化的NoSql数据库。</p>
-<p>NoSql（Not Only SQL），不仅仅是SQL，泛指<strong>非关系型数据库</strong>。NoSql数据库并不是要取代关系型数据库，而是关系型数据库的补充。</p>
-<p><strong>关系型数据库(RDBMS)：</strong></p>
-<ul>
-<li>Mysql</li>
-<li>Oracle</li>
-<li>DB2</li>
-<li>SQLServer</li>
-</ul>
-<p><strong>非关系型数据库(NoSql)：</strong></p>
-<ul>
-<li>Redis</li>
-<li>Mongo db</li>
-<li>MemCached</li>
-</ul>
-<h4>基本命令</h4>
-<p>启动：<code>redis-server.exe redis.conf</code></p>
-<p>启动时默认创建了 16 个数据库</p>
-<p>连接: <code>redis-cli.exe</code></p>
-<p>通过redis-cli.exe命令默认连接的是本地的redis服务，并且使用默认6379端口。也可以通过指定如下参数连接：</p>
-<ul>
-<li>-h ip地址</li>
-<li>-p 端口号</li>
-<li>-a 密码（如果需要）</li>
-</ul>
-<h3>Redis数据类型</h3>
-<h4>5种常用数据类型</h4>
-<p>Redis存储的是key-value结构的数据，其中key是字符串类型，value有5种常用的数据类型：</p>
-<ul>
-<li>字符串 string</li>
-<li>哈希 hash</li>
-<li>列表 list</li>
-<li>集合 set</li>
-<li>有序集合 sorted set / zset</li>
-</ul>
-<h4>各自特点</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<ul>
-<li>字符串(string)：普通字符串，Redis中最简单的数据类型</li>
-<li>哈希(hash)：也叫散列，类似于Java中的HashMap结构 (适合存对象)</li>
-<li>列表(list)：按照插入顺序排序，可以有重复元素，类似于Java中的LinkedList (可以左右插入，适合存储跟顺序有关系的数据)</li>
-<li>集合(set)：无序集合，没有重复元素，类似于Java中的HashSet</li>
-<li>有序集合(sorted set/zset)：集合中每个元素关联一个分数(score)，根据分数升序排序，没有重复元素 (适合各种排行榜数据)</li>
-</ul>
-<h3>Redis常用命令</h3>
-<p>在Mysql中是通过Sql语句来操作的，与数据类型无关，但在Redis中是不一样的，是根据数据类型不同，命令也不同</p>
-<h4>字符串操作命令</h4>
-<p>Redis 中字符串类型常用命令：</p>
-<ul>
-<li><code>SET key value</code>: 设置指定key的值</li>
-<li><code>GET key</code>: 获取指定key的值</li>
-<li><code>SETEX key seconds value</code>: 设置指定key的值，并将 key 的过期时间设为 seconds 秒 (短信验证码)</li>
-<li><code>SETNX key value</code>: 只有在 key 不存在时设置 key 的值 (分布式锁)</li>
-</ul>
-<p>更多命令可以参考Redis中文网：<a href="https://www.redis.net.cn" target="_blank" rel="noopener noreferrer">https://www.redis.net.cn</a></p>
-<h4>哈希操作命令 <code>H</code></h4>
-<p>Redis hash 是一个<code>string</code>类型的 field 和 value 的映射表，hash特别适合用于存储对象，常用命令：</p>
-<ul>
-<li><code>HSET key field value</code>: 将哈希表 key 中的字段 field 的值设为 value</li>
-<li><code>HGET key field</code>: 获取存储在哈希表中指定字段的值</li>
-<li><code>HDEL key field</code>: 删除存储在哈希表中的指定字段</li>
-<li><code>HKEYS key</code>: 获取哈希表中所有字段</li>
-<li><code>HVALS key</code>: 获取哈希表中所有值</li>
-</ul>
-<p>比如，存一个人的示例对象，key为对应id, 然后 field 和 value 为对应属性和值</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>列表操作命令 <code>L|R|BR</code></h4>
-<p>Redis 列表是简单的字符串列表，按照插入顺序排序，常用命令：</p>
-<ul>
-<li><code>LPUSH key value1 [value2]</code>: 将一个或多个值插入到列表头部 (这样插入顺序是 value2 value1 相反的)</li>
-<li><code>RPUSH key value1 [value2]</code>: 在列表中添加一个或多个值到列表尾部</li>
-<li><code>LRANGE key start stop</code>: 获取列表指定范围内的元素 (全部返回 <code>lrange list 0 -1</code>)</li>
-<li><code>RPOP key</code>: 移除并获取列表最后一个元素</li>
-<li><code>LLEN key</code>: 获取列表长度</li>
-<li><code>BRPOP key1 [key2 ] timeout</code>: 移出并获取列表的最后一个元素， 如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>集合操作命令 <code>S</code></h4>
-<p>Redis set 是string类型的无序集合。集合成员是唯一的，这就意味着集合中不能出现重复的数据，常用命令：</p>
-<ul>
-<li><code>SADD key member1 [member2]</code>: 向集合添加一个或多个成员</li>
-<li><code>SMEMBERS key</code>: 返回集合中的所有成员</li>
-<li><code>SCARD key</code>: 获取集合的成员数</li>
-<li><code>SINTER key1 [key2]</code>: 返回给定所有集合的交集</li>
-<li><code>SUNION key1 [key2]</code>: 返回所有给定集合的并集</li>
-<li><code>SREM key member1 [member2]</code>: 移除集合中一个或多个成员</li>
-</ul>
-<h4>有序集合操作命令 <code>Z</code></h4>
-<p>Redis有序集合是string类型元素的集合，且不允许有重复成员。每个元素都会<strong>关联一个double类型的分数</strong>。常用命令：</p>
-<p>常用命令：</p>
-<ul>
-<li><code>ZADD key score1 member1 [score2 member2]</code>: 向有序集合添加一个或多个成员</li>
-<li><code>ZRANGE key start stop [WITHSCORES]</code>: 通过索引区间返回有序集合中指定区间内的成员</li>
-<li><code>ZINCRBY key increment member</code>: 有序集合中对指定成员的分数加上增量 increment</li>
-<li><code>ZREM key member [member ...]</code>: 移除有序集合中的一个或多个成员</li>
-</ul>
-<h4>通用命令</h4>
-<p>Redis的通用命令是不分数据类型的，都可以使用的命令：</p>
-<ul>
-<li><code>KEYS pattern</code>: 查找所有符合给定模式(pattern)的 key</li>
-<li><code>EXISTS key</code>: 检查给定 key 是否存在</li>
-<li><code>TYPE key</code> : 返回 key 所储存的值的类型</li>
-<li><code>DEL key</code>:该命令用于在 key 存在是删除 key</li>
-</ul>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Javassm - item1-8 (营业状态设置2)</title>
-      <link>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article8.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/1-%E8%8B%8D%E7%A9%B9%E5%A4%96%E5%8D%96/article8.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Javassm - item1-8 (营业状态设置2)</source>
-      <description>营业状态设置2 JAVA操作Redis 我们在java程序中应该如何操作Redis呢？这就需要使用Redis的Java客户端，就如同我们使用JDBC操作MySQL数据库一样。 Redis 的 Java 客户端很多，常用的几种： Jedis Lettuce Spring Data Redis Spring 对 Redis 客户端进行了整合，提供了 Spr...</description>
-      <category>code</category>
-      <pubDate>Wed, 12 Nov 2025 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>营业状态设置2</h2>
-<h3>JAVA操作Redis</h3>
-<p>我们在java程序中应该如何操作Redis呢？这就需要使用Redis的Java客户端，就如同我们使用JDBC操作MySQL数据库一样。</p>
-<p>Redis 的 Java 客户端很多，常用的几种：</p>
-<ul>
-<li>Jedis</li>
-<li>Lettuce</li>
-<li>Spring Data Redis</li>
-</ul>
-<p>Spring 对 Redis 客户端进行了整合，提供了 Spring Data Redis，在Spring Boot项目中还提供了对应的Starter，即 spring-boot-starter-data-redis</p>
-<h3>Spring Data Redis使用方式</h3>
-<p>Spring Data Redis 是 Spring 的一部分，提供了在 Spring 应用中通过简单的配置就可以访问 Redis 服务，对 Redis 底层开发包进行了高度封装。在 Spring 项目中，可以使用Spring Data Redis来简化 Redis 操作。</p>
-<p>网址：<a href="https://spring.io/projects/spring-data-redis" target="_blank" rel="noopener noreferrer">https://spring.io/projects/spring-data-redis</a></p>
-<p>Spring Boot提供了对应的Starter，maven坐标：</p>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-data-redis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>Spring Data Redis中提供了一个高度封装的类：<strong>RedisTemplate</strong>，对相关api进行了归类封装,将同一类型操作封装为<code>operation</code>接口，具体分类如下：</p>
-<ul>
-<li>ValueOperations：string数据操作</li>
-<li>SetOperations：set类型数据操作</li>
-<li>ZSetOperations：zset类型数据操作</li>
-<li>HashOperations：hash类型的数据操作</li>
-<li>ListOperations：list类型的数据操作</li>
-</ul>
-<h4>环境搭建</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>1. 导入Spring Data Redis的maven坐标</h5>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-data-redis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><h5>2. 配置Redis数据源</h5>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">sky</span><span class="token punctuation">:</span>
-  <span class="token key atrule">redis</span><span class="token punctuation">:</span>
-    <span class="token key atrule">host</span><span class="token punctuation">:</span> localhost
-    <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">6379</span>
-    <span class="token key atrule">password</span><span class="token punctuation">:</span> <span class="token number">123456</span>
-    <span class="token key atrule">database</span><span class="token punctuation">:</span> <span class="token number">10</span>
-</code></pre></div><p>在application.yml中添加读取application-dev.yml中的相关Redis配置</p>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">spring</span><span class="token punctuation">:</span>
-  <span class="token key atrule">profiles</span><span class="token punctuation">:</span>
-    <span class="token key atrule">active</span><span class="token punctuation">:</span> dev
-  <span class="token key atrule">redis</span><span class="token punctuation">:</span>
-    <span class="token key atrule">host</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.redis.host<span class="token punctuation">}</span>
-    <span class="token key atrule">port</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.redis.port<span class="token punctuation">}</span>
-    <span class="token key atrule">password</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.redis.password<span class="token punctuation">}</span>
-    <span class="token key atrule">database</span><span class="token punctuation">:</span> $<span class="token punctuation">{</span>sky.redis.database<span class="token punctuation">}</span>
-</code></pre></div><h5>3. 编写配置类，创建RedisTemplate对象</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Configuration</span>
-<span class="token annotation punctuation">@Slf4j</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">RedisConfiguration</span> <span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">RedisTemplate</span> <span class="token function">redisTemplate</span><span class="token punctuation">(</span><span class="token class-name">RedisConnectionFactory</span> redisConnectionFactory<span class="token punctuation">)</span><span class="token punctuation">{</span>
-        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"开始创建redis模板对象..."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">RedisTemplate</span> redisTemplate <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RedisTemplate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//设置redis的连接工厂对象</span>
-        redisTemplate<span class="token punctuation">.</span><span class="token function">setConnectionFactory</span><span class="token punctuation">(</span>redisConnectionFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//设置redis key的序列化器</span>
-        redisTemplate<span class="token punctuation">.</span><span class="token function">setKeySerializer</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">StringRedisSerializer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> redisTemplate<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p><strong>解释说明：</strong></p>
-<p>当前配置类不是必须的，因为 Spring Boot 框架会自动装配 RedisTemplate 对象，但是默认的key序列化器为 <code>JdkSerializationRedisSerializer</code>，导致我们存到Redis中后的数据和原始数据有差别，故设置 <code>StringRedisSerializer</code> 序列化器</p>
-<h5>4. 通过RedisTemplate对象操作Redis</h5>
-<p>在test下新建测试类</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@SpringBootTest</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SpringDataRedisTest</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Autowired</span>
-    <span class="token keyword">private</span> <span class="token class-name">RedisTemplate</span> redisTemplate<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@Test</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testRedisTemplate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>redisTemplate<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//string数据操作</span>
-        <span class="token class-name">ValueOperations</span> valueOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//hash类型的数据操作</span>
-        <span class="token class-name">HashOperations</span> hashOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForHash</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//list类型的数据操作</span>
-        <span class="token class-name">ListOperations</span> listOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//set类型数据操作</span>
-        <span class="token class-name">SetOperations</span> setOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//zset类型数据操作</span>
-        <span class="token class-name">ZSetOperations</span> zSetOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForZSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>操作常见类型数据</h4>
-<p>主要流程：</p>
-<ol>
-<li>先获取对应的 <code>xxOperation</code> 实例通过 <code>redisTemplate.opsForxx</code></li>
-<li>再进行对应操作</li>
-</ol>
-<h5>操作字符串类型数据</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-  * 操作字符串类型的数据
-  */</span>
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token comment">// set get setex setnx</span>
-    redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">,</span><span class="token string">"小明"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">String</span> city <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>city<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span><span class="token string">"1234"</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token class-name">TimeUnit</span><span class="token punctuation">.</span><span class="token constant">MINUTES</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setIfAbsent</span><span class="token punctuation">(</span><span class="token string">"lock"</span><span class="token punctuation">,</span><span class="token string">"1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setIfAbsent</span><span class="token punctuation">(</span><span class="token string">"lock"</span><span class="token punctuation">,</span><span class="token string">"2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>操作哈希类型数据</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-* 操作哈希类型的数据
-*/</span>
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testHash</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token comment">//hset hget hdel hkeys hvals</span>
-    <span class="token class-name">HashOperations</span> hashOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForHash</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    hashOperations<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"100"</span><span class="token punctuation">,</span><span class="token string">"name"</span><span class="token punctuation">,</span><span class="token string">"tom"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    hashOperations<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"100"</span><span class="token punctuation">,</span><span class="token string">"age"</span><span class="token punctuation">,</span><span class="token string">"20"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">String</span> name <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">)</span> hashOperations<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"100"</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">Set</span> keys <span class="token operator">=</span> hashOperations<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span><span class="token string">"100"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>keys<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">List</span> values <span class="token operator">=</span> hashOperations<span class="token punctuation">.</span><span class="token function">values</span><span class="token punctuation">(</span><span class="token string">"100"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>values<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    hashOperations<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token string">"100"</span><span class="token punctuation">,</span><span class="token string">"age"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>操作列表类型数据</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-* 操作列表类型的数据
-*/</span>
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token comment">//lpush lrange rpop llen</span>
-    <span class="token class-name">ListOperations</span> listOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    listOperations<span class="token punctuation">.</span><span class="token function">leftPushAll</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">,</span><span class="token string">"a"</span><span class="token punctuation">,</span><span class="token string">"b"</span><span class="token punctuation">,</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    listOperations<span class="token punctuation">.</span><span class="token function">leftPush</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">,</span><span class="token string">"d"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">List</span> mylist <span class="token operator">=</span> listOperations<span class="token punctuation">.</span><span class="token function">range</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>mylist<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    listOperations<span class="token punctuation">.</span><span class="token function">rightPop</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">Long</span> size <span class="token operator">=</span> listOperations<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>操作集合类型数据</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-* 操作集合类型的数据
-*/</span>
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-  <span class="token comment">//sadd smembers scard sinter sunion srem</span>
-  <span class="token class-name">SetOperations</span> setOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  setOperations<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"set1"</span><span class="token punctuation">,</span><span class="token string">"a"</span><span class="token punctuation">,</span><span class="token string">"b"</span><span class="token punctuation">,</span><span class="token string">"c"</span><span class="token punctuation">,</span><span class="token string">"d"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  setOperations<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"set2"</span><span class="token punctuation">,</span><span class="token string">"a"</span><span class="token punctuation">,</span><span class="token string">"b"</span><span class="token punctuation">,</span><span class="token string">"x"</span><span class="token punctuation">,</span><span class="token string">"y"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token class-name">Set</span> members <span class="token operator">=</span> setOperations<span class="token punctuation">.</span><span class="token function">members</span><span class="token punctuation">(</span><span class="token string">"set1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>members<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token class-name">Long</span> size <span class="token operator">=</span> setOperations<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token string">"set1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token class-name">Set</span> intersect <span class="token operator">=</span> setOperations<span class="token punctuation">.</span><span class="token function">intersect</span><span class="token punctuation">(</span><span class="token string">"set1"</span><span class="token punctuation">,</span> <span class="token string">"set2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>intersect<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token class-name">Set</span> union <span class="token operator">=</span> setOperations<span class="token punctuation">.</span><span class="token function">union</span><span class="token punctuation">(</span><span class="token string">"set1"</span><span class="token punctuation">,</span> <span class="token string">"set2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>union<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  setOperations<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">"set1"</span><span class="token punctuation">,</span><span class="token string">"a"</span><span class="token punctuation">,</span><span class="token string">"b"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>操作有序集合类型数据</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-  * 操作有序集合类型的数据
-  */</span>
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testZset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-  <span class="token comment">//zadd zrange zincrby zrem</span>
-  <span class="token class-name">ZSetOperations</span> zSetOperations <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForZSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  zSetOperations<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"zset1"</span><span class="token punctuation">,</span><span class="token string">"a"</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  zSetOperations<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"zset1"</span><span class="token punctuation">,</span><span class="token string">"b"</span><span class="token punctuation">,</span><span class="token number">12</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  zSetOperations<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"zset1"</span><span class="token punctuation">,</span><span class="token string">"c"</span><span class="token punctuation">,</span><span class="token number">9</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token class-name">Set</span> zset1 <span class="token operator">=</span> zSetOperations<span class="token punctuation">.</span><span class="token function">range</span><span class="token punctuation">(</span><span class="token string">"zset1"</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>zset1<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  zSetOperations<span class="token punctuation">.</span><span class="token function">incrementScore</span><span class="token punctuation">(</span><span class="token string">"zset1"</span><span class="token punctuation">,</span><span class="token string">"c"</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  zSetOperations<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">"zset1"</span><span class="token punctuation">,</span><span class="token string">"a"</span><span class="token punctuation">,</span><span class="token string">"b"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>通用命令操作</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
-* 通用命令操作
-*/</span>
-<span class="token annotation punctuation">@Test</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testCommon</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-  <span class="token comment">//keys exists type del</span>
-  <span class="token class-name">Set</span> keys <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span><span class="token string">"*"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>keys<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token class-name">Boolean</span> name <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">hasKey</span><span class="token punctuation">(</span><span class="token string">"name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">Boolean</span> set1 <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">hasKey</span><span class="token punctuation">(</span><span class="token string">"set1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Object</span> key <span class="token operator">:</span> keys<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">DataType</span> type <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">type</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>type<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  redisTemplate<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span><span class="token string">"mylist"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
 </code></pre></div>]]></content:encoded>
     </item>

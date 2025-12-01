@@ -181,7 +181,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 #### 拦截器优化
 
-![alt text](image.png)
+![alt text](img/9.png)
 
 确实可以使用对应路径的拦截，同时刷新登录token令牌的存活时间，但是现在这个拦截器他只是拦截需要被拦截的路径，假设当前用户访问了一些不需要拦截的路径，那么这个拦截器就不会生效，所以此时令牌刷新的动作实际上就不会执行，所以这个方案他是存在问题的
 

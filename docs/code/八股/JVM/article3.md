@@ -96,7 +96,7 @@ public static void main(String[] args) {
 
 在JDK1.7之后，稍微有一些区别，在调用`intern()`方法时，当常量池中没有对应的字符串时，**不会再进行复制操作**，而是将其直接修改为**指向当前字符串堆中的的引用**：
 
-![alt text](image.png)
+![alt text](img/10.png)
 
 ```java
 public static void main(String[] args) {

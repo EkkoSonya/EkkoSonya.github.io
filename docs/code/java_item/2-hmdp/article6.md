@@ -338,7 +338,7 @@ return var5;
 
 课程中的使用方式是没有像cas一样带自旋的操作，也没有对version的版本号+1
 
-![alt text](image.png)
+![alt text](img/30.png)
 
 直接根据 stock 判断来代替 version，判断前后的 stock 是否被修改即可 (最终版本直接判断 stock > 0 更高效)
 

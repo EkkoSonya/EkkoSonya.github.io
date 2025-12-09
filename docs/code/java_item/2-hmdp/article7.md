@@ -1,5 +1,5 @@
 ---
-title: item2-7 (优惠券秒杀2)
+title: item2-7 (优惠券秒杀2 - 分布式锁)
 date: 2025-12-7
 category:
   - code
@@ -228,9 +228,9 @@ public boolean tryLock(long timeoutSec) {
     // 获取线程标示
     String threadId = ID_PREFIX + Thread.currentThread().getId();
     // 获取锁
-    stringRedisTemplate.opsForValue()
+    Boolean success = stringRedisTemplate.opsForValue()
             .setIfAbsent(KEY_PREFIX + name, threadId, timeoutSec, TimeUnit.SECONDS);
-    return false;
+    return Boolean.TRUE.equals(success);
 }
 ```
 
@@ -262,3 +262,133 @@ public void unlock() {
 那么此时线程2进来，但是线程1他会接着往后执行，当他卡顿结束后，他直接就会执行删除锁那行代码，相当于条件判断并没有起到作用，这就是删锁时的**原子性**问题，之所以有这个问题，是因为线程1的拿锁，比锁，删锁，实际上并不是原子性的，我们要防止刚才的情况发生
 
 ![alt text](img/43.png)
+
+#### Lua脚本
+
+Redis提供了Lua脚本功能，在一个脚本中编写多条Redis命令，确保多条命令执行时的原子性
+
+Lua是一种编程语言，它的基本语法可以参考网站：<https://www.runoob.com/lua/lua-tutorial.html>
+
+这里重点介绍Redis提供的调用函数，我们可以使用lua去操作redis，又能保证他的原子性，这样就可以实现`拿锁比锁删锁`是一个原子性动作了
+
+##### lua中Redis提供的调用函数
+
+```lua
+redis.call('命令名称', 'key', '其它参数', ...)
+```
+
+例如，我们要执行`set name jack`，则脚本是这样：
+
+```lua
+# 执行 set name jack
+redis.call('set', 'name', 'jack')
+```
+
+例如，我们要先执行set name Rose，再执行get name，则脚本如下：
+
+```lua
+# 先执行 set name jack
+redis.call('set', 'name', 'Rose')
+# 再执行 get name
+local name = redis.call('get', 'name')
+# 返回
+return name
+```
+
+##### Redis执行lua脚本 `EVAL`
+
+写好脚本以后，需要用Redis命令来调用脚本，调用脚本的常见命令如下
+
+```redis
+EVAL "return redis.call('set', 'name', 'jack')" 0
+```
+
+如果脚本中的key、value不想写死，可以作为参数传递
+
+key类型参数会放入`KEYS`数组，其它参数会放入`ARGV`数组(这里数组起始元素是从1开始的)
+
+在脚本中可以从KEYS和ARGV数组获取这些参数：
+
+![alt text](img/44.png)
+
+#### java调用lua脚本解决原子性问题
+
+##### 释放锁的逻辑
+
+释放锁的业务流程是这样的
+
+1. 获取锁中的线程标示
+2. 判断是否与指定的标示（当前线程标示）一致
+3. 如果一致则释放锁（删除）
+4. 如果不一致则什么都不做
+
+最终我们操作redis的拿锁比锁删锁的lua脚本就会变成这样
+
+```lua
+-- 这里的 KEYS[1] 就是锁的key，这里的ARGV[1] 就是当前线程标示
+-- 获取锁中的标示，判断是否与当前线程标示一致
+if (redis.call('GET', KEYS[1]) == ARGV[1]) then
+  -- 一致，则删除锁
+  return redis.call('DEL', KEYS[1])
+end
+-- 不一致，则直接返回
+return 0
+```
+
+##### 具体代码
+
+我们的`RedisTemplate`中，可以利用execute方法去执行lua脚本，参数对应关系就如下
+
+![alt text](img/45.png)
+
+**Java代码**
+
+```java
+private static final DefaultRedisScript<Long> UNLOCK_SCRIPT;
+static {
+    UNLOCK_SCRIPT = new DefaultRedisScript<>();
+    UNLOCK_SCRIPT.setLocation(new ClassPathResource("unlock.lua"));
+    UNLOCK_SCRIPT.setResultType(Long.class);
+}
+
+public void unlock() {
+    // 调用lua脚本
+    stringRedisTemplate.execute(
+            UNLOCK_SCRIPT,
+            Collections.singletonList(KEY_PREFIX + name),
+            ID_PREFIX + Thread.currentThread().getId());
+}
+```
+
+经过以上代码改造后，我们就能够实现 拿锁比锁删锁的原子性动作了
+
+### 总结
+
+在之前的逻辑上，已经实现了单个JVM时的 一人一单 和 阻止超卖的情况，主要逻辑也封装在了 `createVoucherOrder` 函数中
+
+但是当开了多个服务，存在多个 JVM 时，此时处理 一人一单 的逻辑就不行了, 因为本质是通过不同的 `userId.toString().intern()` 在通过 `synchronized` 来创建悲观锁使得同一时刻一个用户只能有一个请求可以创建订单，这样就解决了一人一单
+
+但是 多个JVM时，这种锁就没用了，因为不同的JVM对象是不同的。
+
+所以需要考虑别的方法，采用分布式锁来解决，即多个JVM去Redis获取锁，这样就不会有问题了，但是会出现**误删**和**原子性**的情况，所以又要解决
+
+基于Redis的分布式锁实现思路：
+
+- 利用set nx ex获取锁，并设置过期时间，保存线程标示
+- 释放锁时先判断线程标示是否与自己一致，一致则删除锁
+  - 特性：
+    - 利用set nx满足互斥性
+    - 利用set ex保证故障时锁依然能释放，避免死锁，提高安全性
+    - 利用Redis集群保证高可用和高并发特性
+
+我们一路走来，利用添加过期时间，防止死锁问题的发生，但是有了过期时间之后，可能出现误删别人锁的问题，这个问题我们开始是利用删之前通过拿锁，比锁，删锁这个逻辑来解决的，也就是删之前判断一下当前这把锁是否是属于自己的，但是现在还有原子性问题，也就是我们没法保证拿锁比锁删锁是一个原子性的动作，最后通过lua表达式来解决这个问题
+
+但是目前还剩下一个问题锁不住，什么是锁不住呢，你想一想，如果当过期时间到了之后，我们可以给他续期一下，比如续个30s，就好像是网吧上网， 网费到了之后，然后说，来，网管，再给我来10块的，是不是后边的问题都不会发生了，那么续期问题怎么解决呢，可以依赖于我们接下来要学习redission
+
+死锁 —— 添加过期时间
+
+误删 —— 删之前判断一下当前这把锁是否是属于自己的
+
+原子性问题 —— lua表达式来解决
+
+锁不住 (过期时间到了之后续期) —— `redission`

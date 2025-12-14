@@ -1,5 +1,5 @@
 ---
-title: item2-7 (优惠券秒杀3 - 分布式锁-redission)
+title: item2-8 (优惠券秒杀3 - 分布式锁-redission)
 date: 2025-12-7
 category:
   - code

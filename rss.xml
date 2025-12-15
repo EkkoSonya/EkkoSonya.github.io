@@ -6,11 +6,793 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Sun, 14 Dec 2025 08:38:30 GMT</pubDate>
-    <lastBuildDate>Sun, 14 Dec 2025 08:38:30 GMT</lastBuildDate>
+    <pubDate>Mon, 15 Dec 2025 09:27:48 GMT</pubDate>
+    <lastBuildDate>Mon, 15 Dec 2025 09:27:48 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>item2-12 (好友关注 - zset | 滚动查询)</title>
+      <link>http://ekkosonya.cn/code/java_item/2-hmdp/article12.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/2-hmdp/article12.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">item2-12 (好友关注 - zset | 滚动查询)</source>
+      <description>好友关注 关注和取消关注 针对用户的操作：可以对用户进行关注和取消关注功能 alt textalt text 实现思路 需求：基于 tb_follow 表数据结构，实现两个接口： 关注和取关接口 判断是否关注的接口 关注是User之间的关系，是博主与粉丝的关系，数据库中有一张tb_follow表来标示 alt textalt text 具体实现 Con...</description>
+      <category>code</category>
+      <pubDate>Sun, 14 Dec 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>好友关注</h2>
+<h3>关注和取消关注</h3>
+<p>针对用户的操作：可以对用户进行关注和取消关注功能</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>实现思路</h4>
+<p>需求：基于 <code>tb_follow</code> 表数据结构，实现两个接口：</p>
+<ul>
+<li>关注和取关接口</li>
+<li>判断是否关注的接口</li>
+</ul>
+<p>关注是User之间的关系，是博主与粉丝的关系，数据库中有一张<code>tb_follow</code>表来标示</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>具体实现</h4>
+<h5><code>Controller</code>层</h5>
+<p>对应两个接口实现 <code>/{id}/{isFollow}</code> 以及 <code>/or/not/{id}</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@RestController</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/follow"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FollowController</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Resource</span>
+  <span class="token class-name">IFollowService</span> followService<span class="token punctuation">;</span>
+
+  <span class="token doc-comment comment">/**
+   * 根据 isFollow 来选择是否关注还是取关
+   * <span class="token keyword">@param</span> <span class="token parameter">followUserId</span>
+   * <span class="token keyword">@param</span> <span class="token parameter">isFollow</span>
+   * <span class="token keyword">@return</span>
+   */</span>
+  <span class="token annotation punctuation">@PutMapping</span><span class="token punctuation">(</span><span class="token string">"/{id}/{isFollow}"</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">follow</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> followUserId<span class="token punctuation">,</span> <span class="token annotation punctuation">@PathVariable</span> <span class="token keyword">boolean</span> isFollow<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> followService<span class="token punctuation">.</span><span class="token function">follow</span><span class="token punctuation">(</span>followUserId<span class="token punctuation">,</span> isFollow<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token doc-comment comment">/**
+   * 判断是否关注某用户
+   * <span class="token keyword">@param</span> <span class="token parameter">followUserId</span>
+   * <span class="token keyword">@return</span>
+   */</span>
+  <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/or/not/{id}"</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">isFollow</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> followUserId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> followService<span class="token punctuation">.</span><span class="token function">isFollow</span><span class="token punctuation">(</span>followUserId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5><code>Service</code>实现</h5>
+<p>在实现类里，分别实现对应的 <code>关注/取关用户</code> 以及 <code>查询是否关注该用户</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FollowServiceImpl</span> <span class="token keyword">extends</span> <span class="token class-name">ServiceImpl</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">FollowMapper</span><span class="token punctuation">,</span> <span class="token class-name">Follow</span><span class="token punctuation">&gt;</span></span> <span class="token keyword">implements</span> <span class="token class-name">IFollowService</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Resource</span>
+  <span class="token keyword">private</span> <span class="token class-name">FollowMapper</span> followMapper<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">follow</span><span class="token punctuation">(</span><span class="token class-name">Long</span> followUserId<span class="token punctuation">,</span> <span class="token keyword">boolean</span> isFollow<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 1.获取登录用户</span>
+      <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment">// 1.判断到底是关注还是取关</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>isFollow<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 2.关注，新增数据</span>
+          <span class="token class-name">Follow</span> follow <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Follow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          follow<span class="token punctuation">.</span><span class="token function">setUserId</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          follow<span class="token punctuation">.</span><span class="token function">setFollowUserId</span><span class="token punctuation">(</span>followUserId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token function">save</span><span class="token punctuation">(</span>follow<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 3.取关，删除 delete from tb_follow where user_id = ? and follow_user_id = ?</span>
+          <span class="token function">remove</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">QueryWrapper</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Follow</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                  <span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"user_id"</span><span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"follow_user_id"</span><span class="token punctuation">,</span> followUserId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token comment">// followMapper.deleteByUserIdAndFollowId(userId, followUserId);</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">isFollow</span><span class="token punctuation">(</span><span class="token class-name">Long</span> followUserId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 1.获取登录用户</span>
+      <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 2.查询是否关注 select count(*) from tb_follow where user_id = ? and follow_user_id = ?</span>
+      <span class="token class-name">Integer</span> count <span class="token operator">=</span> <span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"user_id"</span><span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"follow_user_id"</span><span class="token punctuation">,</span> followUserId<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 3.判断</span>
+      <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>count <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>共同关注</h3>
+<p>感觉实现有点草率 有种强行用到redis，每次关注把对应信息放到redis，然后进行交集比较 暂时跳过</p>
+<p>想要去看共同关注的好友，需要首先进入到这个页面，这个页面会发起两个请求</p>
+<p>1、去查询用户的详情</p>
+<p>2、去查询用户的笔记</p>
+<p>以上两个功能和共同关注没有什么关系，大家可以自行将笔记中的代码拷贝到idea中就可以实现这两个功能了，我们的重点在于共同关注功能</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// UserController 根据id查询用户</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/{id}"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">queryUserById</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> userId<span class="token punctuation">)</span><span class="token punctuation">{</span>
+  <span class="token comment">// 查询详情</span>
+  <span class="token class-name">User</span> user <span class="token operator">=</span> userService<span class="token punctuation">.</span><span class="token function">getById</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>user <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token class-name">UserDTO</span> userDTO <span class="token operator">=</span> <span class="token class-name">BeanUtil</span><span class="token punctuation">.</span><span class="token function">copyProperties</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token class-name">UserDTO</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 返回</span>
+  <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>userDTO<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/of/user"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">queryBlogByUserId</span><span class="token punctuation">(</span>
+  <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"current"</span><span class="token punctuation">,</span> defaultValue <span class="token operator">=</span> <span class="token string">"1"</span><span class="token punctuation">)</span> <span class="token class-name">Integer</span> current<span class="token punctuation">,</span>
+  <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 根据用户查询</span>
+  <span class="token class-name">Page</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Blog</span><span class="token punctuation">&gt;</span></span> page <span class="token operator">=</span> blogService<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"user_id"</span><span class="token punctuation">,</span> id<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">page</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Page</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>current<span class="token punctuation">,</span> <span class="token class-name">SystemConstants</span><span class="token punctuation">.</span><span class="token constant">MAX_PAGE_SIZE</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 获取当前页数据</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Blog</span><span class="token punctuation">&gt;</span></span> records <span class="token operator">=</span> page<span class="token punctuation">.</span><span class="token function">getRecords</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>records<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>需求：利用Redis中恰当的数据结构，实现共同关注功能。在博主个人页面展示出当前用户与博主的共同关注呢。</p>
+<p>当然是使用我们之前学习过的set集合咯，在set集合中，有交集并集补集的api，我们可以把两人的关注的人分别放入到一个set集合中，然后再通过api去查看这两个set集合中的交集数据</p>
+<p>我们先来改造当前的关注列表</p>
+<p>改造原因是因为我们需要在用户关注了某位用户后，需要将数据放入到set集合中，方便后续进行共同关注，同时当取消关注时，也需要从set集合中进行删除</p>
+<p>FollowServiceImpl</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">follow</span><span class="token punctuation">(</span><span class="token class-name">Long</span> followUserId<span class="token punctuation">,</span> <span class="token class-name">Boolean</span> isFollow<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 1.获取登录用户</span>
+    <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token string">"follows:"</span> <span class="token operator">+</span> userId<span class="token punctuation">;</span>
+    <span class="token comment">// 1.判断到底是关注还是取关</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>isFollow<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 2.关注，新增数据</span>
+        <span class="token class-name">Follow</span> follow <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Follow</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        follow<span class="token punctuation">.</span><span class="token function">setUserId</span><span class="token punctuation">(</span>userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        follow<span class="token punctuation">.</span><span class="token function">setFollowUserId</span><span class="token punctuation">(</span>followUserId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">boolean</span> isSuccess <span class="token operator">=</span> <span class="token function">save</span><span class="token punctuation">(</span>follow<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>isSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 把关注用户的id，放入redis的set集合 sadd userId followerUserId</span>
+            stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> followUserId<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 3.取关，删除 delete from tb_follow where user_id = ? and follow_user_id = ?</span>
+        <span class="token keyword">boolean</span> isSuccess <span class="token operator">=</span> <span class="token function">remove</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">QueryWrapper</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Follow</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"user_id"</span><span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"follow_user_id"</span><span class="token punctuation">,</span> followUserId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>isSuccess<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 把关注用户的id从Redis集合中移除</span>
+            stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> followUserId<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><strong>具体的关注代码：</strong></p>
+<p>FollowServiceImpl</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">followCommons</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 1.获取当前用户</span>
+    <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token string">"follows:"</span> <span class="token operator">+</span> userId<span class="token punctuation">;</span>
+    <span class="token comment">// 2.求交集</span>
+    <span class="token class-name">String</span> key2 <span class="token operator">=</span> <span class="token string">"follows:"</span> <span class="token operator">+</span> id<span class="token punctuation">;</span>
+    <span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> intersect <span class="token operator">=</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">intersect</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> key2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>intersect <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> intersect<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 无交集</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token class-name">Collections</span><span class="token punctuation">.</span><span class="token function">emptyList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 3.解析id集合</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> ids <span class="token operator">=</span> intersect<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token class-name">Long</span><span class="token operator">::</span><span class="token function">valueOf</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token class-name">Collectors</span><span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 4.查询用户</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">UserDTO</span><span class="token punctuation">&gt;</span></span> users <span class="token operator">=</span> userService<span class="token punctuation">.</span><span class="token function">listByIds</span><span class="token punctuation">(</span>ids<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>user <span class="token operator">-&gt;</span> <span class="token class-name">BeanUtil</span><span class="token punctuation">.</span><span class="token function">copyProperties</span><span class="token punctuation">(</span>user<span class="token punctuation">,</span> <span class="token class-name">UserDTO</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token class-name">Collectors</span><span class="token punctuation">.</span><span class="token function">toList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>users<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>关注消息推送(Feed流实现方案)</h3>
+<p>当我们关注了用户后，这个用户发了动态，那么我们应该把这些数据推送给用户，这个需求，其实我们又把他叫做Feed流，关注推送也叫做Feed流，直译为投喂。为用户持续的提供“沉浸式”的体验，通过无限下拉刷新获取新的信息。</p>
+<p>对于传统的模式的内容解锁：我们是需要用户去通过搜索引擎或者是其他的方式去解锁想要看的内容</p>
+<p>对于新型的Feed流的的效果：不需要我们用户再去推送信息，而是系统分析用户到底想要什么，然后直接把内容推送给用户，从而使用户能够更加的节约时间，不用主动去寻找</p>
+<h4>主要模式</h4>
+<p>Feed流产品有两种常见模式：</p>
+<p><strong>Timeline</strong>：不做内容筛选，简单的按照内容发布时间排序，常用于好友或关注。例如朋友圈</p>
+<ul>
+<li>优点：信息全面，不会有缺失。并且实现也相对简单</li>
+<li>缺点：信息噪音较多，用户不一定感兴趣，内容获取效率低</li>
+</ul>
+<p><strong>智能排序</strong>：利用智能算法屏蔽掉违规的、用户不感兴趣的内容。推送用户感兴趣信息来吸引用户</p>
+<ul>
+<li>优点：投喂用户感兴趣信息，用户粘度很高，容易沉迷</li>
+<li>缺点：如果算法不精准，可能起到反作用
+本例中的个人页面，是基于关注的好友来做Feed流，因此采用Timeline的模式。该模式的实现方案有三种：</li>
+</ul>
+<h4>Timeline模式分类</h4>
+<p>针对好友的操作，采用的就是Timeline的方式，只需要拿到我们关注用户的信息，然后按照时间排序即可</p>
+<p>采用Timeline的模式，该模式的实现方案有三种：</p>
+<ul>
+<li>拉模式</li>
+<li>推模式</li>
+<li>推拉结合</li>
+</ul>
+<h5>拉模式</h5>
+<p>也叫做读扩散, 设计发件箱，创建消息只需要存一份</p>
+<p>该模式的核心含义就是：当张三和李四和王五发了消息后，都会保存在自己的邮箱中，假设赵六要读取信息，那么他会从读取他自己的收件箱，此时系统会从他关注的人群中，把他关注人的信息全部都进行拉取，然后在进行排序</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>优点：比较节约空间，因为赵六在读信息时，并没有重复读取，而且读取完之后可以把他的收件箱进行清空</p>
+<p>缺点：比较延迟，当用户读取数据时才去关注的人里边去读取数据，假设用户关注了大量的用户，那么此时就会拉取海量的内容，对服务器压力巨大</p>
+<h5>推模式</h5>
+<p>也叫做写扩散，没有发件箱，用户发布了新的消息，会拷贝多份直接送到其他关注用户的收件箱里</p>
+<p>推模式是没有写邮箱的，当张三写了一个内容，此时会主动的把张三写的内容发送到他的粉丝收件箱中去，假设此时李四再来读取，就不用再去临时拉取了</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>优点：时效快，不用临时拉取</p>
+<p>缺点：内存压力大，假设一个大V写信息，很多人关注他，就会写很多分数据到粉丝那边去</p>
+<h5>推拉结合模式</h5>
+<p>也叫做读写混合，兼具推和拉两种模式的优点</p>
+<p>推拉模式是一个折中的方案</p>
+<p>站在发件人这一段：</p>
+<ul>
+<li>
+<p>如果是个普通的人，那么我们采用写扩散的方式，直接把数据写入到他的粉丝中去，因为普通的人他的粉丝关注量比较小，所以这样做没有压力</p>
+</li>
+<li>
+<p>如果是大V，那么他是直接将数据先写入到一份到发件箱里边去，然后再直接写一份到活跃粉丝收件箱里边去</p>
+</li>
+</ul>
+<p>现在站在收件人这端来看：</p>
+<ul>
+<li>如果是活跃粉丝，那么大V和普通的人发的都会直接写入到自己收件箱里边来</li>
+<li>而如果是普通的粉丝，由于他们上线不是很频繁，所以等他们上线时，再从发件箱里边去拉信息。</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>推送到粉丝收件箱</h3>
+<p>这里不考虑推拉结合的情况，采用 推模式</p>
+<p>需求：</p>
+<ul>
+<li>修改新增探店笔记的业务，在保存blog到数据库的同时，推送到粉丝的收件箱</li>
+<li>收件箱满足可以根据时间戳排序，必须用Redis的数据结构实现</li>
+<li>查询收件箱数据时，可以实现分页查询</li>
+</ul>
+<h4>数据变化问题</h4>
+<p>Feed流中的数据会不断更新，所以数据的角标也在变化，因此不能采用传统的分页模式</p>
+<p>传统了分页在feed流是不适用的，因为我们的数据会随时发生变化</p>
+<p>假设在 t1 时刻，我们去读取第一页，此时page = 1, size = 5</p>
+<p>那么我们拿到的就是 10~6 这几条记录</p>
+<p>假设现在 t2 时候又发布了一条记录，此时 t3 时刻, 我们来读取第二页，读取第二页传入的参数是 page = 2, size = 5, 那么此时读取到的第二页实际上是从 6 开始，然后是 6~2</p>
+<p>那么我们就读取到了重复的数据，所以feed流的分页，不能采用原始方案来做</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>因此在 redis 中，不能用 list 来存储，应该用 zset (sorted_set)</p>
+<h4>1. 用户发送笔记时对应id保存到redis中</h4>
+<p>这个功能比较简单</p>
+<p>只需要修改 <code>BlogController</code> 中的 保存blog 接口即可</p>
+<p>在 <code>Service</code>层 实现类中对应功能 先去查询该用户的粉丝列表，然后遍历将该blog消息依次推送到粉丝的对应的 zset 中</p>
+<h5><code>Controller</code>层</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code> <span class="token annotation punctuation">@PostMapping</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">saveBlog</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">Blog</span> blog<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> blogService<span class="token punctuation">.</span><span class="token function">saveBlog</span><span class="token punctuation">(</span>blog<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5><code>Service</code>层</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">saveBlog</span><span class="token punctuation">(</span><span class="token class-name">Blog</span> blog<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 获取登录用户</span>
+  <span class="token class-name">UserDTO</span> user <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  blog<span class="token punctuation">.</span><span class="token function">setUserId</span><span class="token punctuation">(</span>user<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 保存探店博文</span>
+  <span class="token function">save</span><span class="token punctuation">(</span>blog<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 查询该用户的粉丝 select * from tb_follow where follow_user_id =</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Follow</span><span class="token punctuation">&gt;</span></span> follows <span class="token operator">=</span> followService<span class="token punctuation">.</span><span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"follow_user_id"</span><span class="token punctuation">,</span> user<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 将该blog id 推送到对应 粉丝的redis里</span>
+  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">Follow</span> follow <span class="token operator">:</span> follows<span class="token punctuation">)</span><span class="token punctuation">{</span>
+      <span class="token comment">// 4.1.获取粉丝id</span>
+      <span class="token class-name">Long</span> userId <span class="token operator">=</span> follow<span class="token punctuation">.</span><span class="token function">getUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 4.2.推送</span>
+      <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token constant">FEED_KEY</span> <span class="token operator">+</span> userId<span class="token punctuation">;</span>
+      stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForZSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> blog<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 返回id</span>
+  <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>blog<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>2. 实现关注推送页面的分页查询 (滚动分页)</h4>
+<h5>介绍</h5>
+<p>当插入新数据时，第二次分页查询会导致角标混乱，需要滚动分页</p>
+<p><code>ZRANGE  ZREVRANGE ZRANGEBYSCORE</code></p>
+<p><code>ZREVRANGEBYSCORE key max min [WITHSCORES] [LIMIT offset count]</code></p>
+<p>offest 表示从 max 开始的第几个元素开始查询 (0 从小于等于最大值的第一个元素查)</p>
+<p>比如：</p>
+<p>第一次查询</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 表示开始查三个</span>
+<span class="token constant">ZREVRANGEBYSCORE</span> z1 <span class="token number">1000</span> <span class="token number">0</span> <span class="token constant">WITHSCORES</span> <span class="token constant">LIMIT</span> <span class="token number">0</span> <span class="token number">3</span>
+</code></pre></div><p>找到了3个元素，然后最小的对应value是5，接着新插了一条元素，那么此时滚动查询就是</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 表示找小于等于5的第二个元素</span>
+<span class="token constant">ZREVRANGEBYSCORE</span> z1 <span class="token number">5</span> <span class="token number">0</span> <span class="token constant">WITHSCORES</span> <span class="token constant">LIMIT</span> <span class="token number">1</span> <span class="token number">3</span>
+</code></pre></div><p>每次查询都记录上一次的最小值是谁，从而避免重复查询，不用担心前面数据新增的情况</p>
+<h5>滚动查询实现分析</h5>
+<p>主要命令:</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token constant">ZREVRANGEBYSCORE</span> z1 <span class="token number">1000</span> <span class="token number">0</span> <span class="token constant">WITHSCORES</span> <span class="token constant">LIMIT</span> <span class="token number">0</span> <span class="token number">3</span>
+</code></pre></div><p>显然需要改变的是 <code>max offset</code> 的值</p>
+<p>第一次查询时，<code>offset == 0</code></p>
+<p>之后，<code>max = 上一次查询的最小值</code> 但是对于 <code>offset</code>, 不能想当然的设置为1，因为可能存在重复的元素，需要先对上一次查询数据最后进行统计，来设置 <code>offset</code> 的值</p>
+<p>滚动分页查询参数：</p>
+<ul>
+<li>max: 当前时间戳 | 上一次查询的最小时间戳</li>
+<li>min: 0</li>
+<li>offset: 第一次 0 | 在上一次结果中，与最小值一样的元素个数</li>
+<li>count: 3</li>
+</ul>
+<h5>接口分析</h5>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>具体实现</h5>
+<p>具体操作如下：</p>
+<p>1、每次查询完成后，我们要分析出查询出数据的最小时间戳，这个值会作为下一次查询的条件 <code>lastId</code></p>
+<p>2、我们需要找到与上一次查询相同的查询个数作为偏移量，下次查询时，跳过这些查询过的数据，拿到我们需要的数据 <code>offset</code></p>
+<p>综上：</p>
+<p>我们的请求参数中就需要携带 lastId：上一次查询的最小时间戳 和 offset: 偏移量这两个参数</p>
+<p>这两个参数第一次会由前端来指定，以后的查询就根据后台结果作为条件，再次传递到后台。</p>
+<h4>滚动分页实现</h4>
+<h5>1. DTO设计 <code>ScrollResult</code></h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ScrollResult</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> list<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Long</span> minTime<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> offset<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>2. <code>Controller</code>层</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/of/follow"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">queryBlogOfFollow</span><span class="token punctuation">(</span>
+    <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span><span class="token string">"lastId"</span><span class="token punctuation">)</span> <span class="token class-name">Long</span> max<span class="token punctuation">,</span> <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"offset"</span><span class="token punctuation">,</span> defaultValue <span class="token operator">=</span> <span class="token string">"0"</span><span class="token punctuation">)</span> <span class="token class-name">Integer</span> offset<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">return</span> blogService<span class="token punctuation">.</span><span class="token function">queryBlogOfFollow</span><span class="token punctuation">(</span>max<span class="token punctuation">,</span> offset<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>3. <code>Service</code>层接口</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Result</span> <span class="token function">queryBlogOfFollow</span><span class="token punctuation">(</span><span class="token class-name">Long</span> max<span class="token punctuation">,</span> <span class="token class-name">Integer</span> offset<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h5>3. <code>Service</code>层实现类 <code>BlogServiceImpl</code></h5>
+<p>主要流程比较清晰，注意 <code>Set&lt;ZSetOperations.TypedTuple&lt;String&gt;&gt;</code> 这个类型，反正提供了一个 <code>getValue</code> 和 <code>getScore</code> 方法，用就是对应的即可了</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">queryBlogOfFollow</span><span class="token punctuation">(</span><span class="token class-name">Long</span> max<span class="token punctuation">,</span> <span class="token class-name">Integer</span> offset<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 1.获取当前用户</span>
+  <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 2.查询收件箱 ZREVRANGEBYSCORE key Max Min LIMIT offset count</span>
+  <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token constant">FEED_KEY</span> <span class="token operator">+</span> userId<span class="token punctuation">;</span>
+
+  <span class="token comment">// set里面一条数据 对应一个内容 (value score)</span>
+  <span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">ZSetOperations<span class="token punctuation">.</span>TypedTuple</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> typedTuples <span class="token operator">=</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForZSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          <span class="token punctuation">.</span><span class="token function">reverseRangeByScoreWithScores</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> max<span class="token punctuation">,</span> offset<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 3.非空判断</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>typedTuples <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> typedTuples<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 4.解析数据：blogId、minTime（时间戳）、offset</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> ids <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>typedTuples<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">long</span> minTime <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> <span class="token comment">// 2</span>
+  <span class="token keyword">int</span> os <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 2</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">ZSetOperations<span class="token punctuation">.</span>TypedTuple</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> tuple <span class="token operator">:</span> typedTuples<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 4.1.获取id</span>
+      ids<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">Long</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>tuple<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 4.2.获取分数(时间戳）</span>
+      <span class="token keyword">long</span> time <span class="token operator">=</span> tuple<span class="token punctuation">.</span><span class="token function">getScore</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">longValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">if</span><span class="token punctuation">(</span>time <span class="token operator">==</span> minTime<span class="token punctuation">)</span><span class="token punctuation">{</span>
+          os<span class="token operator">++</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span><span class="token keyword">else</span><span class="token punctuation">{</span>
+          minTime <span class="token operator">=</span> time<span class="token punctuation">;</span>
+          os <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  os <span class="token operator">=</span> minTime <span class="token operator">==</span> max <span class="token operator">?</span> os <span class="token operator">:</span> os <span class="token operator">+</span> offset<span class="token punctuation">;</span>
+
+  <span class="token comment">// 5.根据id查询blog</span>
+  <span class="token class-name">String</span> idStr <span class="token operator">=</span> <span class="token class-name">StrUtil</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">,</span> ids<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Blog</span><span class="token punctuation">&gt;</span></span> blogs <span class="token operator">=</span> <span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">in</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">,</span> ids<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">last</span><span class="token punctuation">(</span><span class="token string">"ORDER BY FIELD(id,"</span> <span class="token operator">+</span> idStr <span class="token operator">+</span> <span class="token string">")"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Blog</span> blog <span class="token operator">:</span> blogs<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 5.1.查询blog有关的用户</span>
+      <span class="token function">queryBlogUser</span><span class="token punctuation">(</span>blog<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 5.2.查询blog是否被点赞</span>
+      <span class="token function">isBlogLiked</span><span class="token punctuation">(</span>blog<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 6.封装并返回</span>
+  <span class="token class-name">ScrollResult</span> r <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ScrollResult</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  r<span class="token punctuation">.</span><span class="token function">setList</span><span class="token punctuation">(</span>blogs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  r<span class="token punctuation">.</span><span class="token function">setOffset</span><span class="token punctuation">(</span>os<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  r<span class="token punctuation">.</span><span class="token function">setMinTime</span><span class="token punctuation">(</span>minTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>r<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>item2-13 (附近商铺 + 用户签到 - GEO + BitMap数据结构)</title>
+      <link>http://ekkosonya.cn/code/java_item/2-hmdp/article13.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/2-hmdp/article13.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">item2-13 (附近商铺 + 用户签到 - GEO + BitMap数据结构)</source>
+      <description>附近商铺 (了解) GEO 数据结构 GEO就是Geolocation的简写形式，代表地理坐标。Redis在3.2版本中加入了对GEO的支持，允许存储地理坐标信息，帮助我们根据经纬度来检索数据 底层用的 sorted set (zset), value是member，地理坐标被转换为score 对于一个GEO类型的key里，我们可以添加很多个点，形成这...</description>
+      <category>code</category>
+      <pubDate>Mon, 15 Dec 2025 00:00:00 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>附近商铺 (了解)</h2>
+<h3><code>GEO</code> 数据结构</h3>
+<p>GEO就是Geolocation的简写形式，代表地理坐标。Redis在3.2版本中加入了对GEO的支持，允许存储地理坐标信息，帮助我们根据经纬度来检索数据</p>
+<p>底层用的 sorted set (zset), value是member，地理坐标被转换为score</p>
+<p>对于一个GEO类型的key里，我们可以添加很多个点，形成这些点的一个集合，然后就可以计算这些点与点之间的相关操作</p>
+<p>常见的命令有：</p>
+<ul>
+<li>
+<p>GEOADD：添加一个地理空间信息，包含：经度（longitude）、纬度（latitude）、值（member）</p>
+</li>
+<li>
+<p>GEODIST：计算指定的两个点之间的距离并返回</p>
+</li>
+<li>
+<p>GEOHASH：将指定member的坐标转为hash字符串形式并返回 (将经纬度转换成二进制，然后用一种编码转换成对应字符串，内存小 可读性好)</p>
+</li>
+<li>
+<p>GEOPOS：返回指定member的坐标</p>
+</li>
+<li>
+<p>GEORADIUS：指定圆心、半径，找到该圆内包含的所有member，并按照与圆心之间的距离排序后返回 (6.2以后已废弃)</p>
+</li>
+<li>
+<p>GEOSEARCH：在指定范围内搜索member，并按照与指定点之间的距离排序后返回。范围可以是圆形或矩形 (6.2.新功能)</p>
+</li>
+<li>
+<p>GEOSEARCHSTORE：与GEOSEARCH功能一致，不过可以把结果存储到一个指定的key (6.2.新功能)</p>
+</li>
+</ul>
+<h3>导入店铺数据到 Redis中的GEO</h3>
+<figure><figcaption>alt text</figcaption></figure>
+<p>当我们点击美食之后，会出现一系列的商家，商家中可以按照多种排序方式，我们此时关注的是距离，这个地方就需要使用到我们的GEO，向后台传入当前app收集的地址(我们此处是写死的) ，以当前坐标作为圆心，同时绑定相同的店家类型type，以及分页信息，把这几个条件传入后台，后台查询出对应的数据再返回</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>我们要做的事情是：将数据库表中的数据导入到redis中去，redis中的GEO，GEO在redis中就一个menber和一个经纬度，我们把x和y轴传入到redis做的经纬度位置去，但我们不能把所有的数据都放入到menber中去，毕竟作为redis是一个内存级数据库，如果存海量数据，redis还是力不从心，所以我们在这个地方存储他的id即可。</p>
+<p>但是这个时候还有一个问题，就是在redis中并没有存储type，所以我们无法根据type来对数据进行筛选，所以我们可以按照商户类型做分组，类型相同的商户作为同一组，以typeId为key存入同一个GEO集合中即可</p>
+<p>代码</p>
+<p><code>HmDianPingApplicationTests</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">void</span> <span class="token function">loadShopData</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 1.查询店铺信息</span>
+  <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Shop</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> shopService<span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 2.把店铺分组，按照typeId分组，typeId一致的放到一个集合</span>
+  <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">,</span> <span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Shop</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> list<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">collect</span><span class="token punctuation">(</span><span class="token class-name">Collectors</span><span class="token punctuation">.</span><span class="token function">groupingBy</span><span class="token punctuation">(</span><span class="token class-name">Shop</span><span class="token operator">::</span><span class="token function">getTypeId</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 3.分批完成写入Redis</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Map<span class="token punctuation">.</span>Entry</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">,</span> <span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Shop</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> entry <span class="token operator">:</span> map<span class="token punctuation">.</span><span class="token function">entrySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 3.1.获取类型id</span>
+      <span class="token class-name">Long</span> typeId <span class="token operator">=</span> entry<span class="token punctuation">.</span><span class="token function">getKey</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token constant">SHOP_GEO_KEY</span> <span class="token operator">+</span> typeId<span class="token punctuation">;</span>
+      <span class="token comment">// 3.2.获取同类型的店铺的集合</span>
+      <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Shop</span><span class="token punctuation">&gt;</span></span> value <span class="token operator">=</span> entry<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">RedisGeoCommands<span class="token punctuation">.</span>GeoLocation</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> locations <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>value<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 3.3.写入redis GEOADD key 经度 纬度 member</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Shop</span> shop <span class="token operator">:</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// stringRedisTemplate.opsForGeo().add(key, new Point(shop.getX(), shop.getY()), shop.getId().toString());</span>
+          locations<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">RedisGeoCommands<span class="token punctuation">.</span>GeoLocation</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>
+                  shop<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                  <span class="token keyword">new</span> <span class="token class-name">Point</span><span class="token punctuation">(</span>shop<span class="token punctuation">.</span><span class="token function">getX</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> shop<span class="token punctuation">.</span><span class="token function">getY</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForGeo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> locations<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>实现附近商户功能</h3>
+<p>SpringDataRedis的2.3.9版本并不支持Redis 6.2提供的GEOSEARCH命令，因此我们需要提示其版本，修改自己的POM</p>
+<p>第一步：导入pom</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-boot-starter-data-redis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusions</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-data-redis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.data<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>lettuce-core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>io.lettuce<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.data<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-data-redis<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>2.6.2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>io.lettuce<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>lettuce-core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>6.1.6.RELEASE<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>第二步：</p>
+<p><code>ShopController</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/of/type"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">queryShopByType</span><span class="token punctuation">(</span>
+        <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span><span class="token string">"typeId"</span><span class="token punctuation">)</span> <span class="token class-name">Integer</span> typeId<span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"current"</span><span class="token punctuation">,</span> defaultValue <span class="token operator">=</span> <span class="token string">"1"</span><span class="token punctuation">)</span> <span class="token class-name">Integer</span> current<span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"x"</span><span class="token punctuation">,</span> required <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token class-name">Double</span> x<span class="token punctuation">,</span>
+        <span class="token annotation punctuation">@RequestParam</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"y"</span><span class="token punctuation">,</span> required <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">)</span> <span class="token class-name">Double</span> y
+<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+   <span class="token keyword">return</span> shopService<span class="token punctuation">.</span><span class="token function">queryShopByType</span><span class="token punctuation">(</span>typeId<span class="token punctuation">,</span> current<span class="token punctuation">,</span> x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>ShopServiceImpl</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">queryShopByType</span><span class="token punctuation">(</span><span class="token class-name">Integer</span> typeId<span class="token punctuation">,</span> <span class="token class-name">Integer</span> current<span class="token punctuation">,</span> <span class="token class-name">Double</span> x<span class="token punctuation">,</span> <span class="token class-name">Double</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 1.判断是否需要根据坐标查询</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> y <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 不需要坐标查询，按数据库查询</span>
+            <span class="token class-name">Page</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Shop</span><span class="token punctuation">&gt;</span></span> page <span class="token operator">=</span> <span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                    <span class="token punctuation">.</span><span class="token function">eq</span><span class="token punctuation">(</span><span class="token string">"type_id"</span><span class="token punctuation">,</span> typeId<span class="token punctuation">)</span>
+                    <span class="token punctuation">.</span><span class="token function">page</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Page</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>current<span class="token punctuation">,</span> <span class="token class-name">SystemConstants</span><span class="token punctuation">.</span><span class="token constant">DEFAULT_PAGE_SIZE</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 返回数据</span>
+            <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>page<span class="token punctuation">.</span><span class="token function">getRecords</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 2.计算分页参数</span>
+        <span class="token keyword">int</span> from <span class="token operator">=</span> <span class="token punctuation">(</span>current <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token class-name">SystemConstants</span><span class="token punctuation">.</span><span class="token constant">DEFAULT_PAGE_SIZE</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> end <span class="token operator">=</span> current <span class="token operator">*</span> <span class="token class-name">SystemConstants</span><span class="token punctuation">.</span><span class="token constant">DEFAULT_PAGE_SIZE</span><span class="token punctuation">;</span>
+
+        <span class="token comment">// 3.查询redis、按照距离排序、分页。结果：shopId、distance</span>
+        <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token constant">SHOP_GEO_KEY</span> <span class="token operator">+</span> typeId<span class="token punctuation">;</span>
+        <span class="token class-name">GeoResults</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">RedisGeoCommands<span class="token punctuation">.</span>GeoLocation</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> results <span class="token operator">=</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForGeo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// GEOSEARCH key BYLONLAT x y BYRADIUS 10 WITHDISTANCE</span>
+                <span class="token punctuation">.</span><span class="token function">search</span><span class="token punctuation">(</span>
+                        key<span class="token punctuation">,</span>
+                        <span class="token class-name">GeoReference</span><span class="token punctuation">.</span><span class="token function">fromCoordinate</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span>
+                        <span class="token keyword">new</span> <span class="token class-name">Distance</span><span class="token punctuation">(</span><span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                        <span class="token class-name">RedisGeoCommands<span class="token punctuation">.</span>GeoSearchCommandArgs</span><span class="token punctuation">.</span><span class="token function">newGeoSearchArgs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">includeDistance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">limit</span><span class="token punctuation">(</span>end<span class="token punctuation">)</span>
+                <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 4.解析出id</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>results <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token class-name">Collections</span><span class="token punctuation">.</span><span class="token function">emptyList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">GeoResult</span><span class="token punctuation">&lt;</span><span class="token class-name">RedisGeoCommands<span class="token punctuation">.</span>GeoLocation</span><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> results<span class="token punctuation">.</span><span class="token function">getContent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;=</span> from<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 没有下一页了，结束</span>
+            <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token class-name">Collections</span><span class="token punctuation">.</span><span class="token function">emptyList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 4.1.截取 from ~ end的部分</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> ids <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Distance</span><span class="token punctuation">&gt;</span></span> distanceMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>list<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        list<span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">skip</span><span class="token punctuation">(</span>from<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>result <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 4.2.获取店铺id</span>
+            <span class="token class-name">String</span> shopIdStr <span class="token operator">=</span> result<span class="token punctuation">.</span><span class="token function">getContent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            ids<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">Long</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>shopIdStr<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 4.3.获取距离</span>
+            <span class="token class-name">Distance</span> distance <span class="token operator">=</span> result<span class="token punctuation">.</span><span class="token function">getDistance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            distanceMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>shopIdStr<span class="token punctuation">,</span> distance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 5.根据id查询Shop</span>
+        <span class="token class-name">String</span> idStr <span class="token operator">=</span> <span class="token class-name">StrUtil</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">,</span> ids<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Shop</span><span class="token punctuation">&gt;</span></span> shops <span class="token operator">=</span> <span class="token function">query</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">in</span><span class="token punctuation">(</span><span class="token string">"id"</span><span class="token punctuation">,</span> ids<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">last</span><span class="token punctuation">(</span><span class="token string">"ORDER BY FIELD(id,"</span> <span class="token operator">+</span> idStr <span class="token operator">+</span> <span class="token string">")"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">list</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Shop</span> shop <span class="token operator">:</span> shops<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            shop<span class="token punctuation">.</span><span class="token function">setDistance</span><span class="token punctuation">(</span>distanceMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>shop<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 6.返回</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>shops<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+</code></pre></div><h2>用户签到 (了解)</h2>
+<p>针对签到功能完全可以通过mysql来完成，比如说以下这张表</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>用户一次签到，就是一条记录，假如有1000万用户，平均每人每年签到次数为10次，则这张表一年的数据量为 1亿条</p>
+<p>每签到一次需要使用（8 + 8 + 1 + 1 + 3 + 1）共22 字节的内存，一个月则最多需要600多字节</p>
+<p>我们如何能够简化一点呢？其实可以考虑小时候一个挺常见的方案，就是小时候，咱们准备一张小小的卡片，你只要签到就打上一个勾，我最后判断你是否签到，其实只需要到小卡片上看一看就知道了</p>
+<p>我们可以采用类似这样的方案来实现我们的签到需求。</p>
+<p>我们按月来统计用户签到信息，签到记录为1，未签到则记录为0.</p>
+<p>把每一个bit位对应当月的每一天，形成了映射关系。</p>
+<p>用0和1标示业务状态，这种思路就称为位图（BitMap）</p>
+<p>这样我们就用极小的空间，来实现了大量数据的表示</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h3><code>BitMap</code> 数据结构</h3>
+<p>Redis中是利用string类型数据结构实现BitMap，因此最大上限是512M，转换为bit则是 2^32个bit位</p>
+<p>BitMap的操作命令有：</p>
+<ul>
+<li>SETBIT：向指定位置（offset）存入一个0或1</li>
+<li>GETBIT ：获取指定位置（offset）的bit值</li>
+<li>BITCOUNT ：统计BitMap中值为1的bit位的数量</li>
+<li>BITFIELD ：操作（查询、修改、自增）BitMap中bit数组中的指定位置（offset）的值</li>
+<li>BITFIELD_RO ：获取BitMap中bit数组，并以十进制形式返回</li>
+<li>BITOP ：将多个BitMap的结果做位运算（与 、或、异或）</li>
+<li>BITPOS ：查找bit数组中指定范围内第一个0或1出现的位置</li>
+</ul>
+<h3>签到功能实现</h3>
+<p>需求：实现签到接口，将当前用户当天签到信息保存到Redis中</p>
+<p>思路：我们可以把年和月作为bitMap的key，然后保存到一个bitMap中，每次签到就到对应的位上把数字从0变成1，只要对应是1，就表明说明这一天已经签到了，反之则没有签到。</p>
+<p>我们通过接口文档发现，此接口并没有传递任何的参数，没有参数怎么确实是哪一天签到呢？这个很容易，可以通过后台代码直接获取即可，然后到对应的地址上去修改bitMap</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>具体代码</h4>
+<h5><code>UserController</code></h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code> <span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/sign"</span><span class="token punctuation">)</span>
+ <span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">sign</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">return</span> userService<span class="token punctuation">.</span><span class="token function">sign</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token punctuation">}</span>
+</code></pre></div><h5><code>UserServiceImpl</code></h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">sign</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 1.获取当前登录用户</span>
+    <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 2.获取日期</span>
+    <span class="token class-name">LocalDateTime</span> now <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 3.拼接key</span>
+    <span class="token class-name">String</span> keySuffix <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token class-name">DateTimeFormatter</span><span class="token punctuation">.</span><span class="token function">ofPattern</span><span class="token punctuation">(</span><span class="token string">":yyyyMM"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token constant">USER_SIGN_KEY</span> <span class="token operator">+</span> userId <span class="token operator">+</span> keySuffix<span class="token punctuation">;</span>
+    <span class="token comment">// 4.获取今天是本月的第几天</span>
+    <span class="token keyword">int</span> dayOfMonth <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">getDayOfMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 5.写入Redis SETBIT key offset 1</span>
+    stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setBit</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> dayOfMonth <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>统计连续签到次数</h3>
+<p><strong>问题1</strong>：什么叫做连续签到天数</p>
+<p>从最后一次签到开始向前统计，直到遇到第一次未签到为止，计算总的签到次数，就是连续签到天数</p>
+<p>Java逻辑代码：获得当前这个月的最后一次签到数据，定义一个计数器，然后不停的向前统计，直到获得第一个非0的数字即可，每得到一个非0的数字计数器+1，直到遍历完所有的数据，就可以获得当前月的签到总天数了</p>
+<p><strong>问题2</strong>：如何得到本月到今天为止的所有签到数据</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token constant">BITFIELD</span> key <span class="token constant">GET</span> u<span class="token punctuation">[</span>dayOfMonth<span class="token punctuation">]</span> <span class="token number">0</span>
+</code></pre></div><p>假设今天是10号，那么我们就可以从当前月的第一天开始，获得到当前这一天的位数，是10号，那么就是10位，去拿这段时间的数据，就能拿到所有的数据了，那么这10天里边签到了多少次呢？统计有多少个1即可。</p>
+<p><strong>问题3</strong>：如何从后向前遍历每个bit位</p>
+<blockquote>
+<p>注意：bitMap返回的数据是10进制，哪假如说返回一个数字8，那么我哪儿知道到底哪些是0，哪些是1呢？
+我们只需要让得到的10进制数字和1做与运算就可以了，因为1只有遇见1 才是1，其他数字都是0
+我们把签到结果和1进行与操作，每与一次，就把签到结果向右移动一位，依次内推，我们就能完成逐个遍历的效果了。</p>
+</blockquote>
+<p>需求：实现下面接口，统计当前用户截止当前时间在本月的连续签到天数</p>
+<p>有用户有时间我们就可以组织出对应的key，此时就能找到这个用户截止这天的所有签到记录，再根据这套算法，就能统计出来他连续签到的次数了</p>
+<h4>具体实现</h4>
+<h5><code>UserController</code></h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/sign/count"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">signCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">return</span> userService<span class="token punctuation">.</span><span class="token function">signCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5><code>UserServiceImpl</code></h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token class-name">Result</span> <span class="token function">signCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 1.获取当前登录用户</span>
+    <span class="token class-name">Long</span> userId <span class="token operator">=</span> <span class="token class-name">UserHolder</span><span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 2.获取日期</span>
+    <span class="token class-name">LocalDateTime</span> now <span class="token operator">=</span> <span class="token class-name">LocalDateTime</span><span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 3.拼接key</span>
+    <span class="token class-name">String</span> keySuffix <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token class-name">DateTimeFormatter</span><span class="token punctuation">.</span><span class="token function">ofPattern</span><span class="token punctuation">(</span><span class="token string">":yyyyMM"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> key <span class="token operator">=</span> <span class="token constant">USER_SIGN_KEY</span> <span class="token operator">+</span> userId <span class="token operator">+</span> keySuffix<span class="token punctuation">;</span>
+    <span class="token comment">// 4.获取今天是本月的第几天</span>
+    <span class="token keyword">int</span> dayOfMonth <span class="token operator">=</span> now<span class="token punctuation">.</span><span class="token function">getDayOfMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 5.获取本月截止今天为止的所有的签到记录，返回的是一个十进制的数字 BITFIELD sign:5:202203 GET u14 0</span>
+    <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Long</span><span class="token punctuation">&gt;</span></span> result <span class="token operator">=</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">bitField</span><span class="token punctuation">(</span>
+            key<span class="token punctuation">,</span>
+            <span class="token class-name">BitFieldSubCommands</span><span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                    <span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">BitFieldSubCommands<span class="token punctuation">.</span>BitFieldType</span><span class="token punctuation">.</span><span class="token function">unsigned</span><span class="token punctuation">(</span>dayOfMonth<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">valueAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>result <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> result<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 没有任何签到结果</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token class-name">Long</span> num <span class="token operator">=</span> result<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>num <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> num <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 6.循环遍历</span>
+    <span class="token keyword">int</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 6.1.让这个数字与1做与运算，得到数字的最后一个bit位  </span>
+        <span class="token comment">// 判断这个bit位是否为0</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>num <span class="token operator">&amp;</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 如果为0，说明未签到，结束</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+            <span class="token comment">// 如果不为0，说明已签到，计数器+1</span>
+            count<span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment">// 把数字右移一位，抛弃最后一个bit位，继续下一个bit位</span>
+        num <span class="token operator">&gt;&gt;&gt;=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token class-name">Result</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>关于使用bitmap来解决缓存穿透的方案</h3>
+<p>回顾<strong>缓存穿透</strong>：</p>
+<p>发起了一个数据库不存在的，redis里边也不存在的数据，通常你可以把他看成一个攻击</p>
+<p>解决方案：</p>
+<p>方案一：判断id&lt;0</p>
+<p>方案二：如果数据库是空，那么就可以直接往redis里边把这个空数据缓存起来</p>
+<p>第一种解决方案：遇到的问题是如果用户访问的是id不存在的数据，则此时就无法生效</p>
+<p>第二种解决方案：遇到的问题是如果是不同的id那就可以防止下次过来直击数据，但不能有效的防止第一次攻击的情况，如果突然有大量的不存在id访问，仍然会击穿</p>
+<p>所以我们如何解决呢？</p>
+<h4>初步方案 - list</h4>
+<p>我们可以将数据库的数据所对应的id写入到一个list集合中</p>
+<p>当用户过来访问的时候，我们直接去判断list中是否包含当前的要查询的数据，如果说用户要查询的id数据并不在list集合中，则直接返回，如果list中包含对应查询的id数据，则说明不是一次缓存穿透数据，则直接放行。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>同样数据存储问题</h5>
+<p>现在的问题是这个主键其实并没有那么短，而是很长的一个 主键</p>
+<p>哪怕你单独去提取这个主键，但是在11年左右，淘宝的商品总量就已经超过10亿个</p>
+<p>所以如果采用以上方案，这个list也会很大，所以我们可以使用bitmap来减少list的存储空间</p>
+<h4>bitmap存储</h4>
+<p>我们可以把list中的数据抽象成一个非常大的bitmap</p>
+<p>设计一个很大的bitmap，然后某个商品id就是对应某一位 (0 不存在 1 存在)</p>
+<p>我们不再使用list，而是将db中的id数据利用哈希思想，比如：</p>
+<p><code>id % bitmap.size  = 算出当前这个id对应应该落在bitmap的哪个索引上</code></p>
+<p>然后将这个值从0变成1</p>
+<p>当用户来查询数据时，此时已经没有了list，让用户用他查询的id去用相同的哈希算法, 算出来当前这个id应当落在bitmap的哪一位，然后判断这一位是0，还是1</p>
+<p>如果是0 则表明这一位上的数据一定不存在</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>哈希冲突的可能</h5>
+<p>采用这种方式来处理，需要重点考虑一个事情，就是误差率，所谓的误差率就是指当发生哈希冲突的时候，产生的误差</p>
+<h2>UV 统计</h2>
+<h3>UV概念</h3>
+<ul>
+<li>
+<p>UV：全称Unique Visitor，也叫独立访客量，是指通过互联网访问、浏览这个网页的自然人。1天内同一个用户多次访问该网站，<strong>只记录1次</strong></p>
+</li>
+<li>
+<p>PV：全称Page View，也叫页面访问量或点击量，用户每访问网站的一个页面，记录1次PV，用户多次打开页面，则记录多次PV。往往用来衡量网站的流量。</p>
+</li>
+<li>
+<p>PV与UV的比值，可以分析这个网站每一个用户来访问时候是点一下就走，还是访问了很多次，粘度如何</p>
+</li>
+</ul>
+<p>通常来说PV会比UV大很多，所以衡量同一个网站的访问量，我们需要综合考虑很多因素，所以我们只是单纯的把这两个值作为一个参考值</p>
+<p>UV统计在服务端做会比较麻烦，因为要判断该用户是否已经统计过了，需要将统计过的用户信息保存</p>
+<p>但是如果每个访问的用户都保存到Redis中，数据量会非常恐怖，那怎么处理呢？</p>
+<h3><code>HyperLogLog</code> 数据结构</h3>
+<p>Hyperloglog(HLL)是从Loglog算法派生的概率算法，用于确定非常大的集合的基数，而不需要存储其所有值。</p>
+<p>相关算法原理大家可以参考：</p>
+<p><a href="https://juejin.cn/post/6844903785744056333#heading-0" target="_blank" rel="noopener noreferrer">https://juejin.cn/post/6844903785744056333#heading-0</a></p>
+<p>Redis中的HLL是基于string结构实现的，单个HLL的内存<strong>永远小于16kb</strong>，<strong>内存占用低</strong>的令人发指！</p>
+<p>作为代价，其测量结果是概率性的，<strong>有小于0.81％的误差</strong>，不过对于UV统计来说，这完全可以忽略</p>
+<p>不会记录重复元素</p>
+<h4>对应命令</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li>
+<p><code>PFADD</code> 将指定多个元素存到类型是 <code>HeyperLogLog</code> 的key中，并不是真的存</p>
+</li>
+<li>
+<p><code>PFCOUNT</code> 统计 key 的数量，通过概率算法</p>
+</li>
+<li>
+<p><code>PFMERGE</code> 合并，将多个 key 合并，然后成一个再统计</p>
+</li>
+</ul>
+<h3>简单测试百万数据下的效果</h3>
+<p>直接利用单元测试，向HyperLogLog中添加100万条数据，看看内存占用和统计效果如何</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Test</span>
+<span class="token keyword">void</span> <span class="token function">testHyperLogLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> values <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token number">1000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  <span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>i <span class="token operator">&lt;</span> <span class="token number">1000000</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+      j <span class="token operator">=</span> i <span class="token operator">%</span> <span class="token number">1000</span><span class="token punctuation">;</span>
+      values<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"user_"</span> <span class="token operator">+</span> i<span class="token punctuation">;</span>
+      <span class="token keyword">if</span><span class="token punctuation">(</span>j <span class="token operator">==</span> <span class="token number">999</span><span class="token punctuation">)</span>
+          stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForHyperLogLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"h1"</span><span class="token punctuation">,</span> values<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token class-name">Long</span> count <span class="token operator">=</span> stringRedisTemplate<span class="token punctuation">.</span><span class="token function">opsForHyperLogLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token string">"h1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"count = "</span> <span class="token operator">+</span> count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><figure><figcaption>alt text</figcaption></figure>
+<p>大小只有 <code>12 Kb</code></p>
+<h3>对于 PV 实现的思路</h3>
+<p>INCR命令统计PV，INCR key，将 key 中储存的数字值增一。如果 key 不存在，那么 key 的值会先被初始化为 0 ，然后再执行 INCR 操作</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Resource</span>
+<span class="token keyword">private</span> <span class="token class-name">RedisTemplate</span> redisTemplate<span class="token punctuation">;</span>
+<span class="token comment">//redis的pv和uv前缀</span>
+<span class="token keyword">final</span> <span class="token keyword">static</span> <span class="token class-name">String</span> <span class="token constant">PV_PREFIX</span> <span class="token operator">=</span> <span class="token string">"pv\_"</span><span class="token punctuation">;</span>
+<span class="token keyword">final</span> <span class="token keyword">static</span> <span class="token class-name">String</span> <span class="token constant">UV_PREFIX</span> <span class="token operator">=</span> <span class="token string">"uv\_"</span><span class="token punctuation">;</span>
+
+<span class="token operator">/</span>\<span class="token operator">*</span>\<span class="token operator">*</span>
+ \<span class="token operator">*</span> 统计pv<span class="token punctuation">,</span>uv
+ \<span class="token operator">*</span> <span class="token annotation punctuation">@return</span> 返回统计后的pv<span class="token punctuation">,</span>uv值
+ \<span class="token operator">*</span><span class="token operator">/</span>
+<span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token class-name">AjaxResult</span> <span class="token function">statist</span><span class="token punctuation">(</span><span class="token class-name">HttpServletRequest</span> request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 获取yyyy-MM-dd格式的日期</span>
+  <span class="token class-name">Date</span> date <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">SimpleDateFormat</span> sdf <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SimpleDateFormat</span><span class="token punctuation">(</span><span class="token string">"yyyy-MM-dd"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span> today <span class="token operator">=</span> sdf<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span>date<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span> pvKey <span class="token operator">=</span> <span class="token constant">PV_PREFIX</span> <span class="token operator">+</span> today<span class="token punctuation">;</span>
+  <span class="token class-name">String</span> uvKey <span class="token operator">=</span> <span class="token constant">UV_PREFIX</span> <span class="token operator">+</span> today<span class="token punctuation">;</span>
+  <span class="token comment">// pv + 1, incr命令:将 key 中储存的数字值增一。如果 key 不存在，那么 key 的值会先被初始化为 0 ，然后再执行 INCR 操作。</span>
+  <span class="token class-name">Long</span> pvNum <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">increment</span><span class="token punctuation">(</span>pvKey<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// hutool获取用户ip</span>
+  <span class="token class-name">String</span> clientIP <span class="token operator">=</span> <span class="token class-name">ServletUtil</span><span class="token punctuation">.</span><span class="token function">getClientIP</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 将ip放到redis的set中</span>
+  redisTemplate<span class="token punctuation">.</span><span class="token function">opsForSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>uvKey<span class="token punctuation">,</span> clientIP<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//"SADD myset hello world"</span>
+  <span class="token class-name">Long</span> uvNum <span class="token operator">=</span> redisTemplate<span class="token punctuation">.</span><span class="token function">opsForSet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span>uvKey<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// "SCARD myset"</span>
+  <span class="token class-name">AjaxResult</span> ans <span class="token operator">=</span> <span class="token class-name">AjaxResult</span><span class="token punctuation">.</span><span class="token function">success</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  ans<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"pv"</span><span class="token punctuation">,</span>pvNum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  ans<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"uv"</span><span class="token punctuation">,</span>uvNum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> ans<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>被访问了一次，就用 incr+1 统计PV，然后根据ip来放入hyperLogLog来统计UV</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>item2-10 (秒杀优化2 - 消息队列)</title>
       <link>http://ekkosonya.cn/code/java_item/2-hmdp/article10.html</link>
@@ -3242,410 +4024,6 @@ redis<span class="token punctuation">.</span><span class="token function">call</
 <p>误删 —— 删之前判断一下当前这把锁是否是属于自己的</p>
 <p>原子性问题 —— lua表达式来解决</p>
 <p>锁不住 (过期时间到了之后续期) —— <code>redission</code></p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM2 - 内存管理1</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM/article2.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM/article2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM2 - 内存管理1</source>
-      <description>JVM内存管理 在传统的C/C++开发中，我们经常通过使用申请内存的方式来创建对象或是存放某些数据，但是这样也带来了一些额外的问题，我们要在何时释放这些内存，怎么才能使得内存的使用最高效 因此，内存管理是一个非常严肃的问题。 比如我们就可以通过C语言动态申请内存，并用于存放数据： 而在Java中，这种操作实际上是不允许的，Java只支持直接使用基本数据...</description>
-      <category>code</category>
-      <pubDate>Sun, 07 Dec 2025 17:17:10 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>JVM内存管理</h2>
-<p>在传统的C/C++开发中，我们经常通过使用申请内存的方式来创建对象或是存放某些数据，但是这样也带来了一些额外的问题，我们要在何时释放这些内存，怎么才能使得内存的使用最高效</p>
-<p>因此，内存管理是一个非常严肃的问题。</p>
-<p>比如我们就可以通过C语言动态申请内存，并用于存放数据：</p>
-<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token comment">//动态申请4个int大小的内存空间</span>
-    <span class="token keyword">int</span><span class="token operator">*</span> memory <span class="token operator">=</span> <span class="token function">malloc</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//修改第一个int空间的值</span>
-    memory<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-    <span class="token comment">//修改第二个int空间的值</span>
-    memory<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
-    <span class="token comment">//遍历内存区域中所有的值</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>i <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span>i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d "</span><span class="token punctuation">,</span> memory<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    <span class="token comment">//释放指针所指向的内存区域</span>
-    <span class="token function">free</span><span class="token punctuation">(</span>memory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">//最后将指针赋值为NULL</span>
-    memory <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>而在Java中，这种操作实际上是不允许的，Java只支持<strong>直接使用基本数据类型和对象类型</strong></p>
-<p>至于内存到底如何分配，并不是由我们来处理，而是JVM帮助我们进行控制</p>
-<p>这样就帮助我们节省很多内存上的工作，虽然带来了很大的便利，但是，一旦出现内存问题，我们就无法像C/C++那样对所管理的内存进行合理地处理，因为所有的内存操作都是由JVM在进行</p>
-<p>只有了解了JVM的内存管理机制，我们才能够在出现内存相关问题时找到解决方案</p>
-<h2>内存区域划分</h2>
-<figure><figcaption>alt text</figcaption></figure>
-<p>内存区域一共分为5个区域</p>
-<p>其中方法区和堆是所有线程共享的区域，随着虚拟机的创建而创建，虚拟机的结束而销毁</p>
-<p>而虚拟机栈、本地方法栈、程序计数器都是线程之间相互隔离的</p>
-<p>每个线程都有一个自己的区域，并且线程启动时会自动创建，结束之后会自动销毁。</p>
-<p>内存划分完成之后，我们的JVM执行引擎和本地库接口，也就是Java程序开始运行之后就会根据分区合理地使用对应区域的内存了</p>
-<h3>大致划分</h3>
-<h4>程序计数器</h4>
-<p>首先我们来介绍一下程序计数器，它和我们的传统8086 CPU中PC寄存器的工作差不多，因为JVM虚拟机目的就是实现物理机那样的程序执行。</p>
-<p>在8086 CPU中，PC作为程序计数器，负责储存内存地址，该地址指向下一条即将执行的指令，每解释执行完一条指令，PC寄存器的值就会自动被更新为下一条指令的地址，进入下一个指令周期时，就会根据当前地址所指向的指令，进行执行。</p>
-<p>而JVM中的程序计数器可以看做是<strong>当前线程所执行字节码的行号指示器</strong></p>
-<p>而行号正好就指的是某一条指令，字节码解释器在工作时也会改变这个值，来指定下一条即将执行的指令。</p>
-<p>因为Java的多线程也是依靠<strong>时间片轮转算法</strong>进行的，因此一个CPU同一时间也只会处理一个线程，当某个线程的时间片消耗完成后，会自动切换到下一个线程继续执行</p>
-<p>而当前线程的执行位置会<strong>被保存到当前线程的程序计数器中</strong>，当下次轮转到此线程时，又继续根据之前的执行位置继续向下执行。</p>
-<p>程序计数器因为只需要记录很少的信息，所以只占用很少一部分内存。</p>
-<h4>虚拟机栈</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p>虚拟机栈就是一个非常关键的部分，看名字就知道它是一个栈结构，每个方法被执行的时候，Java虚拟机都会同步创建一个栈帧（其实就是栈里面的一个元素）</p>
-<h5>栈帧组成</h5>
-<p>栈帧中包括了当前方法的一些信息，比如局部变量表、操作数栈、动态链接、方法出口等</p>
-<p>其中局部变量表就是我们方法中的局部变量，实际上局部变量表在class文件中就已经定义好了</p>
-<p>操作数栈就是我们之前字节码执行时使用到的栈结构；</p>
-<p>每个栈帧还保存了一个<strong>可以指向当前方法所在类</strong>的运行时常量池</p>
-<p>目的是：当前方法中如果需要调用其他方法的时候，能够从运行时常量池中找到对应的符号引用，然后将符号引用转换为直接引用，然后就能直接调用对应方法，这就是动态链接</p>
-<p>最后是方法出口，也就是方法该如何结束，是抛出异常还是正常返回</p>
-<h5>模拟分析</h5>
-<p>这里我们来模拟一下整个虚拟机栈的运作流程，我们先编写一个测试类：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">int</span> res <span class="token operator">=</span> <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">a</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token function">b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">b</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token function">c</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">c</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
-        <span class="token keyword">int</span> b <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> a <span class="token operator">+</span> b<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>当我们的主方法执行后，会依次执行三个方法<code>a() -&gt; b() -&gt; c() -&gt; 返回</code>，我们首先来观察一下反编译之后的结果：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>{
-  public com.test.Main();   #这个是构造方法
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack=1, locals=1, args_size=1
-         0: aload_0
-         1: invokespecial #1                  // Method java/lang/Object."&lt;init&gt;":()V
-         4: return
-      LineNumberTable:
-        line 3: 0
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0       5     0  this   Lcom/test/Main;
-
-  public static void main(java.lang.String[]);    #主方法
-    descriptor: ([Ljava/lang/String;)V
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack=2, locals=2, args_size=1
-         0: invokestatic  #2                  // Method a:()I
-         3: istore_1
-         4: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
-         7: iload_1
-         8: invokevirtual #4                  // Method java/io/PrintStream.println:(I)V
-        11: return
-      LineNumberTable:
-        line 5: 0
-        line 6: 4
-        line 7: 11
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            0      12     0  args   [Ljava/lang/String;
-            4       8     1   res   I
-
-  public static int a();
-    descriptor: ()I
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack=1, locals=0, args_size=0
-         0: invokestatic  #5                  // Method b:()I
-         3: ireturn
-      LineNumberTable:
-        line 10: 0
-
-  public static int b();
-    descriptor: ()I
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack=1, locals=0, args_size=0
-         0: invokestatic  #6                  // Method c:()I
-         3: ireturn
-      LineNumberTable:
-        line 14: 0
-
-  public static int c();
-    descriptor: ()I
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack=2, locals=2, args_size=0
-         0: bipush        10
-         2: istore_0
-         3: bipush        20
-         5: istore_1
-         6: iload_0
-         7: iload_1
-         8: iadd
-         9: ireturn
-      LineNumberTable:
-        line 18: 0
-        line 19: 3
-        line 20: 6
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            3       7     0     a   I
-            6       4     1     b   I
-}
-
-</code></pre></div><p>可以看到在编译之后，我们整个方法的最大操作数栈深度、局部变量表都是已经确定好的，当我们程序开始执行时，会根据这些信息封装为对应的栈帧，我们从<code>main</code>方法开始看起：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>接着我们继续往下，到了<code>0: invokestatic  #2  // Method a:()I</code>时，需要调用方法<code>a()</code></p>
-<p>这时当前方法就不会继续向下运行了，而是去执行方法<code>a()</code>，那么同样的，将此方法也入栈，注意是放入到栈顶位置，<code>main</code>方法的栈帧会被压下去</p>
-<p>这时，进入方法a之后，又继而进入到方法b，最后在进入c，因此，到达方法c的时候，我们的虚拟机栈变成了：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>现在我们依次执行方法c中的指令，最后返回a+b的结果，在方法c返回之后，也就代表方法c已经执行结束了，栈帧4会自动出栈，这时栈帧3就得到了上一栈帧返回的结果，并继续执行，但是由于紧接着马上就返回，所以继续重复栈帧4的操作，此时栈帧3也出栈并继续将结果交给下一个栈帧2，最后栈帧2再将结果返回给栈帧1，然后栈帧1就可以继续向下运行了，最后输出结果。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>本地方法栈</h4>
-<p>本地方法栈与虚拟机栈作用差不多</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM2 - 内存管理2</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM/article3.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM/article3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM2 - 内存管理2</source>
-      <description>JVM内存管理 区域划分 堆 堆是整个Java应用程序共享的区域，也是整个虚拟机最大的一块内存空间 此区域的职责就是存放和管理对象和数组，而我们马上要提到的垃圾回收机制也是主要作用于这一部分内存区域。 方法区 方法区也是整个Java应用程序共享的区域，它用于存储所有的类信息、常量、静态变量、动态编译缓存等数据 可以大致分为两个部分，一个是类信息表，一个...</description>
-      <category>code</category>
-      <pubDate>Sun, 07 Dec 2025 17:17:10 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>JVM内存管理</h2>
-<h3>区域划分</h3>
-<h4>堆</h4>
-<p>堆是整个Java应用程序共享的区域，也是整个虚拟机<strong>最大的一块内存空间</strong></p>
-<p>此区域的职责就是<strong>存放和管理对象和数组</strong>，而我们马上要提到的垃圾回收机制也是主要作用于这一部分内存区域。</p>
-<h4>方法区</h4>
-<p>方法区也是整个Java应用程序共享的区域，它用于存储所有的类信息、常量、静态变量、动态编译缓存等数据</p>
-<p>可以大致分为两个部分，一个是<strong>类信息表</strong>，一个是<strong>运行时常量池</strong>。</p>
-<p>方法区也是我们要重点介绍的部分。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p><strong>类信息表</strong>中存放的是<strong>当前应用程序加载的所有类信息</strong>，包括类的版本、字段、方法、接口等信息，同时会将编译时<strong>生成的常量池数据全部存放到运行时常量池中</strong>。</p>
-<p>当然，常量也并不是只能从类信息中获取，在程序运行时，也有可能会<strong>有新的常量进入到常量池</strong>。</p>
-<h5>String分析</h5>
-<p>其实我们的String类正是利用了常量池进行优化，这里我们编写一个测试用例：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> str1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"abc"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">String</span> str2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"abc"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1 <span class="token operator">==</span> str2<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>str2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>得到的结果也是显而易见的，由于<code>str1</code>和<code>str2</code>是单独创建的两个对象，那么这两个对象实际上会<strong>在堆中存放</strong>，保存在<strong>不同的地址</strong>：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>所以当我们使用<code>==</code>判断时，得到的结果<code>false</code>，而使用<code>equals</code>时因为比较的是值，所以得到<code>true</code>。</p>
-<p>现在我们来稍微修改一下：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> str1 <span class="token operator">=</span> <span class="token string">"abc"</span><span class="token punctuation">;</span>
-    <span class="token class-name">String</span> str2 <span class="token operator">=</span> <span class="token string">"abc"</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1 <span class="token operator">==</span> str2<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>str2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>现在我们没有使用new的形式，而是直接使用双引号创建，那么这时得到的结果就变成了两个<code>true</code></p>
-<p>这其实是因为我们直接使用双引号赋值，会<strong>先在常量池中查找是否存在相同的字符串</strong>，若存在，则将引用直接指向该字符串；若不存在，则在常量池中生成一个字符串，再将引用指向该字符串：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>实际上两次调用String类的<code>intern()</code>方法，和上面的效果差不多，也是第一次调用会将堆中字符串复制并放入常量池中，第二次通过此方法获取字符串时，会查看常量池中是否包含，如果包含那么会直接返回常量池中字符串的地址：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">//不能直接写"abc"，双引号的形式，写了就直接在常量池里面吧abc创好了</span>
-  <span class="token class-name">String</span> str1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"ab"</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">String</span> str2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"ab"</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> str2<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>str2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><figure><figcaption>alt text</figcaption></figure>
-<p>首先常量池会存在 "ab" 和 "c"，但是并没有 "abc", 在创建str1时就会发现常量池里没有"abc"，所以会将堆中字符串复制并放入常量池中，第二次通过此方法获取字符串时，会查看常量池中是否包含，如果包含那么会直接返回常量池中字符串的地址</p>
-<p>所以上述结果中得到的依然是两个<code>true</code>。</p>
-<h6><code>Intern()</code>方法</h6>
-<p>在JDK1.7之后，稍微有一些区别，在调用<code>intern()</code>方法时，当常量池中没有对应的字符串时，<strong>不会再进行复制操作</strong>，而是将其直接修改为<strong>指向当前字符串堆中的的引用</strong>：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-   <span class="token comment">//不能直接写"abc"，双引号的形式，写了就直接在常量池里面吧abc创好了</span>
-    <span class="token class-name">String</span> str1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"ab"</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> str1<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> str1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"ab"</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">String</span> str2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"ab"</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str1 <span class="token operator">==</span> str1<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>str2<span class="token punctuation">.</span><span class="token function">intern</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> str1<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>所以最后我们会发现，<code>str1.intern()</code>和<code>str1</code>都是同一个对象，结果为<code>true</code>。</p>
-<p>值得注意的是，在JDK7之后，字符串常量池从方法区移动到了堆中。</p>
-<p>最后我们再来进行一个总结，各个内存区域的用途：</p>
-<ul>
-<li>（线程独有）程序计数器：保存当前程序的执行位置。</li>
-<li>（线程独有）虚拟机栈：通过栈帧来维持方法调用顺序，帮助控制程序有序运行。</li>
-<li>（线程独有）本地方法栈：同上，作用与本地方法。</li>
-<li>堆：所有的对象和数组都在这里保存。</li>
-<li>方法区：类信息、即时编译器的代码缓存、运行时常量池。</li>
-</ul>
-<p>当然，这些内存区域划分仅仅是概念上的，具体的实现过程我们后面还会提到。</p>
-<h3>爆内存和爆栈</h3>
-<h4>爆内存</h4>
-<p>实际上，在Java程序运行时，内存容量不可能是无限制的，当我们的对象创建过多或是数组容量过大时，就会导致我们的堆内存不足以存放更多新的对象或是数组，这时就会出现错误，比如：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token constant">MAX_VALUE</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这里我们申请了一个容量为21亿多的int型数组，显然，如此之大的数组不可能放在我们的堆内存中，所以程序运行时就会这样：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Exception</span> in thread <span class="token string">"main"</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span></span>OutOfMemoryError</span><span class="token operator">:</span> <span class="token class-name">Requested</span> array size exceeds <span class="token constant">VM</span> limit
- at <span class="token class-name"><span class="token namespace">com<span class="token punctuation">.</span>test<span class="token punctuation">.</span></span>Main</span><span class="token punctuation">.</span><span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span>java<span class="token operator">:</span><span class="token number">5</span><span class="token punctuation">)</span>
-</code></pre></div><p>这里得到了一个<code>OutOfMemoryError</code>错误，也就是我们常说的内存溢出错误。我们可以通过参数来控制堆内存的最大值和最小值：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>-Xms最小值 -Xmx最大值
-</code></pre></div><p>比如我们现在限制堆内存为固定值1M大小，并且在抛出内存溢出异常时保存当前的内存堆转储快照</p>
-<p>注意堆内存不要设置太小，不然连虚拟机都不足以启动，接着我们编写一个一定会导致内存溢出的程序：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Test</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-            list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//无限创建Test对象并丢进List中</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Test</span><span class="token punctuation">{</span> <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在程序运行之后：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>java.lang.OutOfMemoryError: Java heap space
-Dumping heap to java_pid35172.hprof ...
-Heap dump file created [12895344 bytes in 0.028 secs]
-Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
-  at java.util.Arrays.copyOf(Arrays.java:3210)
-  at java.util.Arrays.copyOf(Arrays.java:3181)
-  at java.util.ArrayList.grow(ArrayList.java:267)
-  at java.util.ArrayList.ensureExplicitCapacity(ArrayList.java:241)
-  at java.util.ArrayList.ensureCapacityInternal(ArrayList.java:233)
-  at java.util.ArrayList.add(ArrayList.java:464)
-  at com.test.Main.main(Main.java:10)
-</code></pre></div><p>可以看到错误出现原因正是<code>Java heap space</code>，也就是堆内存满了，并且根据我们设定的VM参数，堆内存保存了快照信息。我们可以在IDEA内置的Profiler中进行查看：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>可以很明显地看到，在创建了360146个Test对象之后，堆内存蚌埠住了，于是就抛出了内存溢出错误。</p>
-<h4>栈溢出</h4>
-<p>我们接着来看栈溢出，我们知道，虚拟机栈会在方法调用时插入栈帧，那么，设想如果出现无限递归</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-        <span class="token function">test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这很明显是一个永无休止的程序，并且会不断继续向下调用test方法本身，那么按照我们之前的逻辑推导，无限地插入栈帧那么一定会将虚拟机栈塞满，所以，当栈的深度已经不足以继续插入栈帧时，就会这样：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Exception in thread "main" java.lang.StackOverflowError
- at com.test.Main.test(Main.java:12)
- at com.test.Main.test(Main.java:12)
- at com.test.Main.test(Main.java:12)
- at com.test.Main.test(Main.java:12)
- at com.test.Main.test(Main.java:12)
- at com.test.Main.test(Main.java:12)
- ....以下省略很多行
-</code></pre></div><p>这也是我们常说的栈溢出，它和堆溢出比较类似，也是由于容纳不下才导致的，我们可以使用<code>-Xss</code>来设定栈容量。</p>
-<h3>申请堆外内存</h3>
-<p>除了堆内存可以存放对象数据以外，我们也可以申请堆外内存（直接内存），也就是<strong>不受JVM管控的内存区域</strong>，这部分区域的内存需要我们自行去申请和释放</p>
-<p>实际上本质就是JVM通过C/C++调用<code>malloc</code>函数申请的内存，当然得我们自己去释放了</p>
-<p>不过虽然是直接内存，不会受到堆内存容量限制，但是依然会受到本机最大内存的限制，所以还是有可能抛出<code>OutOfMemoryError</code>异常。</p>
-<h4><code>Unsafe</code></h4>
-<p>这里我们需要提到一个堆外内存操作类：<code>Unsafe</code></p>
-<p>就像它的名字一样，虽然Java提供堆外内存的操作类，但是实际上它是不安全的，只有你完全了解底层原理并且能够合理控制堆外内存，才能安全地使用堆外内存。</p>
-<p>注意这个类不让我们new，也没有直接获取方式（压根就没想让我们用）：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Unsafe</span> <span class="token punctuation">{</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">static</span> <span class="token punctuation">{</span>
-        <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name"><span class="token namespace">sun<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span>Reflection</span><span class="token punctuation">.</span><span class="token function">registerMethodsToFilter</span><span class="token punctuation">(</span><span class="token class-name">Unsafe</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token string">"getUnsafe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">private</span> <span class="token class-name">Unsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Unsafe</span> theUnsafe <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Unsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  
-    <span class="token annotation punctuation">@CallerSensitive</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">Unsafe</span> <span class="token function">getUnsafe</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> caller <span class="token operator">=</span> <span class="token class-name">Reflection</span><span class="token punctuation">.</span><span class="token function">getCallerClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token constant">VM</span><span class="token punctuation">.</span><span class="token function">isSystemDomainLoader</span><span class="token punctuation">(</span>caller<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">SecurityException</span><span class="token punctuation">(</span><span class="token string">"Unsafe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//不是JDK的类，不让用。</span>
-        <span class="token keyword">return</span> theUnsafe<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>所以我们这里就通过反射：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IllegalAccessException</span> <span class="token punctuation">{</span>
-  <span class="token class-name">Field</span> unsafeField <span class="token operator">=</span> <span class="token class-name">Unsafe</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getDeclaredFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-  unsafeField<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">Unsafe</span> unsafe <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Unsafe</span><span class="token punctuation">)</span> unsafeField<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>成功拿到Unsafe类之后，我们就可以开始申请堆外内存了，比如我们现在想要申请一个int大小的内存空间，并在此空间中存放一个int类型的数据：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">IllegalAccessException</span> <span class="token punctuation">{</span>
-  <span class="token class-name">Field</span> unsafeField <span class="token operator">=</span> <span class="token class-name">Unsafe</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getDeclaredFields</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-  unsafeField<span class="token punctuation">.</span><span class="token function">setAccessible</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">Unsafe</span> unsafe <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Unsafe</span><span class="token punctuation">)</span> unsafeField<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment">//申请4字节大小的内存空间，并得到对应位置的地址</span>
-  <span class="token keyword">long</span> address <span class="token operator">=</span> unsafe<span class="token punctuation">.</span><span class="token function">allocateMemory</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">//在对应的地址上设定int的值</span>
-  unsafe<span class="token punctuation">.</span><span class="token function">putInt</span><span class="token punctuation">(</span>address<span class="token punctuation">,</span> <span class="token number">6666666</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">//获取对应地址上的Int型数值</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span>address<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">//释放申请到的内容</span>
-  unsafe<span class="token punctuation">.</span><span class="token function">freeMemory</span><span class="token punctuation">(</span>address<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment">//由于内存已经释放，这时数据就没了</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span>address<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>我们可以来看一下<code>allocateMemory</code>底层是如何调用的，这是一个native方法，我们来看C++源码：</p>
-<div class="language-cpp" data-ext="cpp" data-title="cpp"><pre class="language-cpp"><code><span class="token function">UNSAFE_ENTRY</span><span class="token punctuation">(</span>jlong<span class="token punctuation">,</span> <span class="token function">Unsafe_AllocateMemory0</span><span class="token punctuation">(</span>JNIEnv <span class="token operator">*</span>env<span class="token punctuation">,</span> jobject unsafe<span class="token punctuation">,</span> jlong size<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  size_t sz <span class="token operator">=</span> <span class="token punctuation">(</span>size_t<span class="token punctuation">)</span>size<span class="token punctuation">;</span>
-
-  sz <span class="token operator">=</span> <span class="token function">align_up</span><span class="token punctuation">(</span>sz<span class="token punctuation">,</span> HeapWordSize<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">void</span><span class="token operator">*</span> x <span class="token operator">=</span> os<span class="token double-colon punctuation">::</span><span class="token function">malloc</span><span class="token punctuation">(</span>sz<span class="token punctuation">,</span> mtOther<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//这里调用了os::malloc方法</span>
-
-  <span class="token keyword">return</span> <span class="token function">addr_to_java</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span> UNSAFE_END
-</code></pre></div><p>接着来看：</p>
-<div class="language-cpp" data-ext="cpp" data-title="cpp"><pre class="language-cpp"><code><span class="token keyword">void</span><span class="token operator">*</span> os<span class="token double-colon punctuation">::</span><span class="token function">malloc</span><span class="token punctuation">(</span>size_t size<span class="token punctuation">,</span> MEMFLAGS flags<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> os<span class="token double-colon punctuation">::</span><span class="token function">malloc</span><span class="token punctuation">(</span>size<span class="token punctuation">,</span> flags<span class="token punctuation">,</span> CALLER_PC<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">void</span><span class="token operator">*</span> os<span class="token double-colon punctuation">::</span><span class="token function">malloc</span><span class="token punctuation">(</span>size_t size<span class="token punctuation">,</span> MEMFLAGS memflags<span class="token punctuation">,</span> <span class="token keyword">const</span> NativeCallStack<span class="token operator">&amp;</span> stack<span class="token punctuation">)</span> <span class="token punctuation">{</span>
- <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  u_char<span class="token operator">*</span> ptr<span class="token punctuation">;</span>
-  ptr <span class="token operator">=</span> <span class="token punctuation">(</span>u_char<span class="token operator">*</span><span class="token punctuation">)</span><span class="token double-colon punctuation">::</span><span class="token function">malloc</span><span class="token punctuation">(</span>alloc_size<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//调用C++标准库函数 malloc(size)</span>
- <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  <span class="token comment">// we do not track guard memory</span>
-  <span class="token keyword">return</span> <span class="token class-name">MemTracker</span><span class="token double-colon punctuation">::</span><span class="token function">record_malloc</span><span class="token punctuation">(</span><span class="token punctuation">(</span>address<span class="token punctuation">)</span>ptr<span class="token punctuation">,</span> size<span class="token punctuation">,</span> memflags<span class="token punctuation">,</span> stack<span class="token punctuation">,</span> level<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>所以，我们上面的Java代码转换为C代码，差不多就是这个意思：</p>
-<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h&gt;</span></span>
-<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h&gt;</span></span>
-
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-    <span class="token keyword">int</span> <span class="token operator">*</span> a <span class="token operator">=</span> <span class="token function">malloc</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token operator">*</span>a <span class="token operator">=</span> <span class="token number">6666666</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span> <span class="token operator">*</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">free</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span> <span class="token operator">*</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>所以说，直接内存实际上就是<strong>JVM申请的一块额外的内存空间</strong>，但是它并不在受管控的几种内存空间中，当然这些内存依然属于是JVM的</p>
-<p>由于JVM提供的堆内存会进行垃圾回收等工作，效率不如直接申请和操作内存来得快，一些比较追求极致性能的框架会用到堆外内存来提升运行速度，如nio框架。</p>
-<p>当然，Unsafe类不仅仅只是这些功能，在其他系列课程中，我们还会讲到它</p>
 ]]></content:encoded>
     </item>
   </channel>

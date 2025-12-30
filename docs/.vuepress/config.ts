@@ -42,7 +42,7 @@ export default defineUserConfig({
 
   markdown: {
     headers: {
-      level: [2, 3, 4, 5], // 生成标题的层级，包含二级和三级标题
+      level: [2, 3, 4, 5, 6], // 生成标题的层级，包含二级和三级标题
     },
     // toc: { 
     //   level: [2, 3, 4, 5] 

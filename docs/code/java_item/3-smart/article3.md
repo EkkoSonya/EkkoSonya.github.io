@@ -418,7 +418,7 @@ String refreshToken = jwtUtils.generateRefreshToken(username);
 
 为了让这个机制真正生效，具体流程应该是：
 
-- 平时：前端在请求头（如 Authorization: Bearer <token>）中携带 token。后端校验这个短效 Token。
+- 平时：前端在请求头（如 Authorization: Bearer `token`）中携带 token。后端校验这个短效 Token。
 
 - 过期时：当 token 过期，后端返回 401 Unauthorized。
 

@@ -118,3 +118,69 @@ public class Counter {
 后++ 会先将旧值压入操作数栈，然后自增，而赋值就是对应操作数栈里的旧值
 
 先++ 则是先自增，然后将自增完的值入栈，所以对应赋值得到的就是自增后的值了
+
+### `int a = i++ + ++i`
+
+```java
+public static void main(String[] args) throws InterruptedException {
+    int i = 1;
+    int a = i++ + ++i;
+    System.out.println(a);
+}
+```
+
+赋值运算符: 在 `a = b = c` 这种情况下，赋值确实是从右往左进行的（先算 b = c，再算 a = b）
+
+赋值表达式的结果就是所赋的值
+
+这种情况下，最终的结果是 `4`，因为首先执行顺序是 从左往右的，所以必然是 先 `i++` 然后 `++i`
+
+`i++` 其是将原值放到栈里，然后自增自己，所以栈里的第一个元素是 `1` 然后 i 自增到 `2`
+
+而 `++i` 是先自增再存储到栈，所以栈里第二个元素放的是 `3`, 同样 i 也自增到3
+
+因此最终 a 的值对应是 4, i 对应是 3
+
+#### 对应编译字节码
+
+```java
+public class com.ekko.Main {
+  public com.ekko.Main();
+    Code:
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static void main(java.lang.String[]) throws java.lang.InterruptedException;
+    Code:
+         0: iconst_1
+         // a = 1
+         1: istore_1 
+         // 将 a 放入栈顶
+         2: iload_1
+         // 直接自增两次 a = 3
+         3: iinc          1, 1
+         6: iinc          1, 1
+         // 再把 a 放入栈顶 栈里两个元素 3 1
+         9: iload_1
+        10: iadd
+        // 相加 为4
+        11: istore_2
+        12: getstatic     #2                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        15: iload_2
+        16: invokevirtual #3                  // Method java/io/PrintStream.println:(I)V
+        19: return
+}
+```
+
+#### 反编译结果
+
+```java
+public static void main(String[] args) throws InterruptedException {
+    int i = 1;
+    int var10000 = i++;
+    ++i;
+    int a = var10000 + i;
+    System.out.println(a);
+}
+```

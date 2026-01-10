@@ -5,6 +5,7 @@ category:
   - code
 tag:
   - java_item
+  - PaiSmart
 # star: true
 # sticky: true
 order: -0.6

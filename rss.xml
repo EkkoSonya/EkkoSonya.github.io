@@ -6,8 +6,8 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Tue, 20 Jan 2026 14:31:01 GMT</pubDate>
-    <lastBuildDate>Tue, 20 Jan 2026 14:31:01 GMT</lastBuildDate>
+    <pubDate>Tue, 20 Jan 2026 17:09:32 GMT</pubDate>
+    <lastBuildDate>Tue, 20 Jan 2026 17:09:32 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
@@ -2225,14 +2225,105 @@ Importance: medium
 ]]></content:encoded>
     </item>
     <item>
-      <title>Kafka - 3</title>
+      <title>Kafka - 4 Spring集成Kafka</title>
       <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/4.html</link>
       <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Kafka/4.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Kafka - 3</source>
-      <description>SpringBoot集成Kafa 发送消息 KafkaTemplate KafkaTemplate 封装了一个生产者，并提供了便捷方法将数据发送到 Kafka 主题 该类构造方法需要传递一个 ProducerFactory 对象，来表示如何根据对应配置创建一个生产者从而进行消息传递 创建 KafkaTemplate 就需要提供一个 ProducerFa...</description>
+      <source url="http://ekkosonya.cn/rss.xml">Kafka - 4 Spring集成Kafka</source>
+      <description>SpringBoot集成Kafka 简单使用 对于Kafka，你更应该从各个角度建立起一个完整的数据流转的模型，通过这些模型去回顾Kafka的重要设计，并且尝试去验证自己的一些理解。这样才能真正去理解Kafka的强大之处。 ​当你掌握了Kafka的核心消息流转模型时，也可以帮助你去了解Kafka更多的应用生态。比如SpringBoot集成Kafka，其...</description>
       <category>code</category>
       <pubDate>Tue, 20 Jan 2026 14:16:53 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>SpringBoot集成Kafa</h2>
+      <content:encoded><![CDATA[<h2>SpringBoot集成Kafka</h2>
+<h3>简单使用</h3>
+<p>对于Kafka，你更应该从各个角度建立起一个完整的数据流转的模型，通过这些模型去回顾Kafka的重要设计，并且尝试去验证自己的一些理解。这样才能真正去理解Kafka的强大之处。</p>
+<p>​当你掌握了Kafka的核心消息流转模型时，也可以帮助你去了解Kafka更多的应用生态。比如SpringBoot集成Kafka，其实非常简单。就分三步</p>
+<h4>在SpringBoot项目中，引入Maven依赖</h4>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.springframework.kafka<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>spring-kafka<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h4>在application.yml中配置kafka相关参数</h4>
+<p>比如</p>
+<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">kafka</span><span class="token punctuation">:</span>
+  <span class="token key atrule">enabled</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>  <span class="token comment"># 启用 Kafka</span>
+  <span class="token key atrule">bootstrap-servers</span><span class="token punctuation">:</span> 127.0.0.1<span class="token punctuation">:</span><span class="token number">9092</span> <span class="token comment"># Kafka 服务器地址</span>
+  <span class="token key atrule">producer</span><span class="token punctuation">:</span>
+    <span class="token key atrule">key-serializer</span><span class="token punctuation">:</span> org.apache.kafka.common.serialization.StringSerializer
+    <span class="token key atrule">value-serializer</span><span class="token punctuation">:</span> org.springframework.kafka.support.serializer.JsonSerializer
+    <span class="token key atrule">acks</span><span class="token punctuation">:</span> all
+    <span class="token key atrule">retries</span><span class="token punctuation">:</span> <span class="token number">3</span>
+    <span class="token key atrule">enable-idempotence</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+    <span class="token key atrule">transactional-id-prefix</span><span class="token punctuation">:</span> file<span class="token punctuation">-</span>upload<span class="token punctuation">-</span>tx<span class="token punctuation">-</span>
+    <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+      <span class="token key atrule">client.dns.lookup</span><span class="token punctuation">:</span> use_all_dns_ips
+  <span class="token key atrule">consumer</span><span class="token punctuation">:</span>
+    <span class="token key atrule">group-id</span><span class="token punctuation">:</span> file<span class="token punctuation">-</span>processing<span class="token punctuation">-</span>group <span class="token comment"># 消费者组 ID</span>
+    <span class="token key atrule">auto-offset-reset</span><span class="token punctuation">:</span> earliest
+    <span class="token key atrule">key-deserializer</span><span class="token punctuation">:</span> org.apache.kafka.common.serialization.StringDeserializer
+    <span class="token key atrule">value-deserializer</span><span class="token punctuation">:</span> org.springframework.kafka.support.serializer.JsonDeserializer
+    <span class="token key atrule">properties</span><span class="token punctuation">:</span>
+      <span class="token key atrule">spring.json.trusted.packages</span><span class="token punctuation">:</span> <span class="token string">"*"</span> <span class="token comment"># 允许反序列化的包</span>
+      <span class="token key atrule">client.dns.lookup</span><span class="token punctuation">:</span> use_all_dns_ips
+  <span class="token key atrule">topic</span><span class="token punctuation">:</span>
+    <span class="token key atrule">file-processing</span><span class="token punctuation">:</span> file<span class="token punctuation">-</span>processing<span class="token punctuation">-</span>topic1 <span class="token comment"># 新增的 Topic 配置</span>
+    <span class="token key atrule">dlt</span><span class="token punctuation">:</span> file<span class="token punctuation">-</span>processing<span class="token punctuation">-</span>dlt <span class="token comment"># 死信队列主题</span>
+</code></pre></div><p>或者在对应 properties 配置</p>
+<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token comment">###########【Kafka集群】###########</span>
+spring.kafka.bootstrap<span class="token punctuation">-</span>servers=worker1<span class="token punctuation">:</span><span class="token number">9092</span><span class="token punctuation">,</span>worker2<span class="token punctuation">:</span><span class="token number">9093</span><span class="token punctuation">,</span>worker3<span class="token punctuation">:</span><span class="token number">9093</span>
+<span class="token comment">###########【初始化生产者配置】###########</span>
+<span class="token comment"># 重试次数</span>
+spring.kafka.producer.retries=0
+<span class="token comment"># 应答级别:多少个分区副本备份完成时向生产者发送ack确认(可选0、1、all/-1)</span>
+spring.kafka.producer.acks=1
+<span class="token comment"># 批量大小</span>
+spring.kafka.producer.batch<span class="token punctuation">-</span>size=16384
+<span class="token comment"># 提交延时</span>
+spring.kafka.producer.properties.linger.ms=0
+<span class="token comment"># 生产端缓冲区大小</span>
+spring.kafka.producer.buffer<span class="token punctuation">-</span>memory = 33554432
+<span class="token comment"># Kafka提供的序列化和反序列化类</span>
+spring.kafka.producer.key<span class="token punctuation">-</span>serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value<span class="token punctuation">-</span>serializer=org.apache.kafka.common.serialization.StringSerializer
+<span class="token comment">###########【初始化消费者配置】###########</span>
+<span class="token comment"># 默认的消费组ID</span>
+spring.kafka.consumer.properties.group.id=defaultConsumerGroup
+<span class="token comment"># 是否自动提交offset</span>
+spring.kafka.consumer.enable<span class="token punctuation">-</span>auto<span class="token punctuation">-</span>commit=true
+<span class="token comment"># 提交offset延时(接收到消息后多久提交offset)</span>
+spring.kafka.consumer.auto<span class="token punctuation">-</span>commit<span class="token punctuation">-</span>interval=1000
+<span class="token comment"># 当kafka中没有初始offset或offset超出范围时将自动重置offset</span>
+<span class="token comment"># earliest:重置为分区中最小的offset;</span>
+<span class="token comment"># latest:重置为分区中最新的offset(消费分区中新产生的数据);</span>
+<span class="token comment"># none:只要有一个分区不存在已提交的offset,就抛出异常;</span>
+spring.kafka.consumer.auto<span class="token punctuation">-</span>offset<span class="token punctuation">-</span>reset=latest
+<span class="token comment"># 消费会话超时时间(超过这个时间consumer没有发送心跳,就会触发rebalance操作)</span>
+spring.kafka.consumer.properties.session.timeout.ms=120000
+<span class="token comment"># 消费请求超时时间</span>
+spring.kafka.consumer.properties.request.timeout.ms=180000
+<span class="token comment"># Kafka提供的序列化和反序列化类</span>
+spring.kafka.consumer.key<span class="token punctuation">-</span>deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value<span class="token punctuation">-</span>deserializer=org.apache.kafka.common.serialization.StringDeserializer
+</code></pre></div><h4>应用中使用框架注入的KafkaTemplate发送消息</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@RestController</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">KafkaProducer</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">KafkaTemplate</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> kafkaTemplate<span class="token punctuation">;</span>
+  <span class="token comment">// 发送消息</span>
+  <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/kafka/normal/{message}"</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">sendMessage1</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span><span class="token punctuation">(</span><span class="token string">"message"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> normalMessage<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      kafkaTemplate<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token string">"topic1"</span><span class="token punctuation">,</span> normalMessage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>使用@KafkaListener注解声明消息消费者</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">KafkaConsumer</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 消费监听</span>
+  <span class="token annotation punctuation">@KafkaListener</span><span class="token punctuation">(</span>topics <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"topic1"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onMessage1</span><span class="token punctuation">(</span><span class="token class-name">ConsumerRecord</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">,</span> <span class="token operator">?</span><span class="token punctuation">&gt;</span></span> record<span class="token punctuation">)</span><span class="token punctuation">{</span>
+      <span class="token comment">// 消费的哪个topic、partition的消息,打印出消息内容</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"简单消费："</span><span class="token operator">+</span>record<span class="token punctuation">.</span><span class="token function">topic</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"-"</span><span class="token operator">+</span>record<span class="token punctuation">.</span><span class="token function">partition</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"-"</span><span class="token operator">+</span>record<span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>这部分的应用本来就非常简单，而且他的本质也是在框架中构建Producer和Consumer。当你了解了kafka的核心消息流转流程，对这些应用参数就可以进行合理的组装，那么分分钟就可以上手SpringBoot集成Kafka框架的</p>
 <h3>发送消息 <code>KafkaTemplate</code></h3>
 <p><code>KafkaTemplate</code> 封装了一个生产者，并提供了便捷方法将数据发送到 Kafka 主题</p>
 <p>该类构造方法需要传递一个 <code>ProducerFactory</code> 对象，来表示如何根据对应配置创建一个生产者从而进行消息传递</p>

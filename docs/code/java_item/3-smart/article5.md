@@ -83,7 +83,7 @@ order: -0.6
 - 文本分块后发送向量化任务到 Kafka→向量化服务消费任务，调用豆包 API 将文本转换为向量表示
 - 向量数据写入 Elasticsearch 和预留 FAISS 接口→更新任务状态，通知用户处理完成
 
-![alt text](image.png)
+![alt text](img/8.png)
 
 #### Mysql 数据表
 

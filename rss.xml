@@ -6,11 +6,151 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Tue, 20 Jan 2026 17:09:32 GMT</pubDate>
-    <lastBuildDate>Tue, 20 Jan 2026 17:09:32 GMT</lastBuildDate>
+    <pubDate>Sat, 24 Jan 2026 17:32:30 GMT</pubDate>
+    <lastBuildDate>Sat, 24 Jan 2026 17:32:30 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>item3 - 8 文件解析模块1</title>
+      <link>http://ekkosonya.cn/code/java_item/3-smart/article9.html</link>
+      <guid>http://ekkosonya.cn/code/java_item/3-smart/article9.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">item3 - 8 文件解析模块1</source>
+      <description>实现大文件的分片上传、断点续传、文件合并以及文档解析功能 目的 通过 Redis 和 MinIO 的结合，确保大文件上传的可靠性 并通过 Kafka 实现异步处理，进行文件解析等操作 模块支持多种文档格式（PDF、Word、Excel）的解析，并提取文本内容用于后续向量化处理 文本向量化通过调用阿里向量化 API 实现，生成的向量数据目前存储在 Ela...</description>
+      <category>code</category>
+      <pubDate>Sat, 24 Jan 2026 17:30:48 GMT</pubDate>
+      <content:encoded><![CDATA[<p>实现大文件的分片上传、断点续传、文件合并以及文档解析功能</p>
+<h2>目的</h2>
+<ul>
+<li>通过 Redis 和 MinIO 的结合，确保大文件上传的可靠性</li>
+<li>并通过 Kafka 实现异步处理，进行文件解析等操作</li>
+<li>模块支持多种文档格式（PDF、Word、Excel）的解析，并提取文本内容用于后续向量化处理</li>
+<li>文本向量化通过调用阿里向量化 API 实现，生成的向量数据目前存储在 <code>Elasticsearch</code> 中，未来将同时支持 FAISS 存储</li>
+</ul>
+<h2>文件处理(解析+向量化)</h2>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>ElasticSearch</h3>
+<p>| <strong>层级</strong> | <strong>MySQL (关系型)</strong> | <strong>Elasticsearch (8.x)</strong> | <strong>备注</strong> |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>MinIO</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/MinIO/1.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/MinIO/1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">MinIO</source>
+      <description>MinIO 在使用时，用的是 MinioClient 对象 MinIO 是一个高性能的对象存储系统，设计初衷是作为云原生存储系统的替代方案 对象存储的概念与标准 Unix 文件系统类似，但 它使用的是&amp;quot;桶(bucket)&amp;quot;和&amp;quot;对象(object)&amp;quot;的概念，而不是目录和文件 桶可以像目录一样嵌套形成层级结构，而对象则是一组任意的字节数据，可以是图片、PD...</description>
+      <category>code</category>
+      <pubDate>Sat, 24 Jan 2026 17:30:48 GMT</pubDate>
+      <content:encoded><![CDATA[<h3>MinIO</h3>
+<p>在使用时，用的是 <code>MinioClient</code> 对象</p>
+<p>MinIO 是一个高性能的对象存储系统，设计初衷是作为云原生存储系统的替代方案</p>
+<p>对象存储的概念与标准 Unix 文件系统类似，但 它使用的是"桶(bucket)"和"对象(object)"的概念，而不是目录和文件</p>
+<p>桶可以像目录一样嵌套形成层级结构，而对象则是一组任意的字节数据，可以是图片、PDF 或其他任何文件类型</p>
+<p>与文件系统类似，桶和对象也可以设置权限，实现细粒度的访问控制</p>
+<p>在安装好 MinIO 后，可以去基于 Web 的管理控制台访问管理</p>
+<h4>MinIO JAVA SDK</h4>
+<p>不过在 JAVA 中更多的是通过 Java SDK 使用 MinIO</p>
+<p>首先在项目中添加依赖：</p>
+<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>io.minio<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>minio<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>8.5.2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>之后，通过 Spring 的 <code>@Value</code> 以及 <code>@Bean</code>等注释，来自动注册一个 <code>MinIOClient</code> 的实例，用于之后的操作</p>
+<p>主要配置文件在 <code>MinioConfig</code></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MinioConfig</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Value</span><span class="token punctuation">(</span><span class="token string">"${minio.endpoint}"</span><span class="token punctuation">)</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> endpoint<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Value</span><span class="token punctuation">(</span><span class="token string">"${minio.accessKey}"</span><span class="token punctuation">)</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> accessKey<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Value</span><span class="token punctuation">(</span><span class="token string">"${minio.secretKey}"</span><span class="token punctuation">)</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> secretKey<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Value</span><span class="token punctuation">(</span><span class="token string">"${minio.publicUrl}"</span><span class="token punctuation">)</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> publicUrl<span class="token punctuation">;</span>
+
+
+  <span class="token annotation punctuation">@Bean</span>
+  <span class="token keyword">public</span> <span class="token class-name">MinioClient</span> <span class="token function">minioClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token class-name">MinioClient</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+              <span class="token comment">// 端口，存储地址</span>
+              <span class="token punctuation">.</span><span class="token function">endpoint</span><span class="token punctuation">(</span>endpoint<span class="token punctuation">)</span>
+              <span class="token comment">// 公钥和秘钥</span>
+              <span class="token punctuation">.</span><span class="token function">credentials</span><span class="token punctuation">(</span>accessKey<span class="token punctuation">,</span> secretKey<span class="token punctuation">)</span>
+              <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token annotation punctuation">@Bean</span>
+  <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">minioPublicUrl</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> publicUrl<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>主要API</h4>
+<h5>桶操作</h5>
+<ul>
+<li>
+<p><code>bucketExists(BucketExistsArgs)</code>: 检查某个桶是否存在。</p>
+</li>
+<li>
+<p><code>makeBucket(MakeBucketArgs)</code>: 创建新桶。</p>
+</li>
+<li>
+<p><code>listBuckets()</code>: 列出当前账号下所有的桶。</p>
+</li>
+<li>
+<p><code>removeBucket(RemoveBucketArgs)</code>: 删除空桶。</p>
+</li>
+</ul>
+<blockquote>
+<p>注意：在上传文件前，通常会先调用 bucketExists 检查，不存在则调用 makeBucket 创建</p>
+</blockquote>
+<h5>对象操作</h5>
+<p>这是最频繁使用的部分，用于处理实际的文件</p>
+<ul>
+<li>上传
+<ul>
+<li><code>putObject(PutObjectArgs)</code>: 最通用的上传接口，支持从 InputStream 上传</li>
+<li><code>uploadObject(UploadObjectArgs)</code>: 直接从本地磁盘文件路径上传，效率更高</li>
+</ul>
+</li>
+<li>下载与查看
+<ul>
+<li><code>getObject(GetObjectArgs)</code>: 获取文件的输入流（InputStream），用于后端处理文件内容。</li>
+<li><code>statObject(StatObjectArgs)</code>: 获取元数据（文件大小、最后修改时间、Content-Type 等），但不下载文件本身。</li>
+</ul>
+</li>
+<li>列表与删除
+<ul>
+<li><code>listObjects(ListObjectsArgs)</code>: 遍历桶内的文件</li>
+<li><code>removeObject(RemoveObjectArgs)</code>: 删除单个对象</li>
+<li><code>removeObjects(RemoveObjectsArgs)</code>: 批量删除</li>
+</ul>
+</li>
+</ul>
+<h5>预签名操作</h5>
+<p>是 MinIO 非常强大的一类 API，主要解决 “权限安全” 问题。</p>
+<ul>
+<li>
+<p><code>getPresignedObjectUrl(GetPresignedObjectUrlArgs)</code>: 生成一个带有时效性的 HTTP GET 链接</p>
+<p>场景： 你的文件是私有的，但你想让用户在接下来的 10 分钟内可以点击查看一张图片</p>
+</li>
+</ul>
+<h4>简单示例</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 构建上传参数</span>
+minioClient<span class="token punctuation">.</span><span class="token function">putObject</span><span class="token punctuation">(</span>
+  <span class="token class-name">PutObjectArgs</span><span class="token punctuation">.</span><span class="token function">builder</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">bucket</span><span class="token punctuation">(</span><span class="token string">"my-bucket"</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">object</span><span class="token punctuation">(</span><span class="token string">"test.jpg"</span><span class="token punctuation">)</span>
+      <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span>inputStream<span class="token punctuation">,</span> size<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment">// -1 表示不限制分片大小</span>
+      <span class="token punctuation">.</span><span class="token function">contentType</span><span class="token punctuation">(</span><span class="token string">"image/jpeg"</span><span class="token punctuation">)</span>      <span class="token comment">// 设置文件类型，方便浏览器直接预览</span>
+      <span class="token punctuation">.</span><span class="token function">build</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div>]]></content:encoded>
+    </item>
     <item>
       <title>item3 - 5 文件上传解析模块1</title>
       <link>http://ekkosonya.cn/code/java_item/3-smart/article5.html</link>
@@ -1523,66 +1663,99 @@ logger<span class="token punctuation">.</span><span class="token function">info<
 </ul>
 <h2>文件处理(解析+向量化)</h2>
 <figure><figcaption>alt text</figcaption></figure>
-<h3>Kafka</h3>
-<p>Apache Kafka是由LinkedIn采⽤Scala和Java开发的开源流处理软件平台，并捐赠给了Apache Software Foundation</p>
-<p>Kafka使用高效的数据存储和管理技术，能够轻松地处理TB级别的数据量。其优点包括高吞吐量、低延迟、可扩展性、持久性和容错性等</p>
-<p>Kafka的设计目标是高吞吐、低延迟和可扩展，主要关注消息传递而不是消息处理</p>
-<p>所以，Kafka并没有支持死信队列、顺序消息等高级功能 (需要自己设计?)</p>
-<h4>基本概念</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>生产者(Producer)和消费者(Consumer) - 客户端</h5>
-<p>客户端(Client)包括：生产者和消费者</p>
-<p>向主题发布消息的客户端应用程序称为生产者，生产者程序通常持续不断地向⼀个或多个主题发送消息</p>
-<p>订阅这些主题消息的客户端应用程序就被称为消费者，消费者也能够同时订阅多个主题的消息</p>
-<h5>服务端(Broker)</h5>
-<p>一个 Kafka服务器 就是一个 Broker</p>
-<p>集群由多个 Broker 组成，Broker 负责接收和处理客户端(即消息生产者和消息消费者)发送过来的请求，以及对消息进行持久化</p>
-<p>虽然多个 Broker 进程能够运行在同⼀台机器上，但更常见的做法是将不同的 Broker 分散运行在不同的机器上，这样如果集群中某⼀台机器宕机，即使在它上面运行的所有 Broker 进程都挂掉了，其他机器上的 Broker 也可以对外提供服务</p>
-<h5>Topic(主题)</h5>
-<p>是⼀个逻辑概念，⼀个Topic被认为是业务含义相同的⼀组消息</p>
-<p>发布订阅的对象是主题(Topic)，可以为每个业务、每个应用甚至是每类数据都创建专属的主题</p>
-<p>客户端都通过绑定 Topic 来生产或者消费自己感兴趣的话题</p>
-<h5>Partition(分区)</h5>
-<p>Topic只是⼀个逻辑概念，⽽Partition就是实际存储消息的组件，每个Topic可以对应多个Partition，并且这些分区可以存在不同的Broker中</p>
-<p>每个Partiton就是⼀个queue队列结构，所有消息以FIFO先进先出的顺序保存在这些Partition分区中</p>
-<p>生产者生产的每条消息只会被发送到⼀个分区中，也就是说如果向⼀个双分区的主题发送⼀条消息，这条消息要么在分区 0 中，要么在分区 1 中</p>
-<p>每个分区下可以配置若干个副本，其中只能有 1 个领导者副本和 N-1 个追随者副本</p>
-<p>生产者向分区写入消息，每条消息在分区中的位置信息叫位移</p>
-<h5>消费者组</h5>
-<p>每个消费者可以指定⼀个所属的消费者组，相同消费者组的消费者共同构成⼀个逻辑消费者组</p>
-<p>每⼀个消息会被多个感兴趣的消费者组消费，但是在每⼀个消费者组内部，⼀个消息只会被消费⼀次</p>
-<p>如果所有实例都属于同⼀个 Group, 那么它实现的就是消息队列模型</p>
-<p>如果所有实例分别属于不同的 Group ，那么它实现的就是发布/订阅模型</p>
-<h4>docker部署</h4>
-<p>在 dokcker 拉取镜像时部署Kafka</p>
-<p>整体主要做三件事：</p>
+<h3>Producer 消息发送</h3>
+<p>首先在 Kafka 中会创建两个Topic对应文档解析(<code>file-processing</code>)和向量化(<code>vectorization</code>)</p>
+<p>他们的副本和分区都简单设为1</p>
+<p>当用户成功把文件chunks均合并好后，会发送信息到 <code>file-processing</code> Topic</p>
+<p>合并文件的逻辑在 <code>uploadService.mergeChunks()</code>，MinIO会建立一个临时URL，来允许本地访问该文件，也会返回这个URL</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span> objectUrl <span class="token operator">=</span> uploadService<span class="token punctuation">.</span><span class="token function">mergeChunks</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">fileMd5</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">fileName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// URL类似</span>
+<span class="token comment">// http://localhost:19000/uploads/merged/original.docx?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=qmY5OyBsIST9I7FLxLug%2F20260122%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20260122T155744Z&amp;X-Amz-Expires=3600&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=e9d553cd260fea9d2449df25ca9fdbb7bef19b53137779de7113b859fc1432b0</span>
+</code></pre></div><p>之后就把对应信息发送给Kafka Broker</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>kafkaTemplate<span class="token punctuation">.</span><span class="token function">executeInTransaction</span><span class="token punctuation">(</span>kt <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
+  kt<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span>kafkaConfig<span class="token punctuation">.</span><span class="token function">getFileProcessingTopic</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>task 是 <code>FileProcessingTask</code> 类，主要包括了文件MD5 | 文件存储路径 | 文件名 | 上传用户ID | 文件所属组织标签 | 文件是否公开 信息</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Data</span>
+<span class="token annotation punctuation">@AllArgsConstructor</span>
+<span class="token annotation punctuation">@NoArgsConstructor</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">FileProcessingTask</span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> fileMd5<span class="token punctuation">;</span> <span class="token comment">// 文件的 MD5 校验值</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> filePath<span class="token punctuation">;</span> <span class="token comment">// 文件存储路径</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> fileName<span class="token punctuation">;</span> <span class="token comment">// 文件名</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> userId<span class="token punctuation">;</span>   <span class="token comment">// 上传用户ID</span>
+  <span class="token keyword">private</span> <span class="token class-name">String</span> orgTag<span class="token punctuation">;</span>   <span class="token comment">// 文件所属组织标签</span>
+  <span class="token keyword">private</span> <span class="token keyword">boolean</span> isPublic<span class="token punctuation">;</span> <span class="token comment">// 文件是否公开</span>
+  
+  <span class="token doc-comment comment">/**
+   * 向后兼容的构造函数
+   */</span>
+  <span class="token keyword">public</span> <span class="token class-name">FileProcessingTask</span><span class="token punctuation">(</span><span class="token class-name">String</span> fileMd5<span class="token punctuation">,</span> <span class="token class-name">String</span> filePath<span class="token punctuation">,</span> <span class="token class-name">String</span> fileName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>fileMd5 <span class="token operator">=</span> fileMd5<span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>filePath <span class="token operator">=</span> filePath<span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>fileName <span class="token operator">=</span> fileName<span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>userId <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>orgTag <span class="token operator">=</span> <span class="token string">"DEFAULT"</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>isPublic <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>Consumer 消息接收 - <code>FileProcessingConsumer</code></h3>
+<p>然后在 <code>FileProcessingConsumer</code> 中由 <code>@Listener</code> 注解来自动监听创建消费者，当对应监听的 Topic 有消息了，就会被消费</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@KafkaListener</span><span class="token punctuation">(</span>topics <span class="token operator">=</span> <span class="token string">"#{kafkaConfig.getFileProcessingTopic()}"</span><span class="token punctuation">,</span> groupId <span class="token operator">=</span> <span class="token string">"#{kafkaConfig.getFileProcessingGroupId()}"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">processTask</span><span class="token punctuation">(</span><span class="token class-name">FileProcessingTask</span> task<span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>
+</code></pre></div><h4>根据消息 <code>task</code> 下载文件</h4>
+<p>task 有对应文件存在MinIO的临时访问链接，基于此去访问获取文件输入流 <code>InputStream</code></p>
+<p>获取后要判断：1. 流是否有内容 2. 转换为可回退流</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Received task: {}"</span><span class="token punctuation">,</span> task<span class="token punctuation">)</span><span class="token punctuation">;</span>
+log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"文件权限信息: userId={}, orgTag={}, isPublic={}"</span><span class="token punctuation">,</span> 
+        task<span class="token punctuation">.</span><span class="token function">getUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">getOrgTag</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">isPublic</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+<span class="token class-name">InputStream</span> fileStream <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+<span class="token keyword">try</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 下载文件</span>
+  fileStream <span class="token operator">=</span> <span class="token function">downloadFileFromStorage</span><span class="token punctuation">(</span>task<span class="token punctuation">.</span><span class="token function">getFilePath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 在 downloadFileFromStorage 返回后立即检查流是否可读</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>fileStream <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">IOException</span><span class="token punctuation">(</span><span class="token string">"流为空"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 强制转换为可缓存流</span>
+  <span class="token comment">// 确保 fileStream 这个输入流拥有“倒带”（回退）的能力</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>fileStream<span class="token punctuation">.</span><span class="token function">markSupported</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      fileStream <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BufferedInputStream</span><span class="token punctuation">(</span>fileStream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><code>InputStream</code> 是一个单向的流，默认情况下，读了一个字节，指针就往后移一个，只能往前走，不能回头。</p>
+<p>但是，BufferedInputStream 具有 Mark (标记) 和 Reset (重置) 的功能：</p>
 <ul>
-<li>
-<p>启动一个单节点 Kafka（不依赖 Zookeeper，用 KRaft 模式）</p>
-</li>
-<li>
-<p>等 Kafka 真正起来之后，自动创建两个 Topic：<code>file-processing</code> 和 <code>vectorization</code></p>
-<p>Kafka 可用后，创建两个 topic：<code>file-processing</code> 和 <code>vectorization</code>
-每个都是：<code>replication-factor 1</code>（单副本）+ <code>partitions 1</code>（1 分区）</p>
-</li>
-<li>
-<p>做健康检查 + 持久化数据</p>
-</li>
+<li>Mark: 在当前位置做一个记号</li>
+<li>Reset: 读取一部分数据后，可以随时调用 reset() 让指针回到刚才做记号的地方，重新读取</li>
 </ul>
-<div class="language-yaml" data-ext="yml" data-title="yml"><pre class="language-yaml"><code><span class="token key atrule">services</span><span class="token punctuation">:</span>
-  <span class="token key atrule">kafka</span><span class="token punctuation">:</span>
-    <span class="token key atrule">image</span><span class="token punctuation">:</span> bitnamilegacy/kafka<span class="token punctuation">:</span>latest
-    <span class="token key atrule">container_name</span><span class="token punctuation">:</span> kafka       <span class="token comment"># 如果需要按照新的命名规则，请改为 pai_smart_kafka</span>
-    <span class="token key atrule">restart</span><span class="token punctuation">:</span> always
-    <span class="token key atrule">ports</span><span class="token punctuation">:</span>
-      <span class="token comment"># Kafka 客户端连接端口（producer/consumer 连接用）</span>
-      <span class="token punctuation">-</span> <span class="token string">"9092:9092"</span>
-      <span class="token comment"># KRaft controller 通信端口（Kafka 内部控制面用）</span>
-      <span class="token punctuation">-</span> <span class="token string">"9093:9093"</span>
-    <span class="token comment"># 把 Kafka 数据目录挂到 volume，重启容器数据不丢</span>
-    <span class="token key atrule">volumes</span><span class="token punctuation">:</span>
-      <span class="token punctuation">-</span> kafka<span class="token punctuation">-</span>data<span class="token punctuation">:</span>/bitnami/kafka
-    <span class="token comment"># </span></code></pre></div>]]></content:encoded>
+<p>目的：</p>
+<ul>
+<li>文件类型探测</li>
+<li>性能优化，BufferedInputStream 内部维护了一个内存缓冲区</li>
+</ul>
+<h4>解析文件 <code>parseService.parseAndSave</code></h4>
+<p>因为不可能把整片文章直接保存，这样也不好，不易于后续RAG理解，所以要根据语义或句子进行切割拆分，再放入对应的 <code>document_vectors</code> 数据表中</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>parseService<span class="token punctuation">.</span><span class="token function">parseAndSave</span><span class="token punctuation">(</span>task<span class="token punctuation">.</span><span class="token function">getFileMd5</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> fileStream<span class="token punctuation">,</span> 
+    task<span class="token punctuation">.</span><span class="token function">getUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">getOrgTag</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">isPublic</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"文件解析完成，fileMd5: {}"</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">getFileMd5</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4>向量化处理 <code>vectorizationService.vectorize</code></h4>
+<p>将存入表中分块的数据，依次借用大模型embedding来进行编码，最终存入ElasticSearch</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>vectorizationService<span class="token punctuation">.</span><span class="token function">vectorize</span><span class="token punctuation">(</span>task<span class="token punctuation">.</span><span class="token function">getFileMd5</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> 
+        task<span class="token punctuation">.</span><span class="token function">getUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">getOrgTag</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">isPublic</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"向量化完成，fileMd5: {}"</span><span class="token punctuation">,</span> task<span class="token punctuation">.</span><span class="token function">getFileMd5</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3>文件拆分存入数据表 <code>parseService.parseAndSave</code></h3>
+<h4><code>document_vectors</code> 数据表</h4>
+<p>每个文档会被切分成多个文本块 (chunk_id)，document_vectors 表存储了所有的文本块信息</p>
+<p>分两步，首先通过 <code>parseService.parseAndSave</code> 将文本块存入表中，但此时没有编码信息</p>
+<p>之后再根据文件MD5作为索引，依次调用 <code>vectorizationService.vectorize</code> 来对文本块进行编码，存入ES中</p>
+<p>| 字段名 | 类型 | 描述 |
+|</p>
+]]></content:encoded>
     </item>
     <item>
       <title>Kafka - 1</title>
@@ -2606,451 +2779,6 @@ kafkaTemplate<span class="token punctuation">.</span><span class="token function
 
 <span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">BatchAcknowledgingConsumerAwareMessageListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span> <span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token keyword">extends</span> <span class="token class-name">BatchMessageListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span> <span class="token class-name">V</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
   <span class="token keyword">void</span> <span class="token function">onMessage</span><span class="token punctuation">(</span><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">ConsumerRecord</span><span class="token punctuation">&lt;</span><span class="token class-name">K</span><span class="token punctuation">,</span> <span class="token class-name">V</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> data<span class="token punctuation">,</span> <span class="token class-name">Acknowledgment</span> acknowledgment<span class="token punctuation">,</span> <span class="token class-name">Consumer</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">,</span> <span class="token operator">?</span><span class="token punctuation">&gt;</span></span> consumer<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>item3 - 2 整体架构</title>
-      <link>http://ekkosonya.cn/code/java_item/3-smart/article2.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/3-smart/article2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">item3 - 2 整体架构</source>
-      <description>简介 这是一个基于 RAG 的 AI 知识库智能问答平台，结合了大语言模型以及向量化的技术来提供高效、准确的问答服务 用户可以通过上传各自的文档来构建相应专属的私有知识库，并可以与对应的agent实时交互提问。支持多轮对话、语义检索和动态知识库更新 </description>
-      <category>code</category>
-      <pubDate>Sat, 10 Jan 2026 06:49:04 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>简介</h2>
-<p>这是一个基于 RAG 的 AI 知识库智能问答平台，结合了大语言模型以及向量化的技术来提供高效、准确的问答服务</p>
-<p>用户可以通过上传各自的文档来构建相应专属的私有知识库，并可以与对应的agent实时交互提问。支持多轮对话、语义检索和动态知识库更新</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>item3 - 3 用户管理模块1</title>
-      <link>http://ekkosonya.cn/code/java_item/3-smart/article3.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/3-smart/article3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">item3 - 3 用户管理模块1</source>
-      <description>解决用户注册、登录以及权限控制 目的 确保用户身份安全性 有灵活权限管理机制，基于角色的访问控制，通过 RBAC 实现不同角色(管理员|普通用户)功能权限区分 为其他模块提供信息支持 实现功能 用户注册 允许用户使用用户名和密码进行注册，成功注册后默认分配普通用户的角色 流程 接收用户注册请求，验证用户名和密码 检查用户名是否已存在 使用 BCrypt...</description>
-      <category>code</category>
-      <pubDate>Sat, 10 Jan 2026 06:49:04 GMT</pubDate>
-      <content:encoded><![CDATA[<p>解决用户注册、登录以及权限控制</p>
-<h2>目的</h2>
-<ul>
-<li>确保用户身份安全性</li>
-<li>有灵活权限管理机制，基于角色的访问控制，通过 RBAC 实现不同角色(管理员|普通用户)功能权限区分</li>
-<li>为其他模块提供信息支持</li>
-</ul>
-<h2>实现功能</h2>
-<h3>用户注册</h3>
-<p>允许用户使用用户名和密码进行注册，成功注册后默认分配普通用户的角色</p>
-<h4>流程</h4>
-<ul>
-<li>接收用户注册请求，验证用户名和密码</li>
-<li>检查用户名是否已存在</li>
-<li>使用 BCrypt 加密密码</li>
-<li>创建用户记录，设置默认角色为USER =&gt; 存 users 表</li>
-<li>创建用户私人组织标签（PRIVATE_username） =&gt; 存 organization_tag 表</li>
-<li>将私人组织标签设置为用户的主组织标签</li>
-<li>返回注册成功响应</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>接口设计</h4>
-<ul>
-<li>
-<p>URL: /api/v1/users/register</p>
-</li>
-<li>
-<p>Method: POST</p>
-</li>
-<li>
-<p>Request Body</p>
-<div class="language-json" data-ext="json" data-title="json"><pre class="language-json"><code>  <span class="token punctuation">{</span>
-    <span class="token property">"username"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>   <span class="token comment">// 用户名，唯一</span>
-    <span class="token property">"password"</span><span class="token operator">:</span> <span class="token string">"string"</span>    <span class="token comment">// 密码（明文传输，后端加密存储）</span>
-  <span class="token punctuation">}</span>
-</code></pre></div></li>
-<li>
-<p>Response:</p>
-<div class="language-json" data-ext="json" data-title="json"><pre class="language-json"><code><span class="token punctuation">{</span>
-  <span class="token property">"code"</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token comment">// 成功</span>
-  <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"User registered successfully"</span>
-<span class="token punctuation">}</span>
-
-<span class="token punctuation">{</span>
-  <span class="token property">"code"</span><span class="token operator">:</span> <span class="token number">400</span><span class="token punctuation">,</span> <span class="token comment">// 失败</span>
-  <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"Username already exists"</span>
-<span class="token punctuation">}</span>
-</code></pre></div></li>
-</ul>
-<h4>具体实现</h4>
-<p>由于这个项目在数据库交互 (数据访问) 用的是 Spring Data JPA，所以不是 Mybatis 那样分的是 Mapper 层</p>
-<p>这里更常用的三层是</p>
-<ul>
-<li><code>UserController</code> (Controller层)</li>
-<li><code>UserService</code> (Service层)</li>
-<li><code>UserRepository</code> (Repository层)</li>
-</ul>
-<h5><code>UserController</code>层</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/register"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">ResponseEntity</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">UserRequest</span> request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">LogUtils<span class="token punctuation">.</span>PerformanceMonitor</span> monitor <span class="token operator">=</span> <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">startPerformanceMonitor</span><span class="token punctuation">(</span><span class="token string">"USER_REGISTER"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-        <span class="token comment">// 用户不合规检验</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span>
-                request<span class="token punctuation">.</span><span class="token function">password</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> request<span class="token punctuation">.</span><span class="token function">password</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span><span class="token string">"anonymous"</span><span class="token punctuation">,</span> <span class="token string">"REGISTER"</span><span class="token punctuation">,</span> <span class="token string">"validation"</span><span class="token punctuation">,</span> <span class="token string">"FAILED_EMPTY_PARAMS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"注册失败：参数为空"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">badRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Username and password cannot be empty"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        
-        <span class="token comment">// 进入 Service 层</span>
-        userService<span class="token punctuation">.</span><span class="token function">registerUser</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">password</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"REGISTER"</span><span class="token punctuation">,</span> <span class="token string">"user_creation"</span><span class="token punctuation">,</span> <span class="token string">"SUCCESS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"注册成功"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        
-        <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"User registered successfully"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">CustomException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logBusinessError</span><span class="token punctuation">(</span><span class="token string">"USER_REGISTER"</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"用户注册失败: %s"</span><span class="token punctuation">,</span> e<span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"注册失败: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logBusinessError</span><span class="token punctuation">(</span><span class="token string">"USER_REGISTER"</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"用户注册异常: %s"</span><span class="token punctuation">,</span> e<span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"注册异常: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token class-name">HttpStatus</span><span class="token punctuation">.</span><span class="token constant">INTERNAL_SERVER_ERROR</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Internal server error"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>整理流程还行，主要日志记录倒是没有见过，需要了解下</p>
-<h5><code>LogUtils</code>工具类</h5>
-<p>暂时简单了解下，之前是直接再对应类上加上 Lombok 的注解 <code>@Slf4j</code> 然后就可以用 <code>log</code> 来快速日志</p>
-<p>本质上在类上使用 <code>@Slf4j</code> 时，Lombok 默认生成的代码其实就是： <code>private static final Logger log = LoggerFactory.getLogger(当前类名.class)</code></p>
-<p>而这里是集成到了一个工具类上 <code>LogUtils</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LogUtils</span> <span class="token punctuation">{</span>
-    
-  <span class="token comment">// 业务日志记录器</span>
-  <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Logger</span> <span class="token constant">BUSINESS_LOGGER</span> <span class="token operator">=</span> <span class="token class-name">LoggerFactory</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"com.yizhaoqi.smartpai.business"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  
-  <span class="token comment">// 性能日志记录器</span>
-  <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Logger</span> <span class="token constant">PERFORMANCE_LOGGER</span> <span class="token operator">=</span> <span class="token class-name">LoggerFactory</span><span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span><span class="token string">"com.yizhaoqi.smartpai.performance"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment">// MDC键名常量</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token constant">USER_ID</span> <span class="token operator">=</span> <span class="token string">"userId"</span><span class="token punctuation">;</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token constant">REQUEST_ID</span> <span class="token operator">=</span> <span class="token string">"requestId"</span><span class="token punctuation">;</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token constant">SESSION_ID</span> <span class="token operator">=</span> <span class="token string">"sessionId"</span><span class="token punctuation">;</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token constant">OPERATION</span> <span class="token operator">=</span> <span class="token string">"operation"</span><span class="token punctuation">;</span>
-
-  <span class="token doc-comment comment">/**
-   * 记录业务日志
-   */</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">logBusiness</span><span class="token punctuation">(</span><span class="token class-name">String</span> operation<span class="token punctuation">,</span> <span class="token class-name">String</span> userId<span class="token punctuation">,</span> <span class="token class-name">String</span> message<span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">try</span> <span class="token punctuation">{</span>
-          <span class="token constant">MDC</span><span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token constant">OPERATION</span><span class="token punctuation">,</span> operation<span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token constant">MDC</span><span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token constant">USER_ID</span><span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token constant">BUSINESS_LOGGER</span><span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"[{}] [用户:{}] {}"</span><span class="token punctuation">,</span> operation<span class="token punctuation">,</span> userId<span class="token punctuation">,</span> <span class="token function">formatMessage</span><span class="token punctuation">(</span>message<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
-          <span class="token constant">MDC</span><span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-
-<span class="token punctuation">}</span>
-</code></pre></div><p>分别设置了两个记录器来记录业务和性能</p>
-<p>有一个概念 MDC (Mapped Diagnostic Context)，可以粗略的理解成是一个线程安全的存放诊断日志的容器</p>
-<p>简单了解是 将类中的对应静态变量（如 userId, requestId）绑定到当前线程，这样就能有具体信息对应，并且多线程下可以对应</p>
-<p>此外还有一个性能监视的内部类</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 性能监控装饰器
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">PerformanceMonitor</span> <span class="token punctuation">{</span>
-  <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">String</span> operation<span class="token punctuation">;</span>
-  <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token keyword">long</span> startTime<span class="token punctuation">;</span>
-  
-  <span class="token keyword">public</span> <span class="token class-name">PerformanceMonitor</span><span class="token punctuation">(</span><span class="token class-name">String</span> operation<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>operation <span class="token operator">=</span> operation<span class="token punctuation">;</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>startTime <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  
-  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token function">end</span><span class="token punctuation">(</span><span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  
-  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">end</span><span class="token punctuation">(</span><span class="token class-name">String</span> details<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">long</span> duration <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> startTime<span class="token punctuation">;</span>
-      <span class="token function">logPerformance</span><span class="token punctuation">(</span>operation<span class="token punctuation">,</span> duration<span class="token punctuation">,</span> details<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token doc-comment comment">/**
- * 创建性能监控器
- */</span>
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">PerformanceMonitor</span> <span class="token function">startPerformanceMonitor</span><span class="token punctuation">(</span><span class="token class-name">String</span> operation<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">PerformanceMonitor</span><span class="token punctuation">(</span>operation<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5><code>UserService</code>层</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
- * 注册新用户。
- *
- * <span class="token keyword">@param</span> <span class="token parameter">username</span> 要注册的用户名
- * <span class="token keyword">@param</span> <span class="token parameter">password</span> 要注册的用户密码
- * <span class="token keyword">@throws</span> <span class="token reference"><span class="token class-name">CustomException</span></span> 如果用户名已存在，则抛出异常
- */</span>
-<span class="token annotation punctuation">@Transactional</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">registerUser</span><span class="token punctuation">(</span><span class="token class-name">String</span> username<span class="token punctuation">,</span> <span class="token class-name">String</span> password<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 检查数据库中是否已存在该用户名</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>userRepository<span class="token punctuation">.</span><span class="token function">findByUsername</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isPresent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">// 若用户名已存在，抛出自定义异常，状态码为 400 Bad Request</span>
-        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">CustomException</span><span class="token punctuation">(</span><span class="token string">"Username already exists"</span><span class="token punctuation">,</span> <span class="token class-name">HttpStatus</span><span class="token punctuation">.</span><span class="token constant">BAD_REQUEST</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    
-    <span class="token comment">// 确保默认组织标签存在（系统内部使用）</span>
-    <span class="token function">ensureDefaultOrgTagExists</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token class-name">User</span> user <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    user<span class="token punctuation">.</span><span class="token function">setUsername</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// 对密码进行加密处理并设置到 User 对象中</span>
-    user<span class="token punctuation">.</span><span class="token function">setPassword</span><span class="token punctuation">(</span><span class="token class-name">PasswordUtil</span><span class="token punctuation">.</span><span class="token function">encode</span><span class="token punctuation">(</span>password<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// 设置用户角色为普通用户</span>
-    user<span class="token punctuation">.</span><span class="token function">setRole</span><span class="token punctuation">(</span><span class="token class-name">User<span class="token punctuation">.</span>Role</span><span class="token punctuation">.</span><span class="token constant">USER</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 保存用户以生成ID</span>
-    userRepository<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 创建用户的私人组织标签</span>
-    <span class="token class-name">String</span> privateTagId <span class="token operator">=</span> <span class="token constant">PRIVATE_TAG_PREFIX</span> <span class="token operator">+</span> username<span class="token punctuation">;</span>
-    <span class="token function">createPrivateOrgTag</span><span class="token punctuation">(</span>privateTagId<span class="token punctuation">,</span> username<span class="token punctuation">,</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 只分配私人组织标签</span>
-    user<span class="token punctuation">.</span><span class="token function">setOrgTags</span><span class="token punctuation">(</span>privateTagId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 设置私人组织标签为主组织标签</span>
-    user<span class="token punctuation">.</span><span class="token function">setPrimaryOrg</span><span class="token punctuation">(</span>privateTagId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    userRepository<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">// 缓存组织标签信息</span>
-    orgTagCacheService<span class="token punctuation">.</span><span class="token function">cacheUserOrgTags</span><span class="token punctuation">(</span>username<span class="token punctuation">,</span> <span class="token class-name">List</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>privateTagId<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    orgTagCacheService<span class="token punctuation">.</span><span class="token function">cacheUserPrimaryOrg</span><span class="token punctuation">(</span>username<span class="token punctuation">,</span> privateTagId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"User registered successfully with private organization tag: {}"</span><span class="token punctuation">,</span> username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>用户登录</h3>
-<p>根据传来的用户信息进行校验，成功就生成包含用户信息和组织标签的 JWT Token，来认证用户信息，支持后续操作</p>
-<h4>流程</h4>
-<ul>
-<li>接收用户登录请求，获取用户名和密码</li>
-<li>查询用户记录并验证密码</li>
-<li>加载用户组织标签信息</li>
-<li>基于用户信息和组织标签，生成包含用户信息和组织标签的 JWT Token</li>
-<li>返回登录成功响应和 Token</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>接口设计</h4>
-<ul>
-<li>
-<p>URL: /api/v1/users/login</p>
-</li>
-<li>
-<p>Method: POST</p>
-</li>
-<li>
-<p>Request Body:</p>
-<div class="language-json" data-ext="json" data-title="json"><pre class="language-json"><code><span class="token punctuation">{</span>
-  <span class="token property">"username"</span><span class="token operator">:</span> <span class="token string">"string"</span><span class="token punctuation">,</span>
-  <span class="token property">"password"</span><span class="token operator">:</span> <span class="token string">"string"</span>
-<span class="token punctuation">}</span>
-</code></pre></div></li>
-<li>
-<p>Response:</p>
-<div class="language-json" data-ext="json" data-title="json"><pre class="language-json"><code><span class="token punctuation">{</span>
-  <span class="token property">"code"</span><span class="token operator">:</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token comment">// 成功</span>
-  <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"Login successful"</span><span class="token punctuation">,</span>
-  <span class="token property">"data"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"token"</span><span class="token operator">:</span> <span class="token string">"JWT_TOKEN_STRING"</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token punctuation">{</span>
-  <span class="token property">"code"</span><span class="token operator">:</span> <span class="token number">401</span><span class="token punctuation">,</span> <span class="token comment">// 失败</span>
-  <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"Invalid username or password"</span>
-<span class="token punctuation">}</span>
-</code></pre></div></li>
-</ul>
-<h4>具体实现</h4>
-<p>同样的，类似还是分了三层来进行实现</p>
-<h5><code>UserController</code></h5>
-<p>先在 Controller 层来处理请求</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/login"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">ResponseEntity</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> <span class="token function">login</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span> <span class="token class-name">UserRequest</span> request<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token class-name">LogUtils<span class="token punctuation">.</span>PerformanceMonitor</span> monitor <span class="token operator">=</span> <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">startPerformanceMonitor</span><span class="token punctuation">(</span><span class="token string">"USER_LOGIN"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">||</span>
-              request<span class="token punctuation">.</span><span class="token function">password</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> request<span class="token punctuation">.</span><span class="token function">password</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span><span class="token string">"anonymous"</span><span class="token punctuation">,</span> <span class="token string">"LOGIN"</span><span class="token punctuation">,</span> <span class="token string">"validation"</span><span class="token punctuation">,</span> <span class="token string">"FAILED_EMPTY_PARAMS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">badRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Username and password cannot be empty"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-      
-      <span class="token class-name">String</span> username <span class="token operator">=</span> userService<span class="token punctuation">.</span><span class="token function">authenticateUser</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">password</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>username <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"LOGIN"</span><span class="token punctuation">,</span> <span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"FAILED_INVALID_CREDENTIALS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">401</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">401</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Invalid credentials"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-      
-      <span class="token class-name">String</span> token <span class="token operator">=</span> jwtUtils<span class="token punctuation">.</span><span class="token function">generateToken</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token class-name">String</span> refreshToken <span class="token operator">=</span> jwtUtils<span class="token punctuation">.</span><span class="token function">generateRefreshToken</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span>username<span class="token punctuation">,</span> <span class="token string">"LOGIN"</span><span class="token punctuation">,</span> <span class="token string">"token_generation"</span><span class="token punctuation">,</span> <span class="token string">"SUCCESS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登录成功"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      
-      <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Login successful"</span><span class="token punctuation">,</span> <span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>
-          <span class="token string">"token"</span><span class="token punctuation">,</span> token<span class="token punctuation">,</span>
-          <span class="token string">"refreshToken"</span><span class="token punctuation">,</span> refreshToken
-      <span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">CustomException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logBusinessError</span><span class="token punctuation">(</span><span class="token string">"USER_LOGIN"</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"登录失败: %s"</span><span class="token punctuation">,</span> e<span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登录失败: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getStatus</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logBusinessError</span><span class="token punctuation">(</span><span class="token string">"USER_LOGIN"</span><span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"登录异常: %s"</span><span class="token punctuation">,</span> e<span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登录异常: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Internal server error"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>先判断账号名和密码的合理性，然后传到 <code>userService</code> 层进行验证</p>
-<p>根据返回的 <code>username</code> 来判断是否成功</p>
-<p>成功就开始建立 JWT token</p>
-<h5><code>UserService</code></h5>
-<p>对应 <code>Service</code> 中的实现方法就比较简单了，就是查询下用户是否在数据库里</p>
-<p>通过与 <code>Repository</code> 进行数据库交互</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">authenticateUser</span><span class="token punctuation">(</span><span class="token class-name">String</span> username<span class="token punctuation">,</span> <span class="token class-name">String</span> password<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token class-name">User</span> user <span class="token operator">=</span> userRepository<span class="token punctuation">.</span><span class="token function">findByUsername</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span>
-          <span class="token punctuation">.</span><span class="token function">orElseThrow</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token keyword">new</span> <span class="token class-name">CustomException</span><span class="token punctuation">(</span><span class="token string">"Invalid username or password"</span><span class="token punctuation">,</span> <span class="token class-name">HttpStatus</span><span class="token punctuation">.</span><span class="token constant">UNAUTHORIZED</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token comment">// 比较输入的密码和数据库中存储的加密密码是否匹配</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token class-name">PasswordUtil</span><span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span>password<span class="token punctuation">,</span> user<span class="token punctuation">.</span><span class="token function">getPassword</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token comment">// 若不匹配，抛出自定义异常，状态码为 401 Unauthorized</span>
-      <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">CustomException</span><span class="token punctuation">(</span><span class="token string">"Invalid username or password"</span><span class="token punctuation">,</span> <span class="token class-name">HttpStatus</span><span class="token punctuation">.</span><span class="token constant">UNAUTHORIZED</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-  <span class="token comment">// 认证成功，返回用户的用户名</span>
-  <span class="token keyword">return</span> user<span class="token punctuation">.</span><span class="token function">getUsername</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>JWT Token</h5>
-<p>在 Service 层完成交互返回用户名字后，<code>Controller</code>层还需要继续完成逻辑，先校验用户是否存在，存在再将其放到 JWT Token 传回</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">if</span> <span class="token punctuation">(</span>username <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">username</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"LOGIN"</span><span class="token punctuation">,</span> <span class="token string">"authentication"</span><span class="token punctuation">,</span> <span class="token string">"FAILED_INVALID_CREDENTIALS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">401</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">401</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Invalid credentials"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token class-name">String</span> token <span class="token operator">=</span> jwtUtils<span class="token punctuation">.</span><span class="token function">generateToken</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">String</span> refreshToken <span class="token operator">=</span> jwtUtils<span class="token punctuation">.</span><span class="token function">generateRefreshToken</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span>username<span class="token punctuation">,</span> <span class="token string">"LOGIN"</span><span class="token punctuation">,</span> <span class="token string">"token_generation"</span><span class="token punctuation">,</span> <span class="token string">"SUCCESS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登录成功"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Login successful"</span><span class="token punctuation">,</span> <span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span>
-  <span class="token string">"token"</span><span class="token punctuation">,</span> token<span class="token punctuation">,</span>
-  <span class="token string">"refreshToken"</span><span class="token punctuation">,</span> refreshToken
-<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>对应的 JWT 生成工具封装在 JwtUtils 下</p>
-<p>一个JWT令牌由3部分组成：标头(Header)、有效载荷(Payload)和签名(Signature)</p>
-<p>在传输的时候，会将JWT的前2部分分别进行Base64编码后用.进行连接形成最终需要传输的字符串。</p>
-<ul>
-<li>
-<p>标头：包含一些元数据信息，比如JWT签名所使用的加密算法，还有类型，这里统一都是JWT。</p>
-</li>
-<li>
-<p>有效载荷：包括用户名称、令牌发布时间、过期时间、JWT ID等，当然我们也可以自定义添加字段，我们的用户信息一般都在这里存放。</p>
-</li>
-<li>
-<p>签名：首先需要指定一个密钥，该密钥仅仅保存在服务器中，保证不能让其他用户知道。然后使用Header中指定的算法对Header和Payload进行base64加密之后的结果通过密钥计算哈希值，然后就得出一个签名哈希。这个会用于之后验证内容是否被篡改。这样即使别人改了前面两个的内容，传回来通过秘钥加密对比就不一样了</p>
-</li>
-</ul>
-<p>标头和载荷直接通过 base64 编/解码，但要验证有效性，必须根据标头和载荷的base64编码值利用对应加密算法和指定秘钥加密后，与签名比对</p>
-<h5>双 Token 机制</h5>
-<p>这里登录采用了双 Token 机制，来解决 Token 被别人恶意截获的情况</p>
-<p>JWT 是无状态的，后端不保存它。如果 Token 被偷且有效期很长（比如 7 天），那黑客就能横行 7 天。</p>
-<ul>
-<li>双 Token 机制（Access + Refresh）：
-<ul>
-<li>Access Token：有效期极短（如 15 分钟），负责日常接口访问。</li>
-<li>Refresh Token：有效期较长（如 7 天），仅用于换取新的 Access Token。</li>
-</ul>
-</li>
-</ul>
-<p>效果：即使 Access Token 被截获，黑客也只能操作 15 分钟。由于 Refresh Token 的调用频率极低，被截获的概率也小得多</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span> token <span class="token operator">=</span> jwtUtils<span class="token punctuation">.</span><span class="token function">generateToken</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">String</span> refreshToken <span class="token operator">=</span> jwtUtils<span class="token punctuation">.</span><span class="token function">generateRefreshToken</span><span class="token punctuation">(</span>username<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>分别创了两个 token，均保存到 redis 中</p>
-<p>第一个 token 有效期是 1 h，包含了用户的信息+组织+主组织以及 uuid生成的唯一tokenId，因此有效期短，负责日常接口访问</p>
-<p>第二个 token 是 refreshToken，就包含了 uuid生成的唯一tokenId, 以及用户名字，主要目的是可以基于这个来刷新获取 第一个token</p>
-<p>即使 Access Token 被截获，黑客也只能操作 15 分钟。由于 Refresh Token 的调用频率极低，被截获的概率也小得多</p>
-<p>为了让这个机制真正生效，具体流程应该是：</p>
-<ul>
-<li>
-<p>平时：前端在请求头（如 Authorization: Bearer <code>token</code>）中携带 token。后端校验这个短效 Token。</p>
-</li>
-<li>
-<p>过期时：当 token 过期，后端返回 401 Unauthorized。</p>
-</li>
-<li>
-<p>静默刷新：前端拦截到 401 后，不跳转登录页，而是自动调用另一个 /refresh 接口，把 refreshToken 发给后端。</p>
-</li>
-<li>
-<p>续期：后端校验 refreshToken 有效后，重新生成一个新的 token 返回。前端拿到新 Token 后重试刚才失败的请求。用户全程无感知。</p>
-</li>
-</ul>
-<h3>用户注销</h3>
-<p>用户退出，如果 token 没过期，需要主动将其放入黑名单里</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 用户登出接口</span>
-<span class="token annotation punctuation">@PostMapping</span><span class="token punctuation">(</span><span class="token string">"/logout"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token class-name">ResponseEntity</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> <span class="token function">logout</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestHeader</span><span class="token punctuation">(</span><span class="token string">"Authorization"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> token<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token class-name">LogUtils<span class="token punctuation">.</span>PerformanceMonitor</span> monitor <span class="token operator">=</span> <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">startPerformanceMonitor</span><span class="token punctuation">(</span><span class="token string">"USER_LOGOUT"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">String</span> username <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>token <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> <span class="token operator">!</span>token<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"Bearer "</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span><span class="token string">"anonymous"</span><span class="token punctuation">,</span> <span class="token string">"LOGOUT"</span><span class="token punctuation">,</span> <span class="token string">"validation"</span><span class="token punctuation">,</span> <span class="token string">"FAILED_INVALID_TOKEN"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登出失败：token格式无效"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">badRequest</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Invalid token format"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-
-      <span class="token class-name">String</span> jwtToken <span class="token operator">=</span> token<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">"Bearer "</span><span class="token punctuation">,</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      username <span class="token operator">=</span> jwtUtils<span class="token punctuation">.</span><span class="token function">extractUsernameFromToken</span><span class="token punctuation">(</span>jwtToken<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>username <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">||</span> username<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span><span class="token string">"anonymous"</span><span class="token punctuation">,</span> <span class="token string">"LOGOUT"</span><span class="token punctuation">,</span> <span class="token string">"token_extraction"</span><span class="token punctuation">,</span> <span class="token string">"FAILED_NO_USERNAME"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登出失败：无法提取用户名"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token number">401</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">401</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Invalid token"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-
-      <span class="token comment">// 使当前token失效</span>
-      jwtUtils<span class="token punctuation">.</span><span class="token function">invalidateToken</span><span class="token punctuation">(</span>jwtToken<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      
-      <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logUserOperation</span><span class="token punctuation">(</span>username<span class="token punctuation">,</span> <span class="token string">"LOGOUT"</span><span class="token punctuation">,</span> <span class="token string">"token_invalidation"</span><span class="token punctuation">,</span> <span class="token string">"SUCCESS"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登出成功"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">ok</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Logout successful"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">LogUtils</span><span class="token punctuation">.</span><span class="token function">logBusinessError</span><span class="token punctuation">(</span><span class="token string">"USER_LOGOUT"</span><span class="token punctuation">,</span> username<span class="token punctuation">,</span> <span class="token string">"登出异常: %s"</span><span class="token punctuation">,</span> e<span class="token punctuation">,</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      monitor<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token string">"登出异常: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">return</span> <span class="token class-name">ResponseEntity</span><span class="token punctuation">.</span><span class="token function">status</span><span class="token punctuation">(</span><span class="token class-name">HttpStatus</span><span class="token punctuation">.</span><span class="token constant">INTERNAL_SERVER_ERROR</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">body</span><span class="token punctuation">(</span><span class="token class-name">Map</span><span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"code"</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">,</span> <span class="token string">"message"</span><span class="token punctuation">,</span> <span class="token string">"Internal server error"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>首先会根据传来的 JWT Token 解析用户名来判断是否正确，然后登出，会将 token 拉入黑名单 <code>jwtUtils.invalidateToken(jwtToken)</code></p>
-<p>而对应的黑名单的有效期就是这个token剩余的时长即可</p>
-<p>存在 redis 对应的 key 为<code>jwt:blacklist:token_id</code> String类型，value为对应 <code>System.currentTimeMillis()</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">invalidateToken</span><span class="token punctuation">(</span><span class="token class-name">String</span> token<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token class-name">String</span> tokenId <span class="token operator">=</span> <span class="token function">extractTokenIdFromToken</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>tokenId <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token class-name">Claims</span> claims <span class="token operator">=</span> <span class="token function">extractClaimsIgnoreExpiration</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token keyword">if</span> <span class="token punctuation">(</span>claims <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-              <span class="token keyword">long</span> expireTime <span class="token operator">=</span> claims<span class="token punctuation">.</span><span class="token function">getExpiration</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-              <span class="token class-name">String</span> userId <span class="token operator">=</span> claims<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">"userId"</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-              
-              <span class="token comment">// 加入黑名单</span>
-              tokenCacheService<span class="token punctuation">.</span><span class="token function">blacklistToken</span><span class="token punctuation">(</span>tokenId<span class="token punctuation">,</span> expireTime<span class="token punctuation">)</span><span class="token punctuation">;</span>
-              <span class="token comment">// 从缓存中移除</span>
-              tokenCacheService<span class="token punctuation">.</span><span class="token function">removeToken</span><span class="token punctuation">(</span>tokenId<span class="token punctuation">,</span> userId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-              
-              logger<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"Token invalidated: {}"</span><span class="token punctuation">,</span> tokenId<span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token punctuation">}</span>
-      <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token string">"Error invalidating token"</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
 <span class="token punctuation">}</span>
 </code></pre></div>]]></content:encoded>
     </item>

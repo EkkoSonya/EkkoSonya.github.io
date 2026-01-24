@@ -1,6 +1,6 @@
 ---
 title: item3 - 8 文件解析模块1
-date: 2026-1-12
+date: 2026-1-23
 category:
   - code
 tag:
@@ -24,524 +24,7 @@ order: -0.6
 
 ![alt text](img/11.png)
 
-### Kafka
-
-Apache Kafka是由LinkedIn采⽤Scala和Java开发的开源流处理软件平台，并捐赠给了Apache Software Foundation
-
-Kafka使用高效的数据存储和管理技术，能够轻松地处理TB级别的数据量。其优点包括高吞吐量、低延迟、可扩展性、持久性和容错性等
-
-Kafka的设计目标是高吞吐、低延迟和可扩展，主要关注消息传递而不是消息处理
-
-所以，Kafka并没有支持死信队列、顺序消息等高级功能 (需要自己设计?)
-
-#### 基本概念
-
-![alt text](img/12.png)
-
-##### 生产者(Producer)和消费者(Consumer) - 客户端
-
-客户端(Client)包括：生产者和消费者
-
-向主题发布消息的客户端应用程序称为生产者，生产者程序通常持续不断地向⼀个或多个主题发送消息
-
-订阅这些主题消息的客户端应用程序就被称为消费者，消费者也能够同时订阅多个主题的消息
-
-##### 服务端(Broker)
-
-一个 Kafka服务器 就是一个 Broker
-
-集群由多个 Broker 组成，Broker 负责接收和处理客户端(即消息生产者和消息消费者)发送过来的请求，以及对消息进行持久化
-
-虽然多个 Broker 进程能够运行在同⼀台机器上，但更常见的做法是将不同的 Broker 分散运行在不同的机器上，这样如果集群中某⼀台机器宕机，即使在它上面运行的所有 Broker 进程都挂掉了，其他机器上的 Broker 也可以对外提供服务
-
-##### Topic(主题)
-
-是⼀个逻辑概念，⼀个Topic被认为是业务含义相同的⼀组消息
-
-发布订阅的对象是主题(Topic)，可以为每个业务、每个应用甚至是每类数据都创建专属的主题
-
-客户端都通过绑定 Topic 来生产或者消费自己感兴趣的话题
-
-##### Partition(分区)
-
-Topic只是⼀个逻辑概念，⽽Partition就是实际存储消息的组件，每个Topic可以对应多个Partition，并且这些分区可以存在不同的Broker中
-
-每个Partiton就是⼀个queue队列结构，所有消息以FIFO先进先出的顺序保存在这些Partition分区中
-
-生产者生产的每条消息只会被发送到⼀个分区中，也就是说如果向⼀个双分区的主题发送⼀条消息，这条消息要么在分区 0 中，要么在分区 1 中
-
-每个分区下可以配置若干个副本，其中只能有 1 个领导者副本和 N-1 个追随者副本
-
-生产者向分区写入消息，每条消息在分区中的位置信息叫位移
-
-##### 消费者组
-
-每个消费者可以指定⼀个所属的消费者组，相同消费者组的消费者共同构成⼀个逻辑消费者组
-
-每⼀个消息会被多个感兴趣的消费者组消费，但是在每⼀个消费者组内部，⼀个消息只会被消费⼀次
-
-如果所有实例都属于同⼀个 Group, 那么它实现的就是消息队列模型
-
-如果所有实例分别属于不同的 Group ，那么它实现的就是发布/订阅模型
-
-#### docker部署
-
-在 dokcker 拉取镜像时部署Kafka
-
-整体主要做三件事：
-
-- 启动一个单节点 Kafka（不依赖 Zookeeper，用 KRaft 模式）
-
-- 等 Kafka 真正起来之后，自动创建两个 Topic：`file-processing` 和 `vectorization`
-  
-  Kafka 可用后，创建两个 topic：`file-processing` 和 `vectorization`
-  每个都是：`replication-factor 1`（单副本）+ `partitions 1`（1 分区）
-
-- 做健康检查 + 持久化数据
-
-```yaml
-services:
-  kafka:
-    image: bitnamilegacy/kafka:latest
-    container_name: kafka       # 如果需要按照新的命名规则，请改为 pai_smart_kafka
-    restart: always
-    ports:
-      # Kafka 客户端连接端口（producer/consumer 连接用）
-      - "9092:9092"
-      # KRaft controller 通信端口（Kafka 内部控制面用）
-      - "9093:9093"
-    # 把 Kafka 数据目录挂到 volume，重启容器数据不丢
-    volumes:
-      - kafka-data:/bitnami/kafka
-    # ---------------------------------------------------- #
-    environment:
-      # 单节点启动
-      - KAFKA_CFG_NODE_ID=0
-      # 同一个进程同时扮演 controller + broker
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@localhost:9093
-
-      # 监听器配置 对谁开放、用哪个端口
-      - KAFKA_CFG_LISTENERS=CONTROLLER://:9093,PLAINTEXT://:9092
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-    command:
-      - sh
-      - -c
-      - |
-        # 启动 Kafka（使用 bitnami 完整初始化流程）
-        /opt/bitnami/scripts/kafka/run.sh &
-
-        # 等待 Kafka 完全启动（更可靠的检测方式）
-        echo "Waiting for Kafka to start..."
-        while ! kafka-topics.sh --bootstrap-server localhost:9092 --list 2>/dev/null; do
-          sleep 2
-        done
-
-        # 创建第一个主题（忽略已存在的错误）
-        echo "Creating topic: file-processing"
-        kafka-topics.sh --create \
-          --bootstrap-server localhost:9092 \
-          --replication-factor 1 \
-          --partitions 1 \
-          --topic file-processing 2>/dev/null || true
-
-        # 创建第二个主题 vectorization
-        echo "Creating topic: vectorization"
-        kafka-topics.sh --create \
-          --bootstrap-server localhost:9092 \
-          --replication-factor 1 \
-          --partitions 1 \
-          --topic vectorization 2>/dev/null || true
-        # 保持容器运行
-        tail -f /dev/null
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1",
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
-```
-
-在使用时用的是 `KafkaTemplate<String, Object>`
-
-##### Kafka结构
-
-### JAVA 使用Kafka API
-
-#### 发送消息 `KafkaTemplate`
-
-`KafkaTemplate` 封装了一个生产者，并提供了便捷方法将数据发送到 Kafka 主题
-
-该类构造方法需要传递一个 `ProducerFactory` 对象，来表示如何根据对应配置创建一个生产者从而进行消息传递
-
-```java
-public KafkaTemplate(ProducerFactory<K, V> producerFactory) {
-  this(producerFactory, false);
-}
-
-public KafkaTemplate(ProducerFactory<K, V> producerFactory, boolean autoFlush) {
-  this(producerFactory, autoFlush, (Map)null);
-}
-
-public KafkaTemplate(ProducerFactory<K, V> producerFactory, boolean autoFlush, @Nullable Map<String, Object> configOverrides) {
-  this.logger = new LogAccessor(LogFactory.getLog(this.getClass()));
-  this.producers = new ConcurrentHashMap();
-  this.micrometerTags = new HashMap();
-  this.clusterIdLock = new ReentrantLock();
-  this.beanName = "kafkaTemplate";
-  this.messageConverter = new MessagingMessageConverter();
-  this.producerListener = new LoggingProducerListener();
-  this.closeTimeout = ProducerFactoryUtils.DEFAULT_CLOSE_TIMEOUT;
-  this.micrometerEnabled = true;
-  this.observationRegistry = ObservationRegistry.NOOP;
-  Assert.notNull(producerFactory, "'producerFactory' cannot be null");
-  this.autoFlush = autoFlush;
-  this.micrometerEnabled = KafkaUtils.MICROMETER_PRESENT;
-  this.customProducerFactory = !CollectionUtils.isEmpty(configOverrides);
-  if (this.customProducerFactory) {
-      this.producerFactory = producerFactory.copyWithConfigurationOverride(configOverrides);
-  } else {
-      this.producerFactory = producerFactory;
-  }
-
-  this.transactional = this.producerFactory.transactionCapable();
-}
-```
-
-##### 创建 `KafkaTemplate`
-
-就需要提供一个 `ProducerFactory` 对象 生产者工厂，规定了一些基础配置，然后在 Template 构造时引用
-
-`ProducerConfig` 是 Kafka 客户端里定义的生产者配置项大全的类
-
-例子
-
-```java
-@Bean
-public ProducerFactory producerFactory() {
-    return new DefaultKafkaProducerFactory<>(producerConfigs());
-}
-
-@Bean
-public Map producerConfigs() {
-    Map props = new HashMap<>();
-    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class);
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-    // See https://kafka.apache.org/41/documentation/#producerconfigs for more properties
-    return props;
-}
-
-@Bean
-public KafkaTemplate kafkaTemplate() {
-    return new KafkaTemplate(producerFactory());
-}
-```
-
-此外，比如我们前面注册了一个 `ProducerFactory<String, Object>` 的类, 我们在穿件别的，可以覆盖这个工厂的 `ProducerConfig` 属性，以使用与同一工厂不同的生产者配置创建模板
-
-```java
-@Bean
-public KafkaTemplate<String, Object> reliableTemplate(ProducerFactory<String, Object> pf) {
-  Map<String, Object> overrides = new HashMap<>();
-  overrides.put(ProducerConfig.ACKS_CONFIG, "all");
-  overrides.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
-  overrides.put(ProducerConfig.RETRIES_CONFIG, 3);
-
-  return new KafkaTemplate<>(pf, overrides);
-}
-```
-
-##### `KafkaTemplate`方法
-
-```java
-CompletableFuture<SendResult<K, V>> sendDefault(V data);
-
-CompletableFuture<SendResult<K, V>> sendDefault(K key, V data);
-
-CompletableFuture<SendResult<K, V>> sendDefault(Integer partition, K key, V data);
-
-CompletableFuture<SendResult<K, V>> sendDefault(Integer partition, Long timestamp, K key, V data);
-
-CompletableFuture<SendResult<K, V>> send(String topic, V data);
-
-CompletableFuture<SendResult<K, V>> send(String topic, K key, V data);
-
-CompletableFuture<SendResult<K, V>> send(String topic, Integer partition, K key, V data);
-
-CompletableFuture<SendResult<K, V>> send(String topic, Integer partition, Long timestamp, K key, V data);
-
-CompletableFuture<SendResult<K, V>> send(ProducerRecord<K, V> record);
-
-CompletableFuture<SendResult<K, V>> send(Message<?> message);
-
-Map<MetricName, ? extends Metric> metrics();
-
-List<PartitionInfo> partitionsFor(String topic);
-
-<T> T execute(ProducerCallback<K, V, T> callback);
-
-<T> T executeInTransaction(OperationsCallback<K, V, T> callback);
-
-// Flush the producer.
-void flush();
-
-interface ProducerCallback<K, V, T> {
-
-    T doInKafka(Producer<K, V> producer);
-
-}
-
-interface OperationsCallback<K, V, T> {
-
-    T doInOperations(KafkaOperations<K, V> operations);
-
-}
-```
-
-主要方法有 `send` 和 `sendDefault`，并且返回的都是 `Future` 类型 `CompletableFuture`
-
-The sendDefault API requires that a default topic has been provided to the template.
-
-```java
-public CompletableFuture<SendResult<K, V>> sendDefault(@Nullable V data) {
-  return this.send(this.defaultTopic, data);
-}
-```
-
-即用 `sendDefault` 方法需要确定 `defaultTopic`
-
-而 `send` 需要自己指明
-
-调用 `kafkaTemplate.metrics()` (拿生产者的监控指标) 和 `kafkaTemplate.partitionsFor(topic)` (查 topic 的分区信息)
-
-KafkaTemplate 不自己实现这些功能，它会把调用原封不动转发给底层的 `org.apache.kafka.clients.producer.KafkaProducer`（或者说 Producer 实例）去执行
-
-调用 KafkaTemplate.send(Message<?> message) 这种方法时, 消息的元信息（topic、partition、key、timestamp）不再写在参数里，而是放在 Message 的 header（消息头）里传递
-
-`Message`
-
-Spring 自己定义了一个通用消息接口：`org.springframework.messaging.Message<T>`
-
-它的实现在 `GenericMessage<T>`
-
-主要就是有两个属性一个是 `payload` 一个是 `headers`
-
-如果用 `Message` 传信息就可以这样写
-
-```java
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.kafka.support.KafkaHeaders;
-
-Message<FileProcessingTask> message = MessageBuilder
-        .withPayload(task)
-        .setHeader(KafkaHeaders.TOPIC, kafkaConfig.getFileProcessingTopic())
-        .setHeader(KafkaHeaders.KEY, request.fileMd5())
-        .setHeader(KafkaHeaders.TIMESTAMP, System.currentTimeMillis())
-        .build();
-
-kafkaTemplate.send(message);
-```
-
-##### 向 Kafka 发送消息
-
-发送方法返回一个 `CompletableFuture<SendResult>` 对象，我们需要用 `whenComplete(...)` 去写回调
-
-非阻塞
-
-```java
-public void sendToKafka(final MyOutputData data) {
-  final ProducerRecord<String, String> record = createRecord(data);
-
-  CompletableFuture<SendResult<String, String>> future = template.send(record);
-  future.whenComplete((result, ex) -> {
-      if (ex == null) {
-          handleSuccess(data);
-      }
-      else {
-          handleFailure(data, record, ex);
-      }
-  });
-}
-```
-
-阻塞
-
-```java
-public void sendToKafka(final MyOutputData data) {
-  final ProducerRecord<String, String> record = createRecord(data);
-
-  try {
-      template.send(record).get(10, TimeUnit.SECONDS);
-      handleSuccess(data);
-  }
-  catch (ExecutionException e) {
-      handleFailure(data, record, e.getCause());
-  }
-  catch (TimeoutException | InterruptedException e) {
-      handleFailure(data, record, e);
-  }
-}
-```
-
-##### 事务
-
-Spring Kafka 在 `executeInTransaction` 里会做这些事（概念上）：
-
-- 从 ProducerFactory 拿一个“事务型 Producer”（前提是你设置了 transactionIdPrefix）
-- beginTransaction()
-- 执行你的 lambda：send(...)
-- commitTransaction()
-  - 如果 lambda 里抛异常或发送失败导致异常冒泡：abortTransaction()
-
-用事务是希望这个任务消息一定要可靠地发出去，最好和我前面那堆数据库操作（更新 file_upload 状态、写记录等）形成一个一致的提交边界
-
-##### 监听 `ProducerListener`
-
-可以为 KafkaTemplate 配置一个 ProducerListener，以获取发送结果（成功或失败）的异步回调，而不是等待 Future 完成
-
-```java
-public interface ProducerListener<K, V> {
-  default void onSuccess(ProducerRecord<K, V> producerRecord, RecordMetadata recordMetadata) {
-  }
-
-    default void onError(ProducerRecord<K, V> producerRecord, RecordMetadata recordMetadata, Exception exception) {
-  }
-}
-```
-
-示例
-
-可以 `KafkaProducerListenerConfig.java` 建一个监听配置
-
-```java
-@Component
-public class KafkaProducerLogListener implements ProducerListener<String, Object> {
-
-    @Override
-    public void onSuccess(ProducerRecord<String, Object> record, RecordMetadata metadata) {
-        log.info("sent ok topic={}, partition={}, offset={}, key={}",
-                metadata.topic(), metadata.partition(), metadata.offset(), record.key());
-    }
-
-    @Override
-    public void onError(ProducerRecord<String, Object> record,
-                        RecordMetadata metadata,
-                        Exception exception) {
-        String meta = (metadata == null)
-                ? "meta=null"
-                : String.format("partition=%d, offset=%d", metadata.partition(), metadata.offset());
-
-        log.error("send failed topic={}, key={}, {}",
-                record.topic(), record.key(), meta, exception);
-    }
-}
-```
-
-然后在 KafkaTemplate 那里注入它：
-
-```java
-@Bean
-public KafkaTemplate<String, Object> kafkaTemplate(
-  ProducerFactory<String, Object> pf,
-  ProducerListener<String, Object> producerListener) {
-  KafkaTemplate<String, Object> template = new KafkaTemplate<>(pf);
-  template.setProducerListener(producerListener);
-  return template;
-}
-
-```
-
-#### 接收消息
-
-##### 示例
-
-监听 Kafka 的 test topic，最简单就 3 步：加依赖 → 配置 consumer → 写 `@KafkaListener`
-
-1.加依赖
-
-```xml
-<dependency>
-  <groupId>org.springframework.kafka</groupId>
-  <artifactId>spring-kafka</artifactId>
-</dependency>
-```
-
-2.配置 application.yml
-
-```yml
-spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: test-group
-      auto-offset-reset: earliest   # 第一次消费从最早开始（可选）
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-```
-
-3.写监听器 Consumer
-
-```java
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
-
-@Component
-public class TestTopicListener {
-    @KafkaListener(topics = "test", groupId = "test-group")
-    public void onMessage(String msg) {
-        System.out.println("收到 test topic 消息: " + msg);
-    }
-}
-```
-
-##### 消息监听器接口
-
-使用消息监听器容器时，您必须提供一个监听器来接收数据。目前有八种支持的消息监听器接口
-
-```java
-public interface MessageListener<K, V> {
-  void onMessage(ConsumerRecord<K, V> data);
-}
-
-public interface AcknowledgingMessageListener<K, V> {
-  void onMessage(ConsumerRecord<K, V> data, Acknowledgment acknowledgment);
-}
-
-public interface ConsumerAwareMessageListener<K, V> extends MessageListener<K, V> {
-  void onMessage(ConsumerRecord<K, V> data, Consumer<?, ?> consumer);
-}
-
-public interface AcknowledgingConsumerAwareMessageListener<K, V> extends MessageListener<K, V> {
-  void onMessage(ConsumerRecord<K, V> data, Acknowledgment acknowledgment, Consumer<?, ?> consumer);
-}
-
-public interface BatchMessageListener<K, V> {
-  void onMessage(List<ConsumerRecord<K, V>> data);
-}
-
-public interface BatchAcknowledgingMessageListener<K, V> {
-  void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgment acknowledgment);
-}
-
-public interface BatchConsumerAwareMessageListener<K, V> extends BatchMessageListener<K, V> {
-  void onMessage(List<ConsumerRecord<K, V>> data, Consumer<?, ?> consumer);
-}
-
-public interface BatchAcknowledgingConsumerAwareMessageListener<K, V> extends BatchMessageListener<K, V> {
-  void onMessage(List<ConsumerRecord<K, V>> data, Acknowledgment acknowledgment, Consumer<?, ?> consumer);
-}
-```
-
-### ElasticSearch
-
-### Consumer解析过程
+### Producer 消息发送
 
 首先在 Kafka 中会创建两个Topic对应文档解析(`file-processing`)和向量化(`vectorization`)
 
@@ -549,9 +32,464 @@ public interface BatchAcknowledgingConsumerAwareMessageListener<K, V> extends Ba
 
 当用户成功把文件chunks均合并好后，会发送信息到 `file-processing` Topic
 
+合并文件的逻辑在 `uploadService.mergeChunks()`，MinIO会建立一个临时URL，来允许本地访问该文件，也会返回这个URL
+
+```java
+String objectUrl = uploadService.mergeChunks(request.fileMd5(), request.fileName(), userId);
+// URL类似
+// http://localhost:19000/uploads/merged/original.docx?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=qmY5OyBsIST9I7FLxLug%2F20260122%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260122T155744Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=e9d553cd260fea9d2449df25ca9fdbb7bef19b53137779de7113b859fc1432b0
+```
+
+之后就把对应信息发送给Kafka Broker
+
 ```java
 kafkaTemplate.executeInTransaction(kt -> {
   kt.send(kafkaConfig.getFileProcessingTopic(), task);
   return true;
 });
 ```
+
+task 是 `FileProcessingTask` 类，主要包括了文件MD5 | 文件存储路径 | 文件名 | 上传用户ID | 文件所属组织标签 | 文件是否公开 信息
+
+```java
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class FileProcessingTask {
+  private String fileMd5; // 文件的 MD5 校验值
+  private String filePath; // 文件存储路径
+  private String fileName; // 文件名
+  private String userId;   // 上传用户ID
+  private String orgTag;   // 文件所属组织标签
+  private boolean isPublic; // 文件是否公开
+  
+  /**
+   * 向后兼容的构造函数
+   */
+  public FileProcessingTask(String fileMd5, String filePath, String fileName) {
+      this.fileMd5 = fileMd5;
+      this.filePath = filePath;
+      this.fileName = fileName;
+      this.userId = null;
+      this.orgTag = "DEFAULT";
+      this.isPublic = false;
+  }
+}
+```
+
+### Consumer 消息接收 - `FileProcessingConsumer`
+
+然后在 `FileProcessingConsumer` 中由 `@Listener` 注解来自动监听创建消费者，当对应监听的 Topic 有消息了，就会被消费
+
+```java
+@KafkaListener(topics = "#{kafkaConfig.getFileProcessingTopic()}", groupId = "#{kafkaConfig.getFileProcessingGroupId()}")
+public void processTask(FileProcessingTask task){...}
+```
+
+#### 根据消息 `task` 下载文件
+
+task 有对应文件存在MinIO的临时访问链接，基于此去访问获取文件输入流 `InputStream`
+
+获取后要判断：1. 流是否有内容 2. 转换为可回退流
+
+```java
+log.info("Received task: {}", task);
+log.info("文件权限信息: userId={}, orgTag={}, isPublic={}", 
+        task.getUserId(), task.getOrgTag(), task.isPublic());
+        
+InputStream fileStream = null;
+try {
+  // 下载文件
+  fileStream = downloadFileFromStorage(task.getFilePath());
+  // 在 downloadFileFromStorage 返回后立即检查流是否可读
+  if (fileStream == null) {
+      throw new IOException("流为空");
+  }
+
+  // 强制转换为可缓存流
+  // 确保 fileStream 这个输入流拥有“倒带”（回退）的能力
+  if (!fileStream.markSupported()) {
+      fileStream = new BufferedInputStream(fileStream);
+  }
+  ...
+}
+```
+
+`InputStream` 是一个单向的流，默认情况下，读了一个字节，指针就往后移一个，只能往前走，不能回头。
+
+但是，BufferedInputStream 具有 Mark (标记) 和 Reset (重置) 的功能：
+
+- Mark: 在当前位置做一个记号
+- Reset: 读取一部分数据后，可以随时调用 reset() 让指针回到刚才做记号的地方，重新读取
+
+目的：
+
+- 文件类型探测
+- 性能优化，BufferedInputStream 内部维护了一个内存缓冲区
+
+#### 解析文件 `parseService.parseAndSave`
+
+因为不可能把整片文章直接保存，这样也不好，不易于后续RAG理解，所以要根据语义或句子进行切割拆分，再放入对应的 `document_vectors` 数据表中
+
+```java
+parseService.parseAndSave(task.getFileMd5(), fileStream, 
+    task.getUserId(), task.getOrgTag(), task.isPublic());
+log.info("文件解析完成，fileMd5: {}", task.getFileMd5());
+```
+
+#### 向量化处理 `vectorizationService.vectorize`
+
+将存入表中分块的数据，依次借用大模型embedding来进行编码，最终存入ElasticSearch
+
+```java
+vectorizationService.vectorize(task.getFileMd5(), 
+        task.getUserId(), task.getOrgTag(), task.isPublic());
+log.info("向量化完成，fileMd5: {}", task.getFileMd5());
+```
+
+### 文件拆分存入数据表 `parseService.parseAndSave`
+
+#### `document_vectors` 数据表
+
+每个文档会被切分成多个文本块 (chunk_id)，document_vectors 表存储了所有的文本块信息
+
+分两步，首先通过 `parseService.parseAndSave` 将文本块存入表中，但此时没有编码信息
+
+之后再根据文件MD5作为索引，依次调用 `vectorizationService.vectorize` 来对文本块进行编码，存入ES中
+
+| 字段名 | 类型 | 描述 |
+| --- | --- | --- |
+| vector_id | BIGINT AUTO_INCREMENT | 主键，自增ID |
+| file_md5 | CHAR(32) | 文件指纹，用于关联file_upload表 |
+| chunk_id | INT | 文本分块序号 |
+| text_content | LONGTEXT | 原始文本内容 |
+| model_version | VARCHAR(32) | 生成向量所使用的模型版本 |
+
+#### 主要流程 (流式文件解析与入库)
+
+通过 Apache Tika 来解析文档
+
+核心目标是：在不占用大量内存的前提下，把一个可能很大的文件（如几百页的 PDF）读出来，拆分成小块，并存入数据库
+
+```java
+public void parseAndSave(String fileMd5, InputStream fileStream, String userId, String orgTag, boolean isPublic) throws IOException, TikaException {
+  logger.info("开始流式解析文件，fileMd5: {}, userId: {}, orgTag: {}, isPublic: {}", fileMd5, userId, orgTag, isPublic);
+
+  checkMemoryThreshold();
+
+  try (BufferedInputStream bufferedStream = new BufferedInputStream(fileStream, bufferSize)) {
+      // 创建一个流式处理器，它会在内部处理父块的切分和子块的保存
+      StreamingContentHandler handler = new StreamingContentHandler(fileMd5, userId, orgTag, isPublic);
+      Metadata metadata = new Metadata();
+      ParseContext context = new ParseContext();
+      AutoDetectParser parser = new AutoDetectParser();
+
+      // Tika的parse方法会驱动整个流式处理过程
+      // 当handler的characters方法接收到足够数据时，会触发分块、切片和保存
+      parser.parse(bufferedStream, handler, metadata, context);
+
+      logger.info("文件流式解析和入库完成，fileMd5: {}", fileMd5);
+
+  } catch (SAXException e) {
+      logger.error("文档解析失败，fileMd5: {}", fileMd5, e);
+      throw new RuntimeException("文档解析失败", e);
+  }
+}
+```
+
+##### 检查 JVM 堆内存是否充足
+
+`Runtime`可以获得此时内存情况
+
+如果系统内存快满了，会尝试调用垃圾回收，如果还是不足，直接抛出异常或阻塞，防止因为解析一个大文件导致整个服务 OOM
+
+```java
+private void checkMemoryThreshold() {
+  Runtime runtime = Runtime.getRuntime();
+  long maxMemory = runtime.maxMemory();
+  long totalMemory = runtime.totalMemory();
+  long freeMemory = runtime.freeMemory();
+  long usedMemory = totalMemory - freeMemory;
+  
+  double memoryUsage = (double) usedMemory / maxMemory;
+  
+  if (memoryUsage > maxMemoryThreshold) {
+      logger.warn("内存使用率过高: {:.2f}%, 触发垃圾回收", memoryUsage * 100);
+      System.gc();
+      
+      // 重新检查
+      usedMemory = runtime.totalMemory() - runtime.freeMemory();
+      memoryUsage = (double) usedMemory / maxMemory;
+      
+      if (memoryUsage > maxMemoryThreshold) {
+          throw new RuntimeException("内存不足，无法处理大文件。当前使用率: " + String.format("%.2f%%", memoryUsage * 100));
+      }
+  }
+}
+```
+
+##### BufferedInputStream加快读取
+
+```java
+try (BufferedInputStream bufferedStream = new BufferedInputStream(fileStream, bufferSize)) {...}
+```
+
+将传入的原始 fileStream 包装成 BufferedInputStream
+
+目的： 减少 IO 中断
+
+- 原始流读取（如从 S3 或磁盘）可能每次只读几个字节，速度慢且频繁触发 IO 中断。
+- BufferedInputStream 相当于一个“蓄水池”，一次性取一大勺水 (大小为预定的 `bufferSize`) 放在内存里，解析器从内存取水，速度极快
+
+使用 `try-with-resources` 语法，确保无论解析成功还是失败，流都会被自动关闭
+
+##### 组装解析流水线 (Apache Tika)
+
+```java
+ // 创建一个流式处理器，它会在内部处理父块的切分和子块的保存
+StreamingContentHandler handler = new StreamingContentHandler(fileMd5, userId, orgTag, isPublic);
+Metadata metadata = new Metadata();
+ParseContext context = new ParseContext();
+AutoDetectParser parser = new AutoDetectParser();
+```
+
+这里组装了 Tika 的四个配置：
+
+- parser (AutoDetectParser): “总指挥”。它负责识别文件类型（是 PDF 还是 Word），并调用对应的底层解析逻辑。
+
+- handler (StreamingContentHandler): “搬运工 + 加工厂”（自己自定义的核心类）
+  - 它不产生数据，它只接收数据。
+  - 它的内部逻辑是：接收字符 -> 攒够一定数量 -> 切分 -> 存数据库 -> 清空缓冲区。
+
+- metadata: 用于接收文件的属性（如作者、标题、修改时间）。虽然代码里没怎么用，但 Tika 必须要求传这个参数。
+
+- context: 解析器的配置上下文
+
+##### 开始解析文档
+
+```java
+parser.parse(bufferedStream, handler, metadata, context);
+```
+
+运行到这里，控制权移交给 Tika 的 `parser`
+
+- parser 读取 bufferedStream 中的一段二进制数据
+- parser 将其转换为文本
+- parser 主动调用 handler 的方法（如 handler.characters(...)），把文本“喂”给 handler
+- handler 在接收到文本的同时，实时进行切分和入库操作
+
+##### 自定义 handler
+
+只有自定义 handler 来实现对文档的流式解析，从而逐步将其分片，然后将内容存入数据表中
+
+```java
+/**
+ * 内部流式内容处理器，实现了父子文档切分策略的核心逻辑。
+ * Tika解析器会调用characters方法，当累积的文本达到"父块"大小时，
+ * 就触发processParentChunk方法，进行"子切片"的生成和入库。
+ */
+private class StreamingContentHandler extends BodyContentHandler {
+    private final StringBuilder buffer = new StringBuilder();
+    private final String fileMd5;
+    private final String userId;
+    private final String orgTag;
+    private final boolean isPublic;
+    private int savedChunkCount = 0;
+
+    public StreamingContentHandler(String fileMd5, String userId, String orgTag, boolean isPublic) {
+        super(-1); // 禁用Tika的内部写入限制，我们自己管理缓冲区
+        this.fileMd5 = fileMd5;
+        this.userId = userId;
+        this.orgTag = orgTag;
+        this.isPublic = isPublic;
+    }
+
+    @Override
+    public void characters(char[] ch, int start, int length) {
+        buffer.append(ch, start, length);
+        if (buffer.length() >= parentChunkSize) {
+            processParentChunk();
+        }
+    }
+
+    @Override
+    public void endDocument() {
+        // 处理文档末尾剩余的最后一部分内容
+        if (buffer.length() > 0) {
+            processParentChunk();
+        }
+    }
+
+    private void processParentChunk() {
+        String parentChunkText = buffer.toString();
+        logger.debug("处理父文本块，大小: {} bytes", parentChunkText.length());
+
+        // 1. 将父块分割成更小的、有语义的子切片
+        List<String> childChunks = ParseService.this.splitTextIntoChunksWithSemantics(parentChunkText, chunkSize);
+
+        // 2. 将子切片批量保存到数据库
+        this.savedChunkCount = ParseService.this.saveChildChunks(fileMd5, childChunks, userId, orgTag, isPublic, this.savedChunkCount);
+
+        // 3. 清空缓冲区，为下一个父块做准备
+        buffer.setLength(0);
+    }
+}
+```
+
+当调用了 `parser.parse` 就开始不断解析文档
+
+parser 负责将文档转为字符流，然后调用 `handler.characters()` 存入 buffer 中，直到最后一部分结束
+
+而 handler 就是不断接受，但是会由逻辑进行判断, 字符存了一定量了，就会触发解析逻辑 `processParentChunk()`
+
+```java
+@Override
+public void characters(char[] ch, int start, int length) {
+    buffer.append(ch, start, length);
+    if (buffer.length() >= parentChunkSize) {
+        processParentChunk();
+    }
+}
+```
+
+一次性存入 `buffer` 的就相当于父文本块，比较大，然后就需要调用解析逻辑来拆分成更小的、有语义的子切片，然后将子切片批量保存到数据库
+
+最后把这个 buffer 清空，然后继续
+
+```java
+private void processParentChunk() {
+  String parentChunkText = buffer.toString();
+  logger.debug("处理父文本块，大小: {} bytes", parentChunkText.length());
+
+  // 1. 将父块分割成更小的、有语义的子切片
+  List<String> childChunks = ParseService.this.splitTextIntoChunksWithSemantics(parentChunkText, chunkSize);
+
+  // 2. 将子切片批量保存到数据库
+  this.savedChunkCount = ParseService.this.saveChildChunks(fileMd5, childChunks, userId, orgTag, isPublic, this.savedChunkCount);
+
+  // 3. 清空缓冲区，为下一个父块做准备
+  buffer.setLength(0);
+}
+```
+
+`endDocument` 是为了避免有省的，即Tika读完了最后一部分，但并没有触发解析逻辑，那么就会调用这个
+
+##### 内部父文本切割逻辑 `ParseService.this.splitTextIntoChunksWithSemantics(...)`
+
+当在 StreamingContentHandler 的代码块里写代码时：
+
+- 单独写 this： 指的是 StreamingContentHandler 这个对象自己
+- 写 ParseService.this： 指的是 创建了这个 Handler 的那个 ParseService 对象
+
+切割逻辑如下：
+
+它的核心思想是：尽量不打断段落，实在不行才打断句子，再不行才强制切断
+
+(预先设定了好了一个小文本块的大小 `chunkSize`)先按照段落进行分割，然后依次遍历每个段落
+
+- 若整个段落很大，大于了 `chunkSize`，那么需要再进行更细致地切割
+
+  先将当前的chunk保存，然后对当前的段落进一步切割 (根据符号分，如句号、感叹号等，如句子也长，再按词分割 HanLP StandardTokenizer进行分词)，切出来的句子块直接加入结果集
+
+- 如果当前 chunk 还行，但是塞不下整个段落了，那么把当前chunk先存入，然后放入新的chunk
+
+- 还能塞得下当前chunk，那直接放进去
+
+```java
+/**
+ * 智能文本分割，保持语义完整性
+ */
+private List<String> splitTextIntoChunksWithSemantics(String text, int chunkSize) {
+  List<String> chunks = new ArrayList<>();
+
+  // 按段落分割
+  String[] paragraphs = text.split("\n\n+");
+
+  StringBuilder currentChunk = new StringBuilder();
+
+  for (String paragraph : paragraphs) {
+      // 如果单个段落超过chunk大小，需要进一步分割
+      if (paragraph.length() > chunkSize) {
+          // 先保存当前chunk
+          if (currentChunk.length() > 0) {
+              chunks.add(currentChunk.toString().trim());
+              currentChunk = new StringBuilder();
+          }
+
+          // 按句子分割长段落
+          List<String> sentenceChunks = splitLongParagraph(paragraph, chunkSize);
+          chunks.addAll(sentenceChunks);
+      }
+      // 如果添加这个段落会超过chunk大小
+      else if (currentChunk.length() + paragraph.length() > chunkSize) {
+          // 保存当前chunk
+          if (currentChunk.length() > 0) {
+              chunks.add(currentChunk.toString().trim());
+          }
+          // 开始新chunk
+          currentChunk = new StringBuilder(paragraph);
+      }
+      // 可以添加到当前chunk
+      else {
+          if (currentChunk.length() > 0) {
+              currentChunk.append("\n\n");
+          }
+          currentChunk.append(paragraph);
+      }
+  }
+
+  // 添加最后一个chunk
+  if (currentChunk.length() > 0) {
+      chunks.add(currentChunk.toString().trim());
+  }
+
+  return chunks;
+}
+```
+
+##### 将所有子块存入数据表 `document_vectors`
+
+在 handler buffer 满了时，触发解析逻辑后，会先分割成子切片，然后将其批量保存到数据表 `document_vectors` 中
+
+`this.savedChunkCount` 在默认是0开始，然后不断累积，记录总保存 chunk 数量
+
+```java
+this.savedChunkCount = ParseService.this.saveChildChunks(fileMd5, childChunks, userId, orgTag, isPublic, this.savedChunkCount);
+```
+
+对应的保存逻辑，就遍历然后依次保存
+
+```java
+/**
+ * 将子切片列表保存到数据库。
+ *
+ * @param fileMd5         文件的 MD5 哈希值
+ * @param chunks          子切片文本列表
+ * @param userId          上传用户ID
+ * @param orgTag          组织标签
+ * @param isPublic        是否公开
+ * @param startingChunkId 当前批次的起始分片ID
+ * @return 保存后总的分片数量
+ */
+private int saveChildChunks(String fileMd5, List<String> chunks, String userId, String orgTag, boolean isPublic, int startingChunkId) {
+  int currentChunkId = startingChunkId;
+  for (String chunk : chunks) {
+      currentChunkId++;
+      var vector = new DocumentVector();
+      vector.setFileMd5(fileMd5);
+      vector.setChunkId(currentChunkId);
+      vector.setTextContent(chunk);
+      vector.setUserId(userId);
+      vector.setOrgTag(orgTag);
+      vector.setPublic(isPublic);
+      documentVectorRepository.save(vector);
+  }
+  logger.info("成功保存 {} 个子切片到数据库", chunks.size());
+  return currentChunkId;
+}
+```
+
+(好像有点问题 N+1 插入问题)
+
+- 使用 JPA 的 saveAll
+- 使用 JdbcTemplate

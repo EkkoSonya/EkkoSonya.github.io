@@ -6,11 +6,708 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 04 Mar 2026 16:32:35 GMT</pubDate>
-    <lastBuildDate>Wed, 04 Mar 2026 16:32:35 GMT</lastBuildDate>
+    <pubDate>Fri, 06 Mar 2026 16:31:37 GMT</pubDate>
+    <lastBuildDate>Fri, 06 Mar 2026 16:31:37 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Mysql - 6 事务2</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/6.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/6.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Mysql - 6 事务2</source>
+      <description>事务2 MVCC 多版本并发控制 多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能 同时还可以解决脏读，幻读，不可重复读等事务隔离问题，但不能解决更新丢失问题。 工作原理 Read View 中四个字段作用； 聚簇索引记录中两个跟事务有关的隐藏列； 行...</description>
+      <category>code</category>
+      <pubDate>Fri, 06 Mar 2026 16:29:32 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>事务2</h2>
+<h3>MVCC 多版本并发控制</h3>
+<p>多版本并发控制（MVCC）是一种用来解决读-写冲突的无锁并发控制，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能 同时还可以解决脏读，幻读，不可重复读等事务隔离问题，但不能解决更新丢失问题。</p>
+<h4>工作原理</h4>
+<ul>
+<li>Read View 中四个字段作用；</li>
+<li>聚簇索引记录中两个跟事务有关的隐藏列；</li>
+</ul>
+<h5>行隐藏字段</h5>
+<p>InnoDB在每行数据都增加三个隐藏字段，一个唯一行号，一个记录创建的版本号，一个记录回滚的版本号</p>
+<ul>
+<li>
+<p>row_id：6byte，隐含的自增ID（隐藏主键），如果数据表没有主键，InnoDB会自动以DB_ROW_ID生成一个聚簇索引。</p>
+</li>
+<li>
+<p>trx_id：6byte，最近修改（修改、插入）事务ID：记录创建这条记录以及最后一次修改该记录的事务的ID，是一个指针。</p>
+</li>
+<li>
+<p>roll_ptr：7byte，回滚指针，每次对某条聚簇索引记录进行改动时，都会把旧版本的记录写入到 undo 日志中，然后这个隐藏列是个指针，指向每一个旧版本记录，于是就可以通过它找到修改前的记录。</p>
+</li>
+</ul>
+<p>所以每个记录在undo会形成一个链表</p>
+<p>判断数据记录可见性的逻辑就是通过readview和【行记录的隐藏字段trx_id】做对比的</p>
+<h5>Read View</h5>
+<blockquote>
+<p>Read View就是事务进行快照读操作的时候生产的读视图(Read View)，在该事务执行的快照读的那一刻，会生成数据库系统当前的一个快照，记录并维护系统当前活跃事务的ID(当每个事务开启时，都会被分配一个ID, 这个ID是递增的，所以最新的事务，ID值越大)。</p>
+</blockquote>
+<figure><figcaption>alt text</figcaption></figure>
+<p>创建 readview 的事务id + 此时活跃的事务id列表 + 全局最大事务id+1 + 活跃事务id最小值</p>
+<p>Read View 有四个重要的字段：</p>
+<ul>
+<li>m_ids：指的是在创建 Read View 时，当前数据库中「活跃事务」的事务 id 列表，注意是一个列表，“活跃事务”指的就是，启动了但还没提交的事务。</li>
+<li>min_trx_id：指的是在创建 Read View 时，当前数据库中「活跃事务」中事务 id 最小的事务，也就是 m_ids 的最小值。</li>
+<li>max_trx_id：这个并不是 m_ids 的最大值，而是创建 Read View 时当前数据库中应该给下一个事务的 id 值，也就是<strong>全局事务中最大的事务 id 值 + 1</strong>；</li>
+<li>creator_trx_id：指的是创建该 Read View 的事务的事务 id (就是当前执行的快照读事务的id)</li>
+</ul>
+<p>当前事务id就是 <code>creator_trx_id</code></p>
+<p>max_try_id 是全局事务中最大的事务 id 值 + 1！！</p>
+<p>在创建 Read View 后，我们可以将记录中的 trx_id 划分这三种情况：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>一个事务去访问记录的时候，除了自己的更新记录总是可见之外，还有这几种情况：</p>
+<ul>
+<li>如果记录的 trx_id 值小于 Read View 中的 min_trx_id 值，表示这个版本的记录是在创建 Read View 前已经提交的事务生成的，所以该版本的记录对当前事务可见。</li>
+<li>如果记录的 trx_id 值大于等于 Read View 中的 max_trx_id 值，表示这个版本的记录是在创建 Read View 后才启动的事务生成的，所以该版本的记录对当前事务不可见。</li>
+<li>如果记录的 trx_id 值在 Read View 的 min_trx_id 和 max_trx_id 之间，需要判断 trx_id 是否在 m_ids 列表中：
+<ul>
+<li>如果记录的 trx_id 在 m_ids 列表中，表示生成该版本记录的活跃事务依然活跃着（还没提交事务），所以该版本的记录对当前事务不可见。</li>
+<li>如果记录的 trx_id 不在 m_ids列表中，表示生成该版本记录的活跃事务已经被提交，所以该版本的记录对当前事务可见。</li>
+</ul>
+</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<p>也就是说如果当前事务执行一个 select 语句到某行数据，对应的 trx_id 与 Read View 的进行比较逻辑，如果不可见，就去从 roll_ptr 到 undo 日志里找上一版本的数据，直到可见为止</p>
+<h3>实现可重复读隔离级别原理</h3>
+<p>可重复读隔离级别是启动事务时创建一个 Read View，然后整个事务期间都是服用这个 Read View</p>
+<p>假设事务 A（事务 id 为 51）启动后，紧接着事务 B（事务 id 为 52）也启动了，那这两个事务创建的 Read View 如下</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>接着，在可重复读隔离级别下，事务 A 和事务 B 按顺序执行了以下操作：</p>
+<ul>
+<li>事务 B 读取账户余额记录，读到余额是 100 万；</li>
+<li>事务 A 将账户余额记录修改成 200 万，并没有提交事务；</li>
+<li>事务 B 读取账户余额记录，读到余额还是 100 万；</li>
+<li>事务 A 提交事务；</li>
+<li>事务 B 读取账户余额记录，读到余额依然还是 100 万；</li>
+</ul>
+<p>分析：</p>
+<p>事务B在读取记录时，会先看这条记录的 trx_id, 此时发现 trx_id 为 50，比事务 B 的 Read View 中的 min_trx_id 值（51）还小，这意味着修改这条记录的事务早就在事务 B 启动前提交过了，所以该版本的记录对事务 B 可见的，也就是事务 B 可以获取到这条记录</p>
+<p>接着，事务 A 通过 update 语句将这条记录修改了（还未提交事务），将余额改成 200 万，这时 MySQL 会记录相应的 undo log，并以链表的方式串联起来，形成版本链</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>由于事务 A 修改了该记录，以前的记录就变成旧版本记录了，于是最新记录和旧版本记录通过链表的方式串起来，而且最新记录的 trx_id 是事务 A 的事务 id（trx_id = 51）</p>
+<p>然后事务 B 第二次去读取该记录</p>
+<p>发现此时这条记录的 trx_id 值为 51，在事务 B 的 Read View 的 min_trx_id 和 max_trx_id 之间，则需要判断 trx_id 值是否在 m_ids 范围内，判断的结果是在的，那么说明这条记录是<strong>被还未提交的事务修改的</strong> (事务A)，这时事务 B 并不会读取这个版本的记录。</p>
+<p>而是沿着 undo log 链条往下找旧版本的记录，直到找到 trx_id 可见的第一条记录（trx_id「小于」事务 B 的 Read View 中的 min_trx_id 值，或者 trx_id 在事务 B 的 Read View 的 min_trx_id 和 max_trx_id 之间，但是不在 m_ids 范围内），所以事务 B 能读取到的是 trx_id 为 50 的记录，也就是余额是 100 万的这条记录</p>
+<p>最后，当事物 A 提交事务后，由于隔离级别时「可重复读」，所以事务 B 再次读取记录时，还是<strong>基于启动事务时创建</strong>的 Read View 来判断当前版本的记录是否可见。所以，即使事物 A 将余额修改为 200 万并提交了事务，事务 B 第三次读取记录时，读到的记录都是余额是 100 万的这条记录</p>
+<p>「可重复读」隔离级别下在事务期间读到的记录都是事务启动前的记录</p>
+<h3>实现读提交隔离级别原理</h3>
+<p>读提交隔离级别是在每次读取数据时，都会生成一个新的 Read View</p>
+<p>意味着，事务期间的多次读取同一条数据，前后两次读的数据可能会出现不一致，因为可能这期间另外一个事务修改了该记录，并提交了事务</p>
+<p>只有另一个事务更改然后提交了，那么在另一个事务那里的 m_ids 列表里被去除了</p>
+<p>假设事务 A（事务 id 为 51）启动后，紧接着事务 B（事务 id 为 52）也启动了，接着按顺序执行了以下操作：</p>
+<ul>
+<li>事务 B 读取数据（创建 Read View），账户余额为 100 万；</li>
+<li>事务 A 修改数据（还没提交事务），将账户余额从 100 万修改成了 200 万；</li>
+<li>事务 B 读取数据（创建 Read View），账户余额为 100 万；</li>
+<li>事务 A 提交事务；</li>
+<li>事务 B 读取数据（创建 Read View），账户余额为 200 万；</li>
+</ul>
+<p>分析：</p>
+<p>前两次 事务 B 读取数据时创建的 Read View 如下图：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>来分析下为什么事务 B 第二次读数据时，读不到事务 A（还未提交事务）修改的数据？</p>
+<p>事务 B 在找到小林这条记录时，会看这条记录的 trx_id 是 51，在事务 B 的 Read View 的 min_trx_id 和 max_trx_id 之间，接下来需要判断 trx_id 值是否在 m_ids 范围内，判断的结果是在的，那么说明这条记录是被还未提交的事务修改的，这时事务 B 并不会读取这个版本的记录。而是，沿着 undo log 链条往下找旧版本的记录，直到找到 trx_id 可见的第一条记录（trx_id「小于」事务 B 的 Read View 中的 min_trx_id 值，或者 trx_id 在事务 B 的 Read View 的 min_trx_id 和 max_trx_id 之间，但是不在 m_ids 范围内），所以事务 B 能读取到的是 trx_id 为 50 的记录，也就是小林余额是 100 万的这条记录。</p>
+<p>我们来分析下为什么事务 A 提交后，事务 B 就可以读到事务 A 修改的数据？</p>
+<p>在事务 A 提交后，由于隔离级别是「读提交」，所以事务 B 在每次读数据的时候，会重新创建 Read View，此时事务 B 第三次读取数据时创建的 Read View 如下：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>事务 B 在找到小林这条记录时，会发现这条记录的 trx_id 是 51，比事务 B 的 Read View 中的 min_trx_id 值（52）还小，这意味着修改这条记录的事务早就在创建 Read View 前提交过了，所以该版本的记录对事务 B 是可见的。</p>
+<p>正是因为在读提交隔离级别下，事务每次读数据时都重新创建 Read View，那么在事务期间的多次读取同一条数据，前后两次读的数据可能会出现不一致，因为可能这期间另外一个事务修改了该记录，并提交了事务。</p>
+<h3>总结</h3>
+<p>事务是在 MySQL 引擎层实现的，我们常见的 InnoDB 引擎是支持事务的，事务的四大特性是原子性、一致性、隔离性、持久性，我们这次主要讲的是隔离性。</p>
+<p>当多个事务并发执行的时候，会引发脏读、不可重复读、幻读这些问题，那为了避免这些问题，SQL 提出了四种隔离级别，分别是读未提交、读已提交、可重复读、串行化，从左往右隔离级别顺序递增，隔离级别越高，意味着性能越差，InnoDB 引擎的默认隔离级别是可重复读。</p>
+<p>要解决脏读现象，就要将隔离级别升级到读已提交以上的隔离级别，要解决不可重复读现象，就要将隔离级别升级到可重复读以上的隔离级别。</p>
+<p>而对于幻读现象，不建议将隔离级别升级为串行化，因为这会导致数据库并发时性能很差。MySQL InnoDB 引擎的默认隔离级别虽然是「可重复读」，但是它很大程度上避免幻读现象（并不是完全解决了，详见这篇文章），解决的方案有两种：</p>
+<ul>
+<li>针对快照读（普通 select 语句），是通过 MVCC 方式解决了幻读，因为可重复读隔离级别下，事务执行过程中看到的数据，一直跟这个事务启动时看到的数据是一致的，即使中途有其他事务插入了一条数据，是查询不出来这条数据的，所以就很好了避免幻读问题。</li>
+<li>针对当前读（select ... for update 等语句），是通过 next-key lock（记录锁 + 间隙锁）方式解决了幻读，因为当执行 select ... for update 语句的时候，会加上 next-key lock，如果有其他事务在 next-key lock 锁范围内插入了一条记录，那么这个插入语句就会被阻塞，无法成功插入，所以就很好了避免幻读问题。</li>
+</ul>
+<p>对于「读提交」和「可重复读」隔离级别的事务来说，它们是通过 Read View 来实现的，它们的区别在于创建 Read View 的时机不同：</p>
+<ul>
+<li>「读提交」隔离级别是在每个 select 都会生成一个新的 Read View，也意味着，事务期间的多次读取同一条数据，前后两次读的数据可能会出现不一致，因为可能这期间另外一个事务修改了该记录，并提交了事务。</li>
+<li>「可重复读」隔离级别是启动事务时生成一个 Read View，然后整个事务期间都在用这个 Read View，这样就保证了在事务期间读到的数据都是事务启动前的记录。</li>
+</ul>
+<p>这两个隔离级别实现是通过「事务的 Read View 里的字段」和「记录中的两个隐藏列」的比对，来控制并发事务访问同一个记录时的行为，这就叫 MVCC（多版本并发控制）。</p>
+<p>在可重复读隔离级别中，普通的 select 语句就是基于 MVCC 实现的快照读，也就是不会加锁的。而 select .. for update 语句就不是快照读了，而是当前读了，也就是每次读都是拿到最新版本的数据，但是它会对读到的记录加上 next-key lock 锁</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Mysql - 7 锁</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/7.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/7.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Mysql - 7 锁</source>
+      <description>锁 锁的目的就是在我执行语句和返回结果这段时间内，不能让其他事务对相关数据进行修改或访问，以保证数据的一致性 (不能出现脏读、幻读、不可重复读等) 在 MySQL 里，根据加锁的范围，可以分为全局锁、表级锁和行锁三类 全局锁 (FTWRL) 表级锁 表锁 元数据锁 意向锁 AUTO-INC 锁 行级锁 Record Lock Gap Lock Next...</description>
+      <category>code</category>
+      <pubDate>Fri, 06 Mar 2026 16:29:32 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>锁</h2>
+<p>锁的目的就是在我执行语句和返回结果这段时间内，不能让其他事务对相关数据进行修改或访问，以保证数据的一致性 (不能出现脏读、幻读、不可重复读等)</p>
+<p>在 MySQL 里，根据加锁的范围，可以分为全局锁、表级锁和行锁三类</p>
+<ul>
+<li>全局锁 (FTWRL)</li>
+<li>表级锁
+<ul>
+<li>表锁</li>
+<li>元数据锁</li>
+<li>意向锁</li>
+<li>AUTO-INC 锁</li>
+</ul>
+</li>
+<li>行级锁
+<ul>
+<li>Record Lock</li>
+<li>Gap Lock</li>
+<li>Next-key Lock</li>
+</ul>
+</li>
+</ul>
+<h3>全局锁</h3>
+<p>要使用全局锁，则要执行这条命令</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 加全局读锁</span>
+FLUSH <span class="token keyword">TABLES</span> <span class="token keyword">WITH</span> <span class="token keyword">READ</span> <span class="token keyword">LOCK</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 释放锁</span>
+<span class="token keyword">UNLOCK</span> <span class="token keyword">TABLES</span><span class="token punctuation">;</span>
+</code></pre></div><p>执行后，整个数据库就处于只读状态了，这时其他线程执行以下操作，都会被阻塞：</p>
+<ul>
+<li>对数据的增删改操作，比如 insert、delete、update 等语句；</li>
+<li>对表结构的更改操作，比如 alter table、drop table 等语句。、</li>
+</ul>
+<p>当然，当会话断开了，全局锁会被自动释放</p>
+<h4>全局锁应用场景</h4>
+<p>全局锁主要应用于做全库逻辑备份 (mysqldump)，这样在备份数据库期间，不会因为数据或表结构的更新，而出现备份文件的数据与预期的不一样</p>
+<h4>缺点</h4>
+<p>加上全局锁，意味着整个数据库都是只读状态。</p>
+<p>那么如果数据库里有很多数据，备份就会花费很多的时间，关键是备份期间，业务只能读数据，而不能更新数据，这样会造成业务停滞</p>
+<h4>备份时如何避免全局锁影响事务</h4>
+<p>如果数据库的引擎支持的事务支持可重复读的隔离级别，那么在备份数据库之前先开启事务，会先创建 Read View，然后整个事务执行期间都在用这个 Read View，而且由于 MVCC 的支持，备份期间业务依然可以对数据进行更新操作。</p>
+<p>因为在可重复读的隔离级别下，即使其他事务更新了表的数据，也不会影响备份数据库时的 Read View，这就是事务四大特性中的隔离性，这样备份期间备份的数据一直是在开启事务时的数据</p>
+<p>备份数据库的工具是 mysqldump，在使用 mysqldump 时加上 –single-transaction 参数的时候，就会在备份数据库之前先开启事务。这种方法只适用于支持「可重复读隔离级别的事务」的存储引擎。</p>
+<h3>表级锁</h3>
+<p>MySQL 里面表级别的锁有这几种：</p>
+<ul>
+<li>表锁；</li>
+<li>元数据锁（MDL）;</li>
+<li>意向锁；</li>
+<li>AUTO-INC 锁；</li>
+</ul>
+<h4>表锁</h4>
+<p>分(共享锁)读锁和(独占锁)写锁</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 表级别的共享锁，也就是读锁；</span>
+<span class="token keyword">lock</span> <span class="token keyword">tables</span> t_student <span class="token keyword">read</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 表级别的独占锁，也就是写锁；</span>
+<span class="token keyword">lock</span> <span class="token keyword">tables</span> t_student <span class="token keyword">write</span><span class="token punctuation">;</span>
+</code></pre></div><p>表锁除了会限制别的线程的读写外，也会限制本线程接下来的读写操作</p>
+<p>如果本线程对学生表加了「共享表锁」，那么本线程接下来如果要对学生表执行写操作的语句，是会被阻塞的，当然其他线程对学生表进行写操作时也会被阻塞，直到锁被释放</p>
+<p>尽量避免在使用 InnoDB 引擎的表使用表锁，因为表锁的颗粒度太大，会影响并发性能，InnoDB 牛逼的地方在于实现了颗粒度更细的行级锁</p>
+<h4>元数据锁</h4>
+<p>避免表结构变化在 CRUD 期间</p>
+<p>MDL 是为了保证当用户对表执行 CRUD 操作时，防止其他线程对这个表结构做了变更</p>
+<p>不需要显式的使用 MDL，因为当我们对数据库表进行操作时，会自动给这个表加上 MDL：</p>
+<ul>
+<li>对一张表进行 CRUD 操作时，加的是 MDL 读锁 (共享锁)；</li>
+<li>对一张表做结构变更操作的时候，加的是 MDL 写锁 (排它锁)；</li>
+</ul>
+<p>当有线程在执行 select 语句（加 MDL 读锁）的期间，如果有其他线程要更改该表的结构（申请 MDL 写锁），那么将会被阻塞，直到执行完 select 语句（释放 MDL 读锁）。</p>
+<p>反之，当有线程对表结构进行变更（加 MDL 写锁）的期间，如果有其他线程执行了 CRUD 操作（申请 MDL 读锁），那么就会被阻塞，直到表结构变更完成（释放 MDL 写锁）。</p>
+<blockquote>
+<p>申请 MDL 锁的操作会形成一个队列，队列中写锁获取优先级高于读锁，一旦出现 MDL 写锁等待，会阻塞后续该表的所有 CRUD 操作。</p>
+<p>所以为了能安全的对表结构进行变更，在对表结构变更前，先要看看数据库中的长事务，是否有事务已经对表加上了 MDL 读锁，如果可以，考虑 kill 掉这个长事务，然后再做表结构的变更。</p>
+</blockquote>
+<h4>意向锁</h4>
+<p>为了避免DML在执行时，加的行锁与表锁的冲突，在InnoDB中引入了意向锁，使得表锁不用检查每行数据是否加锁，使用意向锁来减少表锁的检查。</p>
+<p>当执行插入、更新、删除操作，需要先对表加上「意向独占锁」，然后对该记录加独占锁</p>
+<p>普通的 select 是不会加行级锁的，普通的 select 语句是利用 MVCC 实现一致性读，是无锁的。</p>
+<ul>
+<li>在使用 InnoDB 引擎的表里对某些记录加上「共享锁」之前，需要先在表级别加上一个「意向共享锁」；</li>
+<li>在使用 InnoDB 引擎的表里对某些记录加上「独占锁」之前，需要先在表级别加上一个「意向独占锁」；</li>
+</ul>
+<p>如果没有「意向锁」，那么加「独占表锁」时，就需要遍历表里所有记录，查看是否有记录存在独占锁，这样效率会很慢。</p>
+<p>那么有了「意向锁」，由于在对记录加独占锁前，先会加上表级别的意向独占锁，那么在加「独占表锁」时，直接查该表是否有意向独占锁，如果有就意味着表里已经有记录被加了独占锁，这样就不用去遍历表里的记录。</p>
+<h4>AUTO-INC 锁</h4>
+<h3>行级锁</h3>
+<p>InnoDB 引擎是支持行级锁的，而 MyISAM 引擎并不支持行级锁</p>
+<p>普通的 select 语句是不会对记录加锁的，因为它属于快照读。如果要在查询时对记录加行锁，可以使用下面这两个方式，这种查询会加锁的语句称为锁定读。</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 对读取的记录加共享锁</span>
+<span class="token keyword">select</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token keyword">lock</span> <span class="token operator">in</span> <span class="token keyword">share</span> <span class="token keyword">mode</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 对读取的记录加独占锁</span>
+<span class="token keyword">select</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token keyword">for</span> <span class="token keyword">update</span><span class="token punctuation">;</span>
+</code></pre></div><p>独占锁 -- <code>for update</code>   |   共享锁 -- <code>in share mode</code></p>
+<p>上面这两条语句必须在一个事务中，因为当事务提交了，锁就会被释放，所以在使用这两条语句的时候，要加上 begin、start transaction 或者 set autocommit = 0</p>
+<p>共享锁（S 锁）满足读读共享，读写互斥。独占锁（X 锁）满足写写互斥、读写互斥。</p>
+<p>行级锁的类型主要有三类：(锁一条，锁范围内，锁范围内和自己)</p>
+<ul>
+<li>Record Lock，记录锁，也就是仅仅把一条记录锁上；</li>
+<li>Gap Lock，间隙锁，锁定一个范围，但是不包含记录本身；</li>
+<li>Next-Key Lock：Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身</li>
+</ul>
+<h4>Record Lock</h4>
+<p>Record Lock 称为记录锁，锁住的是一条记录。而且记录锁是有 S 锁和 X 锁之分的：</p>
+<ul>
+<li>当一个事务对一条记录加了 S 型记录锁后，其他事务也可以继续对该记录加 S 型记录锁（S 型与 S 锁兼容），但是不可以对该记录加 X 型记录锁（S 型与 X 锁不兼容）;</li>
+<li>当一个事务对一条记录加了 X 型记录锁后，其他事务既不可以对该记录加 S 型记录锁（S 型与 X 锁不兼容），也不可以对该记录加 X 型记录锁（X 型与 X 锁不兼容）。</li>
+</ul>
+<h4>Gap Lock</h4>
+<p>隔离级别必须是 RR, 只存在于可重复读隔离级别，目的是为了解决可重复读隔离级别下幻读的现象</p>
+<p>假设，表中有一个范围 id 为（3，5）间隙锁，那么其他事务就无法插入 id = 4 这条记录了，这样就有效的防止幻读现象的发生</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>间隙锁虽然存在 X 型间隙锁和 S 型间隙锁，但是并没有什么区别</p>
+<p>间隙锁之间是兼容的，即两个事务可以同时持有包含共同间隙范围的间隙锁，并不存在互斥关系，因为间隙锁的目的是防止插入幻影记录而提出的</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 这些操作会加间隙锁</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span> <span class="token keyword">FOR</span> <span class="token keyword">UPDATE</span><span class="token punctuation">;</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span> <span class="token keyword">FOR</span> <span class="token keyword">SHARE</span><span class="token punctuation">;</span>
+<span class="token keyword">UPDATE</span> users <span class="token keyword">SET</span> name <span class="token operator">=</span> <span class="token string">'xxx'</span> <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">;</span>
+<span class="token keyword">DELETE</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 普通查询不加锁（使用 MVCC）</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span><span class="token punctuation">;</span>  <span class="token comment">-- 不加间隙锁</span>
+</code></pre></div><h5>通过间隙锁解决幻读</h5>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 事务 A（没有间隙锁的情况）</span>
+<span class="token keyword">BEGIN</span><span class="token punctuation">;</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span> <span class="token operator">AND</span> id <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span>
+<span class="token comment">-- 结果：空（没有记录）</span>
+
+<span class="token comment">-- 事务 B</span>
+<span class="token keyword">BEGIN</span><span class="token punctuation">;</span>
+<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> users <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token string">'新用户'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">COMMIT</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 事务 A 再次查询</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span> <span class="token operator">AND</span> id <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span>
+<span class="token comment">-- 结果：出现了 id=7 的记录（幻读！）</span>
+</code></pre></div><p>加 gap lock</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 事务 A</span>
+<span class="token keyword">BEGIN</span><span class="token punctuation">;</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span> <span class="token operator">AND</span> id <span class="token operator">&lt;</span> <span class="token number">10</span> <span class="token keyword">FOR</span> <span class="token keyword">UPDATE</span><span class="token punctuation">;</span>
+<span class="token comment">-- 加间隙锁，锁定 (5, 10) 这个间隙</span>
+
+<span class="token comment">-- 事务 B</span>
+<span class="token keyword">BEGIN</span><span class="token punctuation">;</span>
+<span class="token keyword">INSERT</span> <span class="token keyword">INTO</span> users <span class="token keyword">VALUES</span> <span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token string">'新用户'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">-- ❌ 被阻塞！无法插入到 (5, 10) 间隙</span>
+
+<span class="token comment">-- 事务 A 再次查询</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">5</span> <span class="token operator">AND</span> id <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span>
+<span class="token comment">-- 结果：仍然是空，没有幻读</span>
+</code></pre></div><h4>Next-key Lock</h4>
+<p>Next-Key Lock 称为临键锁，是 Record Lock + Gap Lock 的组合，锁定一个范围，并且锁定记录本身</p>
+<p>假设，表中有一个范围 id 为（3，5] 的 next-key lock，那么其他事务即不能插入 id = 4 记录，也不能修改 id = 5 这条记录</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>所以，next-key lock 即能保护该记录，又能阻止其他事务将新纪录插入到被保护记录前面的间隙中。</p>
+<p>next-key lock 是包含间隙锁 + 记录锁的，如果一个事务获取了 X 型的 next-key lock，那么另外一个事务在获取相同范围的 X 型的 next-key lock 时，是会被阻塞的</p>
+<h4>插入意向锁</h4>
+<p>插入意向锁（Insert Intention Lock）是一种特殊的间隙锁，在插入数据之前获取</p>
+<p>一个事务在插入一条记录的时候，需要判断插入位置是否已被其他事务加了间隙锁（next-key lock 也包含间隙锁）。</p>
+<p>如果有的话，插入操作就会发生阻塞，直到拥有间隙锁的那个事务提交为止（释放间隙锁的时刻），在此期间会生成一个插入意向锁，表明有事务想在某个区间插入新记录，但是现在处于等待状态。</p>
+<p>插入意向锁名字虽然有意向锁，但是它并不是意向锁，它是一种特殊的间隙锁，属于行级别锁</p>
+<p>如果说间隙锁锁住的是一个区间，那么「插入意向锁」锁住的就是一个点</p>
+<h3>Mysql如何加锁</h3>
+<ul>
+<li>
+<p>无索引 - 锁全表</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- name 没有索引</span>
+<span class="token keyword">UPDATE</span> users <span class="token keyword">SET</span> age <span class="token operator">=</span> <span class="token number">20</span> <span class="token keyword">WHERE</span> name <span class="token operator">=</span> <span class="token string">'张三'</span><span class="token punctuation">;</span>
+</code></pre></div><p>加锁： 全表扫描，锁住所有行（相当于表锁）</p>
+</li>
+<li>
+<p>有索引 - 锁索引记录</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- id 是主键</span>
+<span class="token keyword">UPDATE</span> users <span class="token keyword">SET</span> name <span class="token operator">=</span> <span class="token string">'张三'</span> <span class="token keyword">WHERE</span> id <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+</code></pre></div><p>加锁： 只锁 id=10 这一行（精准锁定）</p>
+</li>
+</ul>
+<p>所以，针对唯一索引(主键索引)和非唯一索引(二级索引)查询时，如何加行锁进行分析</p>
+<h4>如何加行级锁</h4>
+<p>加锁的对象是索引，加锁的基本单位是 next-key lock，由记录锁和间隙锁组合而成的</p>
+<p>临键锁 是前开后闭区间，而间隙锁是前开后开区间</p>
+<p>next-key lock 在一些场景下会退化成记录锁或间隙锁</p>
+<p>在能使用记录锁或者间隙锁就能避免幻读现象的场景下，next-key lock 就会退化成记录锁或间隙锁</p>
+<h4>唯一索引查询</h4>
+<h5>等值查询</h5>
+<p>当我们用唯一索引进行等值查询的时候，查询的记录存不存在，加锁的规则也会不同：</p>
+<ul>
+<li>当查询的记录是「存在」的，在索引树上定位到这一条记录后，将该记录的索引中的 next-key lock 会退化成「记录锁」。</li>
+<li>当查询的记录是「不存在」的，在索引树找到第一条大于该查询记录的记录后，将该记录的索引中的 next-key lock 会退化成「间隙锁」</li>
+</ul>
+<p>如果是不存在，那么显然在返回结果之前要把 (大于该查询记录的记录索引，<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord">∞</span></span></span></span>] 加入间隙锁来避免问题</p>
+<p>假设索引中有记录：5, 10, 15, 20</p>
+<p>情况1：唯一索引等值查询（存在）</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> t <span class="token keyword">WHERE</span> id <span class="token operator">=</span> <span class="token number">10</span> <span class="token keyword">FOR</span> <span class="token keyword">UPDATE</span><span class="token punctuation">;</span>
+</code></pre></div><ul>
+<li>默认加 (5, 10] 的 next-key lock</li>
+<li>退化成记录锁：只锁 10 这条记录</li>
+</ul>
+<p>情况2：唯一索引等值查询（不存在）</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> t <span class="token keyword">WHERE</span> id <span class="token operator">=</span> <span class="token number">12</span> <span class="token keyword">FOR</span> <span class="token keyword">UPDATE</span><span class="token punctuation">;</span>
+</code></pre></div><ul>
+<li>默认加 (10, 15] 的 next-key lock</li>
+<li>退化成间隙锁：只锁 (10, 15) 这个间隙</li>
+</ul>
+<h5>范围查询</h5>
+<p>当唯一索引进行范围查询时，会对每一个扫描到的索引加 next-key 锁，然后如果遇到下面这些情况，会退化成记录锁或者间隙锁：</p>
+<ul>
+<li>情况一：针对「大于等于」的范围查询，因为存在等值查询的条件，那么如果等值查询的记录是存在于表中，那么该记录的索引中的 next-key 锁会退化成记录锁。</li>
+<li>情况二：针对「小于或者小于等于」的范围查询，要看条件值的记录是否存在于表中：
+<ul>
+<li>当条件值的记录不在表中，那么不管是「小于」还是「小于等于」条件的范围查询，扫描到终止范围查询的记录时，该记录的索引的 next-key 锁会退化成间隙锁，其他扫描到的记录，都是在这些记录的索引上加 next-key 锁。</li>
+<li>当条件值的记录在表中，如果是「小于」条件的范围查询，扫描到终止范围查询的记录时，该记录的索引的 next-key 锁会退化成间隙锁，其他扫描到的记录，都是在这些记录的索引上加 next-key 锁；如果「小于等于」条件的范围查询，扫描到终止范围查询的记录时，该记录的索引 next-key 锁不会退化成间隙锁。其他扫描到的记录，都是在这些记录的索引上加 next-key 锁</li>
+</ul>
+</li>
+</ul>
+<h4>非唯一索引查询</h4>
+<h5>等值查询</h5>
+<p>假设索引中有记录：5, 10, 15, 20</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> t <span class="token keyword">WHERE</span> id <span class="token operator">&gt;</span> <span class="token number">10</span> <span class="token keyword">FOR</span> <span class="token keyword">UPDATE</span><span class="token punctuation">;</span>
+</code></pre></div><ul>
+<li>加 (10, 15]、(15, 20]、(20, +∞) 的 next-key lock</li>
+<li>不退化，保持临键锁</li>
+</ul>
+<p>因为存在两个索引，一个是主键索引，一个是非唯一索引（二级索引），所以在加锁时，同时会对这两个索引都加锁，但是对主键索引加锁的时候，只有满足查询条件的记录才会对它们的主键索引加锁。</p>
+<p>针对非唯一索引等值查询时，查询的记录存不存在，加锁的规则也会不同：</p>
+<ul>
+<li>当查询的记录「存在」时，由于不是唯一索引，所以肯定存在索引值相同的记录，于是非唯一索引等值查询的过程是一个扫描的过程，直到扫描到第一个不符合条件的二级索引记录就停止扫描，然后在扫描的过程中，对扫描到的二级索引记录加的是 next-key 锁，而对于第一个不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。
+同时，在符合查询条件的记录的主键索引上加记录锁。</li>
+<li>当查询的记录「不存在」时，扫描到第一条不符合条件的二级索引记录，该二级索引的 next-key 锁会退化成间隙锁。因为不存在满足查询条件的记录，所以不会对主键索引加锁。</li>
+</ul>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>id: 1,  age: 10
+id: 2,  age: 10  -- age 有重复值
+id: 3,  age: 15
+id: 4,  age: 20
+</code></pre></div><blockquote>
+<p>为什么第一个不符合条件的记录要加间隙锁？
+防止在 (10, 15) 之间插入新的 age=10 的记录（防止幻读）
+但不需要锁住 age=15 这条记录本身，因为它不在查询范围内</p>
+<p>为什么主键索引只加记录锁
+主键索引只需要锁住具体的记录，不需要锁间隙
+因为间隙的控制已经在二级索引上完成了</p>
+</blockquote>
+<h5>范围查询</h5>
+<p>非唯一索引和主键索引的范围查询的加锁也有所不同，不同之处在于非唯一索引范围查询，索引的 next-key lock 不会有退化为间隙锁和记录锁的情况，也就是非唯一索引进行范围查询时，对二级索引记录加锁都是加 next-key 锁</p>
+<h4>无索引查询</h4>
+<p>前面的案例，我们的查询语句都有使用索引查询，也就是查询记录的时候，是通过索引扫描的方式查询的，然后对扫描出来的记录进行加锁。</p>
+<p>如果锁定读查询语句，没有使用索引列作为查询条件，或者查询语句没有走索引查询，导致扫描是全表扫描。那么，每一条记录的索引上都会加 next-key 锁，这样就相当于锁住的全表，这时如果其他事务对该表进行增、删、改操作的时候，都会被阻塞。</p>
+<p>不只是锁定读查询语句不加索引才会导致这种情况，update 和 delete 语句如果查询条件不加索引，那么由于扫描的方式是全表扫描，于是就会对每一条记录的索引上都会加 next-key 锁，这样就相当于锁住的全表。</p>
+<p>因此，在线上在执行 update、delete、select ... for update 等具有加锁性质的语句，一定要检查语句是否走了索引，如果是全表扫描的话，会对每一个索引加 next-key 锁，相当于把整个表锁住了，这是挺严重的问题。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Mysql - 8 日志</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/8.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/8.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Mysql - 8 日志</source>
+      <description>日志 Buffer Pool MySQL 的数据都是存在磁盘中的，那么我们要更新一条记录的时候，得先要从磁盘读取该记录，然后在内存中修改这条记录 修改完这条记录是选择直接写回到磁盘，还是选择缓存起来呢？ 当然是缓存起来好，这样下次有查询语句命中了这条记录，直接读取缓存中的记录，就不需要从磁盘获取数据了 Innodb 存储引擎设计了一个缓冲池（Buffe...</description>
+      <category>code</category>
+      <pubDate>Fri, 06 Mar 2026 16:29:32 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>日志</h2>
+<h3>Buffer Pool</h3>
+<p>MySQL 的数据都是存在磁盘中的，那么我们要更新一条记录的时候，得先要从磁盘读取该记录，然后在内存中修改这条记录</p>
+<p>修改完这条记录是选择直接写回到磁盘，还是选择缓存起来呢？</p>
+<p>当然是缓存起来好，这样下次有查询语句命中了这条记录，直接读取缓存中的记录，就不需要从磁盘获取数据了</p>
+<p>Innodb 存储引擎设计了一个缓冲池（Buffer Pool），来提高数据库的读写性能</p>
+<blockquote>
+<p>Buffer Pool作为InnoDB内存结构的四大组件之一，不属于MySQL的Server层，是InnoDB存储引擎层的缓冲池, 跟MySQL8.0删掉的 查询缓存 功能是不一样的</p>
+</blockquote>
+<figure><figcaption>alt text</figcaption></figure>
+<p>有了 Buffer Pool 后：</p>
+<ul>
+<li>当读取数据时，如果数据存在于 Buffer Pool 中，客户端就会直接读取 Buffer Pool 中的数据，否则再去磁盘中读取。</li>
+<li>当修改数据时，如果数据存在于 Buffer Pool 中，那直接修改 Buffer Pool 中数据所在的页，然后将其页设置为脏页（该页的内存数据和磁盘上的数据已经不一致），为了减少磁盘 I/O，不会立即将脏页写入磁盘，后续由后台线程选择一个合适的时机将脏页写入到磁盘</li>
+</ul>
+<h4>Buffer Pool 缓存原理</h4>
+<p>InnoDB 会把存储的数据划分为若干个「页」，以页作为磁盘和内存交互的基本单位，一个页的默认大小为 16KB。因此，Buffer Pool 同样需要按「页」来划分</p>
+<p>在 MySQL 启动的时候，InnoDB 会为 Buffer Pool 申请一片连续的内存空间，然后按照默认的16KB的大小划分出一个个的页，Buffer Pool 中的页就叫做<strong>缓存页</strong></p>
+<p>此时这些缓存页都是空闲的，之后随着程序的运行，才会有磁盘上的页被缓存到 Buffer Pool 中</p>
+<p>所以，MySQL 刚启动的时候，你会观察到使用的虚拟内存空间很大，而使用到的物理内存空间却很小，这是因为只有这些虚拟内存被访问后，操作系统才会触发缺页中断，申请物理内存，接着将虚拟地址和物理地址建立映射关系</p>
+<p>Buffer Pool 除了缓存「索引页」和「数据页」，还包括了 Undo 页，插入缓存、自适应哈希索引、锁信息等等</p>
+<figure><figcaption>alt text</figcaption></figure>
+<blockquote>
+<p>查询一条记录，就只需要缓冲一条记录吗？</p>
+<p>不是的。</p>
+<p>当我们查询一条记录时，InnoDB 是会把整个页的数据加载到 Buffer Pool 中，将页加载到 Buffer Pool 后，再通过页里的「页目录」去定位到某条具体的记录。</p>
+</blockquote>
+<h3>UPDATE 语句过程</h3>
+<p>查询语句的那一套流程，更新语句也是同样会走一遍：</p>
+<ul>
+<li>客户端先通过连接器建立连接，连接器自会判断用户身份；</li>
+<li>因为这是一条 update 语句，所以不需要经过查询缓存，但是表上有更新语句，是会把整个表的查询缓存清空的，所以说查询缓存很鸡肋，在 MySQL 8.0 就被移除这个功能了；</li>
+<li>解析器会通过词法分析识别出关键字 update，表名等等，构建出语法树，接着还会做语法分析，判断输入的语句是否符合 MySQL 语法；</li>
+<li>预处理器会判断表和字段是否存在；</li>
+<li>优化器确定执行计划，因为 where 条件中的 id 是主键索引，所以决定要使用 id 这个索引；</li>
+<li>执行器负责具体执行，找到这一行，然后更新。</li>
+</ul>
+<p>不过，更新语句的流程会涉及到 undo log（回滚日志）、redo log（重做日志） 、binlog（归档日志）这三种日志：</p>
+<ul>
+<li>undo log（回滚日志）：是 Innodb 存储引擎层生成的日志，实现了事务中的原子性，主要用于事务回滚和 MVCC。</li>
+<li>redo log（重做日志）：是 Innodb 存储引擎层生成的日志，实现了事务中的持久性，主要用于掉电等故障恢复；</li>
+<li>binlog（归档日志）：是 Server 层生成的日志，主要用于数据备份和主从复制；</li>
+</ul>
+<h3>undo log (回滚日志)</h3>
+<p>作用：保证事务的原子性（Atomicity）和实现 MVCC</p>
+<ul>
+<li>记录的是逻辑日志：与操作相反的操作（例如 INSERT 对应 DELETE）</li>
+<li>存储位置：存储在表空间的 undo 段中</li>
+<li>清理时机：事务提交后，如果没有其他事务需要读取历史版本，就可以清理</li>
+</ul>
+<p>在执行执行一条“增删改”语句的时候，虽然没有输入 begin 开启事务和 commit 提交事务，但是 MySQL 会隐式开启事务来执行“增删改”语句的，执行完就自动提交事务的，这样就保证了执行完“增删改”语句后，我们可以及时在数据库表看到“增删改”的结果了</p>
+<p>执行一条语句是否自动提交事务，是由 autocommit 参数决定的，默认是开启，所以，执行一条 update 语句也是会使用事务的</p>
+<blockquote>
+<p>一个事务在执行过程中，在还没有提交事务之前，如果 MySQL 发生了崩溃，要怎么回滚到事务之前的数据呢？</p>
+</blockquote>
+<p>如果我们每次在事务执行过程中，都记录下回滚时需要的信息到一个日志里，那么在事务执行中途发生了 MySQL 崩溃后，就不用担心无法回滚到事务之前的数据，我们可以通过这个日志回滚到事务之前的数据</p>
+<p>实现这一机制就是 undo log（回滚日志），它保证了事务的 ACID 特性中的原子性（Atomicity）</p>
+<p>undo log 是一种用于撤销回退的日志。在事务没提交之前，MySQL 会先记录更新前的数据到 undo log 日志文件里面，当事务回滚时，可以利用 undo log 来进行回滚</p>
+<figure><figcaption>alt text</figcaption></figure>
+<blockquote>
+<p>每当 InnoDB 引擎对一条记录进行操作（修改、删除、新增）时，要把回滚时需要的信息都记录到 undo log 里</p>
+</blockquote>
+<ul>
+<li>在<strong>插入</strong>一条记录时，要把这条记录的主键值记下来，这样之后回滚时只需要把这个主键值对应的记录<strong>删掉</strong>就好了；</li>
+<li>在<strong>删除</strong>一条记录时，要把这条记录中的内容都记下来，这样之后回滚时再把由这些内容组成的记录<strong>插入</strong>到表中就好了；</li>
+<li>在<strong>更新</strong>一条记录时，要把被更新的列的旧值记下来，这样之后回滚时再把这些列<strong>更新为旧值</strong>就好了。</li>
+</ul>
+<p>在发生回滚时，就读取 undo log 里的数据，然后做原先相反操作。比如当 delete 一条记录时，undo log 中会把记录中的内容都记下来，然后执行回滚操作的时候，就读取 undo log 里的数据，然后进行 insert 操作。</p>
+<p>不同的操作，需要记录的内容也是不同的，所以不同类型的操作（修改、删除、新增）产生的 undo log 的格式也是不同的</p>
+<p>一条记录的每一次更新操作产生的 undo log 格式都有一个 roll_pointer 指针和一个 trx_id 事务 id：</p>
+<ul>
+<li>通过 trx_id 可以知道该记录是被哪个事务修改的；</li>
+<li>通过 roll_pointer 指针可以将这些 undo log 串成一个链表，这个链表就被称为版本链；</li>
+</ul>
+<h4>undo log 两大作用</h4>
+<ul>
+<li>实现事务回滚，保障事务的原子性。事务处理过程中，如果出现了错误或者用户执 行了 ROLLBACK 语句，MySQL 可以利用 undo log 中的历史数据将数据恢复到事务开始之前的状态。</li>
+<li>实现 MVCC（多版本并发控制）关键因素之一。MVCC 是通过 ReadView + undo log 实现的。undo log 为每条记录保存多份历史数据，MySQL 在执行快照读（普通 select 语句）的时候，会根据事务的 Read View 里的信息，顺着 undo log 的版本链找到满足其可见性的记录</li>
+</ul>
+<h3>redo log (重做日志)</h3>
+<p>作用：保证事务的持久性（Durability）</p>
+<ul>
+<li>InnoDB 引擎特有的日志</li>
+<li>记录的是物理日志：数据页的物理修改（例如"在某个页的某个偏移量写入了什么数据"）</li>
+<li>写入时机：事务执行过程中，边执行边写</li>
+<li>大小固定：循环写入，写满后会覆盖旧的日志</li>
+<li>WAL 机制（Write-Ahead Logging）：先写日志，再写磁盘</li>
+</ul>
+<p>Buffer Pool 是提高了读写效率没错，但是问题来了，Buffer Pool 是基于内存的，而内存总是不可靠，万一断电重启，还没来得及落盘的脏页数据就会丢失</p>
+<p>为了防止断电导致数据丢失的问题，当有一条记录<strong>需要更新</strong>的时候，InnoDB 引擎就会先<strong>更新内存</strong>（同时<strong>标记为脏页</strong>），然后将本次对这个页的修改以 redo log 的形式记录下来，<strong>这个时候更新就算完成了</strong></p>
+<p>后续，InnoDB 引擎会在适当的时候，由后台线程将缓存在 Buffer Pool 的脏页刷新到磁盘里，这就是 WAL（Write-Ahead Logging）技术</p>
+<p>WAL 技术指的是，MySQL 的写操作并不是立刻写到磁盘上，而是先写日志，然后在合适的时间再写到磁盘</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>什么是 redo log？</h4>
+<p>redo log 是物理日志，记录了某个数据页做了什么修改，比如对 XXX 表空间中的 YYY 数据页 ZZZ 偏移量的地方做了 AAA 更新，每当执行一个事务就会产生这样的一条或者多条物理日志。</p>
+<p>在事务提交时，只要先将 redo log 持久化到磁盘即可，可以不需要等到将缓存在 Buffer Pool 里的脏页数据持久化到磁盘。</p>
+<p>当系统崩溃时，虽然脏页数据没有持久化，但是 redo log 已经持久化，接着 MySQL 重启后，可以根据 redo log 的内容，将所有数据恢复到最新的状态</p>
+<ol>
+<li>事务修改数据 → 先写 redo log buffer</li>
+<li>事务提交 → redo log buffer 刷到磁盘（redo log file）</li>
+<li>后台线程异步将脏页刷到磁盘</li>
+<li>即使数据页还没刷盘，崩溃后也能通过 redo log 恢复</li>
+</ol>
+<h5>产生的 redo log 是直接写入磁盘的吗？</h5>
+<p>不是的。</p>
+<p>实际上，执行一个事务的过程中，产生的 redo log 也不是直接写入磁盘的，因为这样会产生大量的 I/O 操作，而且磁盘的运行速度远慢于内存。</p>
+<p>所以，redo log 也有自己的缓存—— redo log buffer，每当产生一条 redo log 时，会先写入到 redo log buffer，后续在持久化到磁盘如下图：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>redo log buffer 默认大小 16 MB，可以通过 innodb_log_Buffer_size 参数动态的调整大小，增大它的大小可以让 MySQL 处理「大事务」是不必写入磁盘，进而提升写 IO 性能</p>
+<h4>redolog 刷盘(刷新到磁盘)</h4>
+<p>缓存在 redo log buffer 里的 redo log 还是在内存中，它什么时候刷新到磁盘？</p>
+<p>主要有下面几个时机：</p>
+<ul>
+<li>MySQL 正常关闭时；</li>
+<li>当 redo log buffer 中记录的写入量大于 redo log buffer 内存空间的一半时，会触发落盘；</li>
+<li>InnoDB 的后台线程每隔 1 秒，将 redo log buffer 持久化到磁盘。</li>
+<li>每次事务提交时都将缓存在 redo log buffer 里的 redo log 直接持久化到磁盘（这个策略可由 innodb_flush_log_at_trx_commit 参数控制）。</li>
+</ul>
+<h4>redolog 写满了处理</h4>
+<p>默认情况下，InnoDB 存储引擎有 1 个重做日志文件组 (redo log Group)，「重做日志文件组」由有 2 个 redo log 文件组成，这两个 redo 日志的文件名叫：ib_logfile0 和 ib_logfile1</p>
+<p>在重做日志组中，每个 redo log File 的大小是固定且一致的，假设每个 redo log File 设置的上限是 1 GB，那么总共就可以记录 2GB 的操作</p>
+<p>重做日志文件组是以循环写的方式工作的，从头开始写，写到末尾就又回到开头，相当于一个环形</p>
+<p>所以 InnoDB 存储引擎会先写 ib_logfile0 文件，当 ib_logfile0 文件被写满的时候，会切换至 ib_logfile1 文件，当 ib_logfile1 文件也被写满时，会切换回 ib_logfile0 文件</p>
+<p>redo log 是为了防止 Buffer Pool 中的脏页丢失而设计的，那么如果随着系统运行，Buffer Pool 的脏页刷新到了磁盘中，那么 redo log 对应的记录也就没用了，这时候我们擦除这些旧记录，以腾出空间记录新的更新操作。</p>
+<p>redo log 是循环写的方式，相当于一个环形，InnoDB 用 write pos 表示 redo log 当前记录写到的位置，用 check point 表示当前要擦除的位置</p>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li>write pos 和 check point 的移动都是顺时针方向；</li>
+<li>write pos ～ check point 之间的部分（图中的红色部分），用来记录新的更新操作；</li>
+<li>check point ～ write pos 之间的部分（图中蓝色部分）：待落盘的脏数据页记录</li>
+</ul>
+<p>如果 write pos 追上了 check point，就意味着 redo log 文件满了，<strong>这时 MySQL 不能再执行新的更新操作</strong>，也就是说 MySQL 会被阻塞（因此所以针对并发量大的系统，适当设置 redo log 的文件大小非常重要）</p>
+<p>此时会停下来将 Buffer Pool 中的脏页刷新到磁盘中，然后标记 redo log 哪些记录可以被擦除，接着对旧的 redo log 记录进行擦除，等擦除完旧记录腾出了空间，check point 就会往后移动（图中顺时针），然后 MySQL 恢复正常运行，继续执行新的更新操作。</p>
+<p>所以，一次 check point 的过程就是脏页刷新到磁盘中变成干净页，然后标记 redo log 哪些记录可以被覆盖的过程。</p>
+<h3>binlog</h3>
+<p>undo log 和 redo log 这两个日志都是 Innodb 存储引擎生成的。</p>
+<p>MySQL 在完成一条更新操作后，Server 层还会生成一条 binlog，等之后事务提交的时候，会将该事务执行过程中产生的所有 binlog 统一写 入 binlog 文件。</p>
+<p>binlog 文件是记录了<strong>所有数据库表结构变更和表数据修改的日志</strong>，不会记录<strong>查询类的操作</strong>，比如 SELECT 和 SHOW 操作。</p>
+<blockquote>
+<p>为什么有了 binlog，还要有 redo log？</p>
+</blockquote>
+<p>最开始 MySQL 里并没有 InnoDB 引擎，MySQL 自带的引擎是 MyISAM，但是 MyISAM 没有 crash-safe 的能力，binlog 日志只能用于归档。(Crash-safe 确保系统在崩溃或中断发生后，能够保证数据的安全性、完整性和一致性)</p>
+<p>而 InnoDB 是另一个公司以插件形式引入 MySQL 的，既然只依靠 binlog 是没有 crash-safe 能力的，所以 InnoDB 使用 redo log 来实现 crash-safe 能力</p>
+<h4>binlog 与 redolog 区别</h4>
+<p>四个区别</p>
+<p>1、适用对象不同：</p>
+<ul>
+<li>binlog 是 MySQL 的 Server 层实现的日志，所有存储引擎都可以使用；</li>
+<li>redo log 是 Innodb 存储引擎实现的日志；</li>
+</ul>
+<p>2、文件格式不同：</p>
+<ul>
+<li>
+<p>binlog 有 3 种格式类型，分别是 STATEMENT、ROW、MIXED，区别如下：</p>
+<blockquote>
+<p>在 MySQL 5.7.7 之前，<code>binlog_format</code>的默认值是<code>STATEMENT</code>，而在 5.7.7 及之后的版本，默认值为<code>ROW</code>。</p>
+</blockquote>
+<ul>
+<li>STATEMENT：每一条修改数据的 SQL 都会被记录到 binlog 中（相当于记录了逻辑操作，所以针对这种格式，binlog 可以称为逻辑日志），主从复制中 slave 端再根据 SQL 语句重现。但 STATEMENT 有动态函数的问题，比如你用了 uuid 或者 now 这些函数，你在主库上执行的结果并不是你在从库执行的结果，这种随时在变的函数会导致复制的数据不一致；</li>
+<li>ROW：记录行数据最终被修改成什么样了（这种格式的日志，就不能称为逻辑日志了），不会出现 STATEMENT 下动态函数的问题。但 ROW 的缺点是每行数据的变化结果都会被记录，比如执行批量 update 语句，更新多少行数据就会产生多少条记录，使 binlog 文件过大，而在 STATEMENT 格式下只会记录一个 update 语句而已；</li>
+<li>MIXED：包含了 STATEMENT 和 ROW 模式，它会根据不同的情况自动使用 ROW 模式和 STATEMENT 模式；</li>
+</ul>
+</li>
+<li>
+<p>redo log 是物理日志，记录的是在某个数据页做了什么修改，比如对 XXX 表空间中的 YYY 数据页 ZZZ 偏移量的地方做了 AAA 更新；</p>
+</li>
+</ul>
+<p>3、写入方式不同：</p>
+<ul>
+<li>binlog 是<strong>追加写</strong>，写满一个文件，就创建一个新的文件继续写，不会覆盖以前的日志，保存的是全量的日志。</li>
+<li>redo log 是<strong>循环写</strong>，<strong>日志空间大小是固定</strong>，全部写满就从头开始，保存未被刷入磁盘的脏页日志。</li>
+</ul>
+<p>4、用途不同：</p>
+<ul>
+<li>binlog 用于备份恢复、主从复制；</li>
+<li>redo log 用于掉电等故障恢复</li>
+</ul>
+<h4>如果不小心整个数据库的数据被删除了，能使用 redo log 文件恢复数据吗？</h4>
+<p>不可以使用 redo log 文件恢复，只能使用 binlog 文件恢复。</p>
+<p>因为 redo log 文件是循环写，是会边写边擦除日志的，只记录未被刷入磁盘的数据的物理日志，已经刷入磁盘的数据都会从 redo log 文件里擦除。</p>
+<p>binlog 文件保存的是全量的日志，也就是保存了所有数据变更的情况，理论上只要记录在 binlog 上的数据，都可以恢复，所以如果不小心整个数据库的数据被删除了，得用 binlog 文件恢复数据。</p>
+<h4>binlog 刷盘时间</h4>
+<p>事务执行过程中，先把日志写到 binlog cache（Server 层的 cache），事务提交的时候，再把 binlog cache 写到 binlog 文件中</p>
+<p>MySQL 给 binlog cache 分配了一片内存，每个线程一个，参数 binlog_cache_size 用于控制单个线程内 binlog cache 所占内存的大小。如果超过了这个参数规定的大小，就要暂存到磁盘</p>
+<blockquote>
+<p>什么时候 binlog cache 会写到 binlog 文件？</p>
+</blockquote>
+<p>在事务提交的时候，执行器把 binlog cache 里的完整事务写入到 binlog 文件中，并清空 binlog cache。</p>
+<p>每个事务线程都有独立的 <code>binlog cache</code></p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>虽然每个线程有自己 binlog cache，但是最终都写到同一个 binlog 文件：</p>
+<ul>
+<li>图中的 write，指的就是指把日志写入到 binlog 文件，但是并没有把数据持久化到磁盘，因为数据还缓存在文件系统的 page cache 里，write 的写入速度还是比较快的，因为不涉及磁盘 I/O。</li>
+<li>图中的 fsync，才是将数据持久化到磁盘的操作，这里就会涉及磁盘 I/O，所以频繁的 fsync 会导致磁盘的 I/O 升高。</li>
+</ul>
+<h3>主从复制实现</h3>
+<p>MySQL 的主从复制依赖于 binlog，也就是记录 MySQL 上的所有变化并以二进制形式保存在磁盘上。复制的过程就是将 binlog 中的数据从主库传输到从库上。</p>
+<p>这个过程一般是异步的，也就是主库上执行事务操作的线程不会等待复制 binlog 的线程同步完成。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>MySQL 集群的主从复制过程梳理成 3 个阶段：</p>
+<ul>
+<li>写入 Binlog：主库写 binlog 日志，提交事务，并更新本地存储数据。</li>
+<li>同步 Binlog：把 binlog 复制到所有从库上，每个从库把 binlog 写到暂存日志中。</li>
+<li>回放 Binlog：回放 binlog，并更新存储引擎中的数据。</li>
+</ul>
+<p>具体详细过程如下：</p>
+<ul>
+<li>MySQL 主库在收到客户端提交事务的请求之后，会先写入 binlog，再提交事务，更新存储引擎中的数据，事务提交完成后，返回给客户端“操作成功”的响应。</li>
+<li>从库会创建一个专门的 I/O 线程，连接主库的 log dump 线程，来接收主库的 binlog 日志，再把 binlog 信息写入 relay log 的中继日志里，再返回给主库“复制成功”的响应。</li>
+<li>从库会创建一个用于回放 binlog 的线程，去读 relay log 中继日志，然后回放 binlog 更新存储引擎中的数据，最终实现主从的数据一致性。</li>
+</ul>
+<p>在完成主从复制之后，你就可以在写数据时只写主库，在读数据时只读从库，这样即使写请求会锁表或者锁记录，也不会影响读请求的执行</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>MySQL 主从复制还有哪些模型？</h4>
+<p>主要有三种：</p>
+<ul>
+<li>同步复制：MySQL 主库提交事务的线程要等待所有从库的复制成功响应，才返回客户端结果。这种方式在实际项目中，基本上没法用，原因有两个：一是性能很差，因为要复制到所有节点才返回响应；二是可用性也很差，主库和所有从库任何一个数据库出问题，都会影响业务。</li>
+<li>异步复制（默认模型）：MySQL 主库提交事务的线程并不会等待 binlog 同步到各从库，就返回客户端结果。这种模式一旦主库宕机，数据就会发生丢失。</li>
+<li>半同步复制：MySQL 5.7 版本之后增加的一种复制方式，介于两者之间，事务线程不用等待所有的从库复制成功响应，只要一部分复制成功响应回来就行，比如一主二从的集群，只要数据成功复制到任意一个从库上，主库的事务线程就可以返回给客户端。这种半同步复制的方式，兼顾了异步复制和同步复制的优点，即使出现主库宕机，至少还有一个从库有最新的数据，不存在数据丢失的风险</li>
+</ul>
+<h3>UPDATE语句的执行过程总结</h3>
+<p>undolog 是在语句执行前，负责记录旧值</p>
+<p>当修改了数据页时，对应位置修改什么就会被 redolog 记录</p>
+<p>binlog 则是在最后执行完了记录</p>
+<p>具体更新一条记录 <code>UPDATE t_user SET name = '123' WHERE id = 1;</code> 的流程如下：</p>
+<ol>
+<li>执行器负责具体执行，会调用存储引擎的接口，通过主键索引树搜索获取 id = 1 这一行记录：
+<ul>
+<li>如果 id=1 这一行所在的数据页本来就在 buffer pool 中，就直接返回给执行器更新；</li>
+<li>如果记录不在 buffer pool，将数据页从磁盘读入到 buffer pool，返回记录给执行器。</li>
+</ul>
+</li>
+<li>执行器得到聚簇索引记录后，会看一下更新前的记录和更新后的记录是否一样：
+<ul>
+<li>如果一样的话就不进行后续更新流程；</li>
+<li>如果不一样的话就把更新前的记录和更新后的记录都当作参数传给 InnoDB 层，让 InnoDB 真正的执行更新记录的操作；</li>
+</ul>
+</li>
+<li>开启事务，InnoDB 层更新记录前，首先要记录相应的 undo log，因为这是更新操作，需要把被更新的列的旧值记下来，也就是要生成一条 undo log，undo log 会写入 Buffer Pool 中的 Undo 页面，不过在内存修改该 Undo 页面后，需要记录对应的 redo log。</li>
+<li>InnoDB 层开始更新记录，会先更新内存（同时标记为脏页），然后将记录写到 redo log 里面，这个时候更新就算完成了。为了减少磁盘 I/O，不会立即将脏页写入磁盘，后续由后台线程选择一个合适的时机将脏页写入到磁盘。这就是 <strong>WAL 技术</strong>，MySQL 的写操作并不是立刻写到磁盘上，而是先写 redo 日志，然后在合适的时间再将修改的行数据写到磁盘上。</li>
+<li>至此，一条记录更新完了。</li>
+<li>在一条更新语句执行完成后，然后开始记录该语句对应的 binlog，此时记录的 binlog 会被保存到 binlog cache，并没有刷新到硬盘上的 binlog 文件，在事务提交时才会统一将该事务运行过程中的所有 binlog 刷新到硬盘。</li>
+<li>事务提交，剩下的就是「两阶段提交」的事情了。</li>
+</ol>
+<h3>两阶段提交</h3>
+<p>事务提交后，redo log 和 binlog 都要持久化到磁盘，但是这两个是独立的逻辑，可能出现半成功的状态，这样就造成两份日志之间的逻辑不一致</p>
+<p>举个例子，假设 id = 1 这行数据的字段 name 的值原本是 'jay'，然后执行 <code>UPDATE t_user SET name = 'xiaolin' WHERE id = 1;</code> 如果在持久化 redo log 和 binlog 两个日志的过程中，出现了半成功状态，那么就有两种情况：</p>
+<ul>
+<li><strong>如果在将 redo log 刷入到磁盘之后，MySQL 突然宕机了，而 binlog 还没有来得及写入</strong>。MySQL 重启后，通过 redo log 能将 Buffer Pool 中 id = 1 这行数据的 name 字段恢复到新值 xiaolin，但是 binlog 里面没有记录这条更新语句，在主从架构中，binlog 会被复制到从库，由于 binlog 丢失了这条更新语句，从库的这一行 name 字段是旧值 jay，与主库的值不一致性；</li>
+<li><strong>如果在将 binlog 刷入到磁盘之后，MySQL 突然宕机了，而 redo log 还没有来得及写入</strong>。由于 redo log 还没写，崩溃恢复以后这个事务无效，所以 id = 1 这行数据的 name 字段还是旧值 jay，而 binlog 里面记录了这条更新语句，在主从架构中，binlog 会被复制到从库，从库执行了这条更新语句，那么这一行 name 字段是新值 xiaolin，与主库的值不一致性；</li>
+</ul>
+<p>可以看到，在持久化 redo log 和 binlog 这两份日志的时候，如果出现半成功的状态，就会造成主从环境的数据不一致性。这是因为 redo log 影响主库的数据，binlog 影响从库的数据，所以 redo log 和 binlog 必须保持一致才能保证主从数据一致。</p>
+<p><strong>MySQL 为了避免出现两份日志之间的逻辑不一致的问题，使用了「两阶段提交」来解决</strong>，两阶段提交其实是分布式事务一致性协议，它可以保证多个逻辑操作要不全部成功，要不全部失败，不会出现半成功的状态。</p>
+<p><strong>两阶段提交把单个事务的提交拆分成了 2 个阶段，分别是「准备（Prepare）阶段」和「提交（Commit）阶段」</strong>，每个阶段都由协调者（Coordinator）和参与者（Participant）共同完成。注意，不要把提交（Commit）阶段和 commit 语句混淆了，commit 语句执行的时候，会包含提交（Commit）阶段。</p>
+<p>举个拳击比赛的例子，两位拳击手（参与者）开始比赛之前，裁判（协调者）会在中间确认两位拳击手的状态，类似于问你准备好了吗？</p>
+<ul>
+<li><strong>准备阶段</strong>：裁判（协调者）会依次询问两位拳击手（参与者）是否准备好了，然后拳击手听到后做出应答，如果觉得自己准备好了，就会跟裁判说准备好了；如果没有自己还没有准备好（比如拳套还没有带好），就会跟裁判说还没准备好。</li>
+<li><strong>提交阶段</strong>：如果两位拳击手（参与者）都回答准备好了，裁判（协调者）宣布比赛正式开始，两位拳击手就可以直接开打；如果任何一位拳击手（参与者）回答没有准备好，裁判（协调者）会宣布比赛暂停，对应事务中的回滚操作。</li>
+</ul>
+<h4>两阶段提交的过程是怎样的？</h4>
+<blockquote>
+<p>XA 是 X/Open 组织提出的分布式事务规范，采用**两阶段提交（2PC, Two-Phase Commit）**协议</p>
+</blockquote>
+<p>在 MySQL 的 InnoDB 存储引擎中，开启 binlog 的情况下，MySQL 会同时维护 binlog 日志与 InnoDB 的 redo log，为了保证这两个日志的一致性，MySQL 使用了<strong>内部 XA 事务</strong>（是的，也有外部  XA 事务，跟本文不太相关，我就不介绍了），内部 XA 事务由 binlog 作为协调者，存储引擎是参与者。</p>
+<p>当客户端执行 commit 语句或者在自动提交的情况下，MySQL 内部开启一个 XA 事务，<strong>分两阶段来完成 XA 事务的提交</strong>，如下图：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>从图中可看出，事务的提交过程有两个阶段，就是<strong>将 redo log 的写入拆成了两个步骤：prepare 和 commit，中间再穿插写入 binlog</strong>，具体如下：</p>
+<ul>
+<li>
+<p><strong>prepare 阶段</strong>：将 XID（内部 XA 事务的 ID）写入到 redo log，同时将 redo log 对应的事务状态设置为 prepare，然后将 redo log 刷新到硬盘；</p>
+</li>
+<li>
+<p><strong>commit 阶段</strong>：把 XID  写入到 binlog，然后将 binlog 刷新到磁盘，接着调用引擎的提交事务接口，将 redo log 状态设置为 commit（将事务设置为 commit 状态后，刷入到磁盘 redo log 文件，所以 commit 状态也是会刷盘的）；</p>
+</li>
+</ul>
+<h4>异常重启会出现什么现象？</h4>
+<p>在两阶段提交的不同时刻，MySQL 异常重启会出现什么现象：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>不管是时刻 A（已经 redo log，还没写入 binlog）</p>
+<p>还是时刻 B（已经写入 redo log 和 binlog，还没写入 commit 标识）崩溃</p>
+<p><strong>此时的 redo log 都处于 prepare 状态</strong></p>
+<p>在 MySQL 重启后会按顺序扫描 redo log 文件，碰到处于 prepare 状态的 redo log，就拿着 redo log 中的 XID 去 binlog 查看是否存在此 XID：</p>
+<ul>
+<li><strong>如果 binlog 中没有当前内部 XA 事务的 XID，说明 redolog 完成刷盘，但是 binlog 还没有刷盘，则回滚事务</strong>。对应时刻 A 崩溃恢复的情况。</li>
+<li><strong>如果 binlog 中有当前内部 XA 事务的 XID，说明 redolog 和 binlog 都已经完成了刷盘，则提交事务</strong>。对应时刻 B 崩溃恢复的情况。</li>
+</ul>
+<p>可以看到，<strong>对于处于 prepare 阶段的 redo log，即可以提交事务，也可以回滚事务，这取决于是否能在 binlog 中查找到与 redo log 相同的  XID</strong>，如果有就提交事务，如果没有就回滚事务。这样就可以保证 redo log 和 binlog 这两份日志的一致性了。</p>
+<p>所以说，<strong>两阶段提交是以 binlog 写成功为事务提交成功的标识</strong>，因为 binlog 写成功了，<strong>就意味着能在 binlog 中查找到与 redo log 相同的 XID</strong>。</p>
+<blockquote>
+<p>处于 prepare 阶段的 redo log 加上完整 binlog，重启就提交事务，MySQL 为什么要这么设计？</p>
+</blockquote>
+<p>binlog 已经写入了，之后就会被从库（或者用这个 binlog 恢复出来的库）使用。</p>
+<p>所以，在主库上也要提交这个事务。采用这个策略，主库和备库的数据就保证了一致性。</p>
+<blockquote>
+<p>事务没提交的时候，redo log 会被持久化到磁盘吗？</p>
+</blockquote>
+<p>会的。</p>
+<p>事务执行中间过程的 redo log 也是直接写在 redo log buffer 中的，这些缓存在  redo log buffer  里的 redo log 也会被「后台线程」每隔一秒一起持久化到磁盘。</p>
+<p>也就是说，事务没提交的时候，redo log 也是可能被持久化到磁盘的。</p>
+<blockquote>
+<p>如果 mysql 崩溃了，还没提交事务的 redo log 已经被持久化磁盘了，mysql 重启后，数据不就不一致了？</p>
+</blockquote>
+<p>这种情况 mysql 重启会进行回滚操作，因为事务没提交的时候，binlog 是还没持久化到磁盘的。</p>
+<p>所以，redo log 可以在事务没提交之前持久化到磁盘，但是 binlog 必须在事务提交之后，才可以持久化到磁盘。</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>Mysql - 2数据类型与约束</title>
       <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/2.html</link>
@@ -139,14 +836,42 @@
 ]]></content:encoded>
     </item>
     <item>
-      <title>Mysql - 5 事务</title>
+      <title>Mysql - 5 事务与视图</title>
       <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/5.html</link>
       <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Mysql - 5 事务</source>
-      <description>事务 事务是一组操作的集合，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败 当我们要进行的操作非常多时，比如要依次删除很多个表的数据，我们就需要执行大量的SQL语句来完成，这些数据库操作语句就可以构成一个事务！ 只有Innodb引擎支持事务 使用 Mysql 默认开启事务自动提交 手动控制事务 方式一 方...</description>
+      <source url="http://ekkosonya.cn/rss.xml">Mysql - 5 事务与视图</source>
+      <description>视图 视图（View）是一个虚拟表，它是基于 SQL 查询结果集的可视化表示 视图本质就是一个查询的结果，不过我们每次都可以通过打开视图来按照我们想要的样子查看数据。既然视图本质就是一个查询的结果，那么它本身就是一个虚表，并不是真实存在的，数据实际上还是存放在原来的表中。 通俗的讲，视图只保存了查询的SQL逻辑，不保存查询结果。所以我们在创建视图的时候...</description>
       <category>code</category>
       <pubDate>Wed, 04 Mar 2026 16:30:07 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>事务</h2>
+      <content:encoded><![CDATA[<h2>视图</h2>
+<p>视图（View）是一个虚拟表，它是基于 SQL 查询结果集的可视化表示</p>
+<p>视图本质就是一个查询的结果，不过我们每次都可以通过打开视图来按照我们想要的样子查看数据。既然视图本质就是一个查询的结果，那么它本身就是一个虚表，并不是真实存在的，数据实际上还是存放在原来的表中。</p>
+<p>通俗的讲，视图只保存了查询的SQL逻辑，不保存查询结果。所以我们在创建视图的时候，主要的工作就落在创建这条SQL查询语句上。</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> 视图名称<span class="token punctuation">(</span>列名<span class="token punctuation">)</span> <span class="token keyword">as</span> 子查询语句 <span class="token punctuation">[</span><span class="token keyword">WITH</span> <span class="token keyword">CHECK</span> <span class="token keyword">OPTION</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+</code></pre></div><p>WITH CHECK OPTION是指当创建后，如果更新视图中的数据，是否要满足子查询中的条件表达式，不满足将无法插入，创建后，我们就可以使用select语句来直接查询视图上的数据了，因此，还能在视图的基础上，导出其他的视图</p>
+<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 创建视图</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> user_summary <span class="token keyword">AS</span>
+<span class="token keyword">SELECT</span> id<span class="token punctuation">,</span> name<span class="token punctuation">,</span> age
+<span class="token keyword">FROM</span> users
+<span class="token keyword">WHERE</span> age <span class="token operator">&gt;=</span> <span class="token number">18</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 使用视图（就像查询表一样）</span>
+<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> user_summary <span class="token keyword">WHERE</span> age <span class="token operator">&gt;</span> <span class="token number">25</span><span class="token punctuation">;</span>
+
+<span class="token comment">-- 删除视图</span>
+<span class="token keyword">DROP</span> <span class="token keyword">VIEW</span> user_summary<span class="token punctuation">;</span>
+</code></pre></div><p>某些简单视图支持 INSERT、UPDATE、DELETE 操作</p>
+<p>视图只是一个查询的"窗口"，当你对视图进行增删改操作时，MySQL 会将这些操作转换为对基础表的操作。</p>
+<ul>
+<li>若视图是由两个以上基本表导出的，则此视图不允许更新。</li>
+<li>若视图的字段来自字段表达式或常数，则不允许对此视图执行INSERT和UPDATE操作，但允许执行DELETE操作。</li>
+<li>若视图的字段来自集函数，则此视图不允许更新。</li>
+<li>若视图定义中含有GROUP BY子句，则此视图不允许更新。</li>
+<li>若视图定义中含有DISTINCT短语，则此视图不允许更新。</li>
+<li>若视图定义中有嵌套查询，并且内层查询的FROM子句中涉及的表也是导出该视图的基本表，则此视图不允许更新。</li>
+<li>一个不允许更新的视图上定义的视图也不允许更新</li>
+</ul>
+<h2>事务</h2>
 <p>事务是一组操作的集合，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败</p>
 <p>当我们要进行的操作非常多时，比如要依次删除很多个表的数据，我们就需要执行大量的SQL语句来完成，这些数据库操作语句就可以构成一个事务！</p>
 <p>只有Innodb引擎支持事务</p>
@@ -267,221 +992,6 @@
 logger<span class="token punctuation">.</span><span class="token function">debug</span><span class="token punctuation">(</span><span class="token string">"获取到 {} 条历史对话"</span><span class="token punctuation">,</span> history<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre></div><p>当用户想要查看之前的聊天记录时，客户端会向服务端发送一个查询历史记录的 REST 请求。服务端收到请求后，第一步还是先对用户的身份进行校验，确认用户是合法且有权限访问对应数据的。</p>
 <p>接着，系统会去 Redis 中查找当前用户对应的 conversationId，也就是这位用户当前正在使用的那一轮对话的标识。如果 Redis 中没有查到，或者这条会话已经过期失效，系统会及时返回提示信息，避免出现无效</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>item3 - 10 知识库检索</title>
-      <link>http://ekkosonya.cn/code/java_item/3-smart/article10.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/3-smart/article10.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">item3 - 10 知识库检索</source>
-      <description>知识库检索模块主要是基于 Elasticsearch 实现的文档混合检索能力，将语义检索和关键词检索结果结合起来，为用户提供更高质量的搜索体验 该模块依赖于文件上传与解析模块完成的向量化处理，直接使用存储在 Elasticsearch 中的向量数据进行检索 通过 阿里千问Embedding模型成文本向量，并将向量存储在 Elasticsearch 中 ...</description>
-      <category>code</category>
-      <pubDate>Wed, 04 Feb 2026 15:51:17 GMT</pubDate>
-      <content:encoded><![CDATA[<p>知识库检索模块主要是基于 Elasticsearch 实现的文档混合检索能力，将语义检索和关键词检索结果结合起来，为用户提供更高质量的搜索体验</p>
-<p>该模块依赖于文件上传与解析模块完成的向量化处理，直接使用存储在 Elasticsearch 中的向量数据进行检索</p>
-<p>通过 阿里千问Embedding模型成文本向量，并将向量存储在 Elasticsearch 中</p>
-<h2>主要模块</h2>
-<h3>知识库检索</h3>
-<ul>
-<li>混合检索：结合语义检索和关键词检索结果，按权重排序返回搜索结果</li>
-<li>支持指定返回结果数量：通过 topK 参数控制结果数量</li>
-</ul>
-<h3>权限控制</h3>
-<p>在进行知识库检索时，对于具体的用户，要根据其组织标签来控制检索范围</p>
-<ul>
-<li>
-<p>基于组织标签的数据权限：确保用户只能访问有权限的文档</p>
-</li>
-<li>
-<p>支持层级权限验证：父标签权限自动包含所有子标签文档的访问权限</p>
-</li>
-<li>
-<p>默认标签全局可访问：DEFAULT 标签资源对所有用户开放</p>
-</li>
-</ul>
-<h2>整体流程</h2>
-<figure><figcaption>alt text</figcaption></figure>
-<p>当用户发起一个查询请求时，系统首先会接收用户输入的查询文本，以及一些附带的检索参数，以及需要返回的结果数量（topK）。在这一步，系统会先对这些参数做一轮合法性校验，确保格式正确、数据合理。</p>
-<p>接着，系统会把用户的查询文本交给阿里千问提供的向量化 API，通过这个接口把自然语言的文本转换成可以用于向量检索的向量表示</p>
-<p>拿到查询向量后，系统会执行一套混合检索流程，也就是结合语义匹配和关键词匹配</p>
-<p>在这一步，系统会构建一个 Elasticsearch 的查询语句，这个查询不仅包含了向量相似度的计算，还会结合全文搜索的匹配结果。同时，我们还会在查询中加入权限相关的过滤条件，确保用户只能看到自己“有权访问”的内容</p>
-<p>权限规则主要有：</p>
-<div class="language-markdown" data-ext="md" data-title="md"><pre class="language-markdown"><code><span class="token list punctuation">1.</span> 用户可以访问自己上传的文档；  
-<span class="token list punctuation">2.</span> 用户可以访问被标记为公开的文档；  
-<span class="token list punctuation">3.</span> 如果某些文档被打上了特定的权限标签（比如部门或层级权限），只要用户拥有这些标签，也可以访问这些文档。
-</code></pre></div><p>带着这些权限条件，系统将完整的查询请求发送给 Elasticsearch，并基于设定好的策略对搜索结果进行打分，综合评估文本的相关性与权限匹配度。</p>
-<p>最后，我们会根据 topK 参数，挑选出排名靠前的若干个文档，并从数据库中进一步获取这些文档的元数据信息，比如标题、作者、上传时间等。系统会对这些内容进行格式化处理，打包成清晰完整的响应结果，并最终返回给用户</p>
-<h2>Elasticsearch的索引结构</h2>
-<p>将对应的文本块内容会存到 ES 的 <code>knowledge_base</code> 索引中，每个 Document 为一条记录，分别存了该文本块对应的文件MD5标识，分块序号id，原始的文本内容 (会被 <code>ik_max_word</code> 进行语义切割，从而实现倒排查询)，文本向量 (会基于此计算相似性查询)，以及Embedding模型版本</p>
-<figure><figcaption>alt text</figcaption></figure>
-<div class="language-json" data-ext="json" data-title="json"><pre class="language-json"><code><span class="token punctuation">{</span>
-  <span class="token property">"mappings"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-    <span class="token property">"properties"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-      <span class="token property">"fileMd5"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"keyword"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"chunkId"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"integer"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"textContent"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"text"</span><span class="token punctuation">,</span>
-        <span class="token property">"analyzer"</span><span class="token operator">:</span> <span class="token string">"ik_max_word"</span><span class="token punctuation">,</span>
-        <span class="token property">"search_analyzer"</span><span class="token operator">:</span> <span class="token string">"ik_smart"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"vector"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"dense_vector"</span><span class="token punctuation">,</span>
-        <span class="token property">"dims"</span><span class="token operator">:</span> <span class="token number">2048</span><span class="token punctuation">,</span>
-        <span class="token property">"index"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-        <span class="token property">"similarity"</span><span class="token operator">:</span> <span class="token string">"cosine"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"modelVersion"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"keyword"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"userId"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"keyword"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"orgTag"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"keyword"</span>
-      <span class="token punctuation">}</span><span class="token punctuation">,</span>
-      <span class="token property">"isPublic"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
-        <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"boolean"</span>
-      <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h2>主要API</h2>
-<h3>混合搜索接口</h3>
-<ul>
-<li>URL: <code>/api/search/hybrid</code></li>
-<li>Method: GET</li>
-<li>Parameters:
-<ul>
-<li>query: 搜索查询字符串（必需）</li>
-<li>topK: 返回结果数量（可选，默认10）</li>
-</ul>
-</li>
-</ul>
-<p>示例: <code>/api/search/hybrid?query=Penguin&amp;topK=10</code></p>
-<p>Response:</p>
-<div class="language-json" data-ext="json" data-title="json"><pre class="language-json"><code><span class="token punctuation">[</span>
-  <span class="token punctuation">{</span>
-    <span class="token property">"file_md5"</span><span class="token operator">:</span> <span class="token string">"abc123..."</span><span class="token punctuation">,</span>
-    <span class="token property">"chunk_id"</span><span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
-    <span class="token property">"text_content"</span><span class="token operator">:</span> <span class="token string">"Penguin!!"</span><span class="token punctuation">,</span>
-    <span class="token property">"score"</span><span class="token operator">:</span> <span class="token number">0.92</span><span class="token punctuation">,</span>
-    <span class="token property">"file_name"</span><span class="token operator">:</span> <span class="token string">"paismart.pdf"</span>
-  <span class="token punctuation">}</span><span class="token punctuation">,</span>
-  <span class="token comment">// ...更多结果</span>
-<span class="token punctuation">]</span>
-</code></pre></div><h3>文档删除接口</h3>
-<h2>前端流程</h2>
-<figure><figcaption>alt text</figcaption></figure>
-<p>主要是在 知识库 中可以点击 检索知识库 按钮，然后就会根据输入的关键字和topK数量的参数进行查询</p>
-<p>最终可以得到返回结果</p>
-<h2>混合查询</h2>
-<p>主要实现的是混合搜索，大致思路是通过向量检索和倒排索引（关键词）检索，并施加了严格的权限控制</p>
-<p>实际执行过程更像是一个 “并行执行 -&gt; 合并 -&gt; 最终重排” 的过程</p>
-<p>可以想象成有两个小组在同时工作，最后交给经理审核：</p>
-<ul>
-<li>
-<p>小组 A（向量组）：负责 KNN 搜索。</p>
-</li>
-<li>
-<p>小组 B（关键词组）：负责 倒排索引（关键词）搜索 + 权限过滤。</p>
-</li>
-<li>
-<p>经理（Rescore）：对前两组提交的初选名单进行最终精选</p>
-</li>
-</ul>
-<h3>原理</h3>
-<p>ES 会根据所给的查询语句，判断是否执行混合查询</p>
-<p>当你把 knn 和 query 同时放进同一个 Search Request（s）里时，这本身就是一条指令。这条指令翻译成 Elasticsearch 能听懂的 DSL (JSON) 就像这样：</p>
-<div class="language-json" data-ext="json" data-title="json"><pre class="language-json"><code><span class="token punctuation">{</span>
-  <span class="token property">"knn"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>     <span class="token comment">// 指令 A：向量检索</span>
-  <span class="token property">"query"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span><span class="token punctuation">,</span>   <span class="token comment">// 指令 B：关键词检索</span>
-  <span class="token property">"rescore"</span><span class="token operator">:</span> <span class="token punctuation">{</span> ... <span class="token punctuation">}</span>  <span class="token comment">// 指令 C：重排序</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>Elasticsearch 服务端收到这个 JSON 后，它的底层逻辑是：</p>
-<blockquote>
-<p>用户同时传了 knn 和 query，我必须执行 混合检索 (Hybrid Search) 模式。也就是：分别执行这两个搜索，然后把结果取并集 (OR 关系)。</p>
-</blockquote>
-<p>所以，代码里“同时设置了这两个属性”这个动作，就是合并的指令</p>
-<h4>内部合并操作</h4>
-<p>对于每一个文档，它的初步得分（在 Rescore 之前）通常是两个分数的加权和：</p>
-<p v-pre="" class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mi>c</mi><mi>o</mi><mi>r</mi><msub><mi>e</mi><mrow><mi>f</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>l</mi></mrow></msub><mo>=</mo><mi>S</mi><mi>c</mi><mi>o</mi><mi>r</mi><msub><mi>e</mi><mrow><mi>K</mi><mi>N</mi><mi>N</mi></mrow></msub><mo>+</mo><mi>S</mi><mi>c</mi><mi>o</mi><mi>r</mi><msub><mi>e</mi><mrow><mi>Q</mi><mi>u</mi><mi>e</mi><mi>r</mi><mi>y</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-Score_{final}=Score_{KNN}+Score_{Query}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.02778em;">cor</span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span><span class="mord mathnormal mtight">ina</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.02778em;">cor</span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.07153em;">K</span><span class="mord mathnormal mtight" style="margin-right:0.10903em;">NN</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">S</span><span class="mord mathnormal" style="margin-right:0.02778em;">cor</span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">Q</span><span class="mord mathnormal mtight">u</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">ery</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span></span></p>
-<ul>
-<li>
-<p>情况 A（双重命中）：如果不锈钢杯子既在 KNN 前 300 名里，又包含了关键词“不锈钢”</p>
-<ul>
-<li>它的分数 = 向量相似度分 + BM25关键词分</li>
-<li>结果：分数很高，排在最前面</li>
-</ul>
-</li>
-<li>
-<p>情况 B（单侧命中）：如果某个文档只在 KNN 里找到了（语义相关但不含关键词）</p>
-<ul>
-<li>它的分数 = 向量相似度分 + 0</li>
-<li>结果：也能入围，但分数可能稍低</li>
-</ul>
-</li>
-<li>
-<p>情况 C（单侧命中）：如果某个文档只包含关键词（但向量距离很远，没进 KNN 前 300）</p>
-<ul>
-<li>它的分数 = 0 + BM25关键词分</li>
-<li>结果：也能入围</li>
-</ul>
-</li>
-</ul>
-<p>如果都没有命中，才不会入围</p>
-<p>| <strong>特性</strong> | <strong>Query Context (查询上下文)</strong> | <strong>Filter Context (过滤上下文)</strong> |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>item3 - 11 聊天模块</title>
-      <link>http://ekkosonya.cn/code/java_item/3-smart/article11.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/3-smart/article11.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">item3 - 11 聊天模块</source>
-      <description>聊天模块通过 WebSocket 协议实现双向通信，支持大语言模型（接入了 DeepSeek）输出内容的流式返回；为支持多轮连续对话，该模块集成了 Redis 用于存储和维护用户会话上下文，确保大模型在生成回答时能够“记住”前文内容，维持语义连贯性 为了更好地引导大语言模型生成高质量回答，系统特别强化了 Prompt 构建与模板管理能力： 根据检索结果...</description>
-      <category>code</category>
-      <pubDate>Wed, 04 Feb 2026 15:51:17 GMT</pubDate>
-      <content:encoded><![CDATA[<p>聊天模块通过 WebSocket 协议实现双向通信，支持大语言模型（接入了 DeepSeek）输出内容的流式返回；为支持多轮连续对话，该模块集成了 Redis 用于存储和维护用户会话上下文，确保大模型在生成回答时能够“记住”前文内容，维持语义连贯性</p>
-<p>为了更好地引导大语言模型生成高质量回答，系统特别强化了 Prompt 构建与模板管理能力：</p>
-<ul>
-<li>根据检索结果动态生成 Prompt；</li>
-<li>支持多种 Prompt 模板配置与调优；</li>
-<li>确保内容组织清晰、有重点，引导模型围绕核心信息生成响应</li>
-</ul>
-<h2>功能实现</h2>
-<figure><figcaption>alt text</figcaption></figure>
-<h2>技术选型</h2>
-<p>| 功能模块 | 技术选型 | 备注 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>item3 - 9 文件解析模块2</title>
-      <link>http://ekkosonya.cn/code/java_item/3-smart/article9.html</link>
-      <guid>http://ekkosonya.cn/code/java_item/3-smart/article9.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">item3 - 9 文件解析模块2</source>
-      <description>实现大文件的分片上传、断点续传、文件合并以及文档解析功能 目的 通过 Redis 和 MinIO 的结合，确保大文件上传的可靠性 并通过 Kafka 实现异步处理，进行文件解析等操作 模块支持多种文档格式（PDF、Word、Excel）的解析，并提取文本内容用于后续向量化处理 文本向量化通过调用阿里向量化 API 实现，生成的向量数据目前存储在 Ela...</description>
-      <category>code</category>
-      <pubDate>Sat, 24 Jan 2026 17:30:48 GMT</pubDate>
-      <content:encoded><![CDATA[<p>实现大文件的分片上传、断点续传、文件合并以及文档解析功能</p>
-<h2>目的</h2>
-<ul>
-<li>通过 Redis 和 MinIO 的结合，确保大文件上传的可靠性</li>
-<li>并通过 Kafka 实现异步处理，进行文件解析等操作</li>
-<li>模块支持多种文档格式（PDF、Word、Excel）的解析，并提取文本内容用于后续向量化处理</li>
-<li>文本向量化通过调用阿里向量化 API 实现，生成的向量数据目前存储在 <code>Elasticsearch</code> 中，未来将同时支持 FAISS 存储</li>
-</ul>
-<h2>文件处理(解析+向量化)</h2>
-<figure><figcaption>alt text</figcaption></figure>
-<h3>ElasticSearch</h3>
-<p>| <strong>层级</strong> | <strong>MySQL (关系型)</strong> | <strong>Elasticsearch (8.x)</strong> | <strong>备注</strong> |
-|</p>
 ]]></content:encoded>
     </item>
   </channel>

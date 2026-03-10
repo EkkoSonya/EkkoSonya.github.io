@@ -6,11 +6,1500 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Sat, 07 Mar 2026 09:34:46 GMT</pubDate>
-    <lastBuildDate>Sat, 07 Mar 2026 09:34:46 GMT</lastBuildDate>
+    <pubDate>Tue, 10 Mar 2026 06:33:18 GMT</pubDate>
+    <lastBuildDate>Tue, 10 Mar 2026 06:33:18 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Redis - 1 简介</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/1.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Redis - 1 简介</source>
+      <description>Redis 简介 Redis 是⼀种基于键值对的 NoSQL 数据库 alt textalt text Redis 是一种基于内存的数据库，对数据的读写操作都是在内存中完成，因此读写速度非常快，常用于缓存，消息队列、分布式锁等场景。 Redis 提供了多种数据类型来支持不同的业务场景，比如 String(字符串)、Hash(哈希)、List (列表)、...</description>
+      <category>code</category>
+      <pubDate>Tue, 10 Mar 2026 06:28:10 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Redis 简介</h2>
+<p>Redis 是⼀种基于键值对的 NoSQL 数据库</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>Redis 是一种基于内存的数据库，对数据的读写操作都是在内存中完成，因此<strong>读写速度非常快</strong>，常用于<strong>缓存，消息队列、分布式锁</strong>等场景。</p>
+<p>Redis 提供了多种数据类型来支持不同的业务场景，比如 String(字符串)、Hash(哈希)、List (列表)、Set(集合)、Zset(有序集合)、Bitmaps（位图）、HyperLogLog（基数统计）、GEO（地理信息）、Stream（流），并且对数据类型的操作都是<strong>原子性</strong>的，因为执行命令由<strong>单线程</strong>负责的，不存在并发竞争的问题。</p>
+<p>除此之外，Redis 还支持事务、持久化、Lua 脚本、多种集群方案（主从复制模式、哨兵模式、切片集群模式）、发布/订阅模式，内存淘汰机制、过期删除机制等等</p>
+<p>主要来说，Redis 是一个内存数据库，用作另一个“真实”数据库（如 MySQL 或PostgreSQL）前面的缓存，以帮助提高应用程序性能。它通过利用内存的高速访问速度，从而减轻核心应用程序数据库的负载，例如：</p>
+<ul>
+<li>不经常更改且经常被请求的数据</li>
+<li>任务关键性较低且经常变动的数据</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<p>另一个重要方面是 Redis 模糊了缓存和数据存储之间的界限。这里要理解的重要一点是，相比于使用 SSD 或 HDD 作为存储的传统数据库，读取和操作内存中数据的速度要快得多。</p>
+<h2>Redis 架构</h2>
+<p>Redis可以不同配置：</p>
+<ul>
+<li>单个 Redis 实例</li>
+<li>Redis 高可用性</li>
+<li>Redis 哨兵</li>
+<li>Redis 集群</li>
+</ul>
+<h3>单个 Redis 实例</h3>
+<p>单个 Redis 实例是最直接的 Redis 部署方式。它允许用户设置和运行小型实例，从而帮助他们快速发展和加速服务。但是，这种部署并非没有缺点。例如，如果此实例失败或不可用，则所有客户端对 Redis 的调用都将失败，从而降低系统的整体性能和速度。</p>
+<p>发送到 Redis 的命令首先在内存中处理。然后，如果在这些实例上设置了持久性，则在某个时间间隔上会有一个fork进程，来生成数据持久化 RDB（Redis 数据的非常紧凑的时间点表示）快照或 AOF（仅附加文件）。</p>
+<p>这两个流程可以让 Redis 拥有长期存储，支持各种复制策略，并启用更复杂的拓扑。如果 Redis 未设置为持久化数据，则在重新启动或故障转移时数据会丢失。如果在重启时启用了持久化，它会将 RDB 快照或 AOF 中的所有数据加载回内存，然后实例可以支持新的客户端请求。</p>
+<h3>Redis 复制</h3>
+<h4>高可用性</h4>
+<p>Redis 的另一个流行设置是主从部署方式，从部署保持与主部署之间数据同步。当数据写入主实例时，它会将这些命令的副本发送到从部署客户端输出缓冲区，从而达到数据同步的效果。从部署可以有一个或多个实例。这些实例可以帮助扩展 Redis 的读取操作或提供故障转移，以防 main 丢失。</p>
+<h4>Redis复制</h4>
+<p>Redis 的每个主实例都有一个复制 ID 和一个偏移量。这两条数据对于确定副本可以继续其复制过程的时间点或确定它是否需要进行完整同步至关重要。对于主 Redis 部署上发生的每个操作，此偏移量都会增加。</p>
+<blockquote>
+<p>复制 ID 是一个唯一标识符，用于标识一个 Redis 主实例的"身份"：</p>
+<ul>
+<li>每个主实例都有自己的复制 ID</li>
+<li>当实例被提升为主实例或重启时，会生成新的复制 ID</li>
+<li>它用于判断两个实例是否来自同一个"复制链"</li>
+</ul>
+<p>举例：主实例 A 的复制 ID 是 abc123，它的所有副本也会记录这个 ID</p>
+<p>偏移量是一个递增的数字，用于记录主实例上执行的操作数量：</p>
+<ul>
+<li>主实例每执行一个写操作，偏移量就会增加</li>
+<li>它标记了数据变更的"进度位置"</li>
+<li>副本实例通过偏移量知道自己与主实例的数据差距有多大</li>
+</ul>
+<p>举例：如果主实例偏移量是 1000，副本偏移量是 950，说明副本落后了 50 个操作命令</p>
+</blockquote>
+<p>更明确地说，当 Redis 副本实例仅落后于主实例几个偏移量时，它会从主实例接收剩余的命令，然后在其数据集上重放，直到同步完成。</p>
+<p>如果两个实例无法就复制 ID 达成一致，或者主实例不知道偏移量，则副本将请求全量同步。这时主实例会创建一个新的 RDB 快照并将其发送到副本。</p>
+<p>在此传输之间，主实例会缓冲快照截止和当前偏移之间的所有中间更新指令，这样在快照同步完后，再将这些指令发送到副本实例。这样完成后，复制就可以正常继续。</p>
+<p>如果一个实例具有相同的复制 ID 和偏移量，则它们具有完全相同的数据。现在你可能想知道为什么需要复制 ID。</p>
+<p>当 Redis 实例被提升为主实例或作为主实例从头开始重新启动时，它会被赋予一个新的复制 ID。</p>
+<p>这用于推断此新提升的副本实例是从先前哪个主实例复制出来的。这允许它能够执行部分同步（与其他副本节点），因为新的主实例会记住其旧的复制 ID。</p>
+<p>例如，两个实例（主实例和从实例）具有相同的复制 ID，但偏移量相差几百个命令，这意味着如果在实例上重放这些偏移量后面的命令，它们将具有相同的数据集。现在，如果复制 ID 完全不同，并且我们不知道新降级（或重新加入）从节点的先前复制 ID（没有共同祖先）。我们将需要执行昂贵的全量同步。</p>
+<p>相反，如果我们知道以前的复制 ID，我们就可以推断如何使数据同步，因为我们能够推断出它们共享的共同祖先，并且偏移量对于部分同步再次有意义。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Redis - 2 数据类型1</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/2.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Redis - 2 数据类型1</source>
+      <description>Redis 数据类型 Redis常见的数据类型有： String（字符串） Hash（哈希） List（列表） Set（集合） Zset（有序集合） 后面又支持了四种数据类型： BitMap（2.2 版新增） HyperLogLog（2.8 版新增） GEO（3.2 版新增） Stream（5.0 版新增） String String 是最基本的 ke...</description>
+      <category>code</category>
+      <pubDate>Tue, 10 Mar 2026 06:28:10 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Redis 数据类型</h2>
+<p>Redis常见的数据类型有：</p>
+<ul>
+<li>String（字符串）</li>
+<li>Hash（哈希）</li>
+<li>List（列表）</li>
+<li>Set（集合）</li>
+<li>Zset（有序集合）</li>
+</ul>
+<p>后面又支持了四种数据类型：</p>
+<ul>
+<li>BitMap（2.2 版新增）</li>
+<li>HyperLogLog（2.8 版新增）</li>
+<li>GEO（3.2 版新增）</li>
+<li>Stream（5.0 版新增）</li>
+</ul>
+<h3>String</h3>
+<p>String 是最基本的 key-value 结构，key 是唯一标识，value 是具体的值，value其实不仅是字符串， 也可以是数字（整数或浮点数），value 最多可以容纳的数据长度是 512M</p>
+<p>适合缓存单个对象，⽐如验证码、token、计数器等</p>
+<h4>常用命令</h4>
+<h5>基本操作</h5>
+<p>SET GET EXISTS STRLEN DEL SETNX</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 设置 key-value 类型的值</span>
+<span class="token operator">&gt;</span> SET name lin
+OK
+<span class="token comment"># 根据 key 获得对应的 value</span>
+<span class="token operator">&gt;</span> GET name
+<span class="token string">"lin"</span>
+<span class="token comment"># 判断某个 key 是否存在</span>
+<span class="token operator">&gt;</span> EXISTS name
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># 返回 key 所储存的字符串值的长度</span>
+<span class="token operator">&gt;</span> STRLEN name
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span>
+<span class="token comment"># 删除某个 key 对应的值</span>
+<span class="token operator">&gt;</span> DEL name
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># 不存在就插入（not exists）</span>
+<span class="token operator">&gt;</span>SETNX key value
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+</code></pre></div><h5>过期设置</h5>
+<p>EXPIRE TTL</p>
+<p>默认为永不过期</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 设置 key 在 60 秒后过期（该方法是针对已经存在的key设置过期时间）</span>
+<span class="token operator">&gt;</span> EXPIRE name  <span class="token number">60</span> 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># 查看数据还有多久过期</span>
+<span class="token operator">&gt;</span> TTL name 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">51</span>
+
+<span class="token comment">#设置 key-value 类型的值，并设置该key的过期时间为 60 秒</span>
+<span class="token operator">&gt;</span> SET key  value EX <span class="token number">60</span>
+OK
+<span class="token operator">&gt;</span> SETEX key  <span class="token number">60</span> value
+OK
+</code></pre></div><h5>批量设置</h5>
+<p>MSET MGET</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 批量设置 key-value 类型的值</span>
+<span class="token operator">&gt;</span> MSET key1 value1 key2 value2 
+OK
+<span class="token comment"># 批量获取多个 key 对应的 value</span>
+<span class="token operator">&gt;</span> MGET key1 key2 
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"value1"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"value2"</span>
+</code></pre></div><h5>计数器</h5>
+<p>字符串的内容为整数的时候可以使用</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 设置 key-value 类型的值</span>
+<span class="token operator">&gt;</span> SET number <span class="token number">0</span>
+OK
+<span class="token comment"># 将 key 中储存的数字值增一</span>
+<span class="token operator">&gt;</span> INCR number
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># 将key中存储的数字值加 10</span>
+<span class="token operator">&gt;</span> INCRBY number <span class="token number">10</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">11</span>
+<span class="token comment"># 将 key 中储存的数字值减一</span>
+<span class="token operator">&gt;</span> DECR number
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">10</span>
+<span class="token comment"># 将key中存储的数字值键 10</span>
+<span class="token operator">&gt;</span> DECRBY number <span class="token number">10</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+</code></pre></div><h4>应用场景</h4>
+<h5>缓存对象</h5>
+<p>使用 String 来缓存对象有两种方式：</p>
+<ul>
+<li>直接缓存整个对象的 JSON，命令例子： <code>SET user:1 '{"name":"xiaolin", "age":18}'</code>。</li>
+<li>采用将 key 进行分离为 user:ID:属性，采用 MSET 存储，用 MGET 获取各属性值，命令例子： <code>MSET user:1:name xiaolin user:1:age 18 user:2:name xiaomei user:2:age 2</code></li>
+</ul>
+<h5>常规计数</h5>
+<p>因为 Redis 处理命令是单线程，所以执行命令的过程是原子的。因此 String 数据类型适合计数场景，比如计算访问次数、点赞、转发、库存数量等等</p>
+<h5>分布式锁</h5>
+<p>SET 命令有个 NX 参数可以实现「key 不存在才插入」，可以用它来实现分布式锁：</p>
+<ul>
+<li>如果 key 不存在，则显示插入成功，可以用来表示加锁成功；</li>
+<li>如果 key 存在，则会显示插入失败，可以用来表示加锁失败。</li>
+</ul>
+<p>一般而言，还会对分布式锁加上过期时间</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>SET lock_key unique_value NX PX <span class="token number">10000</span>
+</code></pre></div><ul>
+<li>lock_key 就是 key 键；</li>
+<li>unique_value 是客户端生成的唯一的标识；</li>
+<li>NX 代表只在 lock_key 不存在时，才对 lock_key 进行设置操作；</li>
+<li>PX 10000 表示设置 lock_key 的过期时间为 10s，这是为了避免客户端发生异常而无法释放锁</li>
+</ul>
+<p>而解锁的过程就是将 lock_key 键删除，但不能乱删，要保证执行操作的客户端就是加锁的客户端。所</p>
+<p>以，解锁的时候，我们要先判断锁的 unique_value 是否为加锁客户端，是的话，才将 lock_key 键删除</p>
+<blockquote>
+<p>解锁是有两个操作，这时就需要 Lua 脚本来保证解锁的原子性，因为 Redis 在执行 Lua 脚本时，可以以原子性的方式执行，保证了锁释放操作的原子性</p>
+</blockquote>
+<div class="language-lua" data-ext="lua" data-title="lua"><pre class="language-lua"><code><span class="token operator">//</span> 释放锁时，先比较 unique_value 是否相等，避免锁的误释放
+<span class="token keyword">if</span> redis<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">"get"</span><span class="token punctuation">,</span>KEYS<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">==</span> ARGV<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token keyword">then</span>
+    <span class="token keyword">return</span> redis<span class="token punctuation">.</span><span class="token function">call</span><span class="token punctuation">(</span><span class="token string">"del"</span><span class="token punctuation">,</span>KEYS<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">else</span>
+    <span class="token keyword">return</span> <span class="token number">0</span>
+<span class="token keyword">end</span>
+</code></pre></div><p>这样一来，就通过使用 SET 命令和 Lua 脚本在 Redis 单节点上完成了分布式锁的加锁和解锁</p>
+<h5>共享Redis信息</h5>
+<p>通常我们在开发后台管理系统时，会使用 Session 来保存用户的会话 (登录) 状态，这些 Session 信息会被保存在服务器端，但这只适用于单系统应用，如果是分布式系统此模式将不再适用。</p>
+<p>例如用户一的 Session 信息被存储在服务器一，但第二次访问时用户一被分配到服务器二，这个时候服务器并没有用户一的 Session 信息，就会出现需要重复登录的问题，问题在于分布式系统每次会把请求随机分配到不同的服务器。</p>
+<p>分布式系统单独存储 Session 流程图：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>因此，我们需要借助 Redis 对这些 Session 信息进行统一的存储和管理，这样无论请求发送到那台服务器，服务器都会去同一个 Redis 获取相关的 Session 信息，这样就解决了分布式系统下 Session 存储的问题。</p>
+<p>分布式系统使用同一个 Redis 存储 Session 流程图</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>内部实现</h4>
+<p>String 类型的底层的数据结构实现主要是 int 和 SDS（简单动态字符串）</p>
+<h3>List</h3>
+<p>List 列表是简单的字符串列表，按照插入顺序排序，可以从头部或尾部向 List 列表添加元素。</p>
+<p>列表的最大长度为 2^32 - 1，也即每个列表支持超过 40 亿个元素。</p>
+<h4>内部实现</h4>
+<p>List 类型的底层数据结构是由双向链表或压缩列表实现的：</p>
+<ul>
+<li>如果列表的元素个数小于 512 个（默认值，可由 list-max-ziplist-entries 配置），列表每个元素的值都小于 64 字节（默认值，可由 list-max-ziplist-value 配置），Redis 会使用<strong>压缩列表</strong>作为 List 类型的底层数据结构；</li>
+<li>如果列表的元素不满足上面的条件，Redis 会使用<strong>双向链表</strong>作为 List 类型的底层数据结构；</li>
+</ul>
+<p>但是在 Redis 3.2 版本之后，List 数据类型底层数据结构就只由 <code>quicklist</code> 实现了，替代了双向链表和压缩列表</p>
+<h4>常用命令</h4>
+<p>LPUSH RPUSH LPOP RPOP LRANGE BLPOP BRPOP</p>
+<figure><figcaption>alt text</figcaption></figure>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 将一个或多个值value插入到key列表的表头(最左边)，最后的值在最前面</span>
+LPUSH key value <span class="token punctuation">[</span>value <span class="token punctuation">..</span>.<span class="token punctuation">]</span> 
+<span class="token comment"># 将一个或多个值value插入到key列表的表尾(最右边)</span>
+RPUSH key value <span class="token punctuation">[</span>value <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+<span class="token comment"># 移除并返回key列表的头元素</span>
+LPOP key     
+<span class="token comment"># 移除并返回key列表的尾元素</span>
+RPOP key 
+
+<span class="token comment"># 返回列表key中指定区间内的元素，区间以偏移量start和stop指定，从0开始</span>
+LRANGE key start stop
+
+<span class="token comment"># 从key列表表头弹出一个元素，没有就阻塞timeout秒，如果timeout=0则一直阻塞</span>
+BLPOP key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span> <span class="token function">timeout</span>
+<span class="token comment"># 从key列表表尾弹出一个元素，没有就阻塞timeout秒，如果timeout=0则一直阻塞</span>
+BRPOP key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span> <span class="token function">timeout</span>
+</code></pre></div><h4>应用场景</h4>
+<h5>消息队列</h5>
+<p>消息队列在存取消息时，必须要满足三个需求，分别是消息保序、处理重复的消息和保证消息可靠性。</p>
+<p>Redis 的 List 和 Stream 两种数据类型，就可以满足消息队列的这三个需求。</p>
+<blockquote>
+<p>实现消息的保序性</p>
+</blockquote>
+<p>List 本身就是按先进先出的顺序对数据进行存取的，所以，如果使用 List 作为消息队列保存消息的话，就已经能满足消息保序的需求了。</p>
+<p>List 可以使用 LPUSH + RPOP（或者反过来，RPUSH+LPOP）命令实现消息队列。</p>
+<p>不过，在消费者读取数据时，有一个潜在的性能风险点。</p>
+<p>在生产者往 List 中写入数据时，List 并不会主动地通知消费者有新消息写入，如果消费者想要及时处理消息，就需要在程序中不停地调用 RPOP 命令（比如使用一个 while(1) 循环）。如果有新消息写入，RPOP 命令就会返回结果，否则，RPOP 命令返回空值，再继续循环。</p>
+<p>所以，即使没有新消息写入 List，消费者也要不停地调用 RPOP 命令，这就会导致消费者程序的 CPU 一直消耗在执行 RPOP 命令上，带来不必要的性能损失。</p>
+<p>为了解决这个问题，Redis 提供了 BRPOP 命令。</p>
+<p><strong>BRPOP 命令也称为阻塞式读取，客户端在没有读到队列数据时，自动阻塞，直到有新的数据写入队列，再开始读取新数据。</strong></p>
+<p>与消费者程序自己不停地调用 RPOP 命令相比，这种方式能节省 CPU 开销。</p>
+<blockquote>
+<p>处理重复的消息</p>
+</blockquote>
+<p>消费者要实现重复消息的判断，需要 2 个方面的要求：</p>
+<ul>
+<li>每个消息都有一个全局唯一的 ID。</li>
+<li>消费者要记录已经处理过的消息的 ID。当收到一条消息后，消费者程序就可以对比收到的消息 ID 和记录的已处理过的消息 ID，来判断当前收到的消息有没有经过处理。如果已经处理过，那么，消费者程序就不再进行处理了。</li>
+</ul>
+<p>但是 List 并不会为每个消息生成 ID 号，所以我们需要自行为每个消息生成一个全局唯一 ID，生成之后，我们在用 LPUSH 命令把消息插入 List 时，需要在消息中包含这个全局唯一 ID</p>
+<blockquote>
+<p>保证消息可靠性</p>
+</blockquote>
+<p>当消费者程序从 List 中读取一条消息后，List 就不会再留存这条消息了。所以，如果消费者程序在处理消息的过程出现了故障或宕机，就会导致消息没有处理完成，那么，消费者程序再次启动后，就没法再次从 List 中读取消息了。</p>
+<p>为了留存消息，List 类型提供了 BRPOPLPUSH 命令，这个命令的作用是让消费者程序从一个 List 中读取消息，同时，Redis 会把这个消息再插入到另一个 List（可以叫作备份 List）留存。</p>
+<p>这样一来，如果消费者程序读了消息但没能正常处理，等它重启后，就可以从备份 List 中重新读取消息并进行处理了。</p>
+<h3>Hash</h3>
+<p>Hash 是一个键值对（key - value）集合，其中 value 的形式如： value=[{field1，value1}，...{fieldN，valueN}]</p>
+<p>Hash 特别适合用于存储对象。</p>
+<p>Hash 与 String 对象的区别：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>内部实现</h4>
+<p>Hash 类型的底层数据结构是由<strong>压缩列表或哈希表</strong>实现的：</p>
+<ul>
+<li>如果哈希类型元素个数小于 512 个（默认值，可由 hash-max-ziplist-entries 配置），所有值小于 64 字节（默认值，可由 hash-max-ziplist-value 配置）的话，Redis 会使用压缩列表作为 Hash 类型的底层数据结构；</li>
+<li>如果哈希类型元素不满足上面条件，Redis 会使用哈希表作为 Hash 类型的 底层数据结构。</li>
+</ul>
+<p>在 Redis 7.0 中，压缩列表数据结构已经废弃了，交由 listpack 数据结构来实现了</p>
+<h4>常用命令</h4>
+<p>HSET HGET HMSET HMGET HDEL HLEN HGETALL HINCRBY</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 存储一个哈希表key的键值</span>
+HSET key field value   
+<span class="token comment"># 获取哈希表key对应的field键值</span>
+HGET key field
+
+<span class="token comment"># 在一个哈希表key中存储多个键值对</span>
+HMSET key field value <span class="token punctuation">[</span>field value<span class="token punctuation">..</span>.<span class="token punctuation">]</span> 
+<span class="token comment"># 批量获取哈希表key中多个field键值</span>
+HMGET key field <span class="token punctuation">[</span>field <span class="token punctuation">..</span>.<span class="token punctuation">]</span>       
+<span class="token comment"># 删除哈希表key中的field键值</span>
+HDEL key field <span class="token punctuation">[</span>field <span class="token punctuation">..</span>.<span class="token punctuation">]</span>    
+
+<span class="token comment"># 返回哈希表key中field的数量</span>
+HLEN key       
+<span class="token comment"># 返回哈希表key中所有的键值</span>
+HGETALL key 
+
+<span class="token comment"># 为哈希表key中field键的值加上增量n</span>
+HINCRBY key field n
+</code></pre></div><h4>应用场景</h4>
+<h5>缓存对象</h5>
+<p>Hash 类型的（key，field，value）的结构与对象的（对象 id，属性，值）的结构相似，也可以用来存储对象</p>
+<p>但一般还是用 String 的多</p>
+<p>一般对象用 String + Json 存储，对象中某些频繁变化的属性可以考虑抽出来用 Hash 类型存储</p>
+<p>可以使用如下命令，将用户对象的信息存储到 Hash 类型：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 存储一个哈希表uid:1的键值</span>
+<span class="token operator">&gt;</span> HMSET uid:1 name Tom age <span class="token number">15</span>
+<span class="token number">2</span>
+<span class="token comment"># 存储一个哈希表uid:2的键值</span>
+<span class="token operator">&gt;</span> HMSET uid:2 name Jerry age <span class="token number">13</span>
+<span class="token number">2</span>
+<span class="token comment"># 获取哈希表用户id为1中所有的键值</span>
+<span class="token operator">&gt;</span> HGETALL uid:1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"name"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"Tom"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"age"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"15"</span>
+</code></pre></div><figure><figcaption>alt text</figcaption></figure>
+<h5>购物车</h5>
+<p>以用户 id 为 key，商品 id 为 field，商品数量为 value，恰好构成了购物车的 3 个要素</p>
+<p>涉及的命令如下：</p>
+<ul>
+<li>添加商品：<code>HSET  cart:{用户id}  {商品id}  1</code></li>
+<li>添加数量：<code>HINCRBY  cart:{用户id}  {商品id}  1</code></li>
+<li>商品总数：<code>HLEN  cart:{用户id}</code></li>
+<li>删除商品：<code>HDEL  cart:{用户id}  {商品id}</code></li>
+<li>获取购物车所有商品：<code>HGETALL  cart:{用户id}</code></li>
+</ul>
+<p>当前仅仅是将商品 ID 存储到了 Redis 中，在回显商品具体信息的时候，还需要拿着商品 id 查询一次数据库，获取完整的商品的信息</p>
+<h3>Set</h3>
+<p>Set 类型是一个无序并唯一的键值集合，它的存储顺序不会按照插入的先后顺序进行存储。</p>
+<p>一个集合最多可以存储 2^32-1 个元素。</p>
+<p>概念和数学中个的集合基本类似，可以交集，并集，差集等等，所以 Set 类型除了支持集合内的增删改查，同时还支持多个集合取交集、并集、差集</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>Set 类型和 List 类型的区别如下：</p>
+<ul>
+<li>List 可以存储重复元素，Set 只能存储非重复元素；</li>
+<li>List 是按照元素的先后顺序存储元素的，而 Set 则是无序方式存储元素的</li>
+</ul>
+<h4>内部实现</h4>
+<p>Set 类型的底层数据结构是由哈希表或整数集合实现的：</p>
+<ul>
+<li>如果集合中的元素都是整数且元素个数小于 512 （默认值，set-maxintset-entries配置）个，Redis 会使用<strong>整数集合</strong>作为 Set 类型的底层数据结构；</li>
+<li>如果集合中的元素不满足上面条件，则 Redis 使用哈希表作为 Set 类型的底层数据结构</li>
+</ul>
+<h4>常用命令</h4>
+<p>SADD SREM SMEMBERS SCARD SISMEMBER SRANDMEMBER SPOP</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 往集合key中存入元素，元素存在则忽略，若key不存在则新建</span>
+SADD key member <span class="token punctuation">[</span>member <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+<span class="token comment"># 从集合key中删除元素</span>
+SREM key member <span class="token punctuation">[</span>member <span class="token punctuation">..</span>.<span class="token punctuation">]</span> 
+<span class="token comment"># 获取集合key中所有元素</span>
+SMEMBERS key
+<span class="token comment"># 获取集合key中的元素个数</span>
+SCARD key
+
+<span class="token comment"># 判断member元素是否存在于集合key中</span>
+SISMEMBER key member
+
+<span class="token comment"># 从集合key中随机选出count个元素，元素不从key中删除</span>
+SRANDMEMBER key <span class="token punctuation">[</span>count<span class="token punctuation">]</span>
+<span class="token comment"># 从集合key中随机选出count个元素，元素从key中删除</span>
+SPOP key <span class="token punctuation">[</span>count<span class="token punctuation">]</span>
+</code></pre></div><h5>运算操作</h5>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 交集运算</span>
+SINTER key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+<span class="token comment"># 将交集结果存入新集合destination中</span>
+SINTERSTORE destination key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+
+<span class="token comment"># 并集运算</span>
+SUNION key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+<span class="token comment"># 将并集结果存入新集合destination中</span>
+SUNIONSTORE destination key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+
+<span class="token comment"># 差集运算</span>
+SDIFF key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+<span class="token comment"># 将差集结果存入新集合destination中</span>
+SDIFFSTORE destination key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+</code></pre></div><h4>应用场景</h4>
+<p>集合的主要几个特性，无序、不可重复、支持并交差等操作</p>
+<p>因此 Set 类型比较适合用来数据去重和保障数据的唯一性，还可以用来统计多个集合的交集、差集和并集等，当我们存储的数据是无序并且需要去重的情况下，比较适合使用集合类型进行存储</p>
+<p>但 <strong>Set 的差集、并集和交集的计算复杂度较高，在数据量较大的情况下，如果直接执行这些计算，会导致 Redis 实例阻塞</strong></p>
+<p>在主从集群中，为了避免主库因为 Set 做聚合计算（交集、差集、并集）时导致主库被阻塞，我们可以选择一个从库完成聚合统计，或者把数据返回给客户端，由客户端来完成聚合统计</p>
+<h5>点赞</h5>
+<p>Set 类型可以保证一个用户只能点一个赞，这里举例子一个场景，key 是文章 id，value 是用户 id</p>
+<p><code>uid:1</code> 、<code>uid:2</code>、<code>uid:3</code>   三个用户分别对 article:1 文章点赞了。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># uid:1 用户对文章 article:1 点赞</span>
+<span class="token operator">&gt;</span> SADD article:1 uid:1
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># uid:2 用户对文章 article:1 点赞</span>
+<span class="token operator">&gt;</span> SADD article:1 uid:2
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># uid:3 用户对文章 article:1 点赞</span>
+<span class="token operator">&gt;</span> SADD article:1 uid:3
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+</code></pre></div><p><code>uid:1</code> 取消了对 article:1 文章点赞。</p>
+<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>&gt; SREM article:1 uid:1
+(integer) 1
+</code></pre></div><p>获取  article:1 文章所有点赞用户 :</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> SMEMBERS article:1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"uid:3"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"uid:2"</span>
+</code></pre></div><p>获取 article:1 文章的点赞用户数量：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> SCARD article:1
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">2</span>
+</code></pre></div><p>判断用户 <code>uid:1</code> 是否对文章 article:1 点赞了：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> SISMEMBER article:1 uid:1
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>  <span class="token comment"># 返回0说明没点赞，返回1则说明点赞了</span>
+</code></pre></div><h5>共同关注</h5>
+<p>Set 类型支持交集运算，所以可以用来计算共同关注的好友、公众号等。</p>
+<p>key 可以是用户 id，value 则是已关注的公众号的 id</p>
+<p><code>uid:1</code> 用户关注公众号 id 为 5、6、7、8、9，<code>uid:2</code>  用户关注公众号 id 为 7、8、9、10、11。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># uid:1 用户关注公众号 id 为 5、6、7、8、9</span>
+<span class="token operator">&gt;</span> SADD uid:1 <span class="token number">5</span> <span class="token number">6</span> <span class="token number">7</span> <span class="token number">8</span> <span class="token number">9</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">5</span>
+<span class="token comment"># uid:2  用户关注公众号 id 为 7、8、9、10、11</span>
+<span class="token operator">&gt;</span> SADD uid:2 <span class="token number">7</span> <span class="token number">8</span> <span class="token number">9</span> <span class="token number">10</span> <span class="token number">11</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">5</span>
+</code></pre></div><p><code>uid:1</code>  和 <code>uid:2</code>  共同关注的公众号：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 获取共同关注</span>
+<span class="token operator">&gt;</span> SINTER uid:1 uid:2
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"7"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"8"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"9"</span>
+</code></pre></div><p>给  <code>uid:2</code>   推荐 <code>uid:1</code> 关注的公众号：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> SDIFF uid:1 uid:2
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"5"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"6"</span>
+</code></pre></div><p>验证某个公众号是否同时被  <code>uid:1</code>   或  <code>uid:2</code>   关注：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> SISMEMBER uid:1 <span class="token number">5</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span> <span class="token comment"># 返回1，说明关注了</span>
+<span class="token operator">&gt;</span> SISMEMBER uid:2 <span class="token number">5</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span> <span class="token comment"># 返回0，说明没关注</span>
+</code></pre></div><h5>抽奖活动</h5>
+<p>存储某活动中中奖的用户名，Set 类型因为有去重功能，可以保证同一个用户不会中奖两次。</p>
+<p>key 为抽奖活动名，value 为员工名称</p>
+<h3>ZSet</h3>
+<p>Zset 类型（有序集合类型）相比于 Set 类型多了一个排序属性 score（分值），对于有序集合 ZSet 来说，每个存储元素相当于有两个值组成的，一个是有序结合的元素值，一个是排序值</p>
+<p>有序集合保留了集合不能有重复成员的特性（分值可以重复），但不同的是，有序集合中的元素可以排序</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>ZSet 默认是升序排列</p>
+<ul>
+<li>使用 ZRANGE 系列命令 = 升序</li>
+<li>使用 ZREVRANGE 系列命令 = 降序</li>
+</ul>
+<h4>内部实现</h4>
+<p>Zset 类型的底层数据结构是由<strong>压缩列表或跳表</strong>实现的：</p>
+<ul>
+<li>如果有序集合的元素个数小于 128 个，并且每个元素的值小于 64 字节时，Redis 会使用<strong>压缩列表</strong>作为 Zset 类型的底层数据结构；</li>
+<li>如果有序集合的元素不满足上面的条件，Redis 会使用<strong>跳表</strong>作为 Zset 类型的底层数据结构；
+在 Redis 7.0 中，压缩列表数据结构已经废弃了，交由 listpack 数据结构来实现了。</li>
+</ul>
+<h4>常用命令</h4>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 往有序集合key中加入带分值元素</span>
+ZADD key score member <span class="token punctuation">[</span><span class="token punctuation">[</span>score member<span class="token punctuation">]</span><span class="token punctuation">..</span>.<span class="token punctuation">]</span>   
+<span class="token comment"># 往有序集合key中删除元素</span>
+ZREM key member <span class="token punctuation">[</span>member<span class="token punctuation">..</span>.<span class="token punctuation">]</span>                 
+<span class="token comment"># 返回有序集合key中元素member的分值</span>
+ZSCORE key member
+<span class="token comment"># 返回有序集合key中元素个数</span>
+ZCARD key 
+
+<span class="token comment"># 为有序集合key中元素member的分值加上increment</span>
+ZINCRBY key increment member 
+
+<span class="token comment"># 正序获取有序集合key从start下标到stop下标的元素</span>
+ZRANGE key start stop <span class="token punctuation">[</span>WITHSCORES<span class="token punctuation">]</span>
+<span class="token comment"># 倒序获取有序集合key从start下标到stop下标的元素</span>
+ZREVRANGE key start stop <span class="token punctuation">[</span>WITHSCORES<span class="token punctuation">]</span>
+
+<span class="token comment"># 返回有序集合中指定分数区间内的成员，分数由低到高排序。</span>
+ZRANGEBYSCORE key min max <span class="token punctuation">[</span>WITHSCORES<span class="token punctuation">]</span> <span class="token punctuation">[</span>LIMIT offset count<span class="token punctuation">]</span>
+
+<span class="token comment"># 返回指定成员区间内的成员，按字典正序排列, 分数必须相同。</span>
+ZRANGEBYLEX key min max <span class="token punctuation">[</span>LIMIT offset count<span class="token punctuation">]</span>
+<span class="token comment"># 返回指定成员区间内的成员，按字典倒序排列, 分数必须相同</span>
+ZREVRANGEBYLEX key max min <span class="token punctuation">[</span>LIMIT offset count<span class="token punctuation">]</span>
+</code></pre></div><p>Zset 运算操作（相比于 Set 类型，ZSet 类型没有支持差集运算）：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 并集计算(相同元素分值相加)，numberkeys一共多少个key，WEIGHTS每个key对应的分值乘积</span>
+ZUNIONSTORE destkey numberkeys key <span class="token punctuation">[</span>key<span class="token punctuation">..</span>.<span class="token punctuation">]</span> 
+<span class="token comment"># 交集计算(相同元素分值相加)，numberkeys一共多少个key，WEIGHTS每个key对应的分值乘积</span>
+ZINTERSTORE destkey numberkeys key <span class="token punctuation">[</span>key<span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+</code></pre></div><h4>应用场景</h4>
+<h5>排行榜</h5>
+<p>有序集合比较典型的使用场景就是排行榜。例如学生成绩的排名榜、游戏积分排行榜、视频播放排名、电商系统中商品的销量排名等</p>
+<p>以博文点赞排名为例，小林发表了五篇博文，分别获得赞为 200、40、100、50、150</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># arcticle:1 文章获得了200个赞</span>
+<span class="token operator">&gt;</span> ZADD user:xiaolin:ranking <span class="token number">200</span> arcticle:1
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># arcticle:2 文章获得了40个赞</span>
+<span class="token operator">&gt;</span> ZADD user:xiaolin:ranking <span class="token number">40</span> arcticle:2
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># arcticle:3 文章获得了100个赞</span>
+<span class="token operator">&gt;</span> ZADD user:xiaolin:ranking <span class="token number">100</span> arcticle:3
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># arcticle:4 文章获得了50个赞</span>
+<span class="token operator">&gt;</span> ZADD user:xiaolin:ranking <span class="token number">50</span> arcticle:4
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token comment"># arcticle:5 文章获得了150个赞</span>
+<span class="token operator">&gt;</span> ZADD user:xiaolin:ranking <span class="token number">150</span> arcticle:5
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+</code></pre></div><p>文章 arcticle:4 新增一个赞，可以使用 ZINCRBY 命令（为有序集合 key 中元素 member 的分值加上 increment）：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZINCRBY user:xiaolin:ranking <span class="token number">1</span> arcticle:4
+<span class="token string">"51"</span>
+</code></pre></div><p>查看某篇文章的赞数，可以使用 ZSCORE 命令（返回有序集合 key 中元素个数）：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZSCORE user:xiaolin:ranking arcticle:4
+<span class="token string">"50"</span>
+</code></pre></div><p>获取小林文章赞数最多的 3 篇文章，可以使用 ZREVRANGE 命令（倒序获取有序集合 key 从 start 下标到 stop 下标的元素）：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># WITHSCORES 表示把 score 也显示出来</span>
+<span class="token operator">&gt;</span> ZREVRANGE user:xiaolin:ranking <span class="token number">0</span> <span class="token number">2</span> WITHSCORES
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"arcticle:1"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"200"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"arcticle:5"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"150"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"arcticle:3"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"100"</span>
+</code></pre></div><h5>电话、姓名排序</h5>
+<p>使用有序集合的 <code>ZRANGEBYLEX</code> 或 <code>ZREVRANGEBYLEX</code> 可以帮助我们实现电话号码或姓名的排序，我们以 <code>ZRANGEBYLEX</code> （返回指定成员区间内的成员，按 key 正序排列，分数必须相同）为例。</p>
+<p><strong>注意：不要在分数不一致的 SortSet 集合中去使用 ZRANGEBYLEX 和 ZREVRANGEBYLEX 指令，因为获取的结果会不准确。</strong></p>
+<p><em>1、电话排序</em></p>
+<p>我们可以将电话号码存储到 SortSet 中，然后根据需要来获取号段：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZADD phone <span class="token number">0</span> <span class="token number">13100111100</span> <span class="token number">0</span> <span class="token number">13110114300</span> <span class="token number">0</span> <span class="token number">13132110901</span> 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span>
+<span class="token operator">&gt;</span> ZADD phone <span class="token number">0</span> <span class="token number">13200111100</span> <span class="token number">0</span> <span class="token number">13210414300</span> <span class="token number">0</span> <span class="token number">13252110901</span> 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span>
+<span class="token operator">&gt;</span> ZADD phone <span class="token number">0</span> <span class="token number">13300111100</span> <span class="token number">0</span> <span class="token number">13310414300</span> <span class="token number">0</span> <span class="token number">13352110901</span> 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span>
+</code></pre></div><p>获取所有号码：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZRANGEBYLEX phone - +
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"13100111100"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"13110114300"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"13132110901"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"13200111100"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"13210414300"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"13252110901"</span>
+<span class="token number">7</span><span class="token punctuation">)</span> <span class="token string">"13300111100"</span>
+<span class="token number">8</span><span class="token punctuation">)</span> <span class="token string">"13310414300"</span>
+<span class="token number">9</span><span class="token punctuation">)</span> <span class="token string">"13352110901"</span>
+</code></pre></div><p>获取 132 号段的号码：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZRANGEBYLEX phone <span class="token punctuation">[</span><span class="token number">132</span> <span class="token punctuation">(</span><span class="token number">133</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"13200111100"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"13210414300"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"13252110901"</span>
+</code></pre></div><p>获取 132、133 号段的号码：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZRANGEBYLEX phone <span class="token punctuation">[</span><span class="token number">132</span> <span class="token punctuation">(</span><span class="token number">134</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"13200111100"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"13210414300"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"13252110901"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"13300111100"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"13310414300"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"13352110901"</span>
+</code></pre></div><p><em>2、姓名排序</em></p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> zadd names <span class="token number">0</span> Toumas <span class="token number">0</span> Jake <span class="token number">0</span> Bluetuo <span class="token number">0</span> Gaodeng <span class="token number">0</span> Aimini <span class="token number">0</span> Aidehua 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">6</span>
+</code></pre></div><p>获取所有人的名字：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZRANGEBYLEX names - +
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"Aidehua"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"Aimini"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"Bluetuo"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"Gaodeng"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"Jake"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"Toumas"</span>
+</code></pre></div><p>获取名字中大写字母 A 开头的所有人：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZRANGEBYLEX names <span class="token punctuation">[</span>A <span class="token punctuation">(</span>B
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"Aidehua"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"Aimini"</span>
+</code></pre></div><p>获取名字中大写字母 C 到 Z 的所有人：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token operator">&gt;</span> ZRANGEBYLEX names <span class="token punctuation">[</span>C <span class="token punctuation">[</span>Z
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"Gaodeng"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"Jake"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"Toumas"</span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Redis - 3 数据类型2</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/3.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Redis - 3 数据类型2</source>
+      <description>Redis 数据类型 Redis常见的数据类型有： String（字符串） Hash（哈希） List（列表） Set（集合） Zset（有序集合） 后面又支持了四种数据类型： BitMap（2.2 版新增） HyperLogLog（2.8 版新增） GEO（3.2 版新增） Stream（5.0 版新增） BitMap Bitmap，即位图，是一串连...</description>
+      <category>code</category>
+      <pubDate>Tue, 10 Mar 2026 06:28:10 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Redis 数据类型</h2>
+<p>Redis常见的数据类型有：</p>
+<ul>
+<li>String（字符串）</li>
+<li>Hash（哈希）</li>
+<li>List（列表）</li>
+<li>Set（集合）</li>
+<li>Zset（有序集合）</li>
+</ul>
+<p>后面又支持了四种数据类型：</p>
+<ul>
+<li>BitMap（2.2 版新增）</li>
+<li>HyperLogLog（2.8 版新增）</li>
+<li>GEO（3.2 版新增）</li>
+<li>Stream（5.0 版新增）</li>
+</ul>
+<h3>BitMap</h3>
+<p>Bitmap，即位图，是一串连续的二进制数组（0 和 1），可以通过偏移量（offset）定位元素。</p>
+<p>BitMap 通过最小的单位 bit 来进行0|1的设置，表示某个元素的值或者状态，时间复杂度为 O(1)。</p>
+<p>由于 bit 是计算机中最小的单位，使用它进行储存将非常节省空间，特别适合一些数据量大且使用二值统计的场景。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>内部实现</h4>
+<p>Bitmap 本身是用 String 类型作为底层数据结构实现的一种统计二值状态的数据类型。</p>
+<p>String 类型是会保存为二进制的字节数组，所以，Redis 就把字节数组的每个 bit 位利用起来，用来表示一个元素的二值状态，你可以把 Bitmap 看作是一个 bit 数组。</p>
+<h4>常用命令</h4>
+<p>基本命令：SETBIT GETBIT BITCOUNT</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 设置值，其中value只能是 0 和 1</span>
+SETBIT key offset value
+
+<span class="token comment"># 获取值</span>
+GETBIT key offset
+
+<span class="token comment"># 获取指定范围内值为 1 的个数</span>
+<span class="token comment"># start 和 end 以字节为单位</span>
+BITCOUNT key start end
+</code></pre></div><p>bitmap 运算操作：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># BitMap间的运算</span>
+<span class="token comment"># operations 位移操作符，枚举值</span>
+  AND 与运算 <span class="token operator">&amp;</span>
+  OR 或运算 <span class="token operator">|</span>
+  XOR 异或 ^
+  NOT 取反 ~
+<span class="token comment"># result 计算的结果，会存储在该key中</span>
+<span class="token comment"># key1 … keyn 参与运算的key，可以有多个，空格分割，not运算只能一个key</span>
+<span class="token comment"># 当 BITOP 处理不同长度的字符串时，较短的那个字符串所缺少的部分会被看作 0。返回值是保存到 destkey 的字符串的长度（以字节byte为单位），和输入 key 中最长的字符串长度相等。</span>
+BITOP <span class="token punctuation">[</span>operations<span class="token punctuation">]</span> <span class="token punctuation">[</span>result<span class="token punctuation">]</span> <span class="token punctuation">[</span>key1<span class="token punctuation">]</span> <span class="token punctuation">[</span>keyn…<span class="token punctuation">]</span>
+
+<span class="token comment"># 返回指定key中第一次出现指定value(0/1)的位置</span>
+BITPOS <span class="token punctuation">[</span>key<span class="token punctuation">]</span> <span class="token punctuation">[</span>value<span class="token punctuation">]</span>
+</code></pre></div><h4>应用场景</h4>
+<p>Bitmap 类型非常适合二值状态统计的场景，这里的二值状态就是指集合元素的取值就只有 0 和 1 两种，在记录海量数据时，Bitmap 能够有效地节省内存空间。</p>
+<h5>签到统计</h5>
+<p>在签到打卡的场景中，我们只用记录签到（1）或未签到（0），所以它就是非常典型的二值状态。</p>
+<p>签到统计时，每个用户一天的签到用 1 个 bit 位就能表示，一个月（假设是 31 天）的签到情况用 31 个 bit 位就可以，而一年的签到也只需要用 365 个 bit 位，根本不用太复杂的集合类型。</p>
+<p>假设我们要统计 ID 100 的用户在 2022 年 6 月份的签到情况，就可以按照下面的步骤进行操作。</p>
+<p>第一步，执行下面的命令，记录该用户 6 月 3 号已签到。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>SETBIT uid:sign:100:202206 <span class="token number">2</span> <span class="token number">1</span>
+</code></pre></div><p>第二步，检查该用户 6 月 3 日是否签到。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>GETBIT uid:sign:100:202206 <span class="token number">2</span> 
+</code></pre></div><p>第三步，统计该用户在 6 月份的签到次数。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>BITCOUNT uid:sign:100:202206
+</code></pre></div><p>这样，我们就知道该用户在 6 月份的签到情况了。</p>
+<blockquote>
+<p>如何统计这个月首次打卡时间呢？</p>
+</blockquote>
+<p>Redis 提供了 <code>BITPOS key bitValue [start] [end]</code>指令，返回数据表示 Bitmap 中第一个值为 <code>bitValue</code> 的 offset 位置。</p>
+<p>在默认情况下，命令将检测整个位图，用户可以通过可选的 <code>start</code> 参数和 <code>end</code> 参数指定要检测的范围。所以我们可以通过执行这条命令来获取 userID = 100 在 2022 年 6 月份<strong>首次打卡</strong>日期：</p>
+<div class="language-apache" data-ext="apache" data-title="apache"><pre class="language-apache"><code>BITPOS uid:sign:100:202206 1
+</code></pre></div><p>需要注意的是，因为 offset 从 0 开始的，所以我们需要将返回的 value + 1。</p>
+<h5>判断用户登录状态</h5>
+<p>Bitmap 提供了 GETBIT、SETBIT 操作，通过一个偏移值 offset 对 bit 数组的 offset 位置的 bit 位进行读写操作，需要注意的是 offset 从 0 开始。</p>
+<p>只需要一个 key = login_status 表示存储用户登录状态集合数据，将用户 ID 作为 offset，在线就设置为 1，下线设置 0。通过 GETBIT判断对应的用户是否在线。50000 万 用户只需要 6 MB 的空间</p>
+<p>假如我们要判断 ID = 10086 的用户的登录情况：</p>
+<p>第一步，执行以下指令，表示用户已登录。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>SETBIT login_status <span class="token number">10086</span> <span class="token number">1</span>
+</code></pre></div><p>第二步，检查该用户是否登录，返回值 1 表示已登录。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>GETBIT login_status <span class="token number">10086</span>
+</code></pre></div><p>第三步，登出，将 offset 对应的 value 设置成 0。</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>SETBIT login_status <span class="token number">10086</span> <span class="token number">0</span>
+</code></pre></div><h5>连续签到用户总数</h5>
+<p>我们把每天的日期作为 Bitmap 的 key，userId 作为 offset，若是打卡则将 offset 位置的 bit 设置成 1。</p>
+<p>key 对应的集合的每个 bit 位的数据则是一个用户在该日期的打卡记录。</p>
+<p>一共有 7 个这样的 Bitmap，如果我们能对这 7 个 Bitmap 的对应的 bit 位做 『与』运算。同样的 UserID offset 都是一样的，当一个 userID 在 7 个 Bitmap 对应对应的 offset 位置的 bit = 1 就说明该用户 7 天连续打卡。</p>
+<p>结果保存到一个新 Bitmap 中，我们再通过 BITCOUNT 统计 bit = 1 的个数便得到了连续打卡 7 天的用户总数了。</p>
+<p>假设要统计 3 天连续打卡的用户数，则是将三个 bitmap 进行 AND 操作，并将结果保存到 destmap 中，接着对 destmap 执行 BITCOUNT 统计，如下命令：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 与操作</span>
+BITOP AND destmap bitmap:01 bitmap:02 bitmap:03
+<span class="token comment"># 统计 bit 位 =  1 的个数</span>
+BITCOUNT destmap
+</code></pre></div><p>即使一天产生一个亿的数据，Bitmap 占用的内存也不大，大约占 12 MB 的内存（10^8/8/1024/1024），7 天的 Bitmap 的内存开销约为 84 MB。同时我们最好给 Bitmap 设置过期时间，让 Redis 删除过期的打卡数据，节省内存</p>
+<h3>HyperLogLog</h3>
+<p>Redis HyperLogLog 是 Redis 2.8.9 版本新增的数据类型，是一种用于「统计基数」的数据集合类型，基数统计就是指统计一个集合中不重复的元素个数。但要注意，HyperLogLog 统计规则是基于概率完成的，不是非常准确，标准误算率是 0.81%。</p>
+<p>所以，简单来说 HyperLogLog 提供不精确的去重计数。</p>
+<p>HyperLogLog 的优点是，在输入元素的数量或者体积非常非常大时，计算基数所需的内存空间总是固定的、并且是很小的。</p>
+<p>在 Redis 里面，每个 HyperLogLog 键只需要花费 12 KB 内存，就可以计算接近 2^64 个不同元素的基数，和元素越多就越耗费内存的 Set 和 Hash 类型相比，HyperLogLog 就非常节省空间。</p>
+<h4>常用命令</h4>
+<p>HyperLogLog 命令很少，就三个</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 添加指定元素到 HyperLogLog 中</span>
+PFADD key element <span class="token punctuation">[</span>element <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+
+<span class="token comment"># 返回给定 HyperLogLog 的基数估算值。</span>
+PFCOUNT key <span class="token punctuation">[</span>key <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+
+<span class="token comment"># 将多个 HyperLogLog 合并为一个 HyperLogLog</span>
+PFMERGE destkey sourcekey <span class="token punctuation">[</span>sourcekey <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+</code></pre></div><h4>应用场景</h4>
+<h5>百万级网页 UA (User Agent) 计数</h5>
+<p>Redis HyperLogLog 优势在于只需要花费 12 KB 内存，就可以计算接近 2^64 个元素的基数，和元素越多就越耗费内存的 Set 和 Hash 类型相比，HyperLogLog 就非常节省空间。</p>
+<p>所以，非常适合统计百万级以上的网页 UA 的场景</p>
+<h3>GEO</h3>
+<p>Redis GEO 是 Redis 3.2 版本新增的数据类型，主要用于存储地理位置信息，并对存储的信息进行操作。</p>
+<p>在日常生活中，我们越来越依赖搜索“附近的餐馆”、在打车软件上叫车，这些都离不开基于位置信息服务（Location-Based Service，LBS）的应用。LBS 应用访问的数据是和人或物关联的一组经纬度信息，而且要能查询相邻的经纬度范围，GEO 就非常适合应用在 LBS 服务的场景中。</p>
+<h4>内部实现</h4>
+<p>GEO 本身并没有设计新的底层数据结构，而是直接使用了 Sorted Set 集合类型。</p>
+<p>GEO 类型使用 GeoHash 编码方法实现了经纬度到 Sorted Set 中元素权重分数的转换，这其中的两个关键机制就是「对二维地图做区间划分」和「对区间进行编码」。一组经纬度落在某个区间后，就用区间的编码值来表示，并把编码值作为 Sorted Set 元素的权重分数。</p>
+<p>这样一来，我们就可以把经纬度保存到 Sorted Set 中，利用 Sorted Set 提供的“按权重进行有序范围查找”的特性，实现 LBS 服务中频繁使用的“搜索附近”的需求。</p>
+<h4>常用命令</h4>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token comment"># 存储指定的地理空间位置，可以将一个或多个经度(longitude)、纬度(latitude)、位置名称(member)添加到指定的 key 中。</span>
+GEOADD key longitude latitude member <span class="token punctuation">[</span>longitude latitude member <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+
+<span class="token comment"># 从给定的 key 里返回所有指定名称(member)的位置（经度和纬度），不存在的返回 nil。</span>
+GEOPOS key member <span class="token punctuation">[</span>member <span class="token punctuation">..</span>.<span class="token punctuation">]</span>
+
+<span class="token comment"># 返回两个给定位置之间的距离。</span>
+GEODIST key member1 member2 <span class="token punctuation">[</span>m<span class="token operator">|</span>km<span class="token operator">|</span>ft<span class="token operator">|</span>mi<span class="token punctuation">]</span>
+
+<span class="token comment"># 根据用户给定的经纬度坐标来获取指定范围内的地理位置集合。</span>
+GEORADIUS key longitude latitude radius m<span class="token operator">|</span>km<span class="token operator">|</span>ft<span class="token operator">|</span>mi <span class="token punctuation">[</span>WITHCOORD<span class="token punctuation">]</span> <span class="token punctuation">[</span>WITHDIST<span class="token punctuation">]</span> <span class="token punctuation">[</span>WITHHASH<span class="token punctuation">]</span> <span class="token punctuation">[</span>COUNT count<span class="token punctuation">]</span> <span class="token punctuation">[</span>ASC<span class="token operator">|</span>DESC<span class="token punctuation">]</span> <span class="token punctuation">[</span>STORE key<span class="token punctuation">]</span> <span class="token punctuation">[</span>STOREDIST key<span class="token punctuation">]</span>
+</code></pre></div><h4>应用场景</h4>
+<p>假设车辆 ID 是 33，经纬度位置是（116.034579，39.030452），我们可以用一个 GEO 集合保存所有车辆的经纬度，集合 key 是 cars:locations</p>
+<p>把 ID 号为 33 的车辆的当前经纬度位置存入 GEO 集合中：</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>GEOADD cars:locations <span class="token number">116.034579</span> <span class="token number">39.030452</span> <span class="token number">33</span>
+</code></pre></div><p>当用户想要寻找自己附近的网约车时，LBS 应用就可以使用 GEORADIUS 命令</p>
+<p>LBS 应用执行下面的命令时，Redis 会根据输入的用户的经纬度信息（116.054579，39.030452），查找以这个经纬度为中心的 5 公里内的车辆信息，并返回给 LBS 应用</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>GEORADIUS cars:locations <span class="token number">116.054579</span> <span class="token number">39.030452</span> <span class="token number">5</span> km ASC COUNT <span class="token number">10</span>
+</code></pre></div><h3>Stream</h3>
+<p>Redis Stream 是 Redis 5.0 版本新增加的数据类型，Redis 专门为消息队列设计的数据类型。</p>
+<p>在 Redis 5.0 Stream 没出来之前，消息队列的实现方式都有着各自的缺陷，例如：</p>
+<ul>
+<li>发布订阅模式，不能持久化也就无法可靠的保存消息，并且对于离线重连的客户端不能读取历史消息的缺陷；</li>
+<li>List 实现消息队列的方式不能重复消费，一个消息消费完就会被删除，而且生产者需要自行实现全局唯一 ID。</li>
+</ul>
+<p>基于以上问题，Redis 5.0 便推出了 Stream 类型也是此版本最重要的功能，用于完美地实现消息队列，它支持消息的持久化、支持自动生成全局唯一 ID、支持 ack 确认消息的模式、支持消费组模式等，让消息队列更加的稳定和可靠。</p>
+<h4>常用命令</h4>
+<p>Stream 消息队列操作命令：</p>
+<ul>
+<li>XADD：插入消息，保证有序，可以自动生成全局唯一 ID；</li>
+<li>XLEN：查询消息长度；</li>
+<li>XREAD：用于读取消息，可以按 ID 读取数据；</li>
+<li>XDEL：根据消息 ID 删除消息；</li>
+<li>DEL：删除整个 Stream；</li>
+<li>XRANGE：读取区间消息</li>
+<li>XREADGROUP：按消费组形式读取消息；</li>
+<li>XPENDING 和 XACK：</li>
+<li>XPENDING 命令可以用来查询每个消费组内所有消费者「已读取、但尚未确认」的消息；</li>
+<li>XACK 命令用于向消息队列确认消息处理已完成</li>
+</ul>
+<h4>应用场景</h4>
+<h5>消息队列</h5>
+<p>Stream 的基础方法，使用 xadd 存入消息和 xread 循环阻塞读取消息的方式可以实现简易版的消息队列，交互流程如下图所示</p>
+<figure><figcaption>alt text</figcaption></figure>
+<blockquote>
+<p>基于 Stream 实现的消息队列，如何保证消费者在发生故障或宕机再次重启后，仍然可以读取未处理完的消息？</p>
+</blockquote>
+<p>Streams 会自动使用内部队列（也称为 PENDING List）留存消费组里每个消费者读取的消息，直到消费者使用 XACK 命令通知 Streams“消息已经处理完成”。</p>
+<p>消费确认增加了消息的可靠性，一般在业务处理完成之后，需要执行 XACK 命令确认消息已经被消费完成</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>如果消费者没有成功处理消息，它就不会给 Streams 发送 XACK 命令，消息仍然会留存。此时，消<strong>费者可以在重启后，用 XPENDING 命令查看已读取、但尚未确认处理完成的消息</strong></p>
+<ul>
+<li>消息保序：XADD/XREAD</li>
+<li>阻塞读取：XREAD block</li>
+<li>重复消息处理：Stream 在使用 XADD 命令，会自动生成全局唯一 ID；</li>
+<li>消息可靠性：内部使用 PENDING List 自动保存消息，使用 XPENDING 命令查看消费组已经读取但是未被确认的消息，消费者使用 XACK 确认消息；</li>
+<li>支持消费组形式消费数据</li>
+</ul>
+<h4>讨论</h4>
+<blockquote>
+<p>Redis 基于 Stream 消息队列与专业的消息队列有哪些差距</p>
+</blockquote>
+<p>一个专业的消息队列，必须要做到两大块：</p>
+<ul>
+<li>消息不丢。</li>
+<li>消息可堆积</li>
+</ul>
+<h5>Redis Stream 消息会丢失吗</h5>
+<p>使用一个消息队列，其实就分为三大块：生产者、队列中间件、消费者，所以要保证消息就是保证三个环节都不能丢失数据</p>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li>
+<p>Redis 生产者会不会丢消息？</p>
+<p>生产者会不会丢消息，取决于生产者对于异常情况的处理是否合理。从消息被生产出来，然后提交给 MQ 的过程中，只要能正常收到（MQ 中间件）的 ack 确认响应，就表示发送成功，所以只要处理好返回值和异常，如果返回异常则进行消息重发，那么这个阶段是不会出现消息丢失的。</p>
+</li>
+<li>
+<p>Redis 消费者会不会丢消息？</p>
+<p>不会，因为 Stream（MQ 中间件）会自动使用内部队列（也称为 PENDING List）留存消费组里每个消费者读取的消息，但是未被确认的消息。消费者可以在重启后，用 XPENDING 命令查看已读取、但尚未确认处理完成的消息。等到消费者执行完业务逻辑后，再发送消费确认 XACK 命令，也能保证消息的不丢失。</p>
+</li>
+<li>
+<p>Redis 消息中间件会不会丢消息？</p>
+<p>会，Redis 在以下 2 个场景下，都会导致数据丢失：</p>
+<p>AOF 持久化配置为每秒写盘，但这个写盘过程是异步的，Redis 宕机时会存在数据丢失的可能</p>
+<p>主从复制也是异步的，主从切换时，也存在丢失数据的可能。</p>
+</li>
+</ul>
+<p>可以看到，Redis 在队列中间件环节无法保证消息不丢。像 RabbitMQ 或 Kafka 这类专业的队列中间件，在使用时是部署一个集群，生产者在发布消息时，队列中间件通常会写「多个节点」，也就是有多个副本，这样一来，即便其中一个节点挂了，也能保证集群的数据不丢失</p>
+<h5>Redis Stream 消息可堆积吗</h5>
+<p>Redis 的数据都存储在内存中，这就意味着一旦发生消息积压，则会导致 Redis 的内存持续增长，如果超过机器内存上限，就会面临被 OOM 的风险。</p>
+<p>所以 Redis 的 Stream 提供了可以指定队列最大长度的功能，就是为了避免这种情况发生。</p>
+<p>当指定队列最大长度时，队列长度超过上限后，旧消息会被删除，只保留固定长度的新消息。这么来看，Stream 在消息积压时，如果指定了最大长度，还是有可能丢失消息的。</p>
+<p>但 Kafka、RabbitMQ 专业的消息队列它们的数据都是存储在磁盘上，当消息积压时，无非就是多占用一些磁盘空间。</p>
+<p>因此，把 Redis 当作队列来使用时，会面临的 2 个问题：</p>
+<ul>
+<li>Redis 本身可能会丢数据；</li>
+<li>面对消息挤压，内存资源会紧张；</li>
+</ul>
+<p>所以，能不能将 Redis 作为消息队列来使用，关键看你的业务场景：</p>
+<ul>
+<li>如果你的业务场景足够简单，对于数据丢失不敏感，而且消息积压概率比较小的情况下，把 Redis 当作队列是完全可以的。</li>
+<li>如果你的业务有海量消息，消息积压的概率比较大，并且不能接受数据丢失，那么还是用专业的消息队列中间件吧。</li>
+</ul>
+<blockquote>
+<p>Redis 发布/订阅机制为什么不可以作为消息队列？</p>
+</blockquote>
+<p>发布订阅机制存在以下缺点，都是跟丢失数据有关：</p>
+<ul>
+<li>发布/订阅机制没有基于任何数据类型实现，所以不具备「数据持久化」的能力，也就是发布/订阅机制的相关操作，不会写入到 RDB 和 AOF 中，当 Redis 宕机重启，发布/订阅机制的数据也会全部丢失。</li>
+<li>发布订阅模式是“发后既忘”的工作模式，如果有订阅者离线重连之后不能消费之前的历史消息。</li>
+<li>当消费端有一定的消息积压时，也就是生产者发送的消息，消费者消费不过来时，如果超过 32M 或者是 60s 内持续保持在 8M 以上，消费端会被强行断开，这个参数是在配置文件中设置的，默认值是 client-output-buffer-limit pubsub 32mb 8mb 60。</li>
+</ul>
+<p>所以，发布/订阅机制只适合即时通讯的场景，比如构建哨兵集群的场景采用了发布/订阅机制。</p>
+<h3>总结</h3>
+<p>Redis 常见的五种数据类型：String（字符串），Hash（哈希），List（列表），Set（集合）及 Zset(sorted set：有序集合)。</p>
+<p>这五种数据类型都由多种数据结构实现的，主要是出于时间和空间的考虑，当数据量小的时候使用更简单的数据结构，有利于节省内存，提高性能。</p>
+<p>Redis 五种数据类型的应用场景：</p>
+<ul>
+<li>String 类型的应用场景：缓存对象、常规计数、分布式锁、共享 session 信息等。</li>
+<li>List 类型的应用场景：消息队列（有两个问题：1. 生产者需要自行实现全局唯一 ID；2. 不能以消费组形式消费数据）等。</li>
+<li>Hash 类型：缓存对象、购物车等。</li>
+<li>Set 类型：聚合计算（并集、交集、差集）场景，比如点赞、共同关注、抽奖活动等。</li>
+<li>Zset 类型：排序场景，比如排行榜、电话和姓名排序等。</li>
+</ul>
+<p>Redis 后续版本又支持四种数据类型，它们的应用场景如下：</p>
+<ul>
+<li>BitMap（2.2 版新增）：二值状态统计的场景，比如签到、判断用户登录状态、连续签到用户总数等；</li>
+<li>HyperLogLog（2.8 版新增）：海量数据基数统计的场景，比如百万级网页 UV 计数等；</li>
+<li>GEO（3.2 版新增）：存储地理位置信息的场景，比如滴滴叫车；</li>
+<li>Stream（5.0 版新增）：消息队列，相比于基于 List 类型实现的消息队列，有这两个特有的特性：自动生成全局唯一消息 ID，支持以消费组形式消费数据。</li>
+</ul>
+<p>针对 Redis 是否适合做消息队列，关键看你的业务场景：</p>
+<ul>
+<li>如果你的业务场景足够简单，对于数据丢失不敏感，而且消息积压概率比较小的情况下，把 Redis 当作队列是完全可以的。</li>
+<li>如果你的业务有海量消息，消息积压的概率比较大，并且不能接受数据丢失，那么还是用专业的消息队列中间件吧。</li>
+</ul>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Redis - 3 数据类型2</title>
+      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/4.html</link>
+      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Redis/4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Redis - 3 数据类型2</source>
+      <description>Redis 数据结构 String - SDS | List - 双向链表, 压缩列表/quicklist | hash - 哈希表 set - 整数集合, 哈希表 | zset - 跳表, 压缩列表 Redis 为什么那么快？ 除了它是内存数据库，使得所有的操作都在内存上进行之外，还有一个重要因素，它实现的数据结构，使得我们对数据进行增删查改操作时，...</description>
+      <category>code</category>
+      <pubDate>Tue, 10 Mar 2026 06:28:10 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Redis 数据结构</h2>
+<p>String - SDS | List - 双向链表, 压缩列表/quicklist | hash - 哈希表</p>
+<p>set - 整数集合, 哈希表 | zset - 跳表, 压缩列表</p>
+<blockquote>
+<p>Redis 为什么那么快？</p>
+</blockquote>
+<p>除了它是内存数据库，使得所有的操作都在内存上进行之外，还有一个重要因素，它实现的数据结构，使得我们对数据进行增删查改操作时，Redis 能高效的处理。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li>在 Redis 3.0 版本中 List 对象的底层数据结构由「双向链表」或「压缩表列表」实现，但是在 3.2 版本之后，List 数据类型底层数据结构是由 quicklist 实现的；</li>
+<li>在最新的 Redis 代码中，压缩列表数据结构已经废弃了，交由 listpack 数据结构来实现了</li>
+</ul>
+<p>共有 9 种数据结构：SDS、双向链表、压缩列表、哈希表、跳表、整数集合、quicklist、listpack</p>
+<h3>键值对存储实现原理</h3>
+<p>其他所有的数据结构本质都是存在这么一个大的hash表里</p>
+<p>Redis 的键值对中的 key 就是字符串对象，而 value 可以是字符串对象，也可以是集合数据类型的对象，比如 List 对象、Hash 对象、Set 对象和 Zset 对象</p>
+<blockquote>
+<p>这些键值对是如何保存在 Redis 中的</p>
+</blockquote>
+<p>Redis 是使用了一个「哈希表」保存所有键值对，哈希表的最大好处就是让我们可以用 O(1) 的时间复杂度来快速查找到键值对。</p>
+<p>哈希表其实就是一个数组，数组中的元素叫做哈希桶</p>
+<blockquote>
+<p>Redis 的哈希桶是怎么保存键值对数据的</p>
+</blockquote>
+<p>哈希桶存放的是指向键值对数据的指针（dictEntry*），这样通过指针就能找到键值对数据</p>
+<p>然后因为键值对的值可以保存字符串对象和集合数据类型的对象，所以键值对的数据结构中并不是直接保存值本身</p>
+<p>而是保存了 <code>void * key</code> 和 <code>void * value</code> 指针，分别指向了实际的键对象和值对象，这样一来，即使值是集合数据，也可以通过 <code>void * value</code> 指针找到</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>图中涉及到的数据结构的名字和用途：</p>
+<ul>
+<li>redisDb 结构，表示 Redis 数据库的结构，结构体里存放了指向了 dict 结构的指针；</li>
+<li>dict 结构，结构体里存放了 2 个哈希表，正常情况下都是用「哈希表 1」，「哈希表 2」只有在 rehash 的时候才用；</li>
+<li>ditctht 结构，表示哈希表的结构，结构里存放了哈希表数组，数组中的每个元素都是指向一个哈希表节点结构（dictEntry）的指针；</li>
+<li>dictEntry 结构，表示哈希表节点的结构，结构里存放了 <code>void * key</code> 和 <code>void * value</code> 指针， key 指向的是 String 对象，而 value 则可以指向 String 对象，也可以指向集合类型的对象，比如 List 对象、Hash 对象、Set 对象和 Zset 对象</li>
+</ul>
+<p>特别说明下，<code>void * key</code> 和 <code>void * value</code> 指针指向的是 Redis 对象，Redis 中的每个对象都由 redisObject 结构表示</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>对象结构里包含的成员变量：</p>
+<ul>
+<li>type，标识该对象是什么类型的对象（String 对象、List 对象、Hash 对象、Set 对象和 Zset 对象）；</li>
+<li>encoding，标识该对象使用了哪种底层的数据结构；</li>
+<li>ptr，指向底层数据结构的指针</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>实际找一个key</h4>
+<p>就是用 key 哈希计算，然后去 ht[0] 里找对应，然后根据对应类型找值</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>redisDb.dict → dict → ht[0] → table:
+
+[0] → NULL
+[1] → NULL
+...
+[345] → dictEntry {
+          key → String对象("user:1")
+          value → String对象("penguin")
+          next → NULL
+        }
+...
+[678] → dictEntry {
+          key → String对象("user:2")
+          value → String对象("cat")
+          next → dictEntry {
+                   key → String对象("name")
+                   value → String对象("alice")
+                   next → NULL
+                 }
+        }
+...
+</code></pre></div><p>底层数据结构分析</p>
+<h3>SDS (Simple dynamic string)</h3>
+<p>字符串在 Redis 中是很常用的，键值对中的键是字符串类型，值有时也是字符串类型</p>
+<p>Redis 是用 C 语言实现的，但是它没有直接使用 C 语言的 <code>char*</code> 字符数组来实现字符串，而是自己封装了一个名为简单动态字符串（simple dynamic string，SDS）的数据结构来表示字符串，也就是 Redis 的 String 数据类型的底层数据结构是 SDS</p>
+<h4>C语言字符串缺陷</h4>
+<p>C 语言的字符串其实就是一个字符数组，即数组中每个元素是字符串中的一个字符</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>对字符串操作时，<code>char *</code> 指针只是指向字符数组的起始位置，而字符数组的结尾位置就用“\0”表示，意思是指字符串的结束</p>
+<p>C 语言字符串用“\0”字符作为结尾标记有个缺陷。假设有个字符串中有个“\0”字符，这时在操作这个字符串时就会提早结束</p>
+<p>因此，除了字符串的末尾之外，字符串里面不能含有“\0”字符，否则最先被程序读入的“\0”字符将被误认为是字符串结尾，这个限制使得 C 语言的字符串只能保存文本数据，<strong>不能保存像图片、音频、视频文化这样的二进制数据</strong></p>
+<p>另外，C 语言标准库中字符串的操作函数是很不安全的，对程序员很不友好，稍微一不注意，就会导致缓冲区溢出</p>
+<p>C 语言的字符串不足之处以及可以改进的地方：</p>
+<ul>
+<li>获取字符串长度的时间复杂度为 O（N）；</li>
+<li>字符串的结尾是以“\0”字符标识，字符串里面不能包含有“\0”字符，因此不能保存二进制数据；</li>
+<li>字符串操作函数不高效且不安全，比如有缓冲区溢出的风险，有可能会造成程序运行终止；</li>
+</ul>
+<p>Redis 实现的 SDS 的结构就把上面这些问题解决了</p>
+<h4>SDS结构设计</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>结构中的每个成员变量：</p>
+<ul>
+<li><strong>len，记录了字符串长度</strong>。这样获取字符串长度的时候，只需要返回这个成员变量值就行，时间复杂度只需要 O（1）。</li>
+<li><strong>alloc，分配给字符数组的空间长度</strong>。这样在修改字符串的时候，可以通过 alloc - len 计算出剩余的空间大小，可以用来判断空间是否满足修改需求，如果不满足的话，就会自动将 SDS 的空间扩展至执行修改所需的大小，然后才执行实际的修改操作，所以使用 SDS 既不需要手动修改 SDS 的空间大小，也不会出现前面所说的缓冲区溢出的问题。</li>
+<li><strong>flags，用来表示不同类型的 SDS</strong>。一共设计了 5 种类型，分别是 sdshdr5、sdshdr8、sdshdr16、sdshdr32 和 sdshdr64，后面在说明区别之处。</li>
+<li><strong>buf[]，字符数组</strong>，用来保存实际数据。不仅可以保存字符串，也可以保存二进制数据</li>
+</ul>
+<p>总的来说，Redis 的 SDS 结构在原本字符数组之上，增加了三个元数据：len、alloc、flags，用来解决 C 语言字符串的缺陷</p>
+<h5>O（1）复杂度获取字符串长度</h5>
+<p>C 语言的字符串长度获取 strlen 函数，需要通过遍历的方式来统计字符串长度，时间复杂度是 O（N）。</p>
+<p>而 Redis 的 SDS 结构因为加入了 len 成员变量，那么获取字符串长度的时候，直接返回这个成员变量的值就行，所以复杂度只有 O（1）</p>
+<h5>二进制安全</h5>
+<p>因为 SDS 不需要用“\0”字符来标识字符串结尾了，而是有个专门的 len 成员变量来记录长度，所以可存储包含“\0”的数据。但是 SDS 为了兼容部分 C 语言标准库的函数，SDS 字符串结尾还是会加上“\0”字符。</p>
+<p>因此，SDS 的 API 都是以处理二进制的方式来处理 SDS 存放在 buf[] 里的数据，程序不会对其中的数据做任何限制，数据写入的时候时什么样的，它被读取时就是什么样的。</p>
+<p>通过使用二进制安全的 SDS，而不是 C 字符串，使得 Redis 不仅可以保存文本数据，也可以保存任意格式的二进制数据。</p>
+<h5>不会发生缓冲区溢出</h5>
+<p>C 语言的字符串标准库提供的字符串操作函数，大多数（比如 strcat 追加字符串函数）都是不安全的，因为这些函数把缓冲区大小是否满足操作需求的工作交由开发者来保证，程序内部并不会判断缓冲区大小是否足够用，当发生了缓冲区溢出就有可能造成程序异常结束。</p>
+<p>所以，Redis 的 SDS 结构里引入了 alloc 和 len 成员变量，这样 SDS API 通过 alloc - len 计算，可以算出剩余可用的空间大小，这样在对字符串做修改操作的时候，就可以由程序内部判断缓冲区大小是否足够用。</p>
+<p>而且，<strong>当判断出缓冲区大小不够用时，Redis 会自动将扩大 SDS 的空间大小</strong>，以满足修改所需的大小。</p>
+<p>SDS 扩容的规则代码如下</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code>hisds <span class="token function">hi_sdsMakeRoomFor</span><span class="token punctuation">(</span>hisds s<span class="token punctuation">,</span> <span class="token class-name">size_t</span> addlen<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token comment">// s 目前的剩余空间已足够，无需扩展，直接返回</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>avail <span class="token operator">&gt;=</span> addlen<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> s<span class="token punctuation">;</span>
+    <span class="token comment">//获取目前 s 的长度</span>
+    len <span class="token operator">=</span> <span class="token function">hi_sdslen</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    sh <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">)</span>s <span class="token operator">-</span> <span class="token function">hi_sdsHdrSize</span><span class="token punctuation">(</span>oldtype<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//扩展之后 s 至少需要的长度</span>
+    newlen <span class="token operator">=</span> <span class="token punctuation">(</span>len <span class="token operator">+</span> addlen<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//根据新长度，为 s 分配新空间所需要的大小</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>newlen <span class="token operator">&lt;</span> HI_SDS_MAX_PREALLOC<span class="token punctuation">)</span>
+        <span class="token comment">//新长度&lt;HI_SDS_MAX_PREALLOC 则分配所需空间*2 的空间</span>
+        newlen <span class="token operator">*=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+    <span class="token keyword">else</span>
+        <span class="token comment">//否则，分配长度为目前长度 +1MB</span>
+        newlen <span class="token operator">+=</span> HI_SDS_MAX_PREALLOC<span class="token punctuation">;</span>
+       <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+</code></pre></div><ul>
+<li>如果所需的 sds 长度小于 1 MB，那么最后的扩容是按照翻倍扩容来执行的，即 2 倍的 newlen</li>
+<li>如果所需的 sds 长度超过 1 MB，那么最后的扩容长度应该是 newlen + 1MB</li>
+</ul>
+<h5>节省内存空间</h5>
+<p>SDS 结构中有个 flags 成员变量，表示的是 SDS 类型。</p>
+<p>Redis 一共设计了 5 种类型，分别是 sdshdr5、sdshdr8、sdshdr16、sdshdr32 和 sdshdr64</p>
+<p>这 5 种类型的主要区别就在于，它们数据结构中的 len 和 alloc 成员变量的数据类型不同</p>
+<p>比如 sdshdr16 和 sdshdr32 这两个类型，它们的定义:</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">struct</span> <span class="token keyword">__attribute__</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>__packed__<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token class-name">sdshdr16</span> <span class="token punctuation">{</span>
+  <span class="token class-name">uint16_t</span> len<span class="token punctuation">;</span>
+  <span class="token class-name">uint16_t</span> alloc<span class="token punctuation">;</span> 
+  <span class="token keyword">unsigned</span> <span class="token keyword">char</span> flags<span class="token punctuation">;</span> 
+  <span class="token keyword">char</span> buf<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+
+<span class="token keyword">struct</span> <span class="token keyword">__attribute__</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>__packed__<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token class-name">sdshdr32</span> <span class="token punctuation">{</span>
+  <span class="token class-name">uint32_t</span> len<span class="token punctuation">;</span>
+  <span class="token class-name">uint32_t</span> alloc<span class="token punctuation">;</span> 
+  <span class="token keyword">unsigned</span> <span class="token keyword">char</span> flags<span class="token punctuation">;</span>
+  <span class="token keyword">char</span> buf<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><p>可以看到：</p>
+<ul>
+<li>sdshdr16 类型的 len 和 alloc 的数据类型都是 uint16_t，表示字符数组长度和分配空间大小不能超过 2 的 16 次方。</li>
+<li>sdshdr32 则都是 uint32_t，表示表示字符数组长度和分配空间大小不能超过 2 的 32 次方。</li>
+</ul>
+<p>之所以 SDS 设计不同类型的结构体，是为了能灵活保存不同大小的字符串，从而有效节省内存空间</p>
+<p>除了设计不同类型的结构体，Redis 在编程上还使用了<strong>专门的编译优化来节省内存空间</strong>，即在 struct 声明了 <code>__attribute__ ((packed))</code>，它的作用是：告诉编译器<strong>取消结构体在编译过程中的优化对齐，按照实际占用字节数进行对齐</strong></p>
+<h3>链表 (List)</h3>
+<p>Redis 的 List 对象的底层实现之一就是链表。C 语言本身没有链表这个数据结构的，所以 Redis 自己设计了一个链表数据结构</p>
+<h4>链表节点结构设计</h4>
+<p>有前置节点和后置节点，可以看的出，这个是一个双向链表</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">listNode</span> <span class="token punctuation">{</span>
+  <span class="token comment">//前置节点</span>
+  <span class="token keyword">struct</span> <span class="token class-name">listNode</span> <span class="token operator">*</span>prev<span class="token punctuation">;</span>
+  <span class="token comment">//后置节点</span>
+  <span class="token keyword">struct</span> <span class="token class-name">listNode</span> <span class="token operator">*</span>next<span class="token punctuation">;</span>
+  <span class="token comment">//节点的值</span>
+  <span class="token keyword">void</span> <span class="token operator">*</span>value<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> listNode<span class="token punctuation">;</span>
+</code></pre></div><h4>链表结构设计</h4>
+<p>Redis 在 listNode 结构体基础上又封装了 list 这个数据结构 (类似虚拟头结点？但功能更多)，这样操作起来会更方便，链表结构如下:</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">list</span> <span class="token punctuation">{</span>
+  <span class="token comment">//链表头节点</span>
+  listNode <span class="token operator">*</span>head<span class="token punctuation">;</span>
+  <span class="token comment">//链表尾节点</span>
+  listNode <span class="token operator">*</span>tail<span class="token punctuation">;</span>
+  <span class="token comment">//节点值复制函数</span>
+  <span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span>dup<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>ptr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">//节点值释放函数</span>
+  <span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>free<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>ptr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">//节点值比较函数</span>
+  <span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>match<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>ptr<span class="token punctuation">,</span> <span class="token keyword">void</span> <span class="token operator">*</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">//链表节点数量</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> len<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> list<span class="token punctuation">;</span>
+</code></pre></div><p>list 结构为链表提供了链表头指针 head、链表尾节点 tail、链表节点数量 len、以及可以自定义实现的 dup、free、match 函数</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>链表的优势与缺陷</h4>
+<p>Redis 的链表实现优点如下：</p>
+<ul>
+<li>listNode 链表节点的结构里带有 prev 和 next 指针，获取某个节点的前置节点或后置节点的时间复杂度只需 O(1)，而且这两个指针都可以指向 NULL，所以链表是无环链表；</li>
+<li>list 结构因为提供了表头指针 head 和表尾节点 tail，所以获取链表的表头节点和表尾节点的时间复杂度只需 O(1)；</li>
+<li>list 结构因为提供了链表节点数量 len，所以获取链表中的节点数量的时间复杂度只需 O(1)；</li>
+<li>listNode 链表节使用 <code>void*</code> 指针保存节点值，并且可以通过 list 结构的 dup、free、match 函数指针为节点设置该节点类型特定的函数，因此链表节点可以保存各种不同类型的值；</li>
+</ul>
+<p>链表的缺陷也是有的：</p>
+<ul>
+<li>
+<p>链表每个节点之间的内存都是不连续的，意味着无法很好利用 CPU 缓存。能很好利用 CPU 缓存的数据结构就是数组，因为数组的内存是连续的，这样就可以充分利用 CPU 缓存来加速访问。</p>
+</li>
+<li>
+<p>还有一点，保存一个链表节点的值都需要一个链表节点结构头的分配，内存开销较大。</p>
+</li>
+</ul>
+<p>因此，Redis 3.0 的 List 对象在数据量比较少的情况下，会采用「压缩列表」作为底层数据结构的实现，它的优势是节省内存空间，并且是内存紧凑型的数据结构。</p>
+<p>不过，压缩列表存在性能问题，所以 Redis 在 3.2 版本设计了新的数据结构 quicklist，并将 List 对象的底层数据结构改由 quicklist 实现。</p>
+<p>然后在 Redis 5.0 设计了新的数据结构 listpack，沿用了压缩列表紧凑型的内存布局，最终在最新的 Redis 版本，将 Hash 对象和 Zset 对象的底层数据结构实现之一的压缩列表，替换成由 listpack 实现。</p>
+<h3>压缩列表 (List, Hash, ZSet)</h3>
+<p>压缩列表的最大特点，就是它被设计成一种内存紧凑型的数据结构，占用一块连续的内存空间，不仅可以利用 CPU 缓存，而且会针对不同长度的数据，进行相应编码，这种方法可以有效地节省内存开销。</p>
+<p>但是，压缩列表的缺陷也是有的：</p>
+<ul>
+<li>不能保存过多的元素，否则查询效率就会降低；</li>
+<li>新增或修改某个元素时，压缩列表占用的内存空间需要重新分配，甚至可能引发连锁更新的问题</li>
+</ul>
+<p>因此，Redis 对象（List 对象、Hash 对象、Zset 对象）包含的元素数量较少，或者元素值不大的情况才会使用压缩列表作为底层数据结构</p>
+<h4>结构设计</h4>
+<p>压缩列表是 Redis 为了节约内存而开发的，它是由连续内存块组成的顺序型数据结构，有点类似于数组</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>整体结构</h5>
+<p>压缩列表在表头有三个字段 (总大小、尾部偏移量、总数量 | 结束位置)：</p>
+<ul>
+<li>zlbytes，记录整个压缩列表占用的内存字节数；</li>
+<li>zltail，记录压缩列表「尾部」节点距离起始地址由多少字节，也就是列表尾的偏移量；</li>
+<li>zllen，记录压缩列表包含的节点数量；</li>
+<li>zlend，标记压缩列表的结束点，固定值 0xFF（十进制 255）</li>
+</ul>
+<p>在压缩列表中，如果我们要查找定位第一个元素和最后一个元素，可以通过表头三个字段（zllen）的长度直接定位，复杂度是 O(1)。</p>
+<p>而查找其他元素时，就没有这么高效了，只能逐个查找，此时的复杂度就是 O(N) 了，因此压缩列表不适合保存过多的元素</p>
+<h5>节点结构</h5>
+<p>（每个节点）另外，压缩列表节点（entry）的构成如下：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>压缩列表节点包含三部分内容(前一个节点长度、自身类型+长度、实际数据)：</p>
+<ul>
+<li>prevlen，记录了「前一个节点」的长度，目的是为了实现从后向前遍历；</li>
+<li>encoding，记录了当前节点实际数据的「类型和长度」，类型主要有两种：字符串和整数。</li>
+<li>data，记录了当前节点的实际数据，类型和长度都由 encoding 决定；</li>
+</ul>
+<p>当我们往压缩列表中插入数据时，压缩列表就会根据数据类型是字符串还是整数，以及数据的大小，会使用不同空间大小的 prevlen 和 encoding 这两个元素里保存的信息，这种根据数据大小和类型进行不同的空间大小分配的设计思想，正是 Redis 为了节省内存而采用的。</p>
+<p>分别说下，prevlen 和 encoding 是如何根据数据的大小和类型来进行不同的空间大小分配。</p>
+<blockquote>
+<p>prevlen 大小分配</p>
+</blockquote>
+<p>压缩列表里的每个节点中的 prevlen 属性都记录了「前一个节点的长度」，而且 prevlen 属性的空间大小跟前一个节点长度值有关，比如：</p>
+<ul>
+<li>
+<p>如果前一个节点的长度小于 254 字节，那么 prevlen 属性需要用 1 字节的空间来保存这个长度值 (就直接表示了)；</p>
+<p>prevlen = [长度值]</p>
+</li>
+<li>
+<p>如果前一个节点的长度大于等于 254 字节，那么 prevlen 属性需要用 5 字节的空间来保存这个长度值(有标记字节)；</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>[标记字节][长度的 4 字节小端表示]
+0xFF    [byte1][byte2][byte3][byte4]
+</code></pre></div></li>
+</ul>
+<p>所以就可以根据有没有标记字节判断 prevlen 的长度</p>
+<p>prevlen 的单位是 字节，对应的数字就是实际的长度</p>
+<blockquote>
+<p>encoding 大小分配</p>
+</blockquote>
+<p>encoding 属性的空间大小跟数据是字符串还是整数，以及字符串的长度有关, content 表示的是实际数据</p>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li>如果当前节点的数据是<strong>整数</strong>，则 encoding 会使用 <strong>1 字节的空间</strong>进行编码，也就是 encoding 长度为 1 字节。通过 encoding 确认了整数类型，就可以确认整数数据的实际大小了，比如如果 encoding 编码确认了数据是 int16 整数，那么 data 的长度就是 int16 的大小。</li>
+<li>如果当前节点的数据是<strong>字符串</strong>，根据<strong>字符串的长度大小</strong>，encoding 会使用 <strong>1 字节/2 字节/5 字节</strong>的空间进行编码</li>
+</ul>
+<p>encoding 编码的<strong>前两个 bit 表示数据的类型</strong>，也标识 encoding 长度: (00 | 01 就是1字节；01 10 就是 2 5 字节)</p>
+<p>后续的其他 bit 标识字符串数据的实际长度，即 data 的长度</p>
+<h4>连锁更新</h4>
+<p>压缩列表除了查找复杂度高的问题，还有一个问题。</p>
+<p>连锁更新：由于插入一个元素，导致后续的prevlen变化，进而导致该节点大小变化，从而引发下一个也开始变化，不断更新</p>
+<p>压缩列表新增某个元素或修改某个元素时，如果空间不够，压缩列表占用的内存空间就需要重新分配。而当新插入的元素较大时，可能会导致后续元素的 prevlen 占用空间都发生变化，从而引起「连锁更新」问题，导致每个元素的空间都要重新分配，造成访问压缩列表性能的下降</p>
+<p>压缩列表节点的 prevlen 属性会根据前一个节点的长度进行不同的空间大小分配：</p>
+<ul>
+<li>如果前一个<strong>节点的长度小于 254 字节</strong>，那么 prevlen 属性需要用 1 字节的空间来保存这个长度值；</li>
+<li>如果前一个<strong>节点的长度大于等于 254 字节</strong>，那么 prevlen 属性需要用 5 字节的空间来保存这个长度值；</li>
+</ul>
+<p>那如果现在一个压缩列表中有多个连续的、长度在 250～253 之间的节点</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>因为这些节点长度值小于 254 字节，所以 prevlen 属性需要用 1 字节的空间来保存这个长度值。</p>
+<p>这时，如果将一个长度大于等于 254 字节的新节点加入到压缩列表的表头节点，即新节点将成为 e1 的前置节点</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>因为 e1 节点的 prevlen 属性只有 1 个字节大小，无法保存新节点的长度，此时就需要对压缩列表的空间重分配操作，并将 e1 节点的 prevlen 属性从原来的 1 字节大小扩展为 5 字节大小</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>e1 原本的长度在 250～253 之间，因为刚才的扩展空间，此时 e1 的长度就大于等于 254 了，因此原本 e2 保存 e1 的 prevlen 属性也必须从 1 字节扩展至 5 字节大小。</p>
+<p>正如扩展 e1 引发了对 e2 扩展一样，扩展 e2 也会引发对 e3 的扩展，而扩展 e3 又会引发对 e4 的扩展…… 一直持续到结尾。</p>
+<p><strong>这种在特殊情况下产生的连续多次空间扩展操作就叫做「连锁更新」</strong>，就像多米诺牌的效应一样，第一张牌倒下了，推动了第二张牌倒下；第二张牌倒下，又推动了第三张牌倒下……</p>
+<h4>缺陷</h4>
+<p>空间扩展操作也就是重新分配内存，因此<strong>连锁更新一旦发生，就会导致压缩列表占用的内存空间要多次重新分配，这就会直接影响到压缩列表的访问性能</strong>。</p>
+<p>所以说，<strong>虽然压缩列表紧凑型的内存布局能节省内存开销，但是如果保存的元素数量增加了，或是元素变大了，会导致内存重新分配，最糟糕的是会有「连锁更新」的问题</strong>。</p>
+<p>因此，压缩列表只会<strong>用于保存的节点数量不多的场景</strong>，只要节点数量足够小，即使发生连锁更新，也是能接受的。</p>
+<p>虽说如此，Redis 针对压缩列表在设计上的不足，在后来的版本中，新增设计了两种数据结构：quicklist（Redis 3.2 引入）和 listpack（Redis 5.0 引入）。这两种数据结构的设计目标，就是尽可能地保持压缩列表节省内存的优势，同时解决压缩列表的「连锁更新」的问题</p>
+<h3>哈希表 (Hash, Set)</h3>
+<p>哈希表是一种保存键值对（key-value）的数据结构。</p>
+<p>哈希表中的每一个 key 都是独一无二的，程序可以根据 key 查找到与之关联的 value，或者通过 key 来更新 value，又或者根据 key 来删除整个 key-value 等等。</p>
+<p>在讲压缩列表的时候，提到过 Redis 的 Hash 对象的底层实现之一是压缩列表（最新 Redis 代码已将压缩列表替换成 listpack）。</p>
+<p>Hash 对象的另外一个底层实现就是哈希表。</p>
+<p>哈希表优点在于，它能以 O(1) 的复杂度快速查询数据</p>
+<p>但是存在的风险也是有，在哈希表大小固定的情况下，随着数据不断增多，那么哈希冲突的可能性也会越高。</p>
+<p>解决哈希冲突的方式，有很多种。</p>
+<p><strong>Redis 采用了「链式哈希」来解决哈希冲突</strong>，在不扩容哈希表的前提下，将具有相同哈希值的数据串起来，形成链表，以便这些数据在表中仍然可以被查询到</p>
+<h4>结构设计</h4>
+<p>Redis 的哈希表结构如下：</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">dictht</span> <span class="token punctuation">{</span>
+  <span class="token comment">//哈希表数组</span>
+  dictEntry <span class="token operator">*</span><span class="token operator">*</span>table<span class="token punctuation">;</span>
+  <span class="token comment">//哈希表大小</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> size<span class="token punctuation">;</span>  
+  <span class="token comment">//哈希表大小掩码，用于计算索引值</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> sizemask<span class="token punctuation">;</span>
+  <span class="token comment">//该哈希表已有的节点数量</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> used<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> dictht<span class="token punctuation">;</span>
+</code></pre></div><p>哈希表内部有一个指针，是指向存放哈希表节点的指针数组</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>哈希表节点的结构如下：</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">dictEntry</span> <span class="token punctuation">{</span>
+  <span class="token comment">//键值对中的键</span>
+  <span class="token keyword">void</span> <span class="token operator">*</span>key<span class="token punctuation">;</span>
+
+  <span class="token comment">//键值对中的值</span>
+  <span class="token keyword">union</span> <span class="token punctuation">{</span>
+      <span class="token keyword">void</span> <span class="token operator">*</span>val<span class="token punctuation">;</span>
+      <span class="token class-name">uint64_t</span> u64<span class="token punctuation">;</span>
+      <span class="token class-name">int64_t</span> s64<span class="token punctuation">;</span>
+      <span class="token keyword">double</span> d<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> v<span class="token punctuation">;</span>
+  <span class="token comment">//指向下一个哈希表节点，形成链表</span>
+  <span class="token keyword">struct</span> <span class="token class-name">dictEntry</span> <span class="token operator">*</span>next<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> dictEntry<span class="token punctuation">;</span>
+</code></pre></div><p>dictEntry 结构里不仅包含指向键和值的指针，还包含了指向下一个哈希表节点的指针，这个指针可以将多个哈希值相同的键值对链接起来，以此来解决哈希冲突的问题，这就是链式哈希。</p>
+<p>另外，dictEntry 结构里键值对中的值是一个「union v」</p>
+<p>因此，键值对中的值可以是一个指向实际值的指针，或者是一个无符号的 64 位整数或有符号的 64 位整数或 double 类的值</p>
+<p>这么做的好处是可以节省内存空间，因为当「值」是<strong>整数或浮点数</strong>时，就可以<strong>将值的数据内嵌在 dictEntry 结构</strong>里，无需再用一个指针指向实际的值，从而节省了内存空间。</p>
+<h4>哈希冲突</h4>
+<p>哈希表实际上是一个数组，数组里的每一个元素就是一个哈希桶。</p>
+<p>当一个键值对的键经过 Hash 函数计算后得到哈希值，再将 (哈希值 % 哈希表大小) 取模计算，得到的结果值就是该 key-value 对应的数组元素位置，也就是第几个哈希桶</p>
+<blockquote>
+<p>什么是哈希冲突</p>
+</blockquote>
+<p>举个例子，有一个可以存放 8 个哈希桶的哈希表。key1 经过哈希函数计算后，再将「哈希值 % 8」进行取模计算，结果值为 1，那么就对应哈希桶 1，类似的，key9 和 key10 分别对应哈希桶 1 和桶 6</p>
+<p>此时，key1 和 key9 对应到了相同的哈希桶中，这就发生了哈希冲突。</p>
+<p>因此，当有两个以上数量的 kay 被分配到了哈希表中同一个哈希桶上时，此时称这些 key 发生了冲突</p>
+<blockquote>
+<p>链式哈希</p>
+</blockquote>
+<p>Redis 采用了「链式哈希」的方法来解决哈希冲突</p>
+<p>实现的方式就是每个哈希表节点都有一个 next 指针，用于指向下一个哈希表节点，因此多个哈希表节点可以用 next 指针构成一个单项链表，被分配到同一个哈希桶上的多个节点可以用这个单项链表连接起来，这样就解决了哈希冲突</p>
+<p>不过，链式哈希局限性也很明显，随着链表长度的增加，在查询这一位置上的数据的耗时就会增加，毕竟链表的查询的时间复杂度是 O(n)。</p>
+<p>要想解决这一问题，就需要进行 rehash，也就是对哈希表的大小进行扩展</p>
+<h4>rehash</h4>
+<p>哈希表结构设计的这一小节，我给大家介绍了 Redis 使用 dictht 结构体表示哈希表</p>
+<p>不过，在实际使用哈希表时，Redis 定义一个 dict 结构体，这个结构体里定义了<strong>两个哈希表（ht[2]）</strong></p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">dict</span> <span class="token punctuation">{</span>
+  …
+  <span class="token comment">//两个 Hash 表，交替使用，用于 rehash 操作</span>
+  dictht ht<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span> 
+  …
+<span class="token punctuation">}</span> dict<span class="token punctuation">;</span>
+</code></pre></div><p>之所以定义了 2 个哈希表，是因为进行 rehash 的时候，需要用上 2 个哈希表</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>在正常服务请求阶段，插入的数据，都会写入到「哈希表 1」，此时的「哈希表 2」并没有被分配空间。</p>
+<p>随着数据逐步增多，触发了 rehash 操作，这个过程分为三步：</p>
+<ul>
+<li>给「哈希表 2」分配空间，一般会比「哈希表 1」大 2 倍；</li>
+<li>将「哈希表 1」的数据迁移到「哈希表 2」中；</li>
+<li>迁移完成后，「哈希表 1」的空间会被释放，并把「哈希表 2」设置为「哈希表 1」，然后在「哈希表 2」新创建一个空白的哈希表，为下次 rehash 做准备</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<p>这个过程看起来简单，但是其实第二步很有问题，<strong>如果「哈希表 1」的数据量非常大，那么在迁移至「哈希表 2」的时候，因为会涉及大量的数据拷贝，此时可能会对 Redis 造成阻塞，无法服务其他请求</strong></p>
+<h5>渐进式 rehash</h5>
+<p>渐进式 rehash 步骤如下：</p>
+<ul>
+<li>给「哈希表 2」分配空间；</li>
+<li>在 rehash 进行期间，每次哈希表元素进行新增、删除、查找或者更新操作时，Redis 除了会执行对应的操作之外，还会顺序将「哈希表 1」中索引位置上的所有 key-value 迁移到「哈希表 2」上；
+-随着处理客户端发起的哈希表操作请求数量越多，最终在某个时间点会把「哈希表 1」的所有 key-value 迁移到「哈希表 2」，从而完成 rehash 操作。</li>
+</ul>
+<p>这样就巧妙地把一次性大量数据迁移工作的开销，分摊到了多次处理请求的过程中，避免了一次性 rehash 的耗时操作。</p>
+<p>在进行渐进式 rehash 的过程中，会有两个哈希表，所以在渐进式 rehash 进行期间，哈希表元素的删除、查找、更新等操作都会在这两个哈希表进行。</p>
+<p>比如，查找一个 key 的值的话，先会在「哈希表 1」里面进行查找，如果没找到，就会继续到哈希表 2 里面进行找到。</p>
+<p>另外，在渐进式 rehash 进行期间，新增一个 key-value 时，会被保存到「哈希表 2」里面，而「哈希表 1」则不再进行任何添加操作，这样保证了「哈希表 1」的 key-value 数量只会减少，随着 rehash 操作的完成，最终「哈希表 1」就会变成空表</p>
+<h5>rehash 触发条件</h5>
+<p>ehash 的触发条件跟<strong>负载因子 load factor</strong>有关系。</p>
+<p>负载因子可以通过下面这个公式计算</p>
+<p v-pre="" class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>负载因子</mtext><mo>=</mo><mtext>哈希表已保存的节点数量</mtext><mi mathvariant="normal">/</mi><mtext>哈希表大小</mtext></mrow><annotation encoding="application/x-tex">
+负载因子 = 哈希表已保存的节点数量 / 哈希表大小
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord cjk_fallback">负载因子</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord cjk_fallback">哈希表已保存的节点数量</span><span class="mord">/</span><span class="mord cjk_fallback">哈希表大小</span></span></span></span></span></p>
+<p>触发 rehash 操作的条件，主要有两个：</p>
+<ul>
+<li>
+<p>当负载因子大于等于 1，并且 Redis 没有在执行 bgsave 命令或者 bgrewiteaof 命令，也就是没有执行 RDB 快照或没有进行 AOF 重写的时候，就会进行 rehash 操作。</p>
+</li>
+<li>
+<p>当负载因子大于等于 5 时，此时说明哈希冲突非常严重了，不管有没有有在执行 RDB 快照或 AOF 重写，都会强制进行 rehash 操作</p>
+</li>
+</ul>
+<h3>整数集合 (Set)</h3>
+<p>整数集合是 Set 对象的底层实现之一。当一个 Set 对象只包含整数值元素，并且元素数量不大时，就会使用整数集这个数据结构作为底层实现</p>
+<h4>结构设计</h4>
+<p>整数集合本质上是一块连续内存空间，它的结构定义如下</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">intset</span> <span class="token punctuation">{</span>
+  <span class="token comment">//编码方式</span>
+  <span class="token class-name">uint32_t</span> encoding<span class="token punctuation">;</span>
+  <span class="token comment">//集合包含的元素数量</span>
+  <span class="token class-name">uint32_t</span> length<span class="token punctuation">;</span>
+  <span class="token comment">//保存元素的数组</span>
+  <span class="token class-name">int8_t</span> contents<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> intset<span class="token punctuation">;</span>
+</code></pre></div><p>可以看到，保存元素的容器是一个 contents 数组，虽然 contents 被声明为 int8_t 类型的数组，但是实际上 contents 数组并不保存任何 int8_t 类型的元素，contents 数组的真正类型取决于 intset 结构体里的 encoding 属性的值。比如：</p>
+<ul>
+<li>如果 encoding 属性值为 INTSET_ENC_INT16，那么 contents 就是一个 int16_t 类型的数组，数组中每一个元素的类型都是 int16_t；</li>
+<li>如果 encoding 属性值为 INTSET_ENC_INT32，那么 contents 就是一个 int32_t 类型的数组，数组中每一个元素的类型都是 int32_t；</li>
+<li>如果 encoding 属性值为 INTSET_ENC_INT64，那么 contents 就是一个 int64_t 类型的数组，数组中每一个元素的类型都是 int64_t；</li>
+</ul>
+<p>不同类型的 contents 数组，意味着数组的大小也会不同</p>
+<p>所有元素在数组中按照从小到大的顺序排列，这样就可以使用二分查找来定位元素，时间复杂度为 O(logN)</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token comment">// 存储 Set {1, 2, 100}</span>
+intset <span class="token punctuation">{</span>
+  encoding <span class="token operator">=</span> INTSET_ENC_INT16<span class="token punctuation">,</span>  <span class="token comment">// 用 16 位整数</span>
+  length <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">,</span>
+  contents <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">]</span>  <span class="token comment">// 连续内存，有序存储</span>
+<span class="token punctuation">}</span>
+
+内存布局：
+<span class="token punctuation">[</span>encoding<span class="token operator">:</span><span class="token number">4</span>字节<span class="token punctuation">]</span><span class="token punctuation">[</span>length<span class="token operator">:</span><span class="token number">4</span>字节<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token operator">:</span><span class="token number">2</span>字节<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token operator">:</span><span class="token number">2</span>字节<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">100</span><span class="token operator">:</span><span class="token number">2</span>字节<span class="token punctuation">]</span>
+总共：<span class="token number">4</span> <span class="token operator">+</span> <span class="token number">4</span> <span class="token operator">+</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">2</span> <span class="token operator">=</span> <span class="token number">14</span> 字节
+</code></pre></div><h4>整数集合升级操作</h4>
+<p>整数集合会有一个升级规则，就是当我们将一个新元素加入到整数集合里面</p>
+<p>如果新元素的类型（int32_t）比整数集合现有所有元素的类型（int16_t）都要长时，整数集合需要先进行升级</p>
+<p>也就是按新元素的类型（int32_t）扩展 contents 数组的空间大小，然后才能将新元素加入到整数集合里</p>
+<p>当然升级的过程中，也要维持整数集合的有序性</p>
+<p>整数集合升级的过程不会重新分配一个新类型的数组，而是在原本的数组上扩展空间，然后在将每个元素按间隔类型大小分割，如果 encoding 属性值为 INTSET_ENC_INT16，则每个元素的间隔就是 16 位。</p>
+<h5>举例</h5>
+<p>假设有一个整数集合里有 3 个类型为 int16_t 的元素</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>现在，往这个整数集合中加入一个新元素 65535，这个新元素需要用 int32_t 类型来保存，所以整数集合要进行升级操作</p>
+<p>首先需要为 contents 数组扩容，在原本空间的大小之上再扩容多 80 位（4x32-3x16=80），这样就能保存下 4 个类型为 int32_t 的元素</p>
+<p>扩容完 contents 数组空间大小后，需要将之前的三个元素转换为 int32_t 类型，并将转换后的元素放置到正确的位上面，并且需要维持底层数组的有序性不变，整个转换过程如下</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>倒序放到新位置，这样保证不会被覆盖</p>
+<blockquote>
+<p>整数集合升级有什么好处呢？</p>
+</blockquote>
+<p>如果要让一个数组同时保存 int16_t、int32_t、int64_t 类型的元素，最简单做法就是直接使用 int64_t 类型的数组。不过这样的话，当如果元素都是 int16_t 类型的，就会造成内存浪费的情况。</p>
+<p>整数集合升级就能避免这种情况，如果一直向整数集合添加 int16_t 类型的元素，那么整数集合的底层实现就一直是用 int16_t 类型的数组，只有在我们要将 int32_t 类型或 int64_t 类型的元素添加到集合时，才会对数组进行升级操作。</p>
+<p>因此，整数集合升级的好处是节省内存资源</p>
+<blockquote>
+<p>整数集合不支持降级操作</p>
+</blockquote>
+<h3>跳表 (ZSet)</h3>
+<p>Redis 只有 Zset 对象的底层实现用到了跳表，跳表的优势是能支持平均 O(logN) 复杂度的节点查找</p>
+<p>zset 结构体里有两个数据结构：一个是跳表，一个是哈希表。</p>
+<p>这样的好处是既能进行高效的范围查询，也能进行高效单点查询</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">zset</span> <span class="token punctuation">{</span>
+  dict <span class="token operator">*</span>dict<span class="token punctuation">;</span>
+  zskiplist <span class="token operator">*</span>zsl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> zset<span class="token punctuation">;</span>
+</code></pre></div><p>Zset 对象在执行数据插入或是数据更新的过程中，会依次在跳表和哈希表中插入或更新相应的数据，从而保证了跳表和哈希表中记录的信息一致。</p>
+<p>Zset 对象能支持范围查询（如 ZRANGEBYSCORE 操作），这是因为它的数据结构设计采用了跳表</p>
+<p>而又能以常数复杂度获取元素权重（如 ZSCORE 操作），这是因为它同时采用了哈希表进行索引</p>
+<p>哈希表不支持范围查询、无法排序</p>
+<blockquote>
+<p>Zset 对象在使用跳表作为数据结构的时候，是使用由「哈希表 + 跳表」组成的 struct zset，但是我们讨论的时候，都会说跳表是 Zset 对象的底层数据结构，而不会提及哈希表，是因为 struct zset 中的哈希表只是用于<strong>以常数复杂度获取元素权重</strong>，大部分操作都是跳表实现的</p>
+</blockquote>
+<p>就是找元素以及其他操作都是跳表，但获得元素的score就直接用哈希表</p>
+<h4>跳表结构设计</h4>
+<p>链表在查找元素的时候，因为需要逐一查找，所以查询效率非常低，时间复杂度是 O(N)，于是就出现了跳表</p>
+<p>跳表是在链表基础上改进过来的，实现了一种「多层」的有序链表，这样的好处是能快读定位数据</p>
+<h5>例子</h5>
+<p>下图展示了一个层级为 3 的跳表</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>图中头节点有 L0~L2 三个头指针，分别指向了不同层级的节点，然后每个层级的节点都通过指针连接起来：</p>
+<ul>
+<li>L0 层级共有 5 个节点，分别是节点 1、2、3、4、5；</li>
+<li>L1 层级共有 3 个节点，分别是节点 2、3、5；</li>
+<li>L2 层级只有 1 个节点，也就是节点 3</li>
+</ul>
+<p>如果我们要在链表中查找节点 4 这个元素，只能从头开始遍历链表，需要查找 4 次，而使用了跳表后，只需要查找 2 次就能定位到节点 4，因为可以在头节点直接从 L2 层级跳到节点 3，然后再往前遍历找到节点 4。</p>
+<p>可以看到，这个查找过程就是在多个层级上跳来跳去，最后定位到元素。</p>
+<p>当数据量很大时，跳表的查找复杂度就是 O(logN)</p>
+<h5>跳表结构体</h5>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">zskiplist</span> <span class="token punctuation">{</span>
+  <span class="token keyword">struct</span> <span class="token class-name">zskiplistNode</span> <span class="token operator">*</span>header<span class="token punctuation">,</span> <span class="token operator">*</span>tail<span class="token punctuation">;</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> length<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> level<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> zskiplist<span class="token punctuation">;</span>
+</code></pre></div><p>跳表结构里包含了：</p>
+<ul>
+<li>跳表的头尾节点，便于在 O(1) 时间复杂度内访问跳表的头节点和尾节点；</li>
+<li>跳表的长度，便于在 O(1) 时间复杂度获取跳表节点的数量；</li>
+<li>跳表的最大层数，便于在 O(1) 时间复杂度获取跳表中层高最大的那个节点的层数量；</li>
+</ul>
+<h5>跳表节点数据结构</h5>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">zskiplistNode</span> <span class="token punctuation">{</span>
+  <span class="token comment">//Zset 对象的元素值</span>
+  sds ele<span class="token punctuation">;</span>
+  <span class="token comment">//元素权重值</span>
+  <span class="token keyword">double</span> score<span class="token punctuation">;</span>
+  <span class="token comment">//后向指针</span>
+  <span class="token keyword">struct</span> <span class="token class-name">zskiplistNode</span> <span class="token operator">*</span>backward<span class="token punctuation">;</span>
+
+  <span class="token comment">//节点的 level 数组，保存每层上的前向指针和跨度</span>
+  <span class="token keyword">struct</span> <span class="token class-name">zskiplistLevel</span> <span class="token punctuation">{</span>
+      <span class="token keyword">struct</span> <span class="token class-name">zskiplistNode</span> <span class="token operator">*</span>forward<span class="token punctuation">;</span>
+      <span class="token keyword">unsigned</span> <span class="token keyword">long</span> span<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> level<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> zskiplistNode<span class="token punctuation">;</span>
+</code></pre></div><p>Zset 对象要同时保存「元素」和「元素的权重」，对应到跳表节点结构里就是 sds 类型的 ele 变量和 double 类型的 score 变量</p>
+<p>每个跳表节点都有一个后向指针（struct zskiplistNode *backward），指向前一个节点，目的是为了方便从跳表的尾节点开始访问节点，这样倒序查找时很方便</p>
+<p>跳表是一个带有层级关系的链表，而且每一层级可以包含多个节点，每一个节点通过指针连接起来，实现这一特性就是靠跳表节点结构体中的zskiplistLevel 结构体类型的 level 数组</p>
+<h5>level数组</h5>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token comment">//节点的 level 数组，保存每层上的前向指针和跨度</span>
+<span class="token keyword">struct</span> <span class="token class-name">zskiplistLevel</span> <span class="token punctuation">{</span>
+  <span class="token keyword">struct</span> <span class="token class-name">zskiplistNode</span> <span class="token operator">*</span>forward<span class="token punctuation">;</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> span<span class="token punctuation">;</span>
+<span class="token punctuation">}</span> level<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+</code></pre></div><p>level 数组中的每一个元素代表跳表的一层，也就是由 zskiplistLevel 结构体表示，比如 <code>level[0]</code> 就表示第一层，<code>level[1]</code> 就表示第二层。zskiplistLevel 结构体里定义了「指向下一个跳表节点的指针」和「跨度」，跨度时用来记录两个节点之间的距离</p>
+<figure><figcaption>alt text</figcaption></figure>
+<blockquote>
+<p>第一眼看到跨度的时候，以为是遍历操作有关，实际上并没有任何关系，遍历操作只需要用前向指针（struct zskiplistNode *forward）就可以完成了</p>
+</blockquote>
+<p><strong>跨度实际上是为了计算这个节点在跳表中的排位</strong></p>
+<p>因为跳表中的节点都是按序排列的，那么计算某个节点排位的时候，从头节点点到该结点的查询路径上，将沿途访问过的所有层的跨度累加起来，得到的结果就是目标节点在跳表中的排位</p>
+<p>举个例子，查找图中节点 3 在跳表中的排位，从头节点开始查找节点 3，查找的过程只经过了一个层（L2），并且层的跨度是 3，所以节点 3 在跳表中的排位是 3。</p>
+<p>另外，图中的头节点其实也是 zskiplistNode 跳表节点，只不过头节点的后向指针、权重、元素值都没有用到，所以图中省略了这部分</p>
+<h4>跳表节点查询过程</h4>
+<blockquote>
+<p>ZSet 是有序且不重复的集合
+权重越小，越在前面</p>
+</blockquote>
+<p>查找一个跳表节点的过程时，跳表会从头节点的最高层开始，逐一遍历每一层</p>
+<p>通过哈希表，可以直接找到要找的节点的权重值 (已知)</p>
+<p>在遍历某一层的跳表节点时，会用跳表节点中的 SDS 类型的元素和元素的权重来进行判断，共有两个判断条件</p>
+<ul>
+<li>如果当前节点指向的下一个节点(forward指向的节点)的权重「小于」要查找的权重时，跳表就会访问该层上的下一个节点。</li>
+<li>如果当前节点指向的下一个节点(forward指向的节点)的权重「等于」要查找的权重时，并且下一个节点的 SDS 类型数据「小于」要查找的数据时，跳表就会访问该层上的下一个节点。</li>
+</ul>
+<p>如果上面两个条件都不满足，或者下一个节点为空时，跳表就会使用目前遍历到的节点的 level 数组里的下一层指针，然后沿着下一层指针继续查找，这就相当于跳到了下一层接着查找</p>
+<h5>例子</h5>
+<p>下图有个 3 层级的跳表</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>如果要查找「元素：abcd，权重：4」的节点，查找的过程是这样的：</p>
+<ul>
+<li>先从头节点的最高层开始，L2 指向了「元素：abc，权重：3」节点，这个节点的权重比要查找节点的小，所以要访问该层上的下一个节点；</li>
+<li>但是该层的下一个节点是空节点（leve[2]指向的是空节点），于是就会跳到「元素：abc，权重：3」节点的下一层去找，也就是 leve[1];</li>
+<li>「元素：abc，权重：3」节点的 leve[1] 的下一个指针指向了「元素：abcde，权重：4」的节点，然后将其和要查找的节点比较。虽然「元素：abcde，权重：4」的节点的权重和要查找的权重相同，但是当前节点的 SDS 类型数据「大于」要查找的数据，所以会继续跳到「元素：abc，权重：3」节点的下一层去找，也就是 leve[0]；</li>
+<li>「元素：abc，权重：3」节点的 leve[0] 的下一个指针指向了「元素：abcd，权重：4」的节点，该节点正是要查找的节点，查询结束。</li>
+</ul>
+<h4>跳表节点层数设置</h4>
+<p>跳表的相邻两层的节点数量的比例会影响跳表的查询性能</p>
+<p>如果第二层的节点数量只有 1 个，而第一层的节点数量有 6 个</p>
+<p>这时，如果想要查询节点 6，那基本就跟链表的查询复杂度一样，就需要在第一层的节点中依次顺序查找，复杂度就是 O(N) 了。所以，为了降低查询复杂度，我们就需要维持相邻层结点数间的关系</p>
+<p><strong>跳表的相邻两层的节点数量最理想的比例是 2:1，查找复杂度可以降低到 O(logN)</strong></p>
+<blockquote>
+<p>怎样才能维持相邻两层的节点数量的比例为 2 : 1</p>
+</blockquote>
+<p>如果采用新增节点或者删除节点时，来调整跳表节点以维持比例的方法的话，会带来额外的开销。</p>
+<p>Redis 则采用一种巧妙的方法是，跳表在创建节点的时候，<strong>随机生成每个节点的层数</strong>，并没有严格维持相邻两层的节点数量比例为 2 : 1 的情况</p>
+<p>具体的做法是，<strong>跳表在创建节点时候，会生成范围为<code>[0-1]</code>的一个随机数，如果这个随机数小于 0.25（相当于概率 25%），那么层数就增加 1 层，然后继续生成下一个随机数，直到随机数的结果大于 0.25 结束，最终确定该节点的层数</strong></p>
+<blockquote>
+<p>span怎么确定，节点在创建时确定了层数是多少，那么其所在的层数就可以计算对应的span了</p>
+</blockquote>
+<p>这样的做法，相当于每增加一层的概率不超过 25%，层数越高，概率越低，层高最大限制是 64</p>
+<p>其实如果层高最大限制是 64，那么在创建跳表「头节点」的时候，就会直接创建 64 层高的头节点</p>
+<h5>创建跳表分析</h5>
+<p>创建跳表时，头节点的 level 数组有 ZSKIPLIST_MAXLEVEL 个元素（层），节点不存储任何 member 和 score 值，level 数组元素的 forward 都指向 NULL，span 值都为 0</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token comment">/* Create a new skiplist. */</span>
+zskiplist <span class="token operator">*</span><span class="token function">zslCreate</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">int</span> j<span class="token punctuation">;</span>
+  zskiplist <span class="token operator">*</span>zsl<span class="token punctuation">;</span>
+
+  zsl <span class="token operator">=</span> <span class="token function">zmalloc</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token operator">*</span>zsl<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  zsl<span class="token operator">-&gt;</span>level <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  zsl<span class="token operator">-&gt;</span>length <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  zsl<span class="token operator">-&gt;</span>header <span class="token operator">=</span> <span class="token function">zslCreateNode</span><span class="token punctuation">(</span>ZSKIPLIST_MAXLEVEL<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token constant">NULL</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> ZSKIPLIST_MAXLEVEL<span class="token punctuation">;</span> j<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      zsl<span class="token operator">-&gt;</span>header<span class="token operator">-&gt;</span>level<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">.</span>forward <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+      zsl<span class="token operator">-&gt;</span>header<span class="token operator">-&gt;</span>level<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">.</span>span <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  zsl<span class="token operator">-&gt;</span>header<span class="token operator">-&gt;</span>backward <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  zsl<span class="token operator">-&gt;</span>tail <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> zsl<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>其中，ZSKIPLIST_MAXLEVEL 定义的是最高的层数，Redis 7.0 定义为 32，Redis 5.0 定义为 64，Redis 3.0 定义为 32</p>
+<h4>跳表的优势</h4>
+<ul>
+<li><strong>从内存占用上来比较，跳表比平衡树更灵活一些</strong>。平衡树每个节点包含 2 个指针（分别指向左右子树），而跳表每个节点包含的指针数目平均为 1/(1-p)，具体取决于参数 p 的大小。如果像 Redis 里的实现一样，取 p=1/4，那么平均每个节点包含 1.33 个指针，比平衡树更有优势。</li>
+<li><strong>在做范围查找的时候，跳表比平衡树操作要简单</strong>。在平衡树上，我们找到指定范围的小值之后，还需要以中序遍历的顺序继续寻找其它不超过大值的节点。如果不对平衡树进行一定的改造，这里的中序遍历并不容易实现。而在跳表上进行范围查找就非常简单，只需要在找到小值之后，对第 1 层链表进行若干步的遍历就可以实现。</li>
+<li><strong>从算法实现难度上来比较，跳表比平衡树要简单得多</strong>。平衡树的插入和删除操作可能引发子树的调整，逻辑复杂，而跳表的插入和删除只需要修改相邻节点的指针，操作简单又快速</li>
+</ul>
+<h3>quicklist (尝试解决压缩列表问题)</h3>
+<p>就是一个链表，链表里的一个元素就是一个压缩列表</p>
+<p>在 Redis 3.0 之前，List 对象的底层数据结构是双向链表或者压缩列表。然后在 Redis 3.2 的时候，List 对象的底层改由 quicklist 数据结构实现。</p>
+<p>其实 quicklist 就是「双向链表 + 压缩列表」组合</p>
+<p>因为一个 quicklist 就是一个链表，而链表中的每个元素又是一个压缩列表</p>
+<p>虽然压缩列表是通过紧凑型的内存布局节省了内存开销，但是因为它的结构设计，如果保存的元素数量增加，或者元素变大了，压缩列表会有「连锁更新」的风险，一旦发生，会造成性能下降。</p>
+<p>quicklist 解决办法，<strong>通过控制每个链表节点中的压缩列表的大小或者元素个数，来规避连锁更新的问题</strong>。</p>
+<p>因为压缩列表元素越少或越小，连锁更新带来的影响就越小，从而提供了更好的访问性能</p>
+<h4>结构设计</h4>
+<p>quicklist 的结构体跟链表的结构体类似，都包含了表头和表尾，区别在于 quicklist 的节点是 quicklistNode</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">quicklist</span> <span class="token punctuation">{</span>
+  <span class="token comment">//quicklist 的链表头</span>
+  quicklistNode <span class="token operator">*</span>head<span class="token punctuation">;</span>      <span class="token comment">//quicklist 的链表头</span>
+  <span class="token comment">//quicklist 的链表尾</span>
+  quicklistNode <span class="token operator">*</span>tail<span class="token punctuation">;</span> 
+  <span class="token comment">//所有压缩列表中的总元素个数</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> count<span class="token punctuation">;</span>
+  <span class="token comment">//quicklistNodes 的个数</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">long</span> len<span class="token punctuation">;</span>       
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span> quicklist<span class="token punctuation">;</span>
+</code></pre></div><p>对应 quicklistNode 的结构定义</p>
+<div class="language-c" data-ext="c" data-title="c"><pre class="language-c"><code><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">quicklistNode</span> <span class="token punctuation">{</span>
+  <span class="token comment">//前一个 quicklistNode</span>
+  <span class="token keyword">struct</span> <span class="token class-name">quicklistNode</span> <span class="token operator">*</span>prev<span class="token punctuation">;</span>     <span class="token comment">//前一个 quicklistNode</span>
+  <span class="token comment">//下一个 quicklistNode</span>
+  <span class="token keyword">struct</span> <span class="token class-name">quicklistNode</span> <span class="token operator">*</span>next<span class="token punctuation">;</span>     <span class="token comment">//后一个 quicklistNode</span>
+  <span class="token comment">//quicklistNode 指向的压缩列表</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">char</span> <span class="token operator">*</span>zl<span class="token punctuation">;</span>              
+  <span class="token comment">//压缩列表的的字节大小</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> sz<span class="token punctuation">;</span>                
+  <span class="token comment">//压缩列表的元素个数</span>
+  <span class="token keyword">unsigned</span> <span class="token keyword">int</span> count <span class="token operator">:</span> <span class="token number">16</span><span class="token punctuation">;</span>        <span class="token comment">//ziplist 中的元素个数 </span>
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span> quicklistNode<span class="token punctuation">;</span>
+</code></pre></div><p>quicklistNode 结构体里包含了前一个节点和下一个节点指针，这样每个 quicklistNode 形成了一个双向链表。但是链表节点的元素不再是单纯保存元素值，而是保存了一个压缩列表，所以 quicklistNode 结构体里有个指向压缩列表的指针 *zl</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>在向 quicklist 添加一个元素的时候，不会像普通的链表那样，直接新建一个链表节点。而是会检查插入位置的压缩列表是否能容纳该元素，如果能容纳就直接保存到 quicklistNode 结构里的压缩列表，如果不能容纳，才会新建一个新的 quicklistNode 结构。</p>
+<blockquote>
+<p>也就是说 quicklist 的节点数量不是和 list 的元素数量对应的，可能一个 quicklist 的节点存了好几个元素，在压缩列表中</p>
+</blockquote>
+<p>quicklist 会控制 quicklistNode 结构里的压缩列表的大小或者元素个数，来规避潜在的连锁更新的风险，但是这并没有完全解决连锁更新的问题。</p>
+<h3>listpack (彻底替代压缩列表)</h3>
+<p>quicklist 虽然通过控制 quicklistNode 结构里的压缩列表的大小或者元素个数，来减少连锁更新带来的性能影响，但是并没有完全解决连锁更新的问题。</p>
+<p>因为 quicklistNode 还是用了压缩列表来保存元素，压缩列表连锁更新的问题，来源于它的结构设计，所以要想彻底解决这个问题，需要设计一个新的数据结构。</p>
+<p>于是，Redis 在 5.0 新设计一个数据结构叫 listpack，目的是替代压缩列表，它最大特点是 listpack 中每个节点不再包含前一个节点的长度了，压缩列表每个节点正因为需要保存前一个节点的长度字段，就会有连锁更新的隐患</p>
+<blockquote>
+<p>在 6.2 发行版本中，Redis Hash 对象、ZSet 对象的底层数据结构的压缩列表还未被替换成 listpack，而 Redis 的最新代码（还未发布版本）已经将所有用到压缩列表底层数据结构的 Redis 对象替换成 listpack 数据结构来实现，估计不久将来，Redis 就会发布一个将压缩列表为 listpack 的发行版本</p>
+</blockquote>
+<h4>结构设计</h4>
+<p>listpack 采用了压缩列表的很多优秀的设计，比如还是用一块连续的内存空间来紧凑地保存数据，并且为了节省内存的开销，listpack 节点会采用不同的编码方式保存不同大小的数据</p>
+<h5>listpack 结构</h5>
+<figure><figcaption>alt text</figcaption></figure>
+<p>listpack 头包含两个属性，分别记录了 listpack 总字节数和元素数量，然后 listpack 末尾也有个结尾标识</p>
+<p>listpack entry 就是 listpack 的节点</p>
+<h5>listpack 节点结构</h5>
+<figure><figcaption>alt text</figcaption></figure>
+<p>主要包含三个方面内容：</p>
+<ul>
+<li>encoding，定义该元素的编码类型，会对不同长度的整数和字符串进行编码；</li>
+<li>data，实际存放的数据；</li>
+<li>len，encoding+data 的总长度；</li>
+</ul>
+<p>可以看到，listpack 没有压缩列表中记录前一个节点长度的字段了，listpack 只记录当前节点的长度，当我们向 listpack 加入一个新元素的时候，不会影响其他节点的长度字段的变化，从而避免了压缩列表的连锁更新问题</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>Mysql - 10索引2 - 优化索引方法</title>
       <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/10.html</link>
@@ -1081,193 +2570,6 @@ id: 4,  age: 20
 <li>double用于存储双精度的小数</li>
 </ul>
 <p>| 类型 | 字节 | 范围 | 说明 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Mysql - 20索引</title>
-      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/20.html</link>
-      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/20.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Mysql - 20索引</source>
-      <description>索引 索引分类 按数据结构分： B+ 树索引 哈希索引 功能分： 主键索引 (Primary key) 唯一索引 (Unique) 普通索引 (Normal) 全文索引 (Full text) 存储位置分： 聚簇索引 非聚簇索引 (二级索引) InnoDB存储方式和查询 InnoDB 的数据是按「数据页」为单位来读写的，默认数据页大小为 16 KB。 ...</description>
-      <category>code</category>
-      <pubDate>Wed, 04 Mar 2026 16:30:07 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>索引</h2>
-<h3>索引分类</h3>
-<p>按数据结构分：</p>
-<ul>
-<li>B+ 树索引</li>
-<li>哈希索引</li>
-</ul>
-<p>功能分：</p>
-<ul>
-<li>主键索引 (Primary key)</li>
-<li>唯一索引 (Unique)</li>
-<li>普通索引 (Normal)</li>
-<li>全文索引 (Full text)</li>
-</ul>
-<p>存储位置分：</p>
-<ul>
-<li>聚簇索引</li>
-<li>非聚簇索引 (二级索引)</li>
-</ul>
-<h3>InnoDB存储方式和查询</h3>
-<p>InnoDB 的数据是按「数据页」为单位来读写的，默认数据页大小为 16 KB。</p>
-<p>每个数据页之间通过<strong>双向链表</strong>的形式组织起来，物理上不连续，但是逻辑上连续。</p>
-<p>数据页内包含用户记录，每个记录之间用<strong>单向链表</strong>的方式组织起来</p>
-<p>为了加快在数据页内高效查询记录，设计了一个页目录，页目录存储各个槽（分组），且主键值是有序的，于是可以通过二分查找法的方式进行检索从而提高效率。</p>
-<p>为了高效查询记录所在的数据页，InnoDB 采用 b+ 树作为索引，每个节点都是一个数据页。</p>
-<p>如果叶子节点存储的是实际数据的就是聚簇索引，一个表只能有一个聚簇索引；如果叶子节点存储的不是实际数据，而是主键值则就是二级索引，一个表中可以有多个二级索引。</p>
-<p>在使用二级索引进行查找数据时，如果查询的数据能在二级索引找到，那么就是「索引覆盖」操作，如果查询的数据不在二级索引里，就需要先在二级索引找到主键值，需要去聚簇索引中获得数据行，这个过程就叫作「回表」。</p>
-<h4>InnoDB 是如何存储数据</h4>
-<p>记录是按照行来存储的，但是数据库的读取并不以「行」为单位</p>
-<p>InnoDB 的数据是按「数据页」为单位来读写的，也就是说，当需要读一条记录的时候，并不是将这个记录本身从磁盘读出来，而是以页为单位，将其整体读入内存</p>
-<p>数据库的 I/O 操作的最小单位是页，InnoDB 数据页的默认大小是 16KB</p>
-<h5>数据页结构</h5>
-<p>数据页与数据页之间是通过 <strong>双向链表</strong> 构建连接</p>
-<p>数据页中可以存储多个数据行(用户记录)，这些是按照索引来升序排序的</p>
-<p>| 名称       | 说明                                                   |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Mysql - 3 SQL语句</title>
-      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/3.html</link>
-      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Mysql - 3 SQL语句</source>
-      <description>SQL语句 结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。 SQL语句不区分大小写（关键字推荐使用大写），它支持多行，并且需要使用 ; 结尾 SQL也支持注释，通过使用--或是#...</description>
-      <category>code</category>
-      <pubDate>Wed, 04 Mar 2026 16:30:07 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>SQL语句</h2>
-<p>结构化查询语言（Structured Query Language）简称SQL，这是一种特殊的语言，它专门用于数据库的操作。每一种数据库都支持SQL，但是他们之间会存在一些细微的差异，因此不同的数据库都存在自己的“方言”。</p>
-<p>SQL语句不区分大小写（关键字推荐使用大写），它支持多行，并且需要使用 ; 结尾</p>
-<p>SQL也支持注释，通过使用--或是#来编写注释内容，也可以使用/*来进行多行注释</p>
-<p>四种 SQL 语言类型：</p>
-<ul>
-<li>DDL: 数据库定义语言DDL(Data Definition Language)，是用于描述数据库中要存储的现实世界实体的语言</li>
-<li>DML: 数据操纵语言（Data Manipulation Language, DML）是SQL语言中，负责对数据库对象运行数据访问工作的指令集，以INSERT、UPDATE、DELETE三种指令为核心，分别代表插入、更新与删除，是开发以数据为中心的应用程序必定会使用到的指令。</li>
-<li>DQL: 数据查询语言（Data Query Language, DQL）基本结构是由SELECT子句，FROM子句，WHERE子句组成的查询块。</li>
-<li>DCL: 数据库控制语言（Data Control Language,DCL）。是用来设置或更改数据库用户或角色权限的语句，包括（grant,deny,revoke等）语句。</li>
-</ul>
-<h3>DDL (数据定义语言)</h3>
-<h4>库操作</h4>
-<p>| 操作 | 命令 | 说明 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Mysql - 4 SQL语句2</title>
-      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/4.html</link>
-      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/4.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Mysql - 4 SQL语句2</source>
-      <description>SQL语句 DQL (数据库查询语言) DQL 的核心命令是 SELECT，用于从一个或多个表中检索数据 基本语法 单表查询 基础查询 限制数量和分页 通过limit来限制查询的数量，只取前n个结果： 也可以进行分页： OFFSET 条件查询 (where) 条件： 排序查询 (ORDER BY) 排序方式： ASC: 升序（默认） DESC: 降序 ...</description>
-      <category>code</category>
-      <pubDate>Wed, 04 Mar 2026 16:30:07 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>SQL语句</h2>
-<h3>DQL (数据库查询语言)</h3>
-<p>DQL 的核心命令是 SELECT，用于从一个或多个表中检索数据</p>
-<p>基本语法</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">SELECT</span> 列名<span class="token number">1</span><span class="token punctuation">,</span> 列名<span class="token number">2</span><span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token keyword">FROM</span> 表名
-<span class="token keyword">WHERE</span> 条件
-<span class="token keyword">GROUP</span> <span class="token keyword">BY</span> 分组列
-<span class="token keyword">HAVING</span> 分组条件
-<span class="token keyword">ORDER</span> <span class="token keyword">BY</span> 排序列 <span class="token keyword">ASC</span><span class="token operator">|</span><span class="token keyword">DESC</span>
-<span class="token keyword">LIMIT</span> 限制行数<span class="token punctuation">;</span>
-</code></pre></div><h4>单表查询</h4>
-<h5>基础查询</h5>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 查询所有列</span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> users<span class="token punctuation">;</span>
-
-<span class="token comment">-- 查询指定列</span>
-<span class="token keyword">SELECT</span> name<span class="token punctuation">,</span> age <span class="token keyword">FROM</span> users<span class="token punctuation">;</span>
-
-<span class="token comment">-- 去重查询</span>
-<span class="token keyword">SELECT</span> <span class="token keyword">DISTINCT</span> department <span class="token keyword">FROM</span> users<span class="token punctuation">;</span>
-</code></pre></div><h5>限制数量和分页</h5>
-<p>| 场景 | 示例 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Mysql - 5 事务与视图</title>
-      <link>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/5.html</link>
-      <guid>http://ekkosonya.cn/code/%E4%B8%AD%E9%97%B4%E4%BB%B6/Mysql/5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Mysql - 5 事务与视图</source>
-      <description>视图 视图（View）是一个虚拟表，它是基于 SQL 查询结果集的可视化表示 视图本质就是一个查询的结果，不过我们每次都可以通过打开视图来按照我们想要的样子查看数据。既然视图本质就是一个查询的结果，那么它本身就是一个虚表，并不是真实存在的，数据实际上还是存放在原来的表中。 通俗的讲，视图只保存了查询的SQL逻辑，不保存查询结果。所以我们在创建视图的时候...</description>
-      <category>code</category>
-      <pubDate>Wed, 04 Mar 2026 16:30:07 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>视图</h2>
-<p>视图（View）是一个虚拟表，它是基于 SQL 查询结果集的可视化表示</p>
-<p>视图本质就是一个查询的结果，不过我们每次都可以通过打开视图来按照我们想要的样子查看数据。既然视图本质就是一个查询的结果，那么它本身就是一个虚表，并不是真实存在的，数据实际上还是存放在原来的表中。</p>
-<p>通俗的讲，视图只保存了查询的SQL逻辑，不保存查询结果。所以我们在创建视图的时候，主要的工作就落在创建这条SQL查询语句上。</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> 视图名称<span class="token punctuation">(</span>列名<span class="token punctuation">)</span> <span class="token keyword">as</span> 子查询语句 <span class="token punctuation">[</span><span class="token keyword">WITH</span> <span class="token keyword">CHECK</span> <span class="token keyword">OPTION</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-</code></pre></div><p>WITH CHECK OPTION是指当创建后，如果更新视图中的数据，是否要满足子查询中的条件表达式，不满足将无法插入，创建后，我们就可以使用select语句来直接查询视图上的数据了，因此，还能在视图的基础上，导出其他的视图</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 创建视图</span>
-<span class="token keyword">CREATE</span> <span class="token keyword">VIEW</span> user_summary <span class="token keyword">AS</span>
-<span class="token keyword">SELECT</span> id<span class="token punctuation">,</span> name<span class="token punctuation">,</span> age
-<span class="token keyword">FROM</span> users
-<span class="token keyword">WHERE</span> age <span class="token operator">&gt;=</span> <span class="token number">18</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 使用视图（就像查询表一样）</span>
-<span class="token keyword">SELECT</span> <span class="token operator">*</span> <span class="token keyword">FROM</span> user_summary <span class="token keyword">WHERE</span> age <span class="token operator">&gt;</span> <span class="token number">25</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 删除视图</span>
-<span class="token keyword">DROP</span> <span class="token keyword">VIEW</span> user_summary<span class="token punctuation">;</span>
-</code></pre></div><p>某些简单视图支持 INSERT、UPDATE、DELETE 操作</p>
-<p>视图只是一个查询的"窗口"，当你对视图进行增删改操作时，MySQL 会将这些操作转换为对基础表的操作。</p>
-<ul>
-<li>若视图是由两个以上基本表导出的，则此视图不允许更新。</li>
-<li>若视图的字段来自字段表达式或常数，则不允许对此视图执行INSERT和UPDATE操作，但允许执行DELETE操作。</li>
-<li>若视图的字段来自集函数，则此视图不允许更新。</li>
-<li>若视图定义中含有GROUP BY子句，则此视图不允许更新。</li>
-<li>若视图定义中含有DISTINCT短语，则此视图不允许更新。</li>
-<li>若视图定义中有嵌套查询，并且内层查询的FROM子句中涉及的表也是导出该视图的基本表，则此视图不允许更新。</li>
-<li>一个不允许更新的视图上定义的视图也不允许更新</li>
-</ul>
-<h2>事务</h2>
-<p>事务是一组操作的集合，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败</p>
-<p>当我们要进行的操作非常多时，比如要依次删除很多个表的数据，我们就需要执行大量的SQL语句来完成，这些数据库操作语句就可以构成一个事务！</p>
-<p>只有Innodb引擎支持事务</p>
-<h3>使用</h3>
-<p>Mysql 默认开启事务自动提交</p>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 查看事务提交方式（1=自动提交，0=手动提交）</span>
-<span class="token keyword">SELECT</span> @<span class="token variable">@autocommit</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 设置为手动提交</span>
-<span class="token keyword">SET</span> @<span class="token variable">@autocommit</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 设置为自动提交</span>
-<span class="token keyword">SET</span> @<span class="token variable">@autocommit</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-</code></pre></div><h4>手动控制事务</h4>
-<h5>方式一</h5>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 开启事务</span>
-<span class="token keyword">BEGIN</span><span class="token punctuation">;</span>  <span class="token comment">-- 或 START TRANSACTION;</span>
-
-<span class="token comment">-- 执行SQL操作</span>
-<span class="token keyword">UPDATE</span> account <span class="token keyword">SET</span> money <span class="token operator">=</span> money <span class="token operator">-</span> <span class="token number">1000</span> <span class="token keyword">WHERE</span> name <span class="token operator">=</span> <span class="token string">'张三'</span><span class="token punctuation">;</span>
-<span class="token keyword">UPDATE</span> account <span class="token keyword">SET</span> money <span class="token operator">=</span> money <span class="token operator">+</span> <span class="token number">1000</span> <span class="token keyword">WHERE</span> name <span class="token operator">=</span> <span class="token string">'李四'</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 提交事务</span>
-<span class="token keyword">COMMIT</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 或者回滚事务（撤销所有操作）</span>
-<span class="token keyword">ROLLBACK</span><span class="token punctuation">;</span>
-</code></pre></div><h5>方式二</h5>
-<div class="language-sql" data-ext="sql" data-title="sql"><pre class="language-sql"><code><span class="token comment">-- 关闭自动提交</span>
-<span class="token keyword">SET</span> @<span class="token variable">@autocommit</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 执行SQL</span>
-<span class="token keyword">UPDATE</span> account <span class="token keyword">SET</span> money <span class="token operator">=</span> money <span class="token operator">-</span> <span class="token number">1000</span> <span class="token keyword">WHERE</span> name <span class="token operator">=</span> <span class="token string">'张三'</span><span class="token punctuation">;</span>
-<span class="token keyword">UPDATE</span> account <span class="token keyword">SET</span> money <span class="token operator">=</span> money <span class="token operator">+</span> <span class="token number">1000</span> <span class="token keyword">WHERE</span> name <span class="token operator">=</span> <span class="token string">'李四'</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 提交事务</span>
-<span class="token keyword">COMMIT</span><span class="token punctuation">;</span>
-
-<span class="token comment">-- 或回滚</span>
-<span class="token keyword">ROLLBACK</span><span class="token punctuation">;</span>
-</code></pre></div><h3>事务四大特性 (ACID)</h3>
-<p>| 特性 | 说明 |
 |</p>
 ]]></content:encoded>
     </item>

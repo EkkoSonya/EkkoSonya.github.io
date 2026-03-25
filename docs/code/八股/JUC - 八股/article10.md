@@ -1,5 +1,5 @@
 ---
-title: JUC 八股10 - 锁1
+title: JUC 八股10 - 锁1(synchronized)
 date: 2026-03-23
 category:
   - code

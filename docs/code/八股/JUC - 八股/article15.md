@@ -1,5 +1,5 @@
 ---
-title: JUC 八股15 - 锁6(CAS + )
+title: JUC 八股15 - 锁6(CAS + 原子类)
 date: 2026-03-24
 category:
   - code

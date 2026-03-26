@@ -16,7 +16,7 @@ order: -0.5
 
 ### HashTable
 
-![alt text](image.png)
+![alt text](img/24.png)
 
 - Hashtable的底层数据结构主要是数组加上链表，数组是主体，链表是解决hash冲突存在的。
 

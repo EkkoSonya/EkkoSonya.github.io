@@ -1,5 +1,5 @@
 ---
-title: Java面试题 - java基础6 (杂)
+title: Java面试题 - java基础6 (序列化+IO)
 date: 2026-3-14
 category:
   - code

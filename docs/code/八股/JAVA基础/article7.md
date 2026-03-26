@@ -1,5 +1,5 @@
 ---
-title: Java面试题 - java基础7 (杂)
+title: Java面试题 - java基础7 (Java8+CompletableFuture)
 date: 2026-3-15
 category:
   - code

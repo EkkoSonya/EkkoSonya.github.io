@@ -1,5 +1,5 @@
 ---
-title: Java面试题 - java基础8 (杂)
+title: Java面试题 - java基础8 (java21+设计模式)
 date: 2026-3-15
 category:
   - code

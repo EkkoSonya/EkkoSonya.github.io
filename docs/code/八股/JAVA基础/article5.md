@@ -1,5 +1,5 @@
 ---
-title: Java面试题 - java基础5 (杂)
+title: Java面试题 - java基础5 (注解+异常)
 date: 2026-3-13
 category:
   - code

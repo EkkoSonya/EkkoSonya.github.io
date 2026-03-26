@@ -1,5 +1,5 @@
 ---
-title: Java面试题 - java基础4 (杂)
+title: Java面试题 - java基础4 (String+Integer+Object+泛型+反射)
 date: 2026-3-13
 category:
   - code

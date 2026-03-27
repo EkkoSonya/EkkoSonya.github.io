@@ -6,8 +6,8 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Thu, 26 Mar 2026 05:56:07 GMT</pubDate>
-    <lastBuildDate>Thu, 26 Mar 2026 05:56:07 GMT</lastBuildDate>
+    <pubDate>Fri, 27 Mar 2026 03:06:19 GMT</pubDate>
+    <lastBuildDate>Fri, 27 Mar 2026 03:06:19 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
@@ -167,10 +167,10 @@ RUNNABLE → 发起IO → RUNNABLE（底层在等）→ IO完成 → RUNNABLE
 ]]></content:encoded>
     </item>
     <item>
-      <title>OS5 - 进程管理3</title>
+      <title>OS6 - 进程管理4</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/article6.html</link>
       <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/article6.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">OS5 - 进程管理3</source>
+      <source url="http://ekkosonya.cn/rss.xml">OS6 - 进程管理4</source>
       <description>OS 中断切换 以线程 A 发起读取磁盘文件为例 第一阶段：发起 I/O 时的“软中断”与主动切换（线程 A 交出 CPU） 当线程 A 执行到读取文件的代码时，它其实是没有权限直接控制底层硬件的，必须向操作系统老大哥（内核）求助。 系统调用（软中断/Trap）： 线程 A 调用 read() 函数，这会触发一个软中断（在 x86 架构下通常是 int...</description>
       <category>code</category>
       <pubDate>Thu, 26 Mar 2026 05:53:24 GMT</pubDate>

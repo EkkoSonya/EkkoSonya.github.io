@@ -28,6 +28,8 @@ ThreadLocal 的实现原理是，每个线程维护一个 Map，key 为 ThreadLo
 2、通过 ThreadLocal 的 get 方法从 Map 中取出对象。
 3、Map 的大小由 ThreadLocal 对象的多少决定。
 
+> 本质是 new 一个 ThreadLocal 后，当调用 ThreadLocal 的 get/set 方法时，会获取当前线程的 threadLocals 属性，以当前 ThreadLocal 对象为 key，存取对应的 value
+
 #### 使用示例
 
 创建 ThreadLocal
@@ -41,7 +43,7 @@ public static ThreadLocal<String> localVariable = new ThreadLocal<>();
 
 ```java
 //设置ThreadLocal变量的值
-localVariable.set("沉默王二是沙雕");
+localVariable.set("Penguin");
 ```
 
 获取 ThreadLocal 的值
@@ -246,6 +248,29 @@ userThreadLocal = null;
 
 - 如果 key 是强引用：ThreadLocalMap 还指着这个 ThreadLocal 对象，它永远无法被回收 → 内存泄漏
 - key 是弱引用：GC 时发现这个 ThreadLocal 只有 Entry 的弱引用指着它，直接回收
+
+#### value 为什么不是弱引用
+
+```java
+ThreadLocal<User> local = new ThreadLocal<>();
+User user = new User();
+
+local.set(user);
+
+user = null;  // 外部不再引用 User
+```
+
+那 value（User 对象）就会被 GC 立即回收，下次 local.get() 就拿到 null 了。
+
+这显然不是你想要的行为 —— 你还想从 ThreadLocal 里取到值。
+
+代价是 key 被回收后变成 null，但 value 还在：
+
+```plain
+Entry
+├── key = null（被 GC 了）
+└── value = User 对象（还活着）
+```
 
 #### value 还存在内存泄露
 

@@ -1,5 +1,5 @@
 ---
-title: JVM 八股13 - JVM 调优
+title: JVM 八股13 - 类加载分析
 date: 2026-3-31
 category:
   - code
@@ -7,118 +7,277 @@ tag:
   - java
   - jvm
   - 八股
-# star: true
-# sticky: true
 order: -0.5
 ---
 
-## JVM 调优
+## 怎么使用自定义 ClassLoader
 
-### 性能检测工具
+类加载器是在运行时动态决定的，不是编译时指定的。
 
-- 系统层面 (可以监控系统整体的资源使用情况，比如说内存、CPU、IO 使用情况、网络使用情况)
-  - top
-  - iostat
-  - netstat
-  - vmstat
-- JDK 自带的命令行工具层面
-  - jps
-  - jstat
-  - jinfo
-  - jmap
-  - jhat
-  - jstack
-  - jcmd
-  - 可以查看 JVM 运行时信息、内存使用情况、堆栈信息等
+当你写 `new MyClass()` 时，JVM 会使用**定义当前类的同一个 ClassLoader**去加载 `MyClass`。
 
-#### jmap 使用
+所以如果你想让某个类用自定义 ClassLoader 加载，有两种方式：
 
-- 一般会使用 `jmap -heap <pid>` 查看堆内存摘要，包括新生代、老年代、元空间等
-- 或者使用 `jmap -histo <pid>` 查看对象分布
+### 1. 直接使用自定义 ClassLoader（反射方式）
 
-### 可视化的性能监控工具
+```java
+// 创建自定义类加载器
+MyClassLoader classLoader = new MyClassLoader();
 
-- JConsole：JDK 自带的监控工具，可以用来监视 Java 应用程序的运行状态，包括内存使用、线程状态、类加载、GC 等
-- VisualVM：一个基于 NetBeans 的可视化工具，在很长一段时间内，VisualVM 都是 Oracle 官方主推的故障处理工具。集成了多个 JDK 命令行工具的功能，非常友好
-- Java Mission Control：JMC 最初是 JRockit VM 中的诊断工具，但在 Oracle JDK7 Update 40 以后，就绑定到了 HotSpot VM 中。不过后来又被 Oracle 开源出来作为了一个单独的产品
+// 用它加载类（返回 Class<?>，不能用强类型）
+Class<?> clazz = classLoader.loadClass("com.example.MyClass");
 
-### JVM 的常见参数配置
-
-一个是堆的大小设置，然后是垃圾收集器的选择和时间，加上日志输出等
-
-主要有 -Xms 设置初始堆大小，-Xmx 设置最大堆大小，-XX:+UseG1GC 使用 G1 垃圾收集器，-XX:MaxGCPauseMillis=n 设置最大垃圾回收停顿时间，-XX:+PrintGCDetails 输出 GC 详细日志等
-
-#### 配置堆内存大小的参数
-
-- `-Xms`：初始堆大小
-- `-Xmx`：最大堆大小
-- `-XX:NewSize=n`：设置年轻代大小
-- `-XX:NewRatio=n`：设置年轻代和年老代的比值。如：n 为 3 表示年轻代和年老代比值为 1：3，年轻代占总和的 1/4
-- `-XX:SurvivorRatio=n`：年轻代中 Eden 区与两个 Survivor 区的比值。如 n=3 表示 Eden 占 3 Survivor 占 2，一个 Survivor
-
-#### 配置 GC 收集器的参数
-
-- `-XX:+UseSerialGC`：设置串行收集器
-- `-XX:+UseParallelGC`：设置并行收集器
-- `-XX:+UseParalledlOldGC`：设置并行老年代收集器
-- `-XX:+UseConcMarkSweepGC`：设置并发收集器
-
-#### 配置并行收集的参数
-
-- `-XX:MaxGCPauseMillis=n`：设置最大垃圾回收停顿时间
-- `-XX:GCTimeRatio=n`：设置垃圾回收时间占程序运行时间的比例
-- `-XX:+CMSIncrementalMode`：设置增量模式，适合单 CPU 环境
-- `-XX:ParallelGCThreads=n`：设置并行收集器的线程数
-
-#### 打印 GC 回收的过程日志信息的参数
-
-- `-XX:+PrintGC`：输出 GC 日志
-- `-XX:+PrintGCDetails`：输出 GC 详细日志
-- `-XX:+PrintGCTimeStamps`：输出 GC 的时间戳（以基准时间的形式）
-- `-Xloggc:filename`：日志文件的输出路径
-
-### CPU 占用过高怎么排查
-
-使用 top 命令查看 CPU 占用情况，找到占用 CPU 较高的进程 ID
-
-接着，使用 jstack 命令查看对应进程的线程堆栈信息
-
-然后再使用 top 命令查看进程中线程的占用情况，找到占用 CPU 较高的线程 ID
-
-接着在 jstack 的输出中搜索这个十六进制的线程 ID，找到对应的堆栈信息。最后，根据堆栈信息定位到具体的业务方法，查看是否有死循环、频繁的垃圾回收、资源竞争导致的上下文频繁切换等问题
-
-> 先找是哪个进程占用 CPU，然后进一步看这个进程有哪些线程，再看看到底是哪一个线程占用率高，就是分析该线程的堆栈信息
-
-### 内存飙高问题
-
-内存飚高一般是因为创建了大量的 Java 对象导致的，如果持续飙高则说明垃圾回收跟不上对象创建的速度，或者内存泄漏导致对象无法回收
-
-第一，先观察垃圾回收的情况，可以通过 jstat -gc PID 1000 查看 GC 次数和时间。或者使用 jmap -histo PID | head -20 查看堆内存占用空间最大的前 20 个对象类型。
-
-第二步，通过 jmap 命令 dump 出堆内存信息。
-
-第三步，使用可视化工具分析 dump 文件，比如说 VisualVM，找到占用内存高的对象，再找到创建该对象的业务代码位置，从代码和业务场景中定位具体问题。
-
-### 频繁 minor gc 怎么办
-
-频繁的 Minor GC 通常意味着新生代中的对象频繁地被垃圾回收，可能是因为**新生代空间设置的过小**，或者是**因为程序中存在大量的短生命周期对象**（如临时变量）
-
-可以使用 GC 日志进行分析，查看 GC 的频率和耗时，找到频繁 GC 的原因
-
-```shell
--XX:+PrintGCDetails -Xloggc:gc.log
+// 用反射创建实例
+Object obj = clazz.newInstance();
 ```
 
-如果是因为新生代空间不足，可以通过 -Xmn 增加新生代的大小，减缓新生代的填满速度
+**缺点**：返回的是 `Class<?>`，编译时无法知道具体类型，只能用反射。
 
-如果对象需要长期存活，但频繁从 Survivor 区晋升到老年代，可以通过 -XX:SurvivorRatio 参数调整 Eden 和 Survivor 的比例。默认比例是 8:1，表示 8 个空间用于 Eden，1 个空间用于 Survivor 区
+### 2. 线程上下文类加载器（TCCL）
 
-### 频繁 Full GC 怎么办
+这是 Java 提供的"父加载器反向委托给子加载器"的机制。
 
-频繁的 Full GC 通常意味着老年代中的对象频繁地被垃圾回收，可能是因为老年代空间设置的过小，或者是因为程序中存在大量的长生命周期对象。
+```java
+// 保存原来的 ClassLoader
+ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
 
-- 假如是因为大对象直接分配到老年代导致的 Full GC 频繁，可以通过 -XX:PretenureSizeThreshold 参数设置大对象直接进入老年代的阈值。
-  - 或者将大对象拆分成小对象，减少大对象的创建。比如说分页。
-- 假如是因为内存泄漏导致的频繁 Full GC，可以通过分析堆内存 dump 文件找到内存泄漏的对象，再找到内存泄漏的代码位置。
-- 假如是因为长生命周期的对象进入到了老年代，要及时释放资源，比如说 ThreadLocal、数据库连接、IO 资源等。
-- 假如是因为 GC 参数配置不合理导致的频繁 Full GC，可以通过调整 GC 参数来优化 GC 行为。或者直接更换更适合的 GC 收集器，如 G1、ZGC 等。
+try {
+    // 设置当前线程的 ClassLoader 为自定义的
+    Thread.currentThread().setContextClassLoader(new MyClassLoader());
+
+    // 某些框架会通过 TCCL 获取 ClassLoader 来加载类
+    // 比如 SPI、JDBC、Spring 等
+    Class.forName("com.example.MyClass", true,
+                  Thread.currentThread().getContextClassLoader());
+} finally {
+    // 恢复原来的 ClassLoader
+    Thread.currentThread().setContextClassLoader(oldLoader);
+}
+```
+
+---
+
+## 类加载器的自举问题
+
+一个经典问题：**ClassLoader 这个类本身是谁加载的？**
+
+### JVM 启动时的加载顺序
+
+```
+1. JVM 启动
+   ↓
+2. Bootstrap ClassLoader 创建（C++ 代码，不是 Java 类）
+   ↓
+3. Bootstrap ClassLoader 加载核心类：
+   - java.lang.Object
+   - java.lang.Class
+   - java.lang.ClassLoader
+   - java.lang.String
+   - ... 等 rt.jar 中的类
+   ↓
+4. Extension ClassLoader 创建（Java 类，由 Bootstrap 加载）
+   ↓
+5. Application ClassLoader 创建（Java 类，由 Extension 加载）
+```
+
+**关键**：第一个加载器必须"凭空出现"，这是典型的**自举（Bootstrap）**问题。
+
+```
+┌─────────────────────────────────────┐
+│   Bootstrap ClassLoader (C++ 原生)   │ ← 最底层，JVM 内置
+│   加载：Object, Class, ClassLoader   │
+└─────────────────────────────────────┘
+                 ↓ 加载
+┌─────────────────────────────────────┐
+│   Extension ClassLoader (Java 类)    │
+│   由 Bootstrap 加载                  │
+└─────────────────────────────────────┘
+                 ↓ 加载
+┌─────────────────────────────────────┐
+│   Application ClassLoader (Java 类)  │
+│   由 Extension 加载                  │
+└─────────────────────────────────────┘
+```
+
+### 验证
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        Class<?> clazz = ClassLoader.class;
+        System.out.println(clazz.getClassLoader());
+        // 输出：null
+    }
+}
+```
+
+输出 `null` 不是因为没人加载它，而是因为 **Bootstrap ClassLoader 是原生代码（C/C++）**，不是 Java 对象。
+
+---
+
+## 自定义 ClassLoader 是谁加载的
+
+### 类 vs 实例
+
+```java
+// 你写的这个类
+public class MyClassLoader extends ClassLoader {
+    ...
+}
+```
+
+要分清两个概念：
+
+| | **MyClassLoader 这个类** | **MyClassLoader 这个实例** |
+| --- | --- | --- |
+| **谁加载的** | AppClassLoader（假设在 classpath 下） | 是你 `new` 出来的，不是谁加载的 |
+| **类比** | 就像 `MyClass.class` | 就像 `new MyClass()` |
+
+### 代码验证
+
+```java
+public class Test {
+    public static void main(String[] args) {
+        // MyClassLoader 这个类是谁加载的？
+        // → AppClassLoader
+        System.out.println(MyClassLoader.class.getClassLoader());
+
+        // 创建一个实例
+        MyClassLoader loader = new MyClassLoader();
+        // 这个实例是你 new 出来的，不是谁"加载"的
+
+        // 用这个实例去加载其他类
+        Class<?> clazz = loader.loadClass("com.example.MyClass");
+
+        // MyClass 是由 loader 这个实例加载的
+        System.out.println(clazz.getClassLoader());  // MyClassLoader@xxx
+    }
+}
+```
+
+### 完整链条
+
+```
+┌─────────────────────────────────────┐
+│ Bootstrap ClassLoader               │
+│ 加载：ClassLoader 类、Object 类等     │
+└─────────────────────────────────────┘
+             ↓ 加载
+┌─────────────────────────────────────┐
+│ Application ClassLoader             │
+│ 加载：你的 MyClassLoader 类、Main 类  │
+└─────────────────────────────────────┘
+             ↓ 你 new
+┌─────────────────────────────────────┐
+│ MyClassLoader 实例                   │
+│ 加载：你指定的类（如 MyClass）        │
+└─────────────────────────────────────┘
+             ↓ 加载
+┌─────────────────────────────────────┐
+│ MyClass                             │
+└─────────────────────────────────────┘
+```
+
+---
+
+## new 对象时的类加载时机
+
+第一次 `new` 一个对象时，会触发类加载：
+
+```java
+MyClassLoader loader = new MyClassLoader();
+```
+
+**执行过程：**
+
+```
+1. JVM 发现要用 MyClassLoader 这个类
+   ↓
+2. 检查：这个类加载了吗？
+   ↓
+3. 没加载过 → 触发类加载流程
+   ↓
+4. AppClassLoader 加载 MyClassLoader.class
+   ↓
+5. 执行静态代码块（如果有）
+   ↓
+6. 然后才能 new 出实例
+```
+
+### 关键点
+
+- **类加载只发生一次**：第二次 `new MyClassLoader()` 就不会再加载了
+- **类加载是惰性的**：没用到的类不会加载
+
+```java
+new MyClassLoader();  // 第一次：加载 + 实例化
+new MyClassLoader();  // 第二次：只实例化，不加载
+new MyClassLoader();  // 第三次：只实例化，不加载
+```
+
+### 主动引用才会触发
+
+以下操作会触发类加载：
+
+| 代码 | 是否触发 |
+| --- | --- |
+| `new MyClass()` | ✅ |
+| `MyClass.staticVar` | ✅ |
+| `MyClass.staticMethod()` | ✅ |
+| `Class.forName("com.example.MyClass")` | ✅ |
+
+---
+
+## import 会触发类加载吗？
+
+**不会！**
+
+`import` 只是**编译期的语法糖**，方便你写代码时不用写全限定名。
+
+### 编译前后对比
+
+```java
+// 源代码
+import com.example.MyClass;
+public class Test {
+    MyClass obj = new MyClass();
+}
+
+// 编译后的字节码（javap）
+public class Test {
+    com.example.MyClass obj;  // import 消失了，变成全限定名
+}
+```
+
+`import` 在编译成 `.class` 文件后就不存在了，它只是告诉编译器："我写的 `MyClass` 指的是 `com.example.MyClass`"。
+
+### 什么情况下触发
+
+```java
+import com.example.MyClass;
+
+public class Test {
+    // 这里不会触发！因为只是声明类型
+    MyClass obj1;
+
+    // 这里会触发！因为 new 创建了实例
+    MyClass obj2 = new MyClass();
+
+    // 或者这里也会触发
+    void method() {
+        MyClass obj3 = new MyClass();
+    }
+}
+```
+
+### 总结
+
+| 代码 | 是否触发加载 |
+| --- | --- |
+| `import com.example.MyClass;` | ❌ |
+| `MyClass obj;` | ❌ |
+| `new MyClass();` | ✅ |
+| `MyClass.staticMethod();` | ✅ |
+| `Class.forName("com.example.MyClass");` | ✅ |
+
+**`import` 只是编译时的"别名"，真正触发类加载的是运行时的主动引用。**

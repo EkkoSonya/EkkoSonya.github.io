@@ -1,5 +1,5 @@
 ---
-title: JVM 八股 12 - 类加载
+title: JVM 八股12 - 类加载
 date: 2026-3-31
 category:
   - code

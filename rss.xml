@@ -6,11 +6,312 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Tue, 31 Mar 2026 16:27:43 GMT</pubDate>
-    <lastBuildDate>Tue, 31 Mar 2026 16:27:43 GMT</lastBuildDate>
+    <pubDate>Wed, 01 Apr 2026 06:46:50 GMT</pubDate>
+    <lastBuildDate>Wed, 01 Apr 2026 06:46:50 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>JVM 八股 14 - IDEA 运行流程</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article14.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article14.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股 14 - IDEA 运行流程</source>
+      <description>IDEA 点击运行后的流程 java 是用来运行 .class 文件的，所以在用 java 之前，需要先用 javac 编译。 IDEA 帮我们自动处理了这个过程。 1. 保存与读取配置 自动保存未保存的文件： IDEA 会把编辑器里所有修改过但还未保存到磁盘的文件进行落盘。这是为什么你在 IDEA 里几乎不需要手动 Ctrl + S 的原因。 读取运...</description>
+      <category>code</category>
+      <pubDate>Wed, 01 Apr 2026 06:44:41 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>IDEA 点击运行后的流程</h2>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>.java 文件  --javac--&gt;  .class 文件  --java--&gt;  执行
+(源代码)    (编译)      (字节码)      (运行)     (程序)
+</code></pre></div><p><code>java</code> 是用来运行 <code>.class</code> 文件的，所以在用 <code>java</code> 之前，需要先用 <code>javac</code> 编译。</p>
+<p>IDEA 帮我们自动处理了这个过程。</p>
+<h3>1. 保存与读取配置</h3>
+<ul>
+<li><strong>自动保存未保存的文件：</strong> IDEA 会把编辑器里所有修改过但还未保存到磁盘的文件进行落盘。这是为什么你在 IDEA 里几乎不需要手动 <code>Ctrl + S</code> 的原因。</li>
+<li><strong>读取运行配置：</strong> IDEA 会读取你当前选中的 <strong>Run/Debug Configuration</strong>，包括：
+<ul>
+<li>Main Class（主类）</li>
+<li>环境变量</li>
+<li>JVM 参数（比如 <code>-Xmx</code>、<code>-Xms</code>）</li>
+<li>Program arguments（程序参数）</li>
+</ul>
+</li>
+</ul>
+<h3>2. 构建与编译</h3>
+<p>在真正运行之前，代码必须被编译成字节码（<code>.class</code> 文件）。</p>
+<ul>
+<li><strong>判断构建委派：</strong>
+<ul>
+<li>如果配置了将构建和运行委派给 Maven 或 Gradle（Spring Boot 项目常见），IDEA 会直接调用对应命令（如 <code>mvn clean compile</code> 或 <code>gradlew classes</code>）。</li>
+<li>如果没有委派，IDEA 会使用自带的增量编译器（JPS - Java Project System）。</li>
+</ul>
+</li>
+<li><strong>增量编译：</strong> IDEA 不会每次都全量编译整个项目。它通过内部的依赖图分析出哪些 <code>.java</code> 文件被修改过，以及哪些依赖它们的文件需要重新编译，然后仅将这些文件交给 <code>javac</code> 编译成 <code>.class</code> 文件，输出到 <code>target/classes</code> 或 <code>out/production</code> 目录下。</li>
+</ul>
+<h3>3. 组装启动命令</h3>
+<p>编译完成后，IDEA 开始拼装启动 JVM 所需的命令。</p>
+<ul>
+<li><strong>构建 Classpath：</strong> 这是最庞大的一步。IDEA 会遍历你项目的依赖树，把所有第三方 <code>.jar</code> 包的绝对路径、你自己模块的 <code>classes</code> 输出目录，全部用分号（Windows）或冒号（Linux/macOS）拼接起来。</li>
+<li><strong>拼接完整命令：</strong> 结合第 1 步读取到的配置，IDEA 会生成一条类似这样的命令：</li>
+</ul>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>/path/to/jdk/bin/java.exe -Xmx1024m -javaagent:/idea/lib/idea_rt.jar
+-classpath /your/project/out/classes;/m2/repo/spring.jar...
+com.your.package.MainClass arg1 arg2
+</code></pre></div><blockquote>
+<p><code>idea_rt.jar</code> 是 IDEA 注入的一个代理，用于捕获控制台输出和优雅地停止进程。</p>
+</blockquote>
+<h3>4. 启动进程</h3>
+<ul>
+<li><strong>Fork 新进程：</strong> IDEA 向操作系统发出请求，根据刚才拼接好的命令，Fork 出一个新的子进程来运行 <code>java</code> 应用程序。</li>
+<li><strong>启动 JVM：</strong> 操作系统启动 JVM 实例，分配初始内存（堆、栈、方法区等）。</li>
+</ul>
+<h3>5. 类加载与执行</h3>
+<p>到这一步，接力棒正式交给了 JVM。</p>
+<ul>
+<li><strong>加载主类：</strong> JVM 的应用程序类加载器（Application ClassLoader）会根据 IDEA 传过来的 Classpath，去磁盘里找到主类的 <code>.class</code> 文件，并将其加载到内存中。</li>
+<li><strong>执行 <code>main</code> 方法：</strong> JVM 找到主类中的 <code>public static void main(String[] args)</code> 方法，将 IDEA 传过来的程序参数作为 <code>args</code> 传入，正式开始执行业务逻辑（例如启动 Spring 容器、初始化 Tomcat 等）。</li>
+</ul>
+<h3>6. 控制台输出绑定</h3>
+<ul>
+<li><strong>重定向输入输出：</strong> JVM 运行时产生的标准输出（<code>System.out</code>）和标准错误输出（<code>System.err</code>）会被 IDEA 捕获。</li>
+<li><strong>渲染日志：</strong> IDEA 将这些日志流渲染到你底部的 Run 窗口中。如果你在控制台输入了文字，IDEA 也会通过标准输入（<code>System.in</code>）传回给运行中的 JVM 进程。</li>
+</ul>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>JVM 八股 15 - javac 和 java 命令</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article15.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article15.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股 15 - javac 和 java 命令</source>
+      <description>编译与运行 javac：编译器，将 .java 源文件编译成 .class 字节码 java：运行器，启动 JVM 加载并执行 .class 文件 简单包结构 vs 复杂包结构 简单包结构（默认包） 复杂包结构 目录结构必须对应： javac 编译命令 java 运行命令 sourcepath 和 classpath 区别 示例 默认类路径 当你运行 ...</description>
+      <category>code</category>
+      <pubDate>Wed, 01 Apr 2026 06:44:41 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>编译与运行</h2>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>.java 文件  --javac--&gt;  .class 文件  --java--&gt;  执行
+(源代码)    (编译)      (字节码)      (运行)     (程序)
+</code></pre></div><ul>
+<li><strong><code>javac</code></strong>：编译器，将 <code>.java</code> 源文件编译成 <code>.class</code> 字节码</li>
+<li><strong><code>java</code></strong>：运行器，启动 JVM 加载并执行 <code>.class</code> 文件</li>
+</ul>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>JVM 八股16 - 类加载器分析</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article16.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article16.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股16 - 类加载器分析</source>
+      <description>jdk jre | jar jar JAR = Java ARchive（Java 归档文件） 简单说：JAR 就是打包好的 .class 文件 + 资源文件，类似 .zip 格式。 使用 分析 类加载器分析 只有通过反射才能用我们的自定义吗，比如我把.java编译好后，用java命令启动，是用什么类加载器 用 java 命令启动时，默认使用的是什么类...</description>
+      <category>code</category>
+      <pubDate>Wed, 01 Apr 2026 06:44:41 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>jdk jre | jar</h2>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>┌─────────────────────────────────────────┐
+│              JDK                         │
+│  ┌────────────────────────────────────┐ │
+│  │              JRE                    │ │
+│  │  ┌────────────────────────────────┐│ │
+│  │  │            JVM                 ││ │
+│  │  │  (Java Virtual Machine)        ││ │
+│  │  │   - 加载 .class                ││ │
+│  │  │   - 执行字节码                 ││ │
+│  │  └────────────────────────────────┘│ │
+│  │   + 核心类库 (rt.jar)              │ │
+│  │   - java.lang.*                    │ │
+│  │   - java.util.*                    │ │
+│  └────────────────────────────────────┘ │
+│   + 开发工具                             │
+│   - javac (编译器)                      │
+│   - java (运行器)                       │
+│   - javadoc (文档生成)                  │
+│   - jdb (调试器)                        │
+│   - jmap, jstack (性能分析)             │
+└─────────────────────────────────────────┘
+</code></pre></div><h3>jar</h3>
+<p>JAR = Java ARchive（Java 归档文件）</p>
+<p>简单说：JAR 就是打包好的 .class 文件 + 资源文件，类似 .zip 格式。</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>my-library.jar
+├── META-INF/
+│   └── MANIFEST.MF      # 清单文件（描述 jar 信息）
+├── com/
+│   └── example/
+│       ├── MyClass.class
+│       └── MyService.class
+├── config/
+│   └── application.properties
+└── ...其他资源文件
+</code></pre></div><p>使用</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code># 编译时指定 classpath
+javac -cp "lib/mysql-connector.jar" MyApp.java
+
+# 运行时指定 classpath
+java -cp "myapp.jar;lib/mysql-connector.jar" com.example.Main
+</code></pre></div><p>分析</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>主程序
+  ↓
+运行时扫描 plugins/ 目录
+  ↓
+发现 plugin-a.jar, plugin-b.jar
+  ↓
+用 URLClassLoader 加载 jar 中的实现类
+  ↓
+通过接口调用插件功能
+</code></pre></div><h2>类加载器分析</h2>
+<blockquote>
+<p>只有通过反射才能用我们的自定义吗，比如我把.java编译好后，用java命令启动，是用什么类加载器</p>
+</blockquote>
+<ul>
+<li>用 java 命令启动时，默认使用的是什么类加载器？ 默认使用的是 <code>AppClassLoader</code>（应用程序类加载器，也叫系统类加载器）</li>
+<li>只有通过反射才能用自定义 ClassLoader 吗？ 不是的。 虽然首次实例化通常需要反射，但在实际开发中，我们通常会结合<strong>接口和隐式加载机制</strong>来完美避开后续繁琐的反射调用</li>
+</ul>
+<h3>用 java 命令启动时的类加载流程</h3>
+<p>当你编译好代码，在终端输入 <code>java com.example.Main</code> 并回车时，JVM 启动并初始化类加载器体系，流程如下：</p>
+<ol>
+<li><strong>Bootstrap ClassLoader（引导类加载器）：</strong> 最先启动，由 C/C++ 实现，负责加载 JDK 最核心的类库（如 <code>java.lang.*</code>、<code>rt.jar</code> 等）。</li>
+<li><strong>ExtClassLoader（扩展类加载器）：</strong> 接着启动，负责加载 Java 的扩展库（如 <code>jre/lib/ext</code> 目录下的类）。<em>注：Java 9 模块化之后改名为 PlatformClassLoader。</em></li>
+<li><strong>AppClassLoader（应用程序类加载器）：</strong> 最后启动。<strong>它就是你用 <code>java</code> 命令启动主类的默认加载器。</strong> 它负责去你配置的 <code>classpath</code>（或默认的当前目录）下找到 <code>com.example.Main.class</code> 并加载执行。</li>
+</ol>
+<p><strong>总结：</strong> 只要是你放在项目 Classpath 里的代码，或者通过 <code>java -cp</code> 运行的代码，入口类都是被 AppClassLoader 加载的。</p>
+<h3>只有通过反射才能用自定义加载器吗</h3>
+<p>如果你的 SecretClass 只存在于外部目录，而在你写代码的当前工程里不存在，编译器（javac）在编译阶段是找不到这个类的。如果你直接写 SecretClass obj = new SecretClass();，代码根本编译不通过。</p>
+<p>为了绕过编译期检查，我们才使用了反射。</p>
+<p>但实际工程中（如 Tomcat、热部署框架、插件系统），频繁使用反射性能很差且代码丑陋</p>
+<p>常见的优雅替代方案有以下两种：</p>
+<h4>面向接口编程（最常用的最佳实践）</h4>
+<p>接口由 AppClassLoader 加载，实现类由自定义 ClassLoader 加载</p>
+<h5>定义一个接口</h5>
+<p>放在主工程中（编译期可见）</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">MyPlugin</span> <span class="token punctuation">{</span>
+  <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>编写实现类</h5>
+<p>并把它编译后的 <code>.class</code> 放到外部目录（让自定义类加载器去加载）：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyPluginImpl</span> <span class="token keyword">implements</span> <span class="token class-name">MyPlugin</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"插件启动了！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>在主程序中调用</h5>
+<p>只需要在创建实例的那一瞬间使用反射（或 <code>newInstance</code>），然后将其强转为接口类型。后续所有的调用都像普通代码一样：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 1. 加载外部的实现类</span>
+<span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> pluginClass <span class="token operator">=</span> myCustomLoader<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token string">"com.example.MyPluginImpl"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 2. 实例化并强转为接口类型（只需这里用一次反射/实例化）</span>
+<span class="token class-name">MyPlugin</span> plugin <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">MyPlugin</span><span class="token punctuation">)</span> pluginClass<span class="token punctuation">.</span><span class="token function">getDeclaredConstructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 3. 正常调用方法，无需反射！</span>
+plugin<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h4>利用“隐式加载机制”</h4>
+<p>JVM 类加载有一个重要特性：<strong>如果类 A 是由某个类加载器加载的，那么类 A 内部引用的所有其他类（包括 new 出来的类），默认都会由加载类 A 的这个类加载器去加载</strong>（前提是这些类还没被加载过）。</p>
+<p>这意味着，你只需要用自定义 ClassLoader（结合反射或接口）把<strong>入口类</strong>加载进来，这个入口类内部如果写了 <code>User user = new User();</code>，JVM 会自动用你的自定义 ClassLoader 去加载 <code>User</code>，全程不需要你写一行反射代码。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>JVM 八股17 - JVM 调优</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article17.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article17.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股17 - JVM 调优</source>
+      <description>JVM 调优 性能检测工具 系统层面 (可以监控系统整体的资源使用情况，比如说内存、CPU、IO 使用情况、网络使用情况) top iostat netstat vmstat JDK 自带的命令行工具层面 jps jstat jinfo jmap jhat jstack jcmd 可以查看 JVM 运行时信息、内存使用情况、堆栈信息等 jmap 使用 ...</description>
+      <category>code</category>
+      <pubDate>Wed, 01 Apr 2026 06:44:41 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>JVM 调优</h2>
+<h3>性能检测工具</h3>
+<ul>
+<li>系统层面 (可以监控系统整体的资源使用情况，比如说内存、CPU、IO 使用情况、网络使用情况)
+<ul>
+<li>top</li>
+<li>iostat</li>
+<li>netstat</li>
+<li>vmstat</li>
+</ul>
+</li>
+<li>JDK 自带的命令行工具层面
+<ul>
+<li>jps</li>
+<li>jstat</li>
+<li>jinfo</li>
+<li>jmap</li>
+<li>jhat</li>
+<li>jstack</li>
+<li>jcmd</li>
+<li>可以查看 JVM 运行时信息、内存使用情况、堆栈信息等</li>
+</ul>
+</li>
+</ul>
+<h4>jmap 使用</h4>
+<ul>
+<li>一般会使用 <code>jmap -heap &lt;pid&gt;</code> 查看堆内存摘要，包括新生代、老年代、元空间等</li>
+<li>或者使用 <code>jmap -histo &lt;pid&gt;</code> 查看对象分布</li>
+</ul>
+<h3>可视化的性能监控工具</h3>
+<ul>
+<li>JConsole：JDK 自带的监控工具，可以用来监视 Java 应用程序的运行状态，包括内存使用、线程状态、类加载、GC 等</li>
+<li>VisualVM：一个基于 NetBeans 的可视化工具，在很长一段时间内，VisualVM 都是 Oracle 官方主推的故障处理工具。集成了多个 JDK 命令行工具的功能，非常友好</li>
+<li>Java Mission Control：JMC 最初是 JRockit VM 中的诊断工具，但在 Oracle JDK7 Update 40 以后，就绑定到了 HotSpot VM 中。不过后来又被 Oracle 开源出来作为了一个单独的产品</li>
+</ul>
+<h3>JVM 的常见参数配置</h3>
+<p>一个是堆的大小设置，然后是垃圾收集器的选择和时间，加上日志输出等</p>
+<p>主要有 -Xms 设置初始堆大小，-Xmx 设置最大堆大小，-XX:+UseG1GC 使用 G1 垃圾收集器，-XX:MaxGCPauseMillis=n 设置最大垃圾回收停顿时间，-XX:+PrintGCDetails 输出 GC 详细日志等</p>
+<h4>配置堆内存大小的参数</h4>
+<ul>
+<li><code>-Xms</code>：初始堆大小</li>
+<li><code>-Xmx</code>：最大堆大小</li>
+<li><code>-XX:NewSize=n</code>：设置年轻代大小</li>
+<li><code>-XX:NewRatio=n</code>：设置年轻代和年老代的比值。如：n 为 3 表示年轻代和年老代比值为 1：3，年轻代占总和的 1/4</li>
+<li><code>-XX:SurvivorRatio=n</code>：年轻代中 Eden 区与两个 Survivor 区的比值。如 n=3 表示 Eden 占 3 Survivor 占 2，一个 Survivor</li>
+</ul>
+<h4>配置 GC 收集器的参数</h4>
+<ul>
+<li><code>-XX:+UseSerialGC</code>：设置串行收集器</li>
+<li><code>-XX:+UseParallelGC</code>：设置并行收集器</li>
+<li><code>-XX:+UseParalledlOldGC</code>：设置并行老年代收集器</li>
+<li><code>-XX:+UseConcMarkSweepGC</code>：设置并发收集器</li>
+</ul>
+<h4>配置并行收集的参数</h4>
+<ul>
+<li><code>-XX:MaxGCPauseMillis=n</code>：设置最大垃圾回收停顿时间</li>
+<li><code>-XX:GCTimeRatio=n</code>：设置垃圾回收时间占程序运行时间的比例</li>
+<li><code>-XX:+CMSIncrementalMode</code>：设置增量模式，适合单 CPU 环境</li>
+<li><code>-XX:ParallelGCThreads=n</code>：设置并行收集器的线程数</li>
+</ul>
+<h4>打印 GC 回收的过程日志信息的参数</h4>
+<ul>
+<li><code>-XX:+PrintGC</code>：输出 GC 日志</li>
+<li><code>-XX:+PrintGCDetails</code>：输出 GC 详细日志</li>
+<li><code>-XX:+PrintGCTimeStamps</code>：输出 GC 的时间戳（以基准时间的形式）</li>
+<li><code>-Xloggc:filename</code>：日志文件的输出路径</li>
+</ul>
+<h3>CPU 占用过高怎么排查</h3>
+<p>使用 top 命令查看 CPU 占用情况，找到占用 CPU 较高的进程 ID</p>
+<p>接着，使用 jstack 命令查看对应进程的线程堆栈信息</p>
+<p>然后再使用 top 命令查看进程中线程的占用情况，找到占用 CPU 较高的线程 ID</p>
+<p>接着在 jstack 的输出中搜索这个十六进制的线程 ID，找到对应的堆栈信息。最后，根据堆栈信息定位到具体的业务方法，查看是否有死循环、频繁的垃圾回收、资源竞争导致的上下文频繁切换等问题</p>
+<blockquote>
+<p>先找是哪个进程占用 CPU，然后进一步看这个进程有哪些线程，再看看到底是哪一个线程占用率高，就是分析该线程的堆栈信息</p>
+</blockquote>
+<h3>内存飙高问题</h3>
+<p>内存飚高一般是因为创建了大量的 Java 对象导致的，如果持续飙高则说明垃圾回收跟不上对象创建的速度，或者内存泄漏导致对象无法回收</p>
+<p>第一，先观察垃圾回收的情况，可以通过 jstat -gc PID 1000 查看 GC 次数和时间。或者使用 jmap -histo PID | head -20 查看堆内存占用空间最大的前 20 个对象类型。</p>
+<p>第二步，通过 jmap 命令 dump 出堆内存信息。</p>
+<p>第三步，使用可视化工具分析 dump 文件，比如说 VisualVM，找到占用内存高的对象，再找到创建该对象的业务代码位置，从代码和业务场景中定位具体问题。</p>
+<h3>频繁 minor gc 怎么办</h3>
+<p>频繁的 Minor GC 通常意味着新生代中的对象频繁地被垃圾回收，可能是因为<strong>新生代空间设置的过小</strong>，或者是<strong>因为程序中存在大量的短生命周期对象</strong>（如临时变量）</p>
+<p>可以使用 GC 日志进行分析，查看 GC 的频率和耗时，找到频繁 GC 的原因</p>
+<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token parameter variable">-XX:+PrintGCDetails</span> <span class="token parameter variable">-Xloggc:gc.log</span>
+</code></pre></div><p>如果是因为新生代空间不足，可以通过 -Xmn 增加新生代的大小，减缓新生代的填满速度</p>
+<p>如果对象需要长期存活，但频繁从 Survivor 区晋升到老年代，可以通过 -XX:SurvivorRatio 参数调整 Eden 和 Survivor 的比例。默认比例是 8:1，表示 8 个空间用于 Eden，1 个空间用于 Survivor 区</p>
+<h3>频繁 Full GC 怎么办</h3>
+<p>频繁的 Full GC 通常意味着老年代中的对象频繁地被垃圾回收，可能是因为老年代空间设置的过小，或者是因为程序中存在大量的长生命周期对象。</p>
+<ul>
+<li>假如是因为大对象直接分配到老年代导致的 Full GC 频繁，可以通过 -XX:PretenureSizeThreshold 参数设置大对象直接进入老年代的阈值。
+<ul>
+<li>或者将大对象拆分成小对象，减少大对象的创建。比如说分页。</li>
+</ul>
+</li>
+<li>假如是因为内存泄漏导致的频繁 Full GC，可以通过分析堆内存 dump 文件找到内存泄漏的对象，再找到内存泄漏的代码位置。</li>
+<li>假如是因为长生命周期的对象进入到了老年代，要及时释放资源，比如说 ThreadLocal、数据库连接、IO 资源等。</li>
+<li>假如是因为 GC 参数配置不合理导致的频繁 Full GC，可以通过调整 GC 参数来优化 GC 行为。或者直接更换更适合的 GC 收集器，如 G1、ZGC 等。</li>
+</ul>
+]]></content:encoded>
+    </item>
     <item>
       <title>JVM 八股10 - 垃圾收集3 (垃圾收集器 + GC类型)</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article10.html</link>
@@ -279,10 +580,10 @@
 ]]></content:encoded>
     </item>
     <item>
-      <title>JVM 八股 12 - 类加载</title>
+      <title>JVM 八股12 - 类加载</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article12.html</link>
       <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article12.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股 12 - 类加载</source>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股12 - 类加载</source>
       <description>类加载机制 JVM 的操作对象是 Class 文件。JVM 把 Class 文件中描述类的数据结构加载到内存中，并对数据进行校验、解析和初始化，最终转化成可以被 JVM 直接使用的类型，这个过程被称为类加载机制。 类加载是运行时进行的，JVM 不会在启动时加载所有类，而是按需加载。 触发类加载的时机（主动引用）： new 一个对象 访问类的静态变量或静...</description>
       <category>code</category>
       <pubDate>Tue, 31 Mar 2026 16:25:41 GMT</pubDate>
@@ -425,112 +726,45 @@ App B 加载 org.springframework.Context
 ]]></content:encoded>
     </item>
     <item>
-      <title>JVM 八股13 - JVM 调优</title>
+      <title>JVM 八股13 - 类加载分析</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article13.html</link>
       <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article13.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股13 - JVM 调优</source>
-      <description>JVM 调优 性能检测工具 系统层面 (可以监控系统整体的资源使用情况，比如说内存、CPU、IO 使用情况、网络使用情况) top iostat netstat vmstat JDK 自带的命令行工具层面 jps jstat jinfo jmap jhat jstack jcmd 可以查看 JVM 运行时信息、内存使用情况、堆栈信息等 jmap 使用 ...</description>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股13 - 类加载分析</source>
+      <description>怎么使用自定义 ClassLoader 类加载器是在运行时动态决定的，不是编译时指定的。 当你写 new MyClass() 时，JVM 会使用定义当前类的同一个 ClassLoader去加载 MyClass。 所以如果你想让某个类用自定义 ClassLoader 加载，有两种方式： 1. 直接使用自定义 ClassLoader（反射方式） 缺点：返回...</description>
       <category>code</category>
       <pubDate>Tue, 31 Mar 2026 16:25:41 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>JVM 调优</h2>
-<h3>性能检测工具</h3>
-<ul>
-<li>系统层面 (可以监控系统整体的资源使用情况，比如说内存、CPU、IO 使用情况、网络使用情况)
-<ul>
-<li>top</li>
-<li>iostat</li>
-<li>netstat</li>
-<li>vmstat</li>
-</ul>
-</li>
-<li>JDK 自带的命令行工具层面
-<ul>
-<li>jps</li>
-<li>jstat</li>
-<li>jinfo</li>
-<li>jmap</li>
-<li>jhat</li>
-<li>jstack</li>
-<li>jcmd</li>
-<li>可以查看 JVM 运行时信息、内存使用情况、堆栈信息等</li>
-</ul>
-</li>
-</ul>
-<h4>jmap 使用</h4>
-<ul>
-<li>一般会使用 <code>jmap -heap &lt;pid&gt;</code> 查看堆内存摘要，包括新生代、老年代、元空间等</li>
-<li>或者使用 <code>jmap -histo &lt;pid&gt;</code> 查看对象分布</li>
-</ul>
-<h3>可视化的性能监控工具</h3>
-<ul>
-<li>JConsole：JDK 自带的监控工具，可以用来监视 Java 应用程序的运行状态，包括内存使用、线程状态、类加载、GC 等</li>
-<li>VisualVM：一个基于 NetBeans 的可视化工具，在很长一段时间内，VisualVM 都是 Oracle 官方主推的故障处理工具。集成了多个 JDK 命令行工具的功能，非常友好</li>
-<li>Java Mission Control：JMC 最初是 JRockit VM 中的诊断工具，但在 Oracle JDK7 Update 40 以后，就绑定到了 HotSpot VM 中。不过后来又被 Oracle 开源出来作为了一个单独的产品</li>
-</ul>
-<h3>JVM 的常见参数配置</h3>
-<p>一个是堆的大小设置，然后是垃圾收集器的选择和时间，加上日志输出等</p>
-<p>主要有 -Xms 设置初始堆大小，-Xmx 设置最大堆大小，-XX:+UseG1GC 使用 G1 垃圾收集器，-XX:MaxGCPauseMillis=n 设置最大垃圾回收停顿时间，-XX:+PrintGCDetails 输出 GC 详细日志等</p>
-<h4>配置堆内存大小的参数</h4>
-<ul>
-<li><code>-Xms</code>：初始堆大小</li>
-<li><code>-Xmx</code>：最大堆大小</li>
-<li><code>-XX:NewSize=n</code>：设置年轻代大小</li>
-<li><code>-XX:NewRatio=n</code>：设置年轻代和年老代的比值。如：n 为 3 表示年轻代和年老代比值为 1：3，年轻代占总和的 1/4</li>
-<li><code>-XX:SurvivorRatio=n</code>：年轻代中 Eden 区与两个 Survivor 区的比值。如 n=3 表示 Eden 占 3 Survivor 占 2，一个 Survivor</li>
-</ul>
-<h4>配置 GC 收集器的参数</h4>
-<ul>
-<li><code>-XX:+UseSerialGC</code>：设置串行收集器</li>
-<li><code>-XX:+UseParallelGC</code>：设置并行收集器</li>
-<li><code>-XX:+UseParalledlOldGC</code>：设置并行老年代收集器</li>
-<li><code>-XX:+UseConcMarkSweepGC</code>：设置并发收集器</li>
-</ul>
-<h4>配置并行收集的参数</h4>
-<ul>
-<li><code>-XX:MaxGCPauseMillis=n</code>：设置最大垃圾回收停顿时间</li>
-<li><code>-XX:GCTimeRatio=n</code>：设置垃圾回收时间占程序运行时间的比例</li>
-<li><code>-XX:+CMSIncrementalMode</code>：设置增量模式，适合单 CPU 环境</li>
-<li><code>-XX:ParallelGCThreads=n</code>：设置并行收集器的线程数</li>
-</ul>
-<h4>打印 GC 回收的过程日志信息的参数</h4>
-<ul>
-<li><code>-XX:+PrintGC</code>：输出 GC 日志</li>
-<li><code>-XX:+PrintGCDetails</code>：输出 GC 详细日志</li>
-<li><code>-XX:+PrintGCTimeStamps</code>：输出 GC 的时间戳（以基准时间的形式）</li>
-<li><code>-Xloggc:filename</code>：日志文件的输出路径</li>
-</ul>
-<h3>CPU 占用过高怎么排查</h3>
-<p>使用 top 命令查看 CPU 占用情况，找到占用 CPU 较高的进程 ID</p>
-<p>接着，使用 jstack 命令查看对应进程的线程堆栈信息</p>
-<p>然后再使用 top 命令查看进程中线程的占用情况，找到占用 CPU 较高的线程 ID</p>
-<p>接着在 jstack 的输出中搜索这个十六进制的线程 ID，找到对应的堆栈信息。最后，根据堆栈信息定位到具体的业务方法，查看是否有死循环、频繁的垃圾回收、资源竞争导致的上下文频繁切换等问题</p>
-<blockquote>
-<p>先找是哪个进程占用 CPU，然后进一步看这个进程有哪些线程，再看看到底是哪一个线程占用率高，就是分析该线程的堆栈信息</p>
-</blockquote>
-<h3>内存飙高问题</h3>
-<p>内存飚高一般是因为创建了大量的 Java 对象导致的，如果持续飙高则说明垃圾回收跟不上对象创建的速度，或者内存泄漏导致对象无法回收</p>
-<p>第一，先观察垃圾回收的情况，可以通过 jstat -gc PID 1000 查看 GC 次数和时间。或者使用 jmap -histo PID | head -20 查看堆内存占用空间最大的前 20 个对象类型。</p>
-<p>第二步，通过 jmap 命令 dump 出堆内存信息。</p>
-<p>第三步，使用可视化工具分析 dump 文件，比如说 VisualVM，找到占用内存高的对象，再找到创建该对象的业务代码位置，从代码和业务场景中定位具体问题。</p>
-<h3>频繁 minor gc 怎么办</h3>
-<p>频繁的 Minor GC 通常意味着新生代中的对象频繁地被垃圾回收，可能是因为<strong>新生代空间设置的过小</strong>，或者是<strong>因为程序中存在大量的短生命周期对象</strong>（如临时变量）</p>
-<p>可以使用 GC 日志进行分析，查看 GC 的频率和耗时，找到频繁 GC 的原因</p>
-<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code><span class="token parameter variable">-XX:+PrintGCDetails</span> <span class="token parameter variable">-Xloggc:gc.log</span>
-</code></pre></div><p>如果是因为新生代空间不足，可以通过 -Xmn 增加新生代的大小，减缓新生代的填满速度</p>
-<p>如果对象需要长期存活，但频繁从 Survivor 区晋升到老年代，可以通过 -XX:SurvivorRatio 参数调整 Eden 和 Survivor 的比例。默认比例是 8:1，表示 8 个空间用于 Eden，1 个空间用于 Survivor 区</p>
-<h3>频繁 Full GC 怎么办</h3>
-<p>频繁的 Full GC 通常意味着老年代中的对象频繁地被垃圾回收，可能是因为老年代空间设置的过小，或者是因为程序中存在大量的长生命周期对象。</p>
-<ul>
-<li>假如是因为大对象直接分配到老年代导致的 Full GC 频繁，可以通过 -XX:PretenureSizeThreshold 参数设置大对象直接进入老年代的阈值。
-<ul>
-<li>或者将大对象拆分成小对象，减少大对象的创建。比如说分页。</li>
-</ul>
-</li>
-<li>假如是因为内存泄漏导致的频繁 Full GC，可以通过分析堆内存 dump 文件找到内存泄漏的对象，再找到内存泄漏的代码位置。</li>
-<li>假如是因为长生命周期的对象进入到了老年代，要及时释放资源，比如说 ThreadLocal、数据库连接、IO 资源等。</li>
-<li>假如是因为 GC 参数配置不合理导致的频繁 Full GC，可以通过调整 GC 参数来优化 GC 行为。或者直接更换更适合的 GC 收集器，如 G1、ZGC 等。</li>
-</ul>
-]]></content:encoded>
+      <content:encoded><![CDATA[<h2>怎么使用自定义 ClassLoader</h2>
+<p>类加载器是在运行时动态决定的，不是编译时指定的。</p>
+<p>当你写 <code>new MyClass()</code> 时，JVM 会使用<strong>定义当前类的同一个 ClassLoader</strong>去加载 <code>MyClass</code>。</p>
+<p>所以如果你想让某个类用自定义 ClassLoader 加载，有两种方式：</p>
+<h3>1. 直接使用自定义 ClassLoader（反射方式）</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 创建自定义类加载器</span>
+<span class="token class-name">MyClassLoader</span> classLoader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 用它加载类（返回 Class&lt;?&gt;，不能用强类型）</span>
+<span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> clazz <span class="token operator">=</span> classLoader<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token string">"com.example.MyClass"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 用反射创建实例</span>
+<span class="token class-name">Object</span> obj <span class="token operator">=</span> clazz<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>缺点</strong>：返回的是 <code>Class&lt;?&gt;</code>，编译时无法知道具体类型，只能用反射。</p>
+<h3>2. 线程上下文类加载器（TCCL）</h3>
+<p>这是 Java 提供的"父加载器反向委托给子加载器"的机制。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 保存原来的 ClassLoader</span>
+<span class="token class-name">ClassLoader</span> oldLoader <span class="token operator">=</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 设置当前线程的 ClassLoader 为自定义的</span>
+    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setContextClassLoader</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 某些框架会通过 TCCL 获取 ClassLoader 来加载类</span>
+    <span class="token comment">// 比如 SPI、JDBC、Spring 等</span>
+    <span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"com.example.MyClass"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+                  <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 恢复原来的 ClassLoader</span>
+    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setContextClassLoader</span><span class="token punctuation">(</span>oldLoader<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
     </item>
     <item>
       <title>hint - 屏障</title>
@@ -672,476 +906,6 @@ App B 加载 org.springframework.Context
 <p>弱引用的对象会在下一次垃圾回收时会被回收，不论内存是否充足</p>
 <h3>虚引用</h3>
 <p>虚引用主要用来跟踪对象被垃圾回收的过程，通过 PhantomReference 类实现。虚引用的对象在任何时候都可能被回收</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股6 - 内存管理5 (java 堆介绍)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article6.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article6.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股6 - 内存管理5 (java 堆介绍)</source>
-      <description>Java 堆 (存放对象位置) 堆内存分区 Java 堆被划分为新生代和老年代两个区域 新生代又被划分为 Eden 空间和两个 Survivor 空间（From 和 To） 新创建的对象会被分配到 Eden 空间 当 Eden 区填满时，会触发一次 Minor GC，清除不再使用的对象 存活下来的对象会从 Eden 区移动到 Survivor 区。 对...</description>
-      <category>code</category>
-      <pubDate>Mon, 30 Mar 2026 16:21:54 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>Java 堆 (存放对象位置)</h2>
-<h3>堆内存分区</h3>
-<p>Java 堆被划分为新生代和老年代两个区域</p>
-<p>新生代又被划分为 Eden 空间和两个 Survivor 空间（From 和 To）</p>
-<p>新创建的对象会被分配到 Eden 空间</p>
-<p>当 Eden 区填满时，会触发一次 Minor GC，清除不再使用的对象</p>
-<p>存活下来的对象会从 Eden 区移动到 Survivor 区。</p>
-<p>对象在新生代中经历多次 GC 后，如果仍然存活，会被移动到老年代</p>
-<p>当老年代内存不足时，会触发 Major GC，对整个堆进行垃圾回收</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>新生代的区域划分</h4>
-<p>新生代的垃圾收集主要采用<strong>标记-复制算法</strong>，因为新生代的存活对象比较少，每次复制少量的存活对象效率比较高</p>
-<p>基于这种算法，虚拟机将内存分为一块较大的 Eden 空间和两块较小的 Survivor 空间</p>
-<p>每次分配内存只使用 Eden 和其中一块 Survivor</p>
-<p>发生垃圾收集时，将 Eden 和 Survivor 中仍然存活的对象一次性复制到另外一块 Survivor 空间上</p>
-<p>然后直接清理掉 Eden 和已用过的那块 Survivor 空间</p>
-<p>默认 Eden 和 Survivor 的大小比例是 8∶1 (8:1:1)</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>对象什么时候进入老年代</h4>
-<p>对象通常会在年轻代中分配，随着时间的推移和垃圾收集的进程，某些满足条件的对象会进入到老年代中，如长期存活的对象</p>
-<p>进入老年代的对象(满足一个即可)：</p>
-<ul>
-<li>长期存活的对象</li>
-<li>大对象</li>
-<li>动态年龄判断</li>
-</ul>
-<h5>长期存活的对象判断</h5>
-<p>JVM 会为对象维护一个“年龄”计数器，记录对象在新生代中经历 Minor GC 的次数</p>
-<p>每次 GC 未被回收的对象，其年龄会加 1</p>
-<p>当超过一个特定阈值，默认值是 15，就会被认为老对象了，需要重点关照。</p>
-<p>这个年龄阈值可以通过 JVM 参数-XX:MaxTenuringThreshold来设置。</p>
-<p>可以通过 <code>jinfo -flag MaxTenuringThreshold $(jps | grep -i nacos | awk '{print $1}')</code> 来查看当前 JVM 的年龄阈值。</p>
-<ul>
-<li>如果应用中的对象存活时间较短，可以适当调大这个值，让对象在新生代多待一会儿</li>
-<li>如果对象存活时间较长，可以适当调小这个值，让对象更快进入老年代，减少在新生代的复制次数</li>
-</ul>
-<h5>大对象判断</h5>
-<p>大对象是指占用内存较大的对象，如大数组、长字符串等</p>
-<p>其大小由 JVM 参数 -XX:PretenureSizeThreshold 控制，但在 JDK 8 中，默认值为 0，也就是说默认情况下，对象仅根据 GC 存活的次数来判断是否进入老年代</p>
-<blockquote>
-<p>G1 垃圾收集器中，大对象会直接分配到 HUMONGOUS 区域。当对象大小超过一个 Region 容量的 50% 时，会被认为是大对象</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>动态年龄判定</h5>
-<p>如果 Survivor 区中所有对象的总大小超过了一定比例，通常是 Survivor 区的一半，那么年龄较小的对象也可能会被提前晋升到老年代</p>
-<h3>堆内存如何分配</h3>
-<p>在堆中为对象分配内存时，主要使用两种策略：<strong>指针碰撞</strong>和<strong>空闲列表</strong></p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>这是因为如果年龄较小的对象在 Survivor 区中占用了较大的空间，会导致 Survivor 区中的对象复制次数增多，影响垃圾回收的效率</p>
-<h3>对象一定分配在堆中吗</h3>
-<p>默认情况下，Java 对象是在堆中分配的</p>
-<p>但 JVM 会进行<strong>逃逸分析</strong>，来判断对象的<strong>生命周期是否只在方法内部</strong>，如果是的话，这个对象可以<strong>在栈上分配</strong></p>
-<p>举例来说，下面的代码中，对象 new Person() 的生命周期只在 testStackAllocation 方法内部，因此 JVM 会将这个对象分配在栈上</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testStackAllocation</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token class-name">Person</span> p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 对象可能分配在栈上</span>
-  p<span class="token punctuation">.</span>name <span class="token operator">=</span> <span class="token string">"1111"</span><span class="token punctuation">;</span>
-  p<span class="token punctuation">.</span>age <span class="token operator">=</span> <span class="token number">18</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>p<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>逃逸分析</h4>
-<p>逃逸分析是一种 JVM 优化技术，用来分析对象的作用域和生命周期，判断对象是否逃逸出方法或线程</p>
-<p>可以通过<strong>分析对象的引用流向</strong>，判断对象是否被方法返回、赋值到全局变量、传递到其他线程等，来确定对象是否逃逸。</p>
-<p>如果对象没有逃逸，就可以进行:</p>
-<ul>
-<li>栈上分配 - 对象分配在栈上，方法结束自动回收</li>
-<li>同步消除 - 去掉不必要的同步锁</li>
-<li>标量替换 - 将对象拆解为标量直接使用</li>
-</ul>
-<p>以提高程序的性能</p>
-<p>可以通过 <code>java -XX:+PrintFlagsFinal 2&gt;&amp;1 | findStr Escape</code> 来确认 JVM 是否开启了逃逸分析</p>
-<h5>什么是逃逸分析</h5>
-<p>根据对象逃逸的范围，可以分为方法逃逸和线程逃逸</p>
-<p>当对象被方法外部的代码引用，<strong>生命周期超出了方法的范围</strong>，那么对象就必须分配在堆中，由垃圾收集器管理</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">Person</span> <span class="token function">createPerson</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 对象逃逸出方法</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>比如说 new Person() 创建的对象被返回，那么这个对象就逃逸出当前方法了</p>
-<p>再比如说，对象被另外一个线程引用，生命周期超出了当前线程，那么对象就必须分配在堆中，并且线程之间需要同步</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">threadEscapeExample</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token class-name">Person</span> p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 对象逃逸到另一个线程</span>
-  <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-&gt;</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>好处</h5>
-<ul>
-<li>如果确定一个对象不会逃逸，那么就可以考虑栈上分配，对象占用的内存随着栈帧出栈后销毁，这样一来，垃圾收集的压力就降低很多</li>
-<li>线程同步需要加锁，加锁就要占用系统资源，如果逃逸分析能够确定一个对象不会逃逸出线程，那么这个对象就不用加锁，从而减少线程同步的开销</li>
-<li>如果对象的字段在方法中独立使用，JVM 可以将对象分解为标量变量，避免对象分配</li>
-</ul>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">scalarReplacementExample</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token class-name">Point</span> p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Point</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">getX</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> p<span class="token punctuation">.</span><span class="token function">getY</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>如果 Point 对象未逃逸，JVM 可以优化为：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">int</span> x <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
-<span class="token keyword">int</span> y <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>x <span class="token operator">+</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股7 - 内存管理6 (java 堆介绍)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article7.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article7.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股7 - 内存管理6 (java 堆介绍)</source>
-      <description>内存溢出和内存泄漏 内存溢出 内存溢出，俗称 OOM，是指当程序请求分配内存时，由于没有足够的内存空间，从而抛出 OutOfMemoryError 可能是因为堆、元空间、栈或直接内存不足导致的。可以通过优化内存配置、减少对象分配来解决。 例子 堆内存溢出： 是否处理过内存溢出 有，上传文件时，一开始是一次性上传，没有正确处理，导致一下子撑爆了内存，程序...</description>
-      <category>code</category>
-      <pubDate>Mon, 30 Mar 2026 16:21:54 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>内存溢出和内存泄漏</h2>
-<h3>内存溢出</h3>
-<p>内存溢出，俗称 OOM，是指当程序请求分配内存时，由于没有足够的内存空间，从而抛出 <code>OutOfMemoryError</code></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"OutOfMemory"</span><span class="token punctuation">.</span><span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 无限增加内存</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>可能是因为堆、元空间、栈或直接内存不足导致的。可以通过优化内存配置、减少对象分配来解决。</p>
-<h4>例子</h4>
-<p>堆内存溢出：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">class</span> <span class="token class-name">HeapSpaceErrorGenerator</span> <span class="token punctuation">{</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 第一步，创建一个大的容器</span>
-    <span class="token class-name">List</span><span class="token operator">&lt;</span><span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&gt;</span> bigObjects <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token comment">// 第二步，循环写入数据</span>
-      <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">// 第三步，创建一个大对象，一个大约 10M 的数组</span>
-        <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> bigObject <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token number">10</span> <span class="token operator">*</span> <span class="token number">1024</span> <span class="token operator">*</span> <span class="token number">1024</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token comment">// 第四步，将大对象添加到容器中</span>
-        bigObjects<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>bigObject<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">OutOfMemoryError</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"OutOfMemoryError 发生在 "</span> <span class="token operator">+</span> bigObjects<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" 对象后"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">throw</span> e<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>是否处理过内存溢出</h4>
-<p>有，上传文件时，一开始是一次性上传，没有正确处理，导致一下子撑爆了内存，程序直接崩溃了</p>
-<blockquote>
-<p>我记得是通过导出堆转储文件进行分析发现的</p>
-</blockquote>
-<p>使用 jmap 命令手动生成 Heap Dump 文件：</p>
-<div class="language-bash" data-ext="sh" data-title="sh"><pre class="language-bash"><code>jmap <span class="token parameter variable">-dump:format</span><span class="token operator">=</span>b,file<span class="token operator">=</span>heap.hprof <span class="token operator">&lt;</span>pid<span class="token operator">&gt;</span>
-</code></pre></div><p>然后使用 MAT、JProfiler 等工具进行分析，查看内存中的对象占用情况</p>
-<h3>内存泄露</h3>
-<p>内存泄漏是指程序在使用完内存后，未能及时释放，导致占用的内存无法再被使用。</p>
-<p>随着时间的推移，内存泄漏会导致可用内存逐渐减少，最终导致内存溢出。</p>
-<p>内存泄漏通常是因为<strong>长期存活的对象持有短期存活对象的引用</strong>，又没有及时释放，从而导致短期存活对象无法被回收而导致的</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">class</span> <span class="token class-name">MemoryLeakExample</span> <span class="token punctuation">{</span>
-  <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> staticList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    staticList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 对象不会被回收</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><blockquote>
-<p>以 ThreadLocal 为例，ThreadLocalMap 的 key 是 ThreadLocal 对象的弱引用</p>
-<p>如果 key 使用强引用，当 ThreadLocal 引用被置为 null 后，Entry 中的 key 仍然持有引用，导致 ThreadLocal 对象无法被回收。</p>
-</blockquote>
-<h4>原因</h4>
-<blockquote>
-<p>静态的集合中添加的对象越来越多，但却没有及时清理；静态变量的生命周期与应用程序相同，如果静态变量持有对象的引用，这些对象将无法被 GC 回收。</p>
-</blockquote>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">class</span> <span class="token class-name">OOM</span> <span class="token punctuation">{</span>
- <span class="token keyword">static</span> <span class="token class-name">List</span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
- <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">oomTests</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
-   <span class="token class-name">Object</span> obj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-   list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><blockquote>
-<p>单例模式下对象持有的外部引用无法及时释放；单例对象在整个应用程序的生命周期中存活，如果单例对象持有其他对象的引用，这些对象将无法被回收</p>
-</blockquote>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">class</span> <span class="token class-name">Singleton</span> <span class="token punctuation">{</span>
-  <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Singleton</span> <span class="token constant">INSTANCE</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Singleton</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">private</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> objects <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">Singleton</span> <span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token constant">INSTANCE</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><blockquote>
-<p>数据库、IO、Socket 等连接资源没有及时关闭</p>
-<p>ThreadLocal 的引用未被清理，线程退出后仍然持有对象引用；在线程执行完后，要调用 ThreadLocal 的 remove 方法进行清理</p>
-</blockquote>
-<h4>是否处理过内存泄露</h4>
-<p>比如 ThreadLocal 没有及时清理导致出现了内存泄漏问题</p>
-<ul>
-<li>先用 <code>jps -l</code> 查看运行的 Java 进程 ID</li>
-<li>使用 <code>top -p [pid]</code> 查看进程使用 CPU 和内存占用情况</li>
-<li>使用 <code>top -Hp [pid]</code> 查看进程下的所有线程占用 CPU 和内存情况</li>
-<li>抓取线程栈：<code>jstack -F 29452 &gt; 29452.txt</code>，可以多抓几次做个对比
-<ul>
-<li>看看有没有线程死锁、死循环或长时间等待这些问题</li>
-</ul>
-</li>
-<li>可以使用 <code>jstat -gcutil [pid] 5000 10</code> 每隔 5 秒输出 GC 信息，输出 10 次，查看 YGC 和 Full GC 次数</li>
-<li>生成 dump 文件，然后借助可视化工具分析哪个对象非常多，基本就能定位到问题根源了
-<ul>
-<li><code>jmap -dump:format=b,file=heap.hprof 10025 </code></li>
-</ul>
-</li>
-<li>使用图形化工具分析，如 JDK 自带的 VisualVM，从菜单 &gt; 文件 &gt; 装入 dump 文件</li>
-</ul>
-<h2>栈溢出</h2>
-<p>栈溢出发生在程序调用栈的深度超过 JVM 允许的最大深度时</p>
-<p>栈溢出的本质是因为线程的栈空间不足，导致无法再为新的栈帧分配内存</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>当一个方法被调用时，JVM 会在栈中分配一个栈帧，用于存储该方法的执行信息。如果方法调用嵌套太深，栈帧不断压入栈中，最终会导致栈空间耗尽，抛出 StackOverflowError。</p>
-<p>最常见的栈溢出场景就是递归调用，尤其是没有正确的终止条件下，会导致递归无限进行</p>
-<p>另外，如果方法中定义了特别大的局部变量，栈帧会变得很大，导致栈空间更容易耗尽</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股8 - 垃圾收集1</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article8.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article8.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股8 - 垃圾收集1</source>
-      <description>垃圾收集机制 垃圾回收就是对堆内存中不再被引用的（不可达的）对象进行清除或回收 JVM 在做 GC 之前，会先搞清楚什么是垃圾，什么不是垃圾，通常会通过可达性分析算法来判断对象是否存活 在确定了哪些垃圾可以被回收后 垃圾收集器（如 CMS、G1、ZGC）要做的事情就是进行垃圾回收 可以采用： 标记清除算法 复制算法 标记整理算法 分代收集算法等 C++...</description>
-      <category>code</category>
-      <pubDate>Mon, 30 Mar 2026 16:21:54 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>垃圾收集机制</h2>
-<p>垃圾回收就是对堆内存中不再被引用的（不可达的）对象进行清除或回收</p>
-<p>JVM 在做 GC 之前，会先搞清楚什么是垃圾，什么不是垃圾，通常会通过<strong>可达性分析</strong>算法来判断对象是否存活</p>
-<p>在确定了哪些垃圾可以被回收后</p>
-<p>垃圾收集器（如 CMS、G1、ZGC）要做的事情就是进行垃圾回收</p>
-<p>可以采用：</p>
-<ul>
-<li>标记清除算法</li>
-<li>复制算法</li>
-<li>标记整理算法</li>
-<li>分代收集算法等</li>
-</ul>
-<blockquote>
-<p>C++ 等语言创建对象要不断的去开辟空间，不用的时候又需要不断的去释放空间，既要写构造函数，又要写析构函数</p>
-<p>于是，有人就提出，能不能写一段程序实现这块功能，每次创建对象、释放内存空间的时候复用这段代码</p>
-<p>1960 年，John McCarthy 在设计 Lisp 语言时首次提出了垃圾回收的概念，用于自动管理内存，避免程序员手动释放内存带来的错误</p>
-</blockquote>
-<h3>垃圾回收的过程</h3>
-<p>Java 的垃圾回收过程主要分为标记存活对象、清除无用对象、以及内存压缩/整理三个阶段</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4><code>finalize()</code> 方法</h4>
-<p>如果对象在进行可达性分析后发现没有与 GC Roots 相连接的引用链，那它将会被第一次标记，随后进行一次筛选</p>
-<p>筛选的条件是对象是否有必要执行 finalize()方法</p>
-<p>如果对象在 finalize() 中成功拯救自己——只要重新与引用链上的任何一个对象建立关联即可。</p>
-<p>譬如把自己 （this 关键字）赋值给某个类变量或者对象的成员变量，那在第二次标记时它就”逃过一劫“；但是如果没有抓住这个机会，那么对象就真的要被回收了</p>
-<p>并且这个机会只有一次，之后就不能用</p>
-<h3>垃圾判断算法</h3>
-<p>既然 JVM 要做垃圾回收，就要搞清楚什么是垃圾，什么不是垃圾</p>
-<ul>
-<li>引用计数算法 (无法解决循环依赖)</li>
-<li>可达性分析算法</li>
-</ul>
-<h4>引用计数法</h4>
-<p>引用计数算法（Reachability Counting）是通过在对象头中分配一个空间来保存该对象被引用的次数（Reference Count）</p>
-<p>如果该对象被其它对象引用，则它的引用计数加 1，如果删除对该对象的引用，那么它的引用计数就减 1，当该对象的引用计数为 0 时，那么该对象就会被回收</p>
-<p>引用计数算法将垃圾回收分摊到整个应用程序的运行当中，而不是集中在垃圾收集时</p>
-<p>因此，采用引用计数的垃圾收集不属于严格意义上的"Stop-The-World"的垃圾收集机制</p>
-<blockquote>
-<p>引用计数算法看似很美好，但实际上它存在一个很大的问题，那就是无法解决循环依赖的问题</p>
-</blockquote>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReferenceCountingGC</span> <span class="token punctuation">{</span>
-
-  <span class="token keyword">public</span> <span class="token class-name">Object</span> instance<span class="token punctuation">;</span>  <span class="token comment">// 对象属性，用于存储对另一个 ReferenceCountingGC 对象的引用</span>
-
-  <span class="token keyword">public</span> <span class="token class-name">ReferenceCountingGC</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 构造方法</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">testGC</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 创建两个 ReferenceCountingGC 对象</span>
-    <span class="token class-name">ReferenceCountingGC</span> a <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ReferenceCountingGC</span><span class="token punctuation">(</span><span class="token string">"沉默王二"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">ReferenceCountingGC</span> b <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ReferenceCountingGC</span><span class="token punctuation">(</span><span class="token string">"沉默王三"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// 使 a 和 b 相互引用</span>
-    a<span class="token punctuation">.</span>instance <span class="token operator">=</span> b<span class="token punctuation">;</span>
-    b<span class="token punctuation">.</span>instance <span class="token operator">=</span> a<span class="token punctuation">;</span>
-
-    <span class="token comment">// 将 a 和 b 设置为 null</span>
-    a <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-    b <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// 这个位置是垃圾回收的触发点</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><figure><figcaption>alt text</figcaption></figure>
-<h4>可达性分析算法</h4>
-<p>可达性分析算法（Reachability Analysis）的基本思路是：</p>
-<p>通过 GC Roots 作为起点，然后向下搜索，搜索走过的路径被称为 Reference Chain（引用链）</p>
-<p>当一个对象到 GC Roots 之间没有任何引用相连时，即从 GC Roots 到该对象节点不可达，则证明该对象是需要垃圾收集的。</p>
-<blockquote>
-<p>目前比较主流的编程语言（包括Java），一般都会使用可达性分析算法来判断对象是否存活，它采用了类似于树结构的搜索机制</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<p>通过可达性算法，成功解决了引用计数无法解决的问题-“循环依赖”，只要你无法与 GC Root 建立直接或间接的连接，系统就会判定你为可回收对象</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>所谓的 GC Roots，就是一组必须活跃的引用，不是对象，它们是程序运行时的起点，是一切引用链的源头。在 Java 中，GC Roots 包括以下几种：</p>
-<ul>
-<li>虚拟机栈中的引用（方法的参数、局部变量等）</li>
-<li>本地方法栈中 JNI 的引用</li>
-<li>类静态变量</li>
-<li>运行时常量池中的常量（String 或 Class 类型）</li>
-</ul>
-<h5>虚拟机栈中的引用（方法的参数、局部变量等）</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">StackReference</span> <span class="token punctuation">{</span>
-  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Object</span> localVar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
-    <span class="token comment">// 这里的 localVar 是一个局部变量，存在于虚拟机栈中</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>localVar<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">new</span> <span class="token class-name">StackReference</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">greet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在 greet 方法中，localVar 是一个局部变量，存在于虚拟机栈中，可以被认为是 GC Roots</p>
-<p>在 greet 方法执行期间，localVar 引用的对象是活跃的，因为它是从 GC Roots 可达的</p>
-<p>当 greet 方法执行完毕后，localVar 的作用域结束，localVar 引用的 Object 对象不再由任何 GC Roots 引用（假设没有其他引用指向这个对象），因此它将有资格作为垃圾被回收掉</p>
-<h5>本地方法栈中 JNI 的引用</h5>
-<h5>类静态变量</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">StaticFieldReference</span> <span class="token punctuation">{</span>
-  <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Object</span> staticVar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 类静态变量</span>
-
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>staticVar<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>StaticFieldReference 类中的 staticVar 引用了一个 Object 对象，这个引用存储在元空间，可以被认为是 GC Roots</p>
-<p>只要 StaticFieldReference 类未被卸载，staticVar 引用的对象都不会被垃圾回收</p>
-<p>如果 StaticFieldReference 类被卸载（这通常发生在其类加载器被垃圾回收时），那么 staticVar 引用的对象也将有资格被垃圾回收（如果没有其他引用指向这个对象）</p>
-<h5>运行时常量池中的常量</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ConstantPoolReference</span> <span class="token punctuation">{</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> <span class="token constant">CONSTANT_STRING</span> <span class="token operator">=</span> <span class="token string">"Hello, World"</span><span class="token punctuation">;</span> <span class="token comment">// 常量，存在于运行时常量池中</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> <span class="token constant">CONSTANT_CLASS</span> <span class="token operator">=</span> <span class="token class-name">Object</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">;</span> <span class="token comment">// 类类型常量</span>
-
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token constant">CONSTANT_STRING</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token constant">CONSTANT_CLASS</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>在 ConstantPoolReference 中，CONSTANT_STRING 和 CONSTANT_CLASS 作为常量存储在运行时常量池。它们可以用来作为 GC Roots。</p>
-<p>这些常量引用的对象（字符串"Hello, World"和 Object.class 类对象）在常量池中，只要包含这些常量的 ConstantPoolReference 类未被卸载，这些对象就不会被垃圾回收</p>
-<h5>如何识别 GC Root</h5>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>┌────────────────────────────────────────────────────────┐
-│                   GC 开始时                             │
-├────────────────────────────────────────────────────────┤
-│                                                        │
-│   1. 暂停所有线程                  │
-│                                                        │
-│   2. 扫描所有线程栈                                     │
-│      ┌─────────┐                                       │
-│      │ 线程1栈  │ → 找到所有局部变量、参数 → 标记为 GC Root │
-│      │ 线程2栈  │                                       │
-│      │ ...     │                                       │
-│      └─────────┘                                       │
-│                                                        │
-│   3. 扫描元空间                                         │
-│      ┌─────────────────┐                               │
-│      │ 类的静态变量      │ → 标记为 GC Root               │
-│      │ 运行时常量池常量  │ → 标记为 GC Root               │
-│      └─────────────────┘                               │
-│                                                        │
-│   4. 从 GC Root 开始遍历引用链                          │
-│      GC Root → 对象A → 对象B → 对象C                    │
-│              ↘ 对象D → 对象E                           │
-│                                                        │
-│   5. 标记所有可达对象 = 存活                            │
-│      未被标记的对象 = 垃圾                              │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股9 - 垃圾收集2 (STW + 垃圾收集算法)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article9.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article9.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股9 - 垃圾收集2 (STW + 垃圾收集算法)</source>
-      <description>STW &amp;quot;Stop The World&amp;quot;是 Java 垃圾收集中的一个重要概念 在垃圾收集过程中，JVM 会暂停所有的用户线程，这种暂停被称为&amp;quot;Stop The World&amp;quot;事件 这么做的主要原因是为了防止在垃圾收集过程中，用户线程修改了堆中的对象，导致垃圾收集器无法准确地收集垃圾 值得注意的是，&amp;quot;Stop The World&amp;quot;事件会对 Java 应用...</description>
-      <category>code</category>
-      <pubDate>Mon, 30 Mar 2026 16:21:54 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>STW</h2>
-<p>"Stop The World"是 Java 垃圾收集中的一个重要概念</p>
-<p>在垃圾收集过程中，JVM 会暂停所有的用户线程，这种暂停被称为"Stop The World"事件</p>
-<p>这么做的主要原因是为了防止在垃圾收集过程中，用户线程修改了堆中的对象，导致垃圾收集器无法准确地收集垃圾</p>
-<p>值得注意的是，"Stop The World"事件会对 Java 应用的性能产生影响</p>
-<p>如果停顿时间过长，就会导致应用的响应时间变长，对于对实时性要求较高的应用，如交易系统、游戏服务器等，这种情况是不能接受的。</p>
-<p>因此，在选择和调优垃圾收集器时，需要考虑其停顿时间。Java 中的一些垃圾收集器，如 G1 和 ZGC，都会尽可能地减少了"Stop The World"的时间，通过并发的垃圾收集，提高应用的响应性能。</p>
-<p>总的来说，"Stop The World"是 Java 垃圾收集中必须面对的一个挑战，其目标是在保证内存的有效利用和应用的响应性能之间找到一个平衡。</p>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>┌────────────────────────────────────────────────────────┐
-│                   GC 开始时                             │
-├────────────────────────────────────────────────────────┤
-│                                                        │
-│   1. 暂停所有线程                  │
-│                                                        │
-│   2. 扫描所有线程栈                                     │
-│      ┌─────────┐                                       │
-│      │ 线程1栈  │ → 找到所有局部变量、参数 → 标记为 GC Root │
-│      │ 线程2栈  │                                       │
-│      │ ...     │                                       │
-│      └─────────┘                                       │
-│                                                        │
-│   3. 扫描元空间                                         │
-│      ┌─────────────────┐                               │
-│      │ 类的静态变量      │ → 标记为 GC Root               │
-│      │ 运行时常量池常量  │ → 标记为 GC Root               │
-│      └─────────────────┘                               │
-│                                                        │
-│   4. 从 GC Root 开始遍历引用链                          │
-│      GC Root → 对象A → 对象B → 对象C                    │
-│              ↘ 对象D → 对象E                           │
-│                                                        │
-│   5. 标记所有可达对象 = 存活                            │
-│      未被标记的对象 = 垃圾                              │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-</code></pre></div><h2>垃圾收集算法</h2>
-<blockquote>
-<p>垃圾收集算法是理论基础，定义了如何识别和回收垃圾；垃圾收集器是算法的具体实现，一个收集器可以实现一种或多种算法</p>
-</blockquote>
-<p>在确定了哪些垃圾可以被回收后，垃圾收集器要做的事情就是进行垃圾回收，但是这里面涉及到一个问题是：如何高效地进行垃圾回收</p>
-<p>由于 JVM 规范并没有对如何实现垃圾收集器做出明确的规定，因此各个厂商的虚拟机可以采用不同的方式来实现垃圾收集器</p>
-<h3>标记-清除算法</h3>
-<blockquote>
-<p>内存碎片问题</p>
-</blockquote>
-<p>标记清除算法（Mark-Sweep）是最基础的一种垃圾回收算法</p>
-<p>分为 2 部分，先把内存区域中的这些对象进行标记，哪些属于可回收的标记出来（用前面提到的可达性分析法），然后把这些垃圾拎出来清理掉</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>就像上图一样，清理掉的垃圾就变成可使用的空闲空间，等待被再次使用。</p>
-<p>逻辑清晰，并且也很好操作，但它存在一个很大的问题，那就是<strong>内存碎片</strong></p>
-<p>碎片太多可能会导致当程序运行过程中需要分配较大对象时，因无法找到足够的连续内存而不得不提前触发新一轮的垃圾收集</p>
-<h3>标记-复制算法</h3>
-<blockquote>
-<p>新生代中 Survior 区的 From 和 to</p>
-</blockquote>
-<p>复制算法（Copying）是在标记清除算法上演化而来的，用于解决标记清除算法的内存碎片问题</p>
-<p>将可用内存按容量划分为大小相等的两块，每次只使用其中的一块</p>
-<p>当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。这样就保证了内存的连续性，逻辑清晰，运行高效</p>
-<p>在标记-复制算法 中，标记阶段和复制阶段都会触发STW。</p>
-<ul>
-<li>标记阶段停顿是为了保证对象的引用关系不被修改。</li>
-<li>复制阶段停顿是防止对象在复制过程中被修改。</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<p>但复制算法也存在一个很明显的问题，规定的内存空间只能用一半</p>
-<h3>标记-整理算法</h3>
-<p>标记整理算法（Mark-Compact），标记过程仍然与标记清除算法一样，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，再清理掉端边界以外的内存区域</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>标记整理算法一方面在标记-清除算法上做了升级，解决了内存碎片的问题，也规避了复制算法只能利用一半内存区域的弊端</p>
-<p>看起来很美好，但<strong>内存变动更频繁</strong>，需要<strong>整理所有存活对象的引用地址</strong>，在效率上比复制算法差很多</p>
-<h3>分代收集算法</h3>
-<p>分代收集算法（Generational Collection）严格来说并不是一种思想或理论，而是融合上述 3 种基础的算法思想，而产生的针对不同情况所采用不同算法的一套组合拳</p>
-<p>根据对象存活周期的不同会将内存划分为几块，一般是把 Java 堆分为新生代和老年代，这样就可以根据各个年代的特点采用最适当的收集算法</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>在新生代中，每次垃圾收集时都发现有大批对象死去，只有少量存活，那就选用复制算法，只需要付出少量存活对象的复制成本就可以完成收集。</p>
-<p>老年代中因为对象存活率高、没有额外空间对它进行分配担保，就必须使用标记清理或者标记整理算法来进行回收</p>
-<h2>GC 类型</h2>
-<p>| GC 类型 | 对应的收集器 | 使用的算法 |
-|</p>
 ]]></content:encoded>
     </item>
   </channel>

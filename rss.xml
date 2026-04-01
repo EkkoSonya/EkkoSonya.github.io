@@ -6,16 +6,16 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 01 Apr 2026 06:46:50 GMT</pubDate>
-    <lastBuildDate>Wed, 01 Apr 2026 06:46:50 GMT</lastBuildDate>
+    <pubDate>Wed, 01 Apr 2026 06:47:23 GMT</pubDate>
+    <lastBuildDate>Wed, 01 Apr 2026 06:47:23 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
     <item>
-      <title>JVM 八股 14 - IDEA 运行流程</title>
+      <title>JVM 八股14 - IDEA 运行流程</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article14.html</link>
       <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article14.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股 14 - IDEA 运行流程</source>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股14 - IDEA 运行流程</source>
       <description>IDEA 点击运行后的流程 java 是用来运行 .class 文件的，所以在用 java 之前，需要先用 javac 编译。 IDEA 帮我们自动处理了这个过程。 1. 保存与读取配置 自动保存未保存的文件： IDEA 会把编辑器里所有修改过但还未保存到磁盘的文件进行落盘。这是为什么你在 IDEA 里几乎不需要手动 Ctrl + S 的原因。 读取运...</description>
       <category>code</category>
       <pubDate>Wed, 01 Apr 2026 06:44:41 GMT</pubDate>
@@ -78,10 +78,10 @@ com.your.package.MainClass arg1 arg2
 ]]></content:encoded>
     </item>
     <item>
-      <title>JVM 八股 15 - javac 和 java 命令</title>
+      <title>JVM 八股15 - javac 和 java 命令</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article15.html</link>
       <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article15.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股 15 - javac 和 java 命令</source>
+      <source url="http://ekkosonya.cn/rss.xml">JVM 八股15 - javac 和 java 命令</source>
       <description>编译与运行 javac：编译器，将 .java 源文件编译成 .class 字节码 java：运行器，启动 JVM 加载并执行 .class 文件 简单包结构 vs 复杂包结构 简单包结构（默认包） 复杂包结构 目录结构必须对应： javac 编译命令 java 运行命令 sourcepath 和 classpath 区别 示例 默认类路径 当你运行 ...</description>
       <category>code</category>
       <pubDate>Wed, 01 Apr 2026 06:44:41 GMT</pubDate>

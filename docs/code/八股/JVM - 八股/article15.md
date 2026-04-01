@@ -1,5 +1,5 @@
 ---
-title: JVM 八股 15 - javac 和 java 命令
+title: JVM 八股15 - javac 和 java 命令
 date: 2026-3-31
 category:
   - code

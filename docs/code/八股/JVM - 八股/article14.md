@@ -1,5 +1,5 @@
 ---
-title: JVM 八股 14 - IDEA 运行流程
+title: JVM 八股14 - IDEA 运行流程
 date: 2026-3-31
 category:
   - code

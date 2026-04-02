@@ -6,11 +6,874 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 01 Apr 2026 06:47:23 GMT</pubDate>
-    <lastBuildDate>Wed, 01 Apr 2026 06:47:23 GMT</lastBuildDate>
+    <pubDate>Thu, 02 Apr 2026 08:54:31 GMT</pubDate>
+    <lastBuildDate>Thu, 02 Apr 2026 08:54:31 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Spring系列八股1 - Spring 简介 + 常用注解</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article1.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股1 - Spring 简介 + 常用注解</source>
+      <description>Spring基础 什么是 Spring Spring 是一个 Java 后端开发框架，其最核心的作用是帮我们管理 Java 对象 其最重要的特性就是 IoC，也就是控制反转。以前我们要使用一个对象时，都要自己先 new 出来。但有了 Spring 之后，我们只需要告诉 Spring 我们需要什么对象，它就会自动帮我们创建好并注入到 Spring 容器当...</description>
+      <category>code</category>
+      <pubDate>Thu, 02 Apr 2026 08:51:45 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Spring基础</h2>
+<h3>什么是 Spring</h3>
+<p>Spring 是一个 Java 后端开发框架，其最核心的作用是帮我们管理 Java 对象</p>
+<p>其最重要的特性就是 IoC，也就是控制反转。以前我们要使用一个对象时，都要自己先 new 出来。但有了 Spring 之后，我们只需要告诉 Spring 我们需要什么对象，它就会自动帮我们创建好并注入到 Spring 容器当中</p>
+<p>另外，Spring 还提供了 AOP，也就是面向切面编程，在我们需要做一些通用功能的时候特别有用，比如说日志记录、权限校验、事务管理这些，我们不用在每个方法里都写重复的代码，直接用 AOP 就能统一处理</p>
+<p>Spring 的生态也特别丰富，像 Spring Boot 能让我们快速搭建项目，Spring MVC 能帮我们处理 web 请求，Spring Data 能帮我们简化数据库操作，Spring Cloud 能帮我们做微服务架构等等</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>特性</h4>
+<p>| <strong>核心思想</strong> | <strong>解决的问题</strong> | <strong>实现手段</strong> | <strong>典型应用场景</strong> |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Spring系列八股2 - Bean1</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article2.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股2 - Bean1</source>
+      <description>Spring基础 Bean Bean 本质上就是由 Spring 容器管理的 Java 对象，但它和普通的 Java 对象有很大区别 普通的 Java 对象我们是通过 new 关键字创建的 而 Bean 是交给 Spring 容器来管理的，从创建到销毁都由容器负责。 从实际使用的角度来说，我们项目里的 Service、Dao、Controller 这些...</description>
+      <category>code</category>
+      <pubDate>Thu, 02 Apr 2026 08:51:45 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Spring基础</h2>
+<h3>Bean</h3>
+<p>Bean 本质上就是由 Spring 容器管理的 Java 对象，但它和普通的 Java 对象有很大区别</p>
+<p>普通的 Java 对象我们是通过 new 关键字创建的</p>
+<p>而 Bean 是交给 Spring 容器来管理的，从创建到销毁都由容器负责。</p>
+<p>从实际使用的角度来说，我们项目里的 Service、Dao、Controller 这些都是 Bean</p>
+<p>比如 <code>UserService</code> 被标注了 <code>@Service</code> 注解，它就成了一个 Bean，Spring 会自动创建它的实例，管理它的依赖关系，当其他地方需要用到 <code>UserService</code> 的时候，Spring 就会把这个实例注入进去</p>
+<p>这种依赖注入的方式让对象之间的关系变得松耦合</p>
+<p>Spring 提供了多种 Bean 的配置方式，基于注解的方式是最常用的</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>@Component 和 @Bean 区别</h4>
+<p>首先从使用上来说，<code>@Component</code> 是标注在类上的，而 <code>@Bean</code> 是标注在方法上的</p>
+<p><code>@Component</code> 告诉 Spring 这个类是一个组件，请把它注册为 Bean，而 <code>@Bean</code> 则告诉 Spring 请将这个方法返回的对象注册为 Bean</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>  <span class="token comment">// Spring自动创建UserService实例</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserService</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">UserDao</span> userDao<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Bean</span>  <span class="token comment">// 我们手动创建DataSource实例</span>
+  <span class="token keyword">public</span> <span class="token class-name">DataSource</span> <span class="token function">dataSource</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token class-name">HikariDataSource</span> ds <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HikariDataSource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      ds<span class="token punctuation">.</span><span class="token function">setJdbcUrl</span><span class="token punctuation">(</span><span class="token string">"jdbc:mysql://localhost:3306/test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      ds<span class="token punctuation">.</span><span class="token function">setUsername</span><span class="token punctuation">(</span><span class="token string">"root"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      ds<span class="token punctuation">.</span><span class="token function">setPassword</span><span class="token punctuation">(</span><span class="token string">"123456"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">return</span> ds<span class="token punctuation">;</span>  <span class="token comment">// 返回给Spring管理</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>从控制权的角度来说，<code>@Component</code> 是由 Spring 自动创建和管理的</p>
+<p>而 <code>@Bean</code> 则是由我们手动创建的，然后再交给 Spring 管理，我们对对象的创建过程有完全的控制权</p>
+<blockquote>
+<p>因为 <code>@Bean</code> 是作用在方法上的，Spring 只是管理这个方法最终 return 的对象</p>
+</blockquote>
+<h4>Bean 生命周期</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>Bean 的生命周期可以分为 5 个主要阶段</p>
+<p>实例化 -&gt; 设置属性 -&gt; 初始化 -&gt; 使用中 -&gt; 销毁</p>
+<figure><figcaption>alt text</figcaption></figure>
+<blockquote>
+<p>第一个阶段是实例化</p>
+</blockquote>
+<p>Spring 容器会根据 <code>BeanDefinition</code>，通过反射调用 Bean 的构造方法创建对象实例</p>
+<p>如果有多个构造方法，Spring 会根据依赖注入的规则选择合适的构造方法</p>
+<blockquote>
+<p>第二阶段是属性赋值</p>
+</blockquote>
+<p>这个阶段 Spring 会给 Bean 的属性赋值，包括通过 <code>@Autowired</code>、<code>@Resource</code> 这些注解注入的依赖对象，以及通过 <code>@Value</code> 注入的配置值</p>
+<blockquote>
+<p>第三阶段是初始化</p>
+</blockquote>
+<p>这个阶段会依次执行：</p>
+<ul>
+<li><code>@PostConstruct</code> 标注的方法</li>
+<li><code>InitializingBean</code> 接口的 <code>afterPropertiesSet</code> 方法</li>
+<li>通过 <code>@Bean</code> 的 <code>initMethod</code> 指定的初始化方法</li>
+</ul>
+<p>初始化后，Spring 还会调用所有注册的 BeanPostProcessor 后置处理方法。这个阶段经常用来创建代理对象，比如 AOP 代理</p>
+<blockquote>
+<p>第四阶段是使用 Bean</p>
+</blockquote>
+<p>比如我们的 Controller 调用 Service，Service 调用 DAO</p>
+<blockquote>
+<p>最后是销毁阶段。</p>
+</blockquote>
+<p>当容器关闭或者 Bean 被移除的时候，会依次执行：</p>
+<ul>
+<li><code>@PreDestroy</code> 标注的方法</li>
+<li><code>DisposableBean</code> 接口的 <code>destroy</code> 方法</li>
+<li>通过 <code>@Bean</code> 的 <code>destroyMethod</code> 指定的销毁方法</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>Aware 类型的接口</h4>
+<p>Aware 接口在 Spring 中是一个很有意思的设计，它们的作用是让 Bean 能够感知到 Spring 容器的一些内部组件</p>
+<p>从设计理念来说，Aware 接口实现了一种“回调”机制。正常情况下，Bean 不应该直接依赖 Spring 容器，这样可以保持代码的独立性。但有些时候，Bean 确实需要获取容器的一些信息或者组件，Aware 接口就提供了这样一个能力</p>
+<p>我最常用的 Aware 接口是 ApplicationContextAware，它可以让 Bean 获取到 ApplicationContext 容器本身</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SpringUtil</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationContextAware</span><span class="token punctuation">,</span> <span class="token class-name">EnvironmentAware</span><span class="token punctuation">,</span> <span class="token class-name">ApplicationListener</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">ContextClosedEvent</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> <span class="token keyword">volatile</span> <span class="token keyword">static</span> <span class="token class-name">ApplicationContext</span> context<span class="token punctuation">;</span>
+  <span class="token keyword">private</span> <span class="token keyword">volatile</span> <span class="token keyword">static</span> <span class="token class-name">Environment</span> environment<span class="token punctuation">;</span>
+
+  <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">Binder</span> binder<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setApplicationContext</span><span class="token punctuation">(</span><span class="token class-name">ApplicationContext</span> applicationContext<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">BeansException</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 容器启动时自动注入，方便后续获取bean</span>
+      <span class="token class-name">SpringUtil</span><span class="token punctuation">.</span>context <span class="token operator">=</span> applicationContext<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setEnvironment</span><span class="token punctuation">(</span><span class="token class-name">Environment</span> environment<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token class-name">SpringUtil</span><span class="token punctuation">.</span>environment <span class="token operator">=</span> environment<span class="token punctuation">;</span>
+      binder <span class="token operator">=</span> <span class="token class-name">Binder</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>environment<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span><span class="token class-name">ContextClosedEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>context <span class="token operator">==</span> event<span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          context <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+          environment <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+          binder <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token doc-comment comment">/**
+   * 获取ApplicationContext
+   *
+   * <span class="token keyword">@return</span>
+   */</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">ApplicationContext</span> <span class="token function">getContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> context<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token doc-comment comment">/**
+   * 获取bean
+   *
+   * <span class="token keyword">@param</span> <span class="token parameter">bean</span>
+   * <span class="token keyword">@param</span> <span class="token class-name"><span class="token punctuation">&lt;</span>T<span class="token punctuation">&gt;</span></span>
+   * <span class="token keyword">@return</span>
+   */</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">boolean</span> <span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> context <span class="token keyword">instanceof</span> <span class="token class-name">ConfigurableApplicationContext</span>
+              <span class="token operator">?</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ConfigurableApplicationContext</span><span class="token punctuation">)</span> context<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+              <span class="token operator">:</span> context <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>init-method 和 destroy-method</h4>
+<p>init-method 指定的初始化方法会在 Bean 的初始化阶段被调用，具体的执行顺序是：</p>
+<ul>
+<li>先执行 @PostConstruct 标注的方法</li>
+<li>然后执行 InitializingBean 接口的 afterPropertiesSet() 方法</li>
+<li>最后再执行 init-method 指定的方法</li>
+</ul>
+<p>也就是说，init-method 是在所有其他初始化方法之后执行的</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyService</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">UserDao</span> userDao<span class="token punctuation">;</span>
+  
+  <span class="token annotation punctuation">@PostConstruct</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">postConstruct</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"1. @PostConstruct执行"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">customInit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// 通过@Bean的initMethod指定</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"3. init-method执行"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span>initMethod <span class="token operator">=</span> <span class="token string">"customInit"</span><span class="token punctuation">)</span>
+  <span class="token keyword">public</span> <span class="token class-name">MyService</span> <span class="token function">myService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">MyService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>destroy-method 会在 Bean 销毁阶段被调用。</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyService</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@PreDestroy</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">preDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"1. @PreDestroy执行"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">customDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// 通过@Bean的destroyMethod指定</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"3. destroy-method执行"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>不过在实际开发中，通常用 @PostConstruct 和 @PreDestroy 就够了，它们更简洁</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Spring系列八股3 - Bean2 (作用域 + 线程安全问题)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article3.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股3 - Bean2 (作用域 + 线程安全问题)</source>
+      <description>Spring基础 Bean的作用域 单例模式 (默认) Bean 的作用域决定了 Bean 实例的生命周期和创建策略，singleton 是默认的作用域 整个 Spring 容器中只会有一个 Bean 实例。不管在多少个地方注入这个 Bean，拿到的都是同一个对象 生命周期和 Spring 容器相同，容器启动时创建，容器销毁时销毁 实际开发中，像 Se...</description>
+      <category>code</category>
+      <pubDate>Thu, 02 Apr 2026 08:51:45 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Spring基础</h2>
+<h3>Bean的作用域</h3>
+<h4>单例模式 (默认)</h4>
+<p>Bean 的作用域决定了 Bean 实例的生命周期和创建策略，singleton 是默认的作用域</p>
+<p>整个 Spring 容器中只会有一个 Bean 实例。不管在多少个地方注入这个 Bean，拿到的都是同一个对象</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>  <span class="token comment">// 默认就是singleton</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserService</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 整个应用中只有一个UserService实例</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>生命周期和 Spring 容器相同，容器启动时创建，容器销毁时销毁</p>
+<p>实际开发中，像 Service、Dao 这些业务组件基本都是单例的，因为单例既能节省内存，又能提高性能</p>
+<h4>多例模式</h4>
+<p>当把 scope 设置为 prototype 时，每次从容器中获取 Bean 的时候都会创建一个新的实例</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token annotation punctuation">@Scope</span><span class="token punctuation">(</span><span class="token string">"prototype"</span><span class="token punctuation">)</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OrderProcessor</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 每次注入或获取都是新的实例</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>当需要处理一些有状态的 Bean 时会用到 prototype，比如每个订单处理器需要维护不同的状态信息</p>
+<h4>注入问题</h4>
+<p>需要注意的是，在 singleton Bean 中注入 prototype Bean 时要小心，因为 singleton Bean 只创建一次，所以 prototype Bean 也只会注入一次。这时候可以用 @Lookup 注解或者 ApplicationContext 来动态获取</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SingletonService</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 错误的做法，prototypeBean只会注入一次</span>
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">PrototypeBean</span> prototypeBean<span class="token punctuation">;</span>
+  
+  <span class="token comment">// 正确的做法，每次调用都获取新实例</span>
+  <span class="token annotation punctuation">@Lookup</span>
+  <span class="token keyword">public</span> <span class="token class-name">PrototypeBean</span> <span class="token function">getPrototypeBean</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token keyword">null</span><span class="token punctuation">;</span>  <span class="token comment">// Spring会重写这个方法</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>其他模式</h4>
+<p>除了 singleton 和 prototype，Spring 还支持其他作用域，比如 request、session、application 和 websocket</p>
+<ul>
+<li>如果作用于是 request，表示在 Web 应用中，每个 HTTP 请求都会创建一个新的 Bean 实例，请求结束后 Bean 就被销毁</li>
+<li>如果作用于是 session，表示在 Web 应用中，每个 HTTP 会话都会创建一个新的 Bean 实例，会话结束后 Bean 被销毁</li>
+<li>application 作用域表示在整个应用中只有一个 Bean 实例，类似于 singleton，但它的生命周期与 ServletContext 绑定</li>
+<li>websocket 作用域表示在 WebSocket 会话中每个连接都有自己的 Bean 实例。WebSocket 连接建立时创建，连接关闭时销毁</li>
+</ul>
+<h3>单例Bean会存在线程安全问题吗</h3>
+<p>首先要明确一点。Spring 容器本身保证了 Bean 创建过程的线程安全，也就是说不会出现多个线程同时创建同一个单例 Bean 的情况。</p>
+<blockquote>
+<p>线程安全的创建过程主要靠 synchronized 实现</p>
+</blockquote>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 单例缓存</span>
+<span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> singletonObjects <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConcurrentHashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token number">256</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">getSingleton</span><span class="token punctuation">(</span><span class="token class-name">String</span> beanName<span class="token punctuation">,</span> <span class="token class-name">ObjectFactory</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> singletonFactory<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>singletonObjects<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// 关键：同步锁</span>
+    <span class="token class-name">Object</span> singletonObject <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>singletonObjects<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>singletonObject <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      singletonObject <span class="token operator">=</span> singletonFactory<span class="token punctuation">.</span><span class="token function">getObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>singletonObjects<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>beanName<span class="token punctuation">,</span> singletonObject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> singletonObject<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>但是 Bean 创建完成后的使用过程，Spring 就不管了</p>
+<p>换句话说，单例 Bean 在被创建后，如果它的内部状态是可变的，那么在多线程环境下就可能会出现线程安全问题</p>
+<p>如果 Bean 中没有成员变量，或者成员变量都是不可变的，final 修饰的，那么就不存在线程安全问题</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">UserService</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Resource</span>
+  <span class="token keyword">private</span> <span class="token class-name">UserDao</span> userDao<span class="token punctuation">;</span>
+  <span class="token annotation punctuation">@Autowired</span>
+  <span class="token keyword">private</span> <span class="token class-name">CountService</span> countService<span class="token punctuation">;</span>
+  <span class="token comment">// 只有依赖注入的无状态字段</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ConfigService</span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">String</span> appName<span class="token punctuation">;</span>  <span class="token comment">// final修饰，不可变</span>
+  
+  <span class="token keyword">public</span> <span class="token class-name">ConfigService</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Value</span><span class="token punctuation">(</span><span class="token string">"${app.name}"</span><span class="token punctuation">)</span> <span class="token class-name">String</span> appName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>appName <span class="token operator">=</span> appName<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>如何解决单例 Bean 的线程安全问题</h4>
+<blockquote>
+<p>无状态优先，ThreadLocal 隔离，JUC 工具，加锁保底，改作用域兜后</p>
+</blockquote>
+<p>| 方案 | 适用场景 | 核心思想 |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Spring系列八股4 - Bean3 (Autowired注解 + 自动装配)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article4.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股4 - Bean3 (Autowired注解 + 自动装配)</source>
+      <description>Spring基础 Autowired注解 原理 @Autowired 是 Spring 实现依赖注入的核心注解，其实现原理基于反射机制和 BeanPostProcessor 接口 整个过程分为两个主要阶段 第一个阶段是依赖收集阶段，发生在 Bean 实例化之后、属性赋值之前 Autowired 的 Processor 会扫描 Bean 的所有字段、方法...</description>
+      <category>code</category>
+      <pubDate>Thu, 02 Apr 2026 08:51:45 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Spring基础</h2>
+<h3>Autowired注解</h3>
+<h4>原理</h4>
+<p><code>@Autowired</code> 是 Spring 实现依赖注入的核心注解，其实现原理基于反射机制和 BeanPostProcessor 接口</p>
+<p>整个过程分为两个主要阶段</p>
+<p>第一个阶段是<strong>依赖收集</strong>阶段，发生在 Bean 实例化之后、属性赋值之前</p>
+<p><code>Autowired</code> 的 <code>Processor</code> 会扫描 Bean 的所有字段、方法和构造方法，找出标注了 <code>@Autowired</code> 注解的地方，然后把这些信息封装成 <code>Injection</code> 元数据对象缓存起来</p>
+<p>这个过程用到了大量的反射操作，需要分析类的结构、注解信息等等</p>
+<p>第二个阶段是<strong>依赖注入</strong>阶段，Spring 会取出之前缓存的 Injection 元数据对象，然后逐个处理每个注入点</p>
+<p>对于每个 <code>@Autowired</code> 标注的字段或方法，Spring 会<strong>根据类型</strong>去容器中查找匹配的 Bean</p>
+<p>在具体的注入过程中，Spring 会使用反射来设置字段的值或者调用 setter 方法。比如对于字段注入，会调用 Field.set() 方法；对于 setter 注入，会调用 Method.invoke() 方法。</p>
+<h4>IDEA不推荐使用@Autowired注解原因</h4>
+<p>第一个是字段注入不利于单元测试。字段注入需要使用反射或 Spring 容器才能注入依赖，测试更复杂；而构造方法注入可以直接通过构造方法传入 Mock 对象，测试起来更简单</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 字段注入的测试困难</span>
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testUserService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token class-name">UserService</span> userService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">UserService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 无法直接设置userRepository，需要反射或Spring容器</span>
+  <span class="token comment">// userService.userRepository = Mockito.mock(UserRepository.class);</span>
+  <span class="token comment">// 需要手动设置依赖，测试不方便</span>
+  <span class="token class-name">ReflectionTestUtils</span><span class="token punctuation">.</span><span class="token function">setField</span><span class="token punctuation">(</span>userService<span class="token punctuation">,</span> <span class="token string">"userRepository"</span><span class="token punctuation">,</span> <span class="token class-name">Mockito</span><span class="token punctuation">.</span><span class="token function">mock</span><span class="token punctuation">(</span><span class="token class-name">UserRepository</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  userService<span class="token punctuation">.</span><span class="token function">doSomething</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// ...</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 构造方法注入的测试简单</span>
+<span class="token annotation punctuation">@Test</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">testUserService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token class-name">UserRepository</span> mockRepository <span class="token operator">=</span> <span class="token class-name">Mockito</span><span class="token punctuation">.</span><span class="token function">mock</span><span class="token punctuation">(</span><span class="token class-name">UserRepository</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">UserService</span> userService <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">UserService</span><span class="token punctuation">(</span>mockRepository<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 直接注入</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>第二个是字段注入会隐藏循环依赖问题，而构造方法注入会在项目启动时就去检查依赖关系，能更早发现问题。</p>
+<p>第三个是构造方法注入可以使用 final 字段确保依赖在对象创建时就被初始化，避免了后续修改的风险。</p>
+<h3>自动装配</h3>
+<p>自动装配的本质就是让 Spring 容器自动帮我们完成 Bean 之间的依赖关系注入，而不需要我们手动去指定每个依赖</p>
+<p>简单来说，就是“我们不用告诉 Spring 具体怎么注入，Spring 自己会想办法找到合适的 Bean 注入进来”。</p>
+<p>自动装配的工作原理简单来说就是，Spring 容器在启动时自动扫描 <code>@ComponentScan</code> 指定包路径下的所有类</p>
+<p>然后根据类上的注解，比如 <code>@Autowired、@Resource</code> 等，来判断哪些 Bean 需要被自动装配</p>
+<p>之后分析每个 Bean 的依赖关系，在创建 Bean 的时候，根据装配规则自动找到合适的依赖 Bean，最后根据反射将这些依赖注入到目标 Bean 中</p>
+<h4><code>@ComponentScan</code></h4>
+<p>@ComponentScan 只是告诉 Spring 去哪里找，但只有带特定注解的类才会被注册为 Bean</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>阶段1：扫描 + 注册 Bean 定义
+────────────────────────────
+@ComponentScan 扫描 → 发现有 @Component 等注解 → 注册 Bean 定义
+
+
+阶段2：创建实例 + 自动装配
+────────────────────────────
+创建 Bean 实例 → 发现 @Autowired → 找到依赖 Bean → 注入
+</code></pre></div><h5>注册条件</h5>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>@Component      // 通用组件
+@Service        // 服务层
+@Repository     // 数据访问层
+@Controller     // 控制器层
+@Configuration  // 配置类（内部的 @Bean 方法也会注册）
+</code></pre></div><h5>Spring Boot（通常不需要写）</h5>
+<p><code>@SpringBootApplication</code> 已经内置了 <code>@ComponentScan</code>，默认扫描启动类所在包及其子包</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@SpringBootApplication</span>  <span class="token comment">// 内含 @ComponentScan</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token punctuation">{</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">SpringApplication</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">Application</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>com.example
+├── Application.java      ← 启动类
+├── controller/           ← 自动扫描到
+├── service/              ← 自动扫描到
+└── dao/                  ← 自动扫描到
+</code></pre></div><blockquote>
+<p>想自定义扫描范围</p>
+</blockquote>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@SpringBootApplication</span>
+<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span>basePackages <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"com.example"</span><span class="token punctuation">,</span> <span class="token string">"com.other"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// 自定义</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div><h5>传统 Spring 项目（必须写）</h5>
+<p>没有 @ComponentScan，Spring 不会扫描注解，Bean 只能通过其他方式注册：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 方式一：XML 配置</span>
+<span class="token operator">&lt;</span>bean id<span class="token operator">=</span><span class="token string">"userService"</span> <span class="token keyword">class</span><span class="token operator">=</span><span class="token string">"com.example.UserService"</span><span class="token operator">/</span><span class="token operator">&gt;</span>
+
+<span class="token comment">// 方式二：@Bean 方法</span>
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Bean</span>
+  <span class="token keyword">public</span> <span class="token class-name">UserService</span> <span class="token function">userService</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">UserService</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 方式三：@Import</span>
+<span class="token annotation punctuation">@Import</span><span class="token punctuation">(</span><span class="token class-name">UserService</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span>
+</code></pre></div><h4>自动装配类型</h4>
+<p>Spring 的自动装配方式有好几种，在 XML 配置时代，主要有 byName、byType、constructor 和 autodetect 四种方式</p>
+<p>到了注解驱动时代，用得最多的是 <code>@Autowired</code> 注解，默认按照类型装配</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserService</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Autowired</span>  <span class="token comment">// 按类型自动装配</span>
+  <span class="token keyword">private</span> <span class="token class-name">UserRepository</span> userRepository<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>其次还有 <code>@Resource</code> 注解，它默认按照名称装配，如果找不到对应名称的 Bean，就会按类型装配</p>
+<p>Spring Boot 的自动装配还有一套更高级的机制，通过 <code>@EnableAutoConfiguration</code> 和各种 <code>@Conditional</code> 注解来实现，这个是框架级别的自动装配，会根据 classpath 中的类和配置来自动配置 Bean</p>
+<figure><figcaption>alt text</figcaption></figure>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Spring系列八股5 - 设计模式 + 三级依赖</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article5.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article5.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股5 - 设计模式 + 三级依赖</source>
+      <description>Spring基础 设计模式 Spring 框架里面确实用了很多设计模式 工厂模式 (管理 Bean)、单例模式 (IOC)、代理模式 (AOP) 模版模式、观察者模式 涉及： 工厂模式 BeanFactory 就是一个典型的工厂，它负责创建和管理所有的 Bean 对象 我们平时用的 ApplicationContext 其实也是 BeanFactory...</description>
+      <category>code</category>
+      <pubDate>Thu, 02 Apr 2026 08:51:45 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Spring基础</h2>
+<h3>设计模式</h3>
+<p>Spring 框架里面确实用了很多设计模式</p>
+<p>工厂模式 (管理 Bean)、单例模式 (IOC)、代理模式 (AOP)</p>
+<p>模版模式、观察者模式</p>
+<p>涉及：</p>
+<ul>
+<li>工厂模式
+<ul>
+<li>BeanFactory 就是一个典型的工厂，它负责创建和管理所有的 Bean 对象</li>
+<li>我们平时用的 ApplicationContext 其实也是 BeanFactory 的一个实现</li>
+<li>当我们通过 @Autowired 获取一个 Bean 的时候，底层就是通过工厂模式来创建和获取对象的。</li>
+</ul>
+</li>
+<li>单例模式
+<ul>
+<li>单例模式也是 Spring 的默认行为。默认情况下，Spring 容器中的 Bean 都是单例的，整个应用中只会有一个实例</li>
+<li>这样可以节省内存，提高性能。当然我们也可以通过 @Scope 注解来改变 Bean 的作用域，比如设置为 prototype 就是每次获取都创建新实例。</li>
+</ul>
+</li>
+<li>代理模式
+<ul>
+<li>代理模式在 AOP 中用得特别多。Spring AOP 的底层实现就是基于动态代理的，对于实现了接口的类用 JDK 动态代理，没有实现接口的类用 CGLIB 代理。比如我们用 @Transactional 注解的时候，Spring 会为我们的类创建一个代理对象，在方法执行前后添加事务处理逻辑。</li>
+</ul>
+</li>
+<li>模版模式
+<ul>
+<li>模板方法模式在 Spring 里也很常见，比如 JdbcTemplate。它定义了数据库操作的基本流程：获取连接、执行 SQL、处理结果、关闭连接，但是具体的 SQL 语句和结果处理逻辑由我们来实现。</li>
+</ul>
+</li>
+<li>观察者模式
+<ul>
+<li>观察者模式在 Spring 的事件机制中有所体现。我们可以通过 ApplicationEvent 和 ApplicationListener 来实现事件的发布和监听。比如用户注册成功后，我们可以发布一个用户注册事件，然后有多个监听器来处理后续的业务逻辑，比如发送邮件、记录日志等。</li>
+</ul>
+</li>
+<li>适配器模式</li>
+<li>策略模式</li>
+</ul>
+<h4>Spring 如何实现单例模式</h4>
+<p>传统的单例模式是在类的内部控制只能创建一个实例，比如用 private 构造方法加 static getInstance() 这种方式</p>
+<p>但是 Spring 的单例是<strong>容器级别</strong>的，同一个 Bean 在整个 Spring 容器中只会有一个实例。</p>
+<p>具体的实现机制是这样的：</p>
+<p>Spring 在启动的时候会把所有的 Bean 定义信息加载进来，然后在 <code>DefaultSingletonBeanRegistry</code> 这个类里面维护了一个叫 <code>singletonObjects</code> 的 <code>ConcurrentHashMap</code>，这个 Map 就是用来存储单例 Bean 的</p>
+<p>key 是 Bean 的名称，value 就是 Bean 的实例对象。</p>
+<p>当我们第一次获取某个 Bean 的时候，Spring 会先检查 singletonObjects 这个 Map 里面有没有这个 Bean，如果没有就会创建一个新的实例，然后放到 Map 里面。后面再获取同一个 Bean 的时候，直接从 Map 里面取就行了，这样就保证了单例。</p>
+<p>还有一个细节就是 Spring 为了解决循环依赖的问题，还用了三级缓存。除了 singletonObjects 这个一级缓存，还有 earlySingletonObjects 二级缓存和 singletonFactories 三级缓存</p>
+<p>这样即使有循环依赖，Spring 也能正确处理。</p>
+<h3>循环依赖问题</h3>
+<p>简单来说就是两个或多个 Bean 相互依赖，比如说 A 依赖 B，B 依赖 A，或者 C 依赖 C，就成了循环依赖</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>Spring 解决方案</h4>
+<p>Spring 通过三级缓存机制来解决循环依赖：</p>
+<ul>
+<li>一级缓存：存放完全初始化好的单例 Bean</li>
+<li>二级缓存：存放提前暴露的 Bean，实例化完成，但未初始化完成</li>
+<li>三级缓存：存放 Bean 工厂，用于生成提前暴露的 Bean</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>例子</h5>
+<figure><figcaption>alt text</figcaption></figure>
+<p>第 1 步：开始创建 Bean A</p>
+<ul>
+<li>Spring 调用 A 的构造方法，创建 A 的实例。此时 A 对象已存在，但 b属性还是 null。</li>
+<li>将 A 的对象工厂放入三级缓存。</li>
+<li>开始进行 A 的属性注入。</li>
+</ul>
+<p>第 2 步：A 需要注入 B，开始创建 Bean B</p>
+<ul>
+<li>发现需要 B，但 B 还不存在，所以开始创建 B。</li>
+<li>调用 B 的构造方法，创建 B 的实例。此时 B 对象已存在，但 a 属性还是 null。</li>
+<li>将 B 的对象工厂放入三级缓存。</li>
+<li>开始进行 B 的属性注入</li>
+</ul>
+<p>第 3 步：B 需要注入 A，从缓存中获取 A。</p>
+<ul>
+<li>B 需要注入 A，先从一级缓存找 A，没找到。</li>
+<li>再从二级缓存找 A，也没找到。</li>
+<li>最后从三级缓存找 A，找到了 A 的对象工厂。</li>
+<li>调用 A 的对象工厂得到 A 的实例。这时 A 已经实例化了，虽然还没完全初始化。</li>
+<li>将 A 从三级缓存移到二级缓存。</li>
+<li>B 拿到 A 的引用，完成属性注入。</li>
+</ul>
+<p>第 4 步：B 完成初始化。</p>
+<ul>
+<li>B 的属性注入完成，执行 @PostConstruct 等初始化逻辑。</li>
+<li>B 完全创建完成，从三级缓存移除，放入一级缓存。</li>
+</ul>
+<p>第 5 步：A 完成初始化。</p>
+<ul>
+<li>回到 A 的创建过程，A 拿到完整的 B 实例，完成属性注入。</li>
+<li>A 执行初始化逻辑，创建完成。</li>
+<li>A 从二级缓存移除，放入一级缓存。</li>
+</ul>
+<p>用代码来模拟这个过程，是这样的：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 模拟Spring的解决过程</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CircularDependencyDemo</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 三级缓存</span>
+  <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> singletonObjects <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">Object</span><span class="token punctuation">&gt;</span></span> earlySingletonObjects <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">,</span> <span class="token class-name">ObjectFactory</span><span class="token punctuation">&gt;</span></span> singletonFactories <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  
+  <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">String</span> beanName<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 先从一级缓存获取</span>
+    <span class="token class-name">Object</span> bean <span class="token operator">=</span> singletonObjects<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>bean <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">return</span> bean<span class="token punctuation">;</span>
+    
+    <span class="token comment">// 再从二级缓存获取</span>
+    bean <span class="token operator">=</span> earlySingletonObjects<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>bean <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">return</span> bean<span class="token punctuation">;</span>
+    
+    <span class="token comment">// 最后从三级缓存获取</span>
+    <span class="token class-name">ObjectFactory</span> factory <span class="token operator">=</span> singletonFactories<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>factory <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      bean <span class="token operator">=</span> factory<span class="token punctuation">.</span><span class="token function">getObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      earlySingletonObjects<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>beanName<span class="token punctuation">,</span> bean<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 移到二级缓存</span>
+      singletonFactories<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 从三级缓存移除</span>
+    <span class="token punctuation">}</span>
+    
+    <span class="token keyword">return</span> bean<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h5>哪些情况下Spring无法解决循环依赖</h5>
+<p>第一种，构造方法的循环依赖，这种情况 Spring 会直接抛出 BeanCurrentlyInCreationException 异常</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">A</span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> <span class="token class-name">B</span> b<span class="token punctuation">;</span>
+  
+  <span class="token keyword">public</span> <span class="token class-name">A</span><span class="token punctuation">(</span><span class="token class-name">B</span> b<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// 构造方法注入</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>b <span class="token operator">=</span> b<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">B</span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> <span class="token class-name">A</span> a<span class="token punctuation">;</span>
+  
+  <span class="token keyword">public</span> <span class="token class-name">B</span><span class="token punctuation">(</span><span class="token class-name">A</span> a<span class="token punctuation">)</span> <span class="token punctuation">{</span>  <span class="token comment">// 构造方法注入</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>a <span class="token operator">=</span> a<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>因为构造方法注入发生在实例化阶段，创建 A 的时候必须先有 B，但创建 B又必须先有 A，这时候两个对象都还没创建出来，无法提前暴露到缓存中</p>
+<p>第二种，prototype 作用域的循环依赖。prototype 作用域的 Bean 每次获取都会创建新实例，Spring 无法缓存这些实例，所以也无法解决循环依赖</p>
+<h4>为什么需要三级缓存而不是两级 (*****)</h4>
+<p>Spring 三级缓存是为了解决循环依赖中 AOP 代理不一致的问题</p>
+<blockquote>
+<p>三级缓存（singletonFactories）里面存放的，实际上是一个叫 ObjectFactory 的泛型接口对象</p>
+</blockquote>
+<p>如果只有二级缓存：暴露的是原始对象，但其他 Bean 注入时可能需要代理对象，导致注入的是原始对象，破坏了代理语义</p>
+<p>三级缓存存的是 ObjectFactory (本身就是一段 lamda 表达式)，在 getEarlyBeanReference() 中判断：</p>
+<ul>
+<li>如果需要代理 → 提前创建代理对象，放入二级缓存并返回</li>
+<li>如果不需要代理 → 直接返回原始对象</li>
+</ul>
+<p>这样保证循环依赖中注入的都是"正确的对象"</p>
+<h5>ObjectFactory</h5>
+<p>在 Spring 的源码里，ObjectFactory 是一个非常简单的函数式接口，里面只有一个方法</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@FunctionalInterface</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">ObjectFactory</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">T</span><span class="token punctuation">&gt;</span></span> <span class="token punctuation">{</span>
+  <span class="token class-name">T</span> <span class="token function">getObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">BeansException</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>通俗地理解，它就是一个“获取对象的钩子（回调函数）”。它本身不是对象，而是一段“教你怎么拿到对象”的代码逻辑</p>
+<p>在 JDK 8 以后，它在源码里通常表现为一个 Lambda 表达式</p>
+<h5>原因</h5>
+<p>要理解第三级缓存的精妙之处，我们必须结合 循环依赖 和 AOP（动态代理） 来看</p>
+<p>假设有两个单例 Bean：ServiceA 和 ServiceB，它们互相 <code>@Autowired</code> 依赖了对方。</p>
+<p>并且，ServiceA 上加了 <code>@Transactional</code> 注解（意味着最终放入容器的 ServiceA 必须是一个 AOP 代理对象，而不是原始对象）</p>
+<p>如果没有第三级缓存，只有一、二级缓存，流程会是这样惨烈的状况：</p>
+<ol>
+<li><strong>A 实例化</strong>：Spring <code>new</code> 出了 A 的原始对象（半成品）。</li>
+<li><strong>A 属性注入</strong>：发现需要 B，于是去创建 B。</li>
+<li><strong>B 实例化</strong>：Spring <code>new</code> 出了 B 的原始对象（半成品）。</li>
+<li><strong>B 属性注入</strong>：发现需要 A。此时 B 去缓存里找 A。</li>
+<li><strong>致命缺陷出现</strong>：如果缓存里直接放的是 A 的半成品原始对象，B 就会把这个<strong>原始 A</strong> 注入到自己的属性里。但等 B 创建完，A 继续走生命周期，在最后一步（初始化后置处理）时，A 发现自己有事务注解，于是生成了一个 <strong>A 的代理对象</strong>。</li>
+<li><strong>最终结果</strong>：Spring 容器里最终保存的是 A 的代理对象，<strong>但是 B 肚子里装的却是 A 的原始对象！</strong> 两者不一致，事务全盘失效。</li>
+</ol>
+<h5>作用</h5>
+<p>Spring 引入了存放 ObjectFactory 的第三级缓存。真实的源码流程是这样的：</p>
+<ul>
+<li><strong>A 实例化</strong>：<code>new</code> 出 A 的原始对象（半成品）。</li>
+<li><strong>放入三级缓存</strong>：此时，Spring 并不直接把半成品的 A 放入缓存，而是<strong>构造了一个 Lambda 表达式（ObjectFactory），把它塞进了三级缓存</strong>。
+<ul>
+<li>这段 Lambda 的核心逻辑是：<code>() -&gt; getEarlyBeanReference(beanName, mbd, bean)</code>。</li>
+<li><em>翻译成人话就是：“如果有人现在就要引用我，请执行这段逻辑来决定给他什么对象。”</em></li>
+</ul>
+</li>
+<li><strong>A 属性注入</strong>：发现需要 B，去创建 B。</li>
+<li><strong>B 实例化与注入</strong>：B 实例化后发现需要 A，于是去缓存找。一二级缓存没有，但在第三级缓存找到了 A 留下的那个 <code>ObjectFactory</code>（Lambda 表达式）。</li>
+<li><strong>调用钩子（见证奇迹的时刻）</strong>：B 调用了 <code>ObjectFactory.getObject()</code>。此时触发了那段 Lambda 表达式的代码
+<ul>
+<li>这段代码（<code>SmartInstantiationAwareBeanPostProcessor</code>）会进行判断：
+<ul>
+<li>发现 A 需要被 AOP 增强！</li>
+<li>于是，<strong>Spring 在这个时候（提前）为 A 创建了 AOP 代理对象</strong>。</li>
+<li>把这个代理对象返回给了 B。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>缓存升级</strong>：为了防止后面还有 C、D 也来要 A 的引用，Spring 会把刚才生成的 A 的代理对象放入<strong>第二级缓存</strong>（<code>earlySingletonObjects</code>），并把 A 从<strong>第三级缓存</strong>中删掉。</li>
+<li><strong>B 顺利完工</strong>：B 把 A 的代理对象注入到自己肚子里，完成创建，返回给 A。</li>
+<li><strong>A 顺利完工</strong>：A 拿到 B，完成自己的属性注入。走到生命周期最后一步时，A 发现自己已经被提前代理过了，就不再重复代理，直接把代理对象放入<strong>第一级缓存</strong>（<code>singletonObjects</code>）</li>
+</ul>
+<h5>总结</h5>
+<ul>
+<li><strong>第三级缓存里放的“工厂”</strong>：其实是一段 Lambda 回调逻辑（<code>ObjectFactory</code>），它手里攥着半成品的目标对象。</li>
+<li><strong>它的终极使命</strong>：处理 AOP 代理的“提前暴露”问题。如果发生循环依赖，并且目标对象需要被代理，这个“工厂”就会在被调用时，临时把原始对象加工成代理对象返回出去，保证全局注入的都是同一个代理对象。如果没有循环依赖，这个第三级缓存里的工厂就永远不会被调用，默默地等待 Bean 创建完成后被清理掉。</li>
+</ul>
+<h4>缺少二级缓存会怎么样</h4>
+<p>二级缓存 earlySingletonObjects 主要是用来存放那些已经通过三级缓存的对象工厂创建出来的早期 Bean 引用</p>
+<p>假设我们有 A、B、C 三个 Bean，A 依赖 B 和 C，B 和 C 都依赖 A，形成了一个复杂的循环依赖。</p>
+<p>在没有二级缓存的情况下，每次 B 或者 C 需要获取 A 的时候，都需要调用三级缓存中 A 的 <code>ObjectFactory.getObject()</code> 方法</p>
+<p>这意味着如果 A 需要被代理的话，代理对象可能会被重复创建多次，这显然是不合理的。</p>
+<p>举个具体的例子</p>
+<p>比如 A 有 <code>@Transactional</code> 注解需要被 AOP 代理，B 在初始化的时候需要 A，会调用一次对象工厂创建 A 的代理对象</p>
+<p>接着 C 在初始化的时候也需要 A，又会调用一次对象工厂，可能又创建了一个 A 的代理对象</p>
+<p>这样 B 和 C 拿到的可能就是两个不同的 A 代理对象，这就违反了单例 Bean 的语义。</p>
+<blockquote>
+<p>二级缓存就是为了解决这个问题。当第一次通过对象工厂创建了 A 的早期引用之后，就把这个引用放到二级缓存中，同时从三级缓存中移除对象工厂</p>
+<p>后续如果再有其他 Bean 需要 A，就直接从二级缓存中获取，不需要再调用对象工厂了</p>
+</blockquote>
+<h4>源码</h4>
+<p>当 B 在做属性注入，发现自己需要 A，去向 Spring 要 A 的时候，流程会走到 <code>DefaultSingletonBeanRegistry.java</code> 的 <code>getSingleton()</code> 方法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">protected</span> <span class="token class-name">Object</span> <span class="token function">getSingleton</span><span class="token punctuation">(</span><span class="token class-name">String</span> beanName<span class="token punctuation">,</span> <span class="token keyword">boolean</span> allowEarlyReference<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 【第一道防线：成品区】</span>
+  <span class="token comment">// 尝试从第一级缓存（singletonObjects）中获取完整的成品 Bean。</span>
+  <span class="token class-name">Object</span> singletonObject <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>singletonObjects<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">// 如果一级缓存没有拿到，并且这个 Bean 当前正处于“正在创建中”的状态。</span>
+  <span class="token comment">// （注：判断“正在创建中”非常关键！这是循环依赖发生的唯一前提，比如 A 创建时触发了 B，B 又回头来找 A）</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>singletonObject <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">isSingletonCurrentlyInCreation</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 【第二道防线：半成品区（无锁快查）】</span>
+    <span class="token comment">// 尝试从第二级缓存（earlySingletonObjects）中获取提前暴露的“半成品”或“代理对象”。</span>
+    <span class="token comment">// 这里没有加锁，是为了在绝大多数情况下追求极致的读取性能。</span>
+    singletonObject <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>earlySingletonObjects<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 如果二级缓存也没拿到，并且当前允许进行提前引用（通常都是 true）</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>singletonObject <span class="token operator">==</span> <span class="token keyword">null</span> <span class="token operator">&amp;&amp;</span> allowEarlyReference<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 【进入加锁警戒区】</span>
+        <span class="token comment">// 接下来要动用三级缓存并修改 Map 结构了，为了防止多线程环境下的数据错乱，必须加全局锁。</span>
+        <span class="token keyword">synchronized</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>singletonObjects<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// === DCL 双重检查锁（Double-Check Locking）开始 ===</span>
+          <span class="token comment">// 第 1 次复查：再查一次一级缓存。</span>
+          <span class="token comment">// （防范场景：当前线程在门外等锁的这短暂瞬间，可能别的线程已经彻底走完生命周期，把成品 Bean 放进一级缓存了）</span>
+          singletonObject <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>singletonObjects<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>singletonObject <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token comment">// 第 2 次复查：再查一次二级缓存。</span>
+              <span class="token comment">// （防范场景：刚才在门外等锁时，可能别的线程已经抢先触发了下面的三级缓存逻辑，把半成品提拔到二级缓存了）</span>
+              singletonObject <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>earlySingletonObjects<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token keyword">if</span> <span class="token punctuation">(</span>singletonObject <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment">// 【最终防线：图纸与工厂区】</span>
+                <span class="token comment">// 如果前两级缓存确实都没有，去第三级缓存（singletonFactories）里找那个 Lambda 表达式工厂。</span>
+                <span class="token class-name">ObjectFactory</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> singletonFactory <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ObjectFactory</span><span class="token punctuation">)</span><span class="token keyword">this</span><span class="token punctuation">.</span>singletonFactories<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>singletonFactory <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                  <span class="token comment">// 核心动作爆发：调用 getObject()，真正执行那段 Lambda 表达式！</span>
+                  <span class="token comment">// （如果在 AOP 环境下，就是在这里提前动态生成了代理对象）</span>
+                  singletonObject <span class="token operator">=</span> singletonFactory<span class="token punctuation">.</span><span class="token function">getObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                  
+                  <span class="token comment">// 【缓存升级操作】</span>
+                  <span class="token comment">// 1. 把刚生成的对象放进第二级缓存。</span>
+                  <span class="token comment">// （意义重大：如果一会儿还有 C、D 也要依赖 A，它们在门外查第二级缓存就能直接拿到了，绝不能让 Lambda 被重复执行，保证单例唯一）</span>
+                  <span class="token keyword">this</span><span class="token punctuation">.</span>earlySingletonObjects<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>beanName<span class="token punctuation">,</span> singletonObject<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                  
+                  <span class="token comment">// 2. 过河拆桥：从第三级缓存中删掉这个工厂。</span>
+                  <span class="token comment">// （它已经生产出对象并放进二级缓存了，完成了历史使命，用完即焚）</span>
+                  <span class="token keyword">this</span><span class="token punctuation">.</span>singletonFactories<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>beanName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+          <span class="token comment">// === DCL 双重检查锁结束 ===</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 凯旋而归：返回最终找到的（或刚刚提前生成的）对象</span>
+  <span class="token keyword">return</span> singletonObject<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Spring系列八股6 - Spring 启动分析</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article6.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article6.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股6 - Spring 启动分析</source>
+      <description>Spring基础 最简单的 Spring 模版 运行源码 this(): 负责准备环境。 register(): 负责注入最初始的元数据（可以理解为给 Spring 一个“线头”）。 refresh(): 则是一个庞大的、标准的模板方法（Template Method 设计模式） 顺着 register() 给的线头，refresh() 里的 Conf...</description>
+      <category>code</category>
+      <pubDate>Thu, 02 Apr 2026 08:51:45 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>Spring基础</h2>
+<h3>最简单的 Spring 模版</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>ekko</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>context<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">AnnotationConfigApplicationContext</span></span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>context<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Configuration</span></span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Configuration</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 这就是启动 Spring 容器最核心、最简单的一行代码</span>
+      <span class="token class-name">AnnotationConfigApplicationContext</span> context <span class="token operator">=</span>
+              <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Spring 容器启动完成！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>运行源码</h4>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Spring 框架源码：AnnotationConfigApplicationContext.java</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AnnotationConfigApplicationContext</span> <span class="token keyword">extends</span> <span class="token class-name">GenericApplicationContext</span> <span class="token keyword">implements</span> <span class="token class-name">AnnotationConfigRegistry</span> <span class="token punctuation">{</span>
+  <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">AnnotatedBeanDefinitionReader</span> reader<span class="token punctuation">;</span>
+  <span class="token keyword">private</span> <span class="token keyword">final</span> <span class="token class-name">ClassPathBeanDefinitionScanner</span> scanner<span class="token punctuation">;</span>
+
+  <span class="token keyword">public</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">StartupStep</span> createAnnotatedBeanDefReader <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getApplicationStartup</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token string">"spring.context.annotated-bean-reader.create"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>reader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AnnotatedBeanDefinitionReader</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    createAnnotatedBeanDefReader<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>scanner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ClassPathBeanDefinitionScanner</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+  <span class="token keyword">public</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> componentClasses<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 第一步：调用无参构造函数</span>
+      <span class="token comment">// 动作：在这里会隐式地初始化一个 BeanFactory，并实例化“读取器 (Reader)”和“扫描器 (Scanner)”。</span>
+      <span class="token comment">// 意义：准备好了处理注解的工具。</span>
+      <span class="token keyword">this</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token comment">// 第二步：注册配置类</span>
+      <span class="token comment">// 动作：把你传入的 AppConfig.class 解析成一个 BeanDefinition，并放入 beanDefinitionMap 中。</span>
+      <span class="token comment">// 意义：把启动入口（图纸）交给 Spring。</span>
+      <span class="token function">register</span><span class="token punctuation">(</span>componentClasses<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      
+      <span class="token comment">// 第三步：刷新容器（核心大戏！）</span>
+      <span class="token comment">// 动作：包含 7 大核心步骤的 refresh() 方法。</span>
+      <span class="token comment">// 意义：完成包扫描、执行后置处理器、实例化所有单例 Bean 等全部生命周期。</span>
+      <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token punctuation">}</span>
+</code></pre></div><ul>
+<li><code>this()</code>: 负责准备环境。</li>
+<li><code>register()</code>: 负责注入最初始的元数据（可以理解为给 Spring 一个“线头”）。</li>
+<li><code>refresh()</code>: 则是一个庞大的、标准的模板方法（Template Method 设计模式）
+<ul>
+<li>顺着 register() 给的线头，refresh() 里的 <code>ConfigurationClassPostProcessor</code> 就会顺藤摸瓜，把包下所有的 <code>@Component</code> 都扫描出来。</li>
+</ul>
+</li>
+</ul>
+<p><code>register()</code> 是把传入的配置类注册成 <code>BeanDefinition</code>，给 Spring 一个"线头"，后续 <code>refresh()</code> 中的 <code>ConfigurationClassPostProcessor</code> 会从这个线头开始扫描</p>
+<h3>Spring 启动分析</h3>
+<p>Spring 容器的启动过程，本质上就是执行 <code>AbstractApplicationContext</code> 类中大名鼎鼎的 <code>refresh()</code> 方法的过程</p>
+<p>这个方法是加了 synchronized 锁的，也就是所谓的“刷新容器”</p>
+<p>它不仅包含了“图纸归档”（Bean 注册），更统揽了从环境准备到对象实例化的全局工作</p>
+<p>如果将整个启动流程按照 <code>refresh()</code> 方法的核心源码骨架来拆解，可以归纳为以下七个核心阶段</p>
+<h4>1. 准备阶段 (Prepare Refresh) 以及 初始化 BeanFactory</h4>
+<p>这是启动的“热身”环节</p>
+<p>Spring 会在这个阶段记录容器的启动时间，标记当前容器的状态为“激活”，并初始化一些上下文环境中的占位符属性（Property Sources）</p>
+<p>同时，它也会验证那些被标记为“必须存在”的系统属性是否都已经配置到位。</p>
+<p>Spring 会在这一步创建一个全新的 <code>DefaultListableBeanFactory</code>（也就是那个核心容器对象）</p>
+<p>对应源码：<code>obtainFreshBeanFactory()</code> 和 <code>prepareBeanFactory()</code></p>
+<ul>
+<li>获取工厂：其实在 <code>new AnnotationConfigApplicationContext()</code> 的第一步 this() 中，底层就已经创建好了一个 <code>DefaultListableBeanFactory</code>。这里主要是把它取出来。</li>
+<li>准备工具：Spring 会给这个工厂配置上类加载器（ClassLoader）、表达式解析器（SpEL），并默默地塞几个系统级的 Bean 进去（比如 Environment）。</li>
+</ul>
+<h4>2. 加载图纸 (Obtain &amp; Prepare BeanFactory)</h4>
+<p>对应源码：<code>invokeBeanFactoryPostProcessors(beanFactory)</code></p>
+<p><strong>这是 <code>refresh</code> 中极其关键的一步，也是连接你之前代码的核心！</strong></p>
+<ol>
+<li><strong>解析 <code>@ComponentScan</code></strong>：Spring 容器目前只有 <code>AppConfig</code> 这一张图纸。Spring 会找到内部默认注册的 <code>ConfigurationClassPostProcessor</code>（它就是一个超高级的 <code>BeanFactoryPostProcessor</code>），由它去读取 <code>AppConfig</code> 上的包扫描路径。</li>
+<li><strong>生成新图纸</strong>：顺着路径，它扫描到了你写的 <code>Pig</code> 类（带有 <code>@Component</code>）。于是，系统通过上一个环节聊到的 <code>doRegisterBean()</code> 逻辑，把 <code>Pig</code> 也变成了 <code>BeanDefinition</code> 存入 Map。至此，所有图纸收集完毕。</li>
+</ol>
+<h4>3. 执行工厂后置处理器 (Invoke BeanFactoryPostProcessors)</h4>
+<p>图纸加载完毕，但在正式”动工”之前，Spring 允许我们对图纸进行最后的修改。</p>
+<ul>
+<li><strong>调用自定义扩展</strong>：图纸齐了，Spring 开始在 Map 里寻找哪些图纸实现了 <code>BeanFactoryPostProcessor</code> 接口。它发现了你的 <code>Pig</code> 类！</li>
+<li><strong>实例化并执行</strong>：Spring 提前把 <code>Pig</code> 实例化，然后调用了它的 <code>postProcessBeanFactory</code> 方法。<strong>此时，你的控制台打印出了 <code>"Hello World"</code>。</strong></li>
+</ul>
+<p>调用实现了 <code>BeanDefinitionRegistryPostProcessor</code> 和 <code>BeanFactoryPostProcessor</code> 接口 的类</p>
+<p><strong>执行顺序</strong>：</p>
+<ol>
+<li>先执行所有实现了 <code>BeanDefinitionRegistryPostProcessor</code> 接口的类的 <code>postProcessBeanDefinitionRegistry</code> 方法</li>
+<li>再执行所有实现了 <code>BeanFactoryPostProcessor</code> 接口的类的 <code>postProcessBeanFactory</code> 方法</li>
+</ol>
+<p><strong>典型应用</strong>：最核心的 <code>ConfigurationClassPostProcessor</code> 就在这个阶段工作，它会：</p>
+<ul>
+<li>解析 <code>@Configuration</code>、<code>@ComponentScan</code>、<code>@Import</code>、<code>@PropertySource</code> 等注解</li>
+<li>完成包扫描，把扫描到的 Bean 定义注册到容器中</li>
+</ul>
+<p><strong>这个阶段结束后，所有 Bean 的定义信息彻底锁定</strong></p>
+<p>比如假设我们有个 <code>Pig</code> 类</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Pig</span> <span class="token keyword">implements</span> <span class="token class-name">BeanFactoryPostProcessor</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">postProcessBeanFactory</span><span class="token punctuation">(</span><span class="token class-name">ConfigurableListableBeanFactory</span> configurableListableBeanFactory<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">BeansException</span> <span class="token punctuation">{</span>
+      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>就会被提前实例化</p>
+<h4>4. 注册 Bean 后置处理器 (Register BeanPostProcessors)</h4>
+<blockquote>
+<p>上一步处理的是 BeanFactory 的后置处理器（管图纸的），这一步处理的是 Bean 的后置处理器（管实例对象的）</p>
+</blockquote>
+<p><strong>注意，这一步只是“注册”，不是执行</strong></p>
+<p>Spring 会从 <code>beanDefinitionMap</code> 中找出所有实现了 <code>BeanPostProcessor</code> 接口的类，把它们提前实例化，并按照优先级（PriorityOrdered、Ordered 等）放入一个特定的集合中</p>
+<p>这些后置处理器是 AOP 生效的基础，它们将在后续 Bean 的“初始化前后”被调用，用来对普通的 Bean 进行功能增强（比如生成代理对象）</p>
+<blockquote>
+<p>（比如专门负责处理 <code>@Autowired</code> 的，或者专门负责生成 AOP 动态代理的）</p>
+</blockquote>
+<h4>5. 初始化基础设施 (Init MessageSource, EventMulticaster, etc.)</h4>
+<p>这是 Spring 为了支撑更庞大架构而准备的底层设施：</p>
+<ul>
+<li><strong>MessageSource</strong>：初始化国际化（i18n）组件。</li>
+<li><strong>ApplicationEventMulticaster</strong>：初始化事件广播器。Spring 的事件驱动模型（发布/订阅）就是依赖这个组件运作的。</li>
+<li><strong>onRefresh()</strong>：这是一个模板方法，留给子类扩展的。<strong>这里非常关键，如果是 Spring Boot 环境下，它会在这里启动内嵌的 Web 容器（比如 Tomcat 或 Undertow）。</strong></li>
+</ul>
+<p>如果你是用 Spring Boot 启动（比如使用了 <code>ServletWebServerApplicationContext</code>），Spring Boot 会重写这个方法，在这里利用代码去 <code>new Tomcat()</code> 并启动内嵌的 Web 服务器。</p>
+<h4>6. 实例化所有非懒加载单例 (Finish BeanFactory Initialization)</h4>
+<blockquote>
+<p>这是整个启动流程中最耗时、最复杂的一步，真正的对象全都在这里诞生</p>
+</blockquote>
+<p>对应的方法是 <code>finishBeanFactoryInitialization(beanFactory)</code></p>
+<p>Spring 会遍历 <code>beanDefinitionMap</code> 中所有的图纸，把那些<strong>不是懒加载的单例 Bean</strong> 全部创建出来。底层核心是调用 <code>getBean(beanName)</code> 方法：</p>
+<ol>
+<li><strong>实例化 (Instantiation)</strong>：利用 Java 反射，调用类的构造函数（通常是无参构造）在堆内存中 <code>new</code> 出一个半成品对象。</li>
+<li><strong>属性填充 (PopulateBean)</strong>：也就是依赖注入。遇到 <code>@Autowired</code>，就去容器里找对应的 Bean 塞进去（如果遇到循环依赖，就在这里通过“三级缓存”解决）。</li>
+<li><strong>初始化 (InitializeBean)</strong>：
+<ul>
+<li><strong>执行前置处理</strong>：刚才招募的 <code>BeanPostProcessor</code> 上场，执行 <code>postProcessBeforeInitialization</code>。</li>
+<li><strong>执行初始化方法</strong>：执行 <code>@PostConstruct</code> 注解标注的方法，或者 <code>InitializingBean</code> 接口的 <code>afterPropertiesSet</code>。</li>
+<li><strong>执行后置处理（AOP 爆发点）</strong>：执行 <code>postProcessAfterInitialization</code>。<strong>如果这个 Bean 需要被事务拦截或切面增强，Spring 就会在这一步悄悄地把返回的对象替换成一个 CGLIB 或 JDK 动态代理对象。</strong></li>
+</ul>
+</li>
+<li><strong>入库</strong>：完全搞定的 Bean（或其代理对象），会被正式放入名为 <code>singletonObjects</code> 的 <code>ConcurrentHashMap</code>（一级缓存）中。</li>
+</ol>
+<p><strong>三级缓存解决循环依赖</strong>：</p>
+<ul>
+<li><strong>一级缓存</strong> <code>singletonObjects</code>：完整的单例 Bean</li>
+<li><strong>二级缓存</strong> <code>earlySingletonObjects</code>：提前暴露的半成品 Bean（已实例化但未初始化）</li>
+<li><strong>三级缓存</strong> <code>singletonFactories</code>：ObjectFactory，用于生成早期引用（处理 AOP 代理）</li>
+</ul>
+<p>在这个阶段结束时，所有的核心单例对象都已经稳稳地躺在一级缓存中。</p>
+<h4>7. 完成刷新与收尾 (Finish Refresh)</h4>
+<p>所有组件都就位后，容器就算启动成功了</p>
+<p>Spring 会在这一步清理一些启动过程中的临时缓存，初始化生命周期处理器（LifecycleProcessor），并向整个系统广播一个 <code>ContextRefreshedEvent</code> 事件</p>
+<p>很多开发者会监听这个事件，用来在 Spring 容器启动完毕后执行一些自定义的业务逻辑（比如加载缓存、启动定时任务等）。</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>JVM 八股14 - IDEA 运行流程</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article14.html</link>
@@ -310,602 +1173,6 @@ plugin<span class="token punctuation">.</span><span class="token function">start
 <li>假如是因为长生命周期的对象进入到了老年代，要及时释放资源，比如说 ThreadLocal、数据库连接、IO 资源等。</li>
 <li>假如是因为 GC 参数配置不合理导致的频繁 Full GC，可以通过调整 GC 参数来优化 GC 行为。或者直接更换更适合的 GC 收集器，如 G1、ZGC 等。</li>
 </ul>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股10 - 垃圾收集3 (垃圾收集器 + GC类型)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article10.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article10.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股10 - 垃圾收集3 (垃圾收集器 + GC类型)</source>
-      <description>垃圾收集器 垃圾收集算法是理论基础，定义了如何识别和回收垃圾；垃圾收集器是算法的具体实现，一个收集器可以实现一种或多种算法 JVM 的垃圾收集器主要分为两大类：分代收集器和分区收集器 分代收集器的代表是 CMS 分区收集器的代表是 G1 和 ZGC 分代是按对象年龄划分（新生代/老年代），针对性回收；分区是把堆切成独立小区域（Region），可预测停顿...</description>
-      <category>code</category>
-      <pubDate>Tue, 31 Mar 2026 16:25:41 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>垃圾收集器</h2>
-<blockquote>
-<p>垃圾收集算法是理论基础，定义了如何识别和回收垃圾；垃圾收集器是算法的具体实现，一个收集器可以实现一种或多种算法</p>
-</blockquote>
-<p>JVM 的垃圾收集器主要分为两大类：分代收集器和分区收集器</p>
-<p>分代收集器的代表是 CMS</p>
-<p>分区收集器的代表是 G1 和 ZGC</p>
-<blockquote>
-<p>分代是按对象年龄划分（新生代/老年代），针对性回收；分区是把堆切成独立小区域（Region），可预测停顿时间。</p>
-<p>现代收集器（如 G1）结合两者：逻辑上分代，物理上分区。</p>
-</blockquote>
-<p>垃圾回收器的核心作用是自动管理 Java 应用程序的运行时内存。它负责识别哪些内存是不再被应用程序使用的，并释放这些内存以便重新使用。</p>
-<p>这一过程减少了程序员手动管理内存的负担，降低了内存泄漏和溢出错误的风险。</p>
-<h3>分代收集器</h3>
-<p>新生代 (Serial): 标记-复制</p>
-<p>老年代 (Serial Old): 标记-整理</p>
-<p>主要是 Serial/old 以及多线程版本 Parallel new/Old</p>
-<p>然后就是根据吞吐量可以动态调整清理时间的 Parallel Scavenge</p>
-<p>JDK8 采用的就是这种 Parallel Scavenge + Parallel Old 的垃圾回收方案</p>
-<h4>Serial 收集器</h4>
-<p>Serial 收集器是最基础、历史最悠久的收集器</p>
-<p>如同它的名字（串行），它是一个<strong>单线程工作的收集器</strong>，使用一个处理器或一条收集线程去完成垃圾收集工作。</p>
-<p>并且进行垃圾收集时，必须暂停其他所有工作线程，直到垃圾收集结束——这就是所谓的“Stop The World”</p>
-<p>Serial/Serial Old 收集器的运行过程如图：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>新生代 (Serial): 标记-复制</p>
-<p>老年代 (Serial Old): 标记-整理</p>
-<h5>Serial Old 收集器</h5>
-<p>Serial Old 是 Serial 收集器的老年代版本，它同样是一个单线程收集器，使用标记-整理算法</p>
-<h4>ParNew 收集器</h4>
-<p>ParNew 收集器实质上是 Serial 收集器的多线程并行版本，使用多条线程进行垃圾收集</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>Parallel Old (老年代收集器)</h4>
-<p>Parallel Old 是 Parallel Scavenge 收集器的老年代版本</p>
-<p>基于标记-整理算法实现，使用多条 GC 线程在 STW 期间同时进行垃圾回收</p>
-<h4>Parallel Scavenge (新生代收集器)</h4>
-<p>Parallel Scavenge 收集器是一款新生代收集器，基于标记-复制算法实现，也能够并行收集</p>
-<p>和 ParNew 有些类似，但 Parallel Scavenge 主要关注的是垃圾收集的吞吐量——所谓吞吐量，就是 CPU 用于运行用户代码的时间和总消耗时间的比值，比值越大，说明垃圾收集的占比越小</p>
-<p v-pre="" class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>吞吐量</mtext><mo>=</mo><mfrac><mtext>运行用户代码的时间</mtext><mrow><mtext>运行垃圾收集的时间</mtext><mo>+</mo><mtext>运行用户代码的时间</mtext></mrow></mfrac></mrow><annotation encoding="application/x-tex">
-\text{吞吐量} = \frac{\text{运行用户代码的时间}}{\text{运行垃圾收集的时间}+\text{运行用户代码的时间}}
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">吞吐量</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1297em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">运行垃圾收集的时间</span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord text"><span class="mord cjk_fallback">运行用户代码的时间</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord text"><span class="mord cjk_fallback">运行用户代码的时间</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
-<p>它会根据吞吐量来决定每次垃圾回收的时间，这种自适应机制，能够很好地权衡当前机器的性能，根据性能选择最优方案。</p>
-<p>目前 JDK8 采用的就是这种 Parallel Scavenge + Parallel Old 的垃圾回收方案</p>
-<h4>CMS 收集器 (老年代收集器)</h4>
-<p>CMS 在 JDK 1.5 时引入，JDK 9 时被标记弃用，JDK 14 时被移除</p>
-<p>在分代收集架构中，CMS 专门负责 老年代 的垃圾回收</p>
-<p>它不能独立工作，通常需要配合年轻代的收集器一起使用:</p>
-<ul>
-<li>配合 ParNew： 这是最常见的组合（ParNew负责年轻代，CMS负责老年代）。</li>
-<li>配合 Serial： 当 CMS 出现故障（Concurrent Mode Failure）时，会退化到使用 Serial Old 进行全量回收</li>
-</ul>
-<p>CMS 是一种低延迟的垃圾收集器，采用标记-清除算法, 主要分为四个阶段：</p>
-<ul>
-<li>初始标记（STW）：仅仅标记 GC Roots 能直接关联到的对象。速度非常快，但会触发 Stop The World (STW)（停止所有业务线程）</li>
-<li>并发标记：从GC Roots的直接关联对象开始遍历整个对象图的过程，这个过程耗时较长但是不需要停顿用户线程，可以与垃圾收集线程一起并发运行。</li>
-<li>重新标记（STW）：修正并发标记期间，因用户程序继续运作而导致标记产生变动的那一部分记录。这个阶段也会 STW，停顿时间比初始标记长，但远比并发标记短。</li>
-<li>并发清除：清理掉标记阶段判断为死亡的对象。这个阶段也是并发执行的。</li>
-</ul>
-<p>优点是垃圾回收线程和应用线程同时运行，停顿时间短，适合延迟敏感的应用，但容易产生内存碎片，可能触发 Full GC</p>
-<p>会产生浮动垃圾，在并发清除阶段，用户线程还在运行，产生的垃圾无法在当次 GC 中清理，只能等下一次</p>
-<blockquote>
-<p>这款收集器是HotSpot虚拟机中第一款真正意义上的并发（注意这里的并发和之前的并行是有区别的，并发可以理解为同时运行用户线程和GC线程，而并行可以理解为多条GC线程同时工作）收集器，它第一次实现了让垃圾收集线程与用户线程同时工作</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<h3>分区收集器</h3>
-<h4>G1 收集器 (主流)</h4>
-<p>G1 在 JDK 1.7 时引入，在 JDK 9 时取代 CMS 成为默认的垃圾收集器</p>
-<p>G1 是一种面向大内存、高吞吐场景的垃圾收集器，它将堆划分为多个小的 Region，通过标记-整理算法，避免了内存碎片问题</p>
-<p>优点是停顿时间可控，适合大堆场景，但调优较复杂</p>
-<p>我们的垃圾回收分为Minor GC、Major GC 和Full GC，它们分别对应的是新生代，老年代和整个堆内存的垃圾回收</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>而G1收集器巧妙地绕过了这些约定，将整个Java堆划分成2048个大小相同的独立Region块，每个Region块的大小根据堆空间的实际大小而定，整体被控制在1MB到32MB之间，且都为2的N次幂</p>
-<p>所有的Region大小相同，且在JVM的整个生命周期内不会发生改变</p>
-<ul>
-<li>每一个Region都可以根据需要，自由决定扮演哪个角色（Eden、Survivor和老年代）</li>
-<li>收集器会根据对应的角色采用不同的回收策略</li>
-<li>此外，G1收集器还存在一个Humongous区域，它专门用于存放大对象（一般认为大小超过了Region容量一半的对象为大对象）</li>
-<li>这样，新生代、老年代在物理上，不再是一个连续的内存区域，而是到处分布的</li>
-</ul>
-<p>现在的主流是 G1 (Garbage First) 收集器（Java 9 后的默认设置），以及在高版本 Java 中出现的 ZGC 和 Shenandoah。它们在处理大内存和极低停顿方面比 CMS 表现得更加优秀。</p>
-<h3>CMS 的垃圾收集过程</h3>
-<blockquote>
-<p>三色标记法</p>
-</blockquote>
-<p>先 STW，快速把所有 GC Roots 直接关联的对象找到并标记，然后并发标记，从前面标记的对象出发，遍历并标记所有可达对象，最后再短暂 STW 修正并发期间的变动，然后并发清除垃圾。</p>
-<p>CMS 使用标记-清除算法进行垃圾收集，分 4 大步：</p>
-<ul>
-<li><strong>初始标记 (STW)</strong>：标记所有从 GC Roots 直接可达的对象，这个阶段需要 STW，但速度很快。</li>
-<li><strong>并发标记</strong>：从初始标记的对象出发，遍历所有对象，标记所有可达的对象。这个阶段是并发进行的。</li>
-<li><strong>重新标记 (STW)</strong>：完成剩余的标记工作，包括处理并发阶段遗留下来的少量变动，这个阶段通常需要短暂的 STW 停顿。</li>
-<li><strong>并发清除</strong>：清除未被标记的对象，回收它们占用的内存空间。这个阶段是并发进行的。</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>重新标记阶段</h4>
-<p>remark 阶段通常会结合三色标记法来执行，确保在并发标记期间所有存活对象都被正确标记。目的是修正并发标记阶段中可能遗漏的对象引用变化</p>
-<p>在 remark 阶段，垃圾收集器会停止应用线程，以确保在这个阶段不会有引用关系的进一步变化。这种暂停通常很短暂。remark 阶段主要包括以下操作：</p>
-<ul>
-<li>处理写屏障记录的引用变化：在并发标记阶段，应用程序可能会更新对象的引用（比如一个黑色对象新增了对一个白色对象的引用），这些变化通过写屏障记录下来。在 remark 阶段，GC 会处理这些记录，确保所有可达对象都正确地标记为灰色或黑色。</li>
-<li>扫描灰色对象：再次遍历灰色对象，处理它们的所有引用，确保引用的对象正确标记为灰色或黑色。</li>
-<li>清理：确保所有引用关系正确处理后，灰色对象标记为黑色，白色对象保持不变。这一步完成后，所有存活对象都应当是黑色的。</li>
-</ul>
-<h4>什么是三色标记法</h4>
-<p>三色标记法用于标记对象的存活状态，它将对象分为三类：</p>
-<ul>
-<li>白色（White）：尚未访问的对象。垃圾回收结束后，仍然为白色的对象会被认为是不可达的对象，可以回收。</li>
-<li>灰色（Gray）：已经访问到但未标记完其引用的对象。灰色对象是需要进一步处理的。</li>
-<li>黑色（Black）：已经访问到并且其所有引用对象都已经标记过。黑色对象是完全处理过的，不需要再处理。</li>
-</ul>
-<blockquote>
-<p>CMS 流程：初始标记，并发标记，重新标记，并发清理</p>
-</blockquote>
-<h5>初始标记</h5>
-<p>从 GC Roots 开始，标记所有直接可达的对象为灰色</p>
-<blockquote>
-<p>相当于把 GC Roots 所引用的对象都标记为灰色</p>
-</blockquote>
-<h5>并发标记</h5>
-<p>在此阶段，标记所有灰色对象引用的对象为灰色，然后将灰色对象自身标记为黑色。</p>
-<p>这个过程是并发的，和应用线程同时进行。</p>
-<blockquote>
-<p>扫描灰色对象集合，依次遍历灰色对象，每个对象可能内部引用了别的，就把这些也放到灰色对象集合中，遍历了一个灰色对象，这个对象就放到黑色集合中</p>
-</blockquote>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>灰色对象集合 = 待处理队列
-
-循环处理：
-1. 从灰色集合拿出一个对象 X
-2. 把 X 引用的所有对象标记为灰色（加入待处理队列）
-3. X 自己标记为黑色（处理完成）
-</code></pre></div><p>会出现:</p>
-<ul>
-<li>漏标: 本该存活的对象被标记为白色(危险，会错误回收)</li>
-<li>错标: 浮动垃圾，本该回收的对象被保留到下次 GC（无害，只是效率问题）</li>
-</ul>
-<p>错标是至少是可以允许的，但是如果发生漏标，导致本不应该被回收的对象被回收了，就很严重，所以需要重新标记</p>
-<h5>重新标记 (STW)</h5>
-<p>重新标记用增量更新或原始快照来防止漏标</p>
-<p>为了确保所有存活对象都被正确标记，remark 需要在 STW 暂停期间执行。</p>
-<blockquote>
-<p>使用写屏障（Write Barrier）来捕捉并发标记阶段应用线程对对象引用的更新</p>
-<p>通过遍历这些更新的引用来修正标记状态，确保遗漏的对象不会被错误地回收。</p>
-</blockquote>
-<p>在 CMS 中，并发标记期间，如果黑色对象A新增了一个指向白色对象B的引用，CMS写屏障会记录下来，然后把这些黑色对象作为GC Roots再重新扫描一次</p>
-<blockquote>
-<p>把这些新增了对象引用的对象，重新扫描一次，来避免漏标</p>
-</blockquote>
-<h5>并发清楚</h5>
-<p>最后把标记为垃圾的对象并发清除</p>
-<h3>G1 收集器分析</h3>
-<p>G1 在 JDK 1.7 时引入，在 JDK 9 时取代 CMS 成为默认的垃圾收集器</p>
-<p>G1 把 Java 堆划分为多个大小相等的独立区域 Region，每个区域都可以扮演新生代或老年代的角色。</p>
-<p>同时，G1 还有一个专门为大对象设计的 Region，叫 Humongous 区。</p>
-<blockquote>
-<p>大对象的判定规则是，如果一个大对象超过了一个 Region 大小的 50%，比如每个 Region 是 2M，只要一个对象超过了 1M，就会被放入 Humongous 中。</p>
-</blockquote>
-<p>回收过程与CMS大体类似：</p>
-<p>分为以下四个步骤：</p>
-<ul>
-<li>初始标记（暂停用户线程）：仅仅只是标记一下GC Roots能直接关联到的对象，并且修改TAMS指针的值，让下一阶段用户线程并发运行时，能正确地在可用的Region中分配新对象。
-<ul>
-<li>这个阶段需要停顿线程，但耗时很短，而且是借用进行Minor GC的时候同步完成的，所以G1收集器在这个阶段实际并没有额外的停顿。</li>
-</ul>
-</li>
-<li>并发标记：从GC Root开始对堆中对象进行可达性分析，递归扫描整个堆里的对象图，找出要回收的对象，这阶段耗时较长，但可与用户程序并发执行。</li>
-<li>最终标记（暂停用户线程）：对用户线程做一个短暂的暂停，用于处理并发标记阶段漏标的那部分对象。</li>
-<li>筛选回收：负责更新Region的统计数据，对各个Region的回收价值和成本进行排序，根据用户所期望的停顿时间来制定回收计划，可以自由选择任意多个Region构成回收集，然后把决定回收的那一部分Region的存活对象复制到空的Region中，再清理掉整个旧Region的全部空间。这里的操作涉及存活对象的移动，是必须暂停用户线程，由多个收集器线程并行完成的。</li>
-</ul>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股11 - 垃圾收集4 (ZGC)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article11.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article11.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股11 - 垃圾收集4 (ZGC)</source>
-      <description>垃圾收集器 ZGC ZGC 是 JDK 11 时引入的一款低延迟的垃圾收集器，最大特点是将垃圾收集的停顿时间控制在 10ms 以内，即使在 TB 级别的堆内存下也能保持较低的停顿时间。 ZGC 也采⽤了复制算法，只不过做了重⼤优化，ZGC 在标记、转移和重定位阶段⼏乎都是并发的，这是 ZGC 实现停顿时间⼩于 10ms 的关键所在 alt textal...</description>
-      <category>code</category>
-      <pubDate>Tue, 31 Mar 2026 16:25:41 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>垃圾收集器</h2>
-<h3>ZGC</h3>
-<p>ZGC 是 JDK 11 时引入的一款低延迟的垃圾收集器，最大特点是将垃圾收集的停顿时间控制在 10ms 以内，即使在 TB 级别的堆内存下也能保持较低的停顿时间。</p>
-<p>ZGC 也采⽤了复制算法，只不过做了重⼤优化，ZGC 在标记、转移和重定位阶段⼏乎都是并发的，这是 ZGC 实现停顿时间⼩于 10ms 的关键所在</p>
-<figure><figcaption>alt text</figcaption></figure>
-<blockquote>
-<p>关键技术</p>
-</blockquote>
-<h4>指针染色</h4>
-<p>在⼀个指针中，除了存储对象的实际地址外，还有额外的位被⽤来存储关于该对象的元数据信息。</p>
-<p>这些信息可能包括：</p>
-<ul>
-<li>对象是否被移动了（即它是否在回收过程中被移动到了新的位置）。</li>
-<li>对象的存活状态。</li>
-<li>对象是否被锁定或有其他特殊状态。</li>
-</ul>
-<p>通过在指针中嵌⼊这些信息，ZGC 在标记和转移阶段会更快，因为通过指针上的颜⾊就能区分出对象状态，不⽤额外做内存访问。</p>
-<p>ZGC 仅支持 64 位系统，把 64 位虚拟地址空间划分为多个子空间</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>其中，0-4TB 对应 Java 堆，4TB-8TB 被称为 M0 地址空间，8TB-12TB 被称为 M1 地址空间，12TB-16TB 预留未使用，16TB-20TB 被称为 Remapped 空间</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>由于仅⽤了第 0~43 位存储对象地址， 2^44 = 16TB，所以 ZGC 最⼤⽀持 16TB 的堆。</p>
-<p>⾄于对象的存活信息，则存储在42-45位中，这与传统的垃圾回收并将对象存活信息放在对象头中完全不同。</p>
-<p>三个虚拟地址映射同一物理内存 = 让对象可以"同时出现在两个地方"，读屏障负责选择正确的地址，从而实现并发移动对象无停顿。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h4>读屏障</h4>
-<p>当程序尝试读取⼀个对象时，读屏障会触发以下操作：</p>
-<ul>
-<li>检查指针染⾊：读屏障⾸先检查指向对象的指针的颜⾊信息。</li>
-<li>处理移动的对象：如果指针表示对象已经被移动（例如，在垃圾回收过程中），读屏障将确保返回对象的新位置。</li>
-<li>确保⼀致性：通过这种⽅式，ZGC 能够在并发移动对象时保持内存访问的⼀致性，从⽽减少对应⽤程序停顿的需要。</li>
-</ul>
-<h3>ZGC 的垃圾收集过程</h3>
-<p>ZGC 的垃圾收集过程分为 8 个阶段，其中只有 3 个阶段需要短暂 STW，其余阶段均与应用线程并发执行：</p>
-<h4>阶段 1：初始标记（STW &lt; 1ms）</h4>
-<ul>
-<li>标记所有从 GC Roots 直接可达的对象</li>
-<li>修改染色指针的标记位（marked0/marked1）</li>
-<li>停顿时间极短，因为只处理直接可达对象</li>
-</ul>
-<h4>阶段 2：并发标记</h4>
-<ul>
-<li>与应用线程同时运行</li>
-<li>从初始标记的对象出发，遍历整个对象图</li>
-<li>标记所有存活对象，修改其染色指针</li>
-</ul>
-<h4>阶段 3：初始暂停（STW &lt; 1ms）</h4>
-<ul>
-<li>处理并发标记期间剩余的引用变化</li>
-<li>完成标记状态的一致性检查</li>
-</ul>
-<h4>阶段 4：并发预备重映射</h4>
-<ul>
-<li>选择存活对象最少的 Region 进行回收</li>
-<li>为存活对象分配新的虚拟地址（Remapped 空间）</li>
-<li>准备对象复制</li>
-</ul>
-<h4>阶段 5：重新标记（STW &lt; 1ms）</h4>
-<ul>
-<li>最终确认所有存活对象的标记状态</li>
-<li>确保没有对象被遗漏</li>
-</ul>
-<h4>阶段 6：并发重映射（对象复制）</h4>
-<ul>
-<li>将存活对象复制到新的物理地址</li>
-<li>旧地址的染色指针标记为"已转发"</li>
-<li>读屏障自动处理转发，应用线程无感知</li>
-</ul>
-<h4>阶段 7：重映射引用（STW &lt; 1ms）</h4>
-<ul>
-<li>更新所有 GC Roots 和对象引用指向新地址</li>
-<li>这个停顿非常短暂，因为只需要更新指针</li>
-</ul>
-<h4>阶段 8：并发释放</h4>
-<ul>
-<li>清空旧 Region，回收物理内存</li>
-<li>为下一次 GC 做准备</li>
-</ul>
-<blockquote>
-<p>提示：JDK 21 引入了分代 ZGC（Z Generational），将堆分为新生代和老年代，进一步提升了 GC 效率。</p>
-</blockquote>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股12 - 类加载</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article12.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article12.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股12 - 类加载</source>
-      <description>类加载机制 JVM 的操作对象是 Class 文件。JVM 把 Class 文件中描述类的数据结构加载到内存中，并对数据进行校验、解析和初始化，最终转化成可以被 JVM 直接使用的类型，这个过程被称为类加载机制。 类加载是运行时进行的，JVM 不会在启动时加载所有类，而是按需加载。 触发类加载的时机（主动引用）： new 一个对象 访问类的静态变量或静...</description>
-      <category>code</category>
-      <pubDate>Tue, 31 Mar 2026 16:25:41 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>类加载机制</h2>
-<p>JVM 的操作对象是 Class 文件。JVM 把 Class 文件中描述类的数据结构加载到内存中，并对数据进行校验、解析和初始化，最终转化成可以被 JVM 直接使用的类型，这个过程被称为类加载机制。</p>
-<blockquote>
-<p>类加载是<strong>运行时</strong>进行的，JVM 不会在启动时加载所有类，而是<strong>按需加载</strong>。</p>
-<p>触发类加载的时机（主动引用）：</p>
-<ul>
-<li><code>new</code> 一个对象</li>
-<li>访问类的静态变量或静态方法</li>
-<li>使用反射（如 <code>Class.forName()</code>）</li>
-<li>初始化子类时（会先触发父类加载）</li>
-</ul>
-<p>不触发类加载的情况（被动引用）：</p>
-<ul>
-<li>通过子类引用父类的静态变量</li>
-<li>定义类数组（如 <code>MyClass[] arr</code>）</li>
-<li>常量引用（如 <code>MyClass.CONST</code>）</li>
-</ul>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<p>其中最重要的三个概念就是：类加载器、类加载过程和双亲委派模型。</p>
-<ul>
-<li><strong>类加载器</strong>：负责加载类文件，将类文件加载到内存中，生成 Class 对象。</li>
-<li><strong>类加载过程</strong>：包括加载、验证、准备、解析和初始化等步骤。</li>
-<li><strong>双亲委派模型</strong>：当一个类加载器接收到类加载请求时，它会把请求委派给父类加载器去完成，依次递归，直到最顶层的类加载器，如果父类加载器无法完成加载请求，子类加载器才会尝试自己去加载。</li>
-</ul>
-<h3>类的加载过程</h3>
-<p>类从被加载到 JVM 开始，到卸载出内存，整个生命周期分为七个阶段：<strong>加载、验证、准备、解析、初始化、使用和卸载</strong>。</p>
-<p>其中验证、准备和解析这三个阶段统称为<strong>连接</strong>。</p>
-<blockquote>
-<p>加载 → 连接（验证、准备、解析）→ 初始化 → 使用 → 卸载</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<p>除去使用和卸载，就是 Java 的类加载过程。</p>
-<p>这 5 个阶段一般是顺序发生的，但在动态绑定的情况下，解析阶段发生在初始化阶段之后。</p>
-<h3>简化版本</h3>
-<p>类装载过程包括三个阶段：<strong>加载、连接和初始化</strong>。</p>
-<ul>
-<li><strong>加载</strong>：将类的二进制字节码加载到内存中。</li>
-<li><strong>连接</strong>可以细分为三个小的阶段：
-<ul>
-<li><strong>验证</strong>：检查类文件格式是否符合 JVM 规范。</li>
-<li><strong>准备</strong>：为类的静态变量分配内存并设置默认值。</li>
-<li><strong>解析</strong>：将符号引用替换为直接引用。</li>
-</ul>
-</li>
-<li><strong>初始化</strong>：执行静态代码块和静态变量初始化。</li>
-</ul>
-<p>在准备阶段，静态变量已经被赋过默认初始值了，在初始化阶段，静态变量将被赋值为代码期望赋的值。</p>
-<p>比如说 <code>static int a = 1;</code>，在准备阶段，a 的值为 0，在初始化阶段，a 的值为 1。</p>
-<blockquote>
-<p>初始化阶段是在执行类的构造方法，也就是 javap 中看到的 <code>&lt;clinit&gt;()</code></p>
-</blockquote>
-<h3>加载过程</h3>
-<ul>
-<li>通过一个类的全限定名 (位置 + 类加载器) 来获取定义此类的二进制字节流。</li>
-<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。</li>
-<li>在内存中生成一个代表这个类的 <code>java.lang.Class</code> 对象，作为这个类的访问入口。</li>
-</ul>
-<blockquote>
-<p>对于任意一个类，都必须由加载它的类加载器和这个类本身一起共同确立其在 Java 虚拟机中的唯一性。</p>
-</blockquote>
-<h2>类加载器</h2>
-<p>类加载由类加载器来执行，JVM 有三个重要的类加载器：启动类加载器、扩展类加载器、应用类加载器。</p>
-<p>它们遵循双亲委派机制。</p>
-<p>类加载器是 JVM 内部的一个组件。</p>
-<p>当 JVM 启动时，会在内存里创建几个类加载器实例，这些类加载器的作用就是根据类名去找到对应的 <code>.class</code> 文件，读取字节码内容，然后交给 JVM 进行解析和初始化。</p>
-<h3>类型</h3>
-<ul>
-<li><strong>启动类加载器 (BootStrap Class Loader)</strong>：负责加载 JVM 的核心类库，如 <code>rt.jar</code> 和其他核心库位于 <code>JAVA_HOME/jre/lib</code> 目录下的类。</li>
-<li><strong>扩展类加载器 (Extension Class Loader)</strong>：负责加载 <code>JAVA_HOME/jre/lib/ext</code> 目录下，或者由系统属性 <code>java.ext.dirs</code> 指定位置的类库，由 <code>sun.misc.Launcher$ExtClassLoader</code> 实现。</li>
-<li><strong>应用程序类加载器 (Application Class Loader)</strong>：负责加载 classpath 的类库，由 <code>sun.misc.Launcher$AppClassLoader</code> 实现。</li>
-<li><strong>用户自定义类加载器</strong>：通常用于加载网络上的类、执行热部署（动态加载和替换应用程序的组件），或者为了安全考虑，从不同的源加载类。通过继承 <code>java.lang.ClassLoader</code> 类来实现。</li>
-</ul>
-<h2>双亲委派模型</h2>
-<figure><figcaption>alt text</figcaption></figure>
-<p>双亲委派模型要求类加载器在加载类时，先委托父加载器尝试加载，只有父加载器无法加载时，子加载器才会加载。</p>
-<p>这个过程会一直向上递归，也就是说，从子加载器到父加载器，再到更上层的加载器，一直到最顶层的启动类加载器。</p>
-<p>启动类加载器会尝试加载这个类。如果它能够加载这个类，就直接返回；如果它不能加载这个类，就会将加载任务返回给委托它的子加载器。</p>
-<p>子加载器尝试加载这个类。如果子加载器也无法加载这个类，它就会继续向下传递这个加载任务，依此类推。</p>
-<p>直到某个加载器能够加载这个类，或者所有加载器都无法加载这个类，最终抛出 <code>ClassNotFoundException</code>。</p>
-<h3>原因</h3>
-<ul>
-<li><strong>避免类的重复加载</strong>：父加载器加载的类，子加载器无需重复加载。</li>
-<li><strong>保证核心类库的安全性</strong>：如 <code>java.lang.*</code> 只能由 Bootstrap ClassLoader 加载，防止被篡改。</li>
-</ul>
-<h3>如何破坏双亲委派机制</h3>
-<p>通常情况下，如果我们自己写一个自定义类加载器并且想要遵循双亲委派，我们只需要重写 <code>findClass()</code> 方法。</p>
-<p>如果我们想要破坏双亲委派机制，我们需要重写 <code>loadClass()</code> 方法，因为双亲委派的逻辑（先找缓存 -&gt; 委托父类 -&gt; 自己查找）正是写在 <code>ClassLoader.loadClass()</code> 的源码中的。</p>
-<p>修改这个方法，就可以改变寻找类的优先顺序。</p>
-<h3>为什么要破坏双亲委派机制</h3>
-<h4>SPI 机制</h4>
-<p>Java 的 SPI（Service Provider Interface）需要父加载器加载的类去使用子加载器加载的实现类。</p>
-<p><strong>典型例子：JDBC</strong></p>
-<p>Java 提供了一些核心接口（如 JDBC 的 <code>java.sql.Driver</code>），这些接口定义在核心类库中，由顶层的 Bootstrap ClassLoader 加载。</p>
-<p>但是，这些接口的具体实现类（如 MySQL 的驱动 <code>mysql-connector-java</code>）是由第三方厂商提供的，放在项目的 classpath 下，只能由底层的 Application ClassLoader 加载。</p>
-<blockquote>
-<p>Bootstrap ClassLoader 看不到也加载不到 Application ClassLoader 路径下的类，这就导致核心接口无法实例化第三方实现类。</p>
-<p>Java 引入了<strong>线程上下文类加载器（Thread Context ClassLoader, TCCL）</strong>。核心类库（父加载器）可以通过 TCCL "拿到"底层的类加载器，去加载需要的实现类。</p>
-</blockquote>
-<h4>实现类库的隔离与多版本共存</h4>
-<p>假设同一个 Tomcat 中部署了两个应用：App A 依赖了 Spring 4.0，App B 依赖了 Spring 5.0。</p>
-<p>如果严格遵循双亲委派，当父加载器加载了 Spring 4.0 后，对于 App B 的加载请求它会直接返回，导致 App B 强行使用了不兼容的版本，从而引发冲突。</p>
-<p>Tomcat 等 Web 容器为每个 Web 应用分配了独立的 <code>WebAppClassLoader</code>。</p>
-<p>它重写了类加载逻辑：优先加载自身应用目录（WEB-INF/classes 和 WEB-INF/lib）下的类，如果找不到再去委托父类加载器（对于 Java 核心类除外）。</p>
-<p>这样就实现了不同应用之间类库的隔离，打破了"优先交给父加载器"的规矩。</p>
-<p><strong>如果遵循双亲委派：</strong></p>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>App A 加载 org.springframework.Context
-  → 委托给父加载器
-    → 父加载器加载了 spring-4.0 的 Context
-
-App B 加载 org.springframework.Context
-  → 委托给父加载器
-    → 父加载器说"我加载过了"，直接返回 spring-4.0 的 Context
-    → ❌ App B 被迫用了 spring-4.0，崩溃
-</code></pre></div><p><strong>Tomcat 打破委派后：</strong></p>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>App A 加载 org.springframework.Context
-  → WebAppClassLoader-A 优先从 WEB-INF/lib 加载
-    → 返回 spring-4.0 的 Context ✓
-
-App B 加载 org.springframework.Context
-  → WebAppClassLoader-B 优先从 WEB-INF/lib 加载
-    → 返回 spring-5.0 的 Context ✓
-</code></pre></div><h4>实现代码的热部署与模块化</h4>
-<p>热部署是指在不重启服务器的情况下更新应用程序代码，需要替换旧版本的类，但旧版本的类可能由父加载器加载。</p>
-<p>双亲委派机制下的类加载树一旦形成就非常稳定，如果一个类被加载了，在 JVM 生命周期内通常不会再被重新加载。</p>
-<p>这就使得在不重启服务的情况下更新代码（热替换/热部署）变得极其困难。</p>
-<p>热部署：为了实现代码热替换，系统会直接销毁旧的类加载器及其加载的类，并创建一个新的类加载器来重新加载最新的字节码。</p>
-<h2>Tomcat 类加载机制</h2>
-<p>Tomcat 基于双亲委派模型进行了一些扩展，主要的类加载器有：</p>
-<ul>
-<li><strong>Bootstrap ClassLoader</strong>：加载 Java 的核心类库；</li>
-<li><strong>Catalina ClassLoader</strong>：加载 Tomcat 的核心类库；</li>
-<li><strong>Shared ClassLoader</strong>：加载共享类库，允许多个 Web 应用共享某些类库；</li>
-<li><strong>WebApp ClassLoader</strong>：加载 Web 应用程序的类库，支持多应用隔离和优先加载应用自定义的类库（破坏了双亲委派模型）。</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股13 - 类加载分析</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article13.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article13.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股13 - 类加载分析</source>
-      <description>怎么使用自定义 ClassLoader 类加载器是在运行时动态决定的，不是编译时指定的。 当你写 new MyClass() 时，JVM 会使用定义当前类的同一个 ClassLoader去加载 MyClass。 所以如果你想让某个类用自定义 ClassLoader 加载，有两种方式： 1. 直接使用自定义 ClassLoader（反射方式） 缺点：返回...</description>
-      <category>code</category>
-      <pubDate>Tue, 31 Mar 2026 16:25:41 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>怎么使用自定义 ClassLoader</h2>
-<p>类加载器是在运行时动态决定的，不是编译时指定的。</p>
-<p>当你写 <code>new MyClass()</code> 时，JVM 会使用<strong>定义当前类的同一个 ClassLoader</strong>去加载 <code>MyClass</code>。</p>
-<p>所以如果你想让某个类用自定义 ClassLoader 加载，有两种方式：</p>
-<h3>1. 直接使用自定义 ClassLoader（反射方式）</h3>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 创建自定义类加载器</span>
-<span class="token class-name">MyClassLoader</span> classLoader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token comment">// 用它加载类（返回 Class&lt;?&gt;，不能用强类型）</span>
-<span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> clazz <span class="token operator">=</span> classLoader<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token string">"com.example.MyClass"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token comment">// 用反射创建实例</span>
-<span class="token class-name">Object</span> obj <span class="token operator">=</span> clazz<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p><strong>缺点</strong>：返回的是 <code>Class&lt;?&gt;</code>，编译时无法知道具体类型，只能用反射。</p>
-<h3>2. 线程上下文类加载器（TCCL）</h3>
-<p>这是 Java 提供的"父加载器反向委托给子加载器"的机制。</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 保存原来的 ClassLoader</span>
-<span class="token class-name">ClassLoader</span> oldLoader <span class="token operator">=</span> <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token keyword">try</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 设置当前线程的 ClassLoader 为自定义的</span>
-    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setContextClassLoader</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// 某些框架会通过 TCCL 获取 ClassLoader 来加载类</span>
-    <span class="token comment">// 比如 SPI、JDBC、Spring 等</span>
-    <span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"com.example.MyClass"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
-                  <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getContextClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 恢复原来的 ClassLoader</span>
-    <span class="token class-name">Thread</span><span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setContextClassLoader</span><span class="token punctuation">(</span>oldLoader<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>hint - 屏障</title>
-      <link>http://ekkosonya.cn/code/java_hint/hint7.html</link>
-      <guid>http://ekkosonya.cn/code/java_hint/hint7.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">hint - 屏障</source>
-      <description>屏障 屏障 = 在某个操作前后插入的&amp;quot;检查点&amp;quot;或&amp;quot;钩子&amp;quot; 计算机中的屏障 内存屏障 CPU 为了性能会重排序指令，内存屏障告诉 CPU： 在 Java 内存模型（JMM）中，定义了四种基本的内存屏障来处理 Load（读）和 Store（写）操作的组合： JVM 垃圾收集器中的屏障 (软件层面) 可以把它们理解为 JVM 在执行底层 C++ 代码时，对“...</description>
-      <category>code</category>
-      <pubDate>Tue, 31 Mar 2026 16:25:30 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>屏障</h2>
-<p>屏障 = 在某个操作前后插入的"检查点"或"钩子"</p>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>想象一个小区门禁：
-
-居民进出 → [门禁屏障] → 记录谁进出了 → 放行
-
-屏障不做"拦截"，只做"记录"或"检查"
-</code></pre></div><h3>计算机中的屏障</h3>
-<h4>内存屏障</h4>
-<p>CPU 为了性能会重排序指令，内存屏障告诉 CPU：</p>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>指令1
-指令2
-[内存屏障] ←  barrier 之前的指令必须先执行完
-指令3
-指令4
-</code></pre></div><p>在 Java 内存模型（JMM）中，定义了四种基本的内存屏障来处理 Load（读）和 Store（写）操作的组合：</p>
-<p>| <strong>屏障类型</strong> | <strong>指令组合</strong> | <strong>原理</strong> |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>JVM 八股5 - 内存管理4 (对象内存布局)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article5.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/JVM%20-%20%E5%85%AB%E8%82%A1/article5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">JVM 八股5 - 内存管理4 (对象内存布局)</source>
-      <description>对象内存布局 对象的内存布局是由 Java 虚拟机规范定义的，但具体的实现细节各有不同，如 HotSpot 和 OpenJ9 就不一样 常用的 HotSpot 为例： 对象在内存中包括三部分：对象头、实例数据和对齐填充 对象头 (Mark World + 类型指针 (指向 Class 对象)) + 实例数据 + 对齐填充 对象头 (8字节 + 8字节 ...</description>
-      <category>code</category>
-      <pubDate>Mon, 30 Mar 2026 16:21:54 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>对象内存布局</h2>
-<p>对象的内存布局是由 Java 虚拟机规范定义的，但具体的实现细节各有不同，如 HotSpot 和 OpenJ9 就不一样</p>
-<p>常用的 HotSpot 为例：</p>
-<p>对象在内存中包括三部分：对象头、实例数据和对齐填充</p>
-<blockquote>
-<p>对象头 (Mark World + 类型指针 (指向 Class 对象)) + 实例数据 + 对齐填充</p>
-<p>对象头 (8字节 + 8字节 (压缩 4 字节)): 12字节 (指针压缩)</p>
-<p>对齐填充必须是 8 的倍数 (64位)</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<h3>对象头作用</h3>
-<p>对象头是对象存储在内存中的元信息，包含了Mark Word、类型指针等信息</p>
-<p>Mark Word 存储了对象的运行时状态信息，包括锁、哈希值、GC 标记等。</p>
-<p>在 64 位操作系统下占 8 个字节，32 位操作系统下占 4 个字节。</p>
-<blockquote>
-<p>Mark Word 的大小等于一个机器字长</p>
-<p>32 位系统是 4 字节，64 位系统是 8 字节。</p>
-</blockquote>
-<p>类型指针指向对象所属类的元数据，也就是 Class 对象，用来支持多态、方法调用等功能。</p>
-<p>除此之外，如果对象是数组类型，还会有一个额外的数组长度字段。占 4 个字节。</p>
-<h4>类型指针会被压缩吗</h4>
-<p>类型指针可能会被压缩，以节省内存空间。比如说在开启压缩指针的情况下占 4 个字节，否则占 8 个字节。</p>
-<p>在 JDK 8 中，压缩指针默认是开启的</p>
-<p>可以通过 <code>java -XX:+PrintFlagsFinal -version | grep UseCompressedOops</code> 命令来查看 JVM 是否开启了压缩指针</p>
-<h3>实例数据</h3>
-<p>实例数据是对象实际的字段值，也就是成员变量的值，按照字段在类中声明的顺序存储</p>
-<p>JVM 会对这些数据进行对齐/重排，以提高内存访问速度</p>
-<h4>对齐填充 (8 字节的倍数)</h4>
-<p>由于 JVM 的内存模型要求对象的起始地址是 8 字节对齐（64 位 JVM 中），因此对象的总大小必须是 8 字节的倍数。</p>
-<p>如果对象头和实例数据的总长度不是 8 的倍数，JVM 会通过填充额外的字节来对齐。</p>
-<p>比如说，如果对象头 + 实例数据 = 14 字节，则需要填充 2 个字节，使总长度变为 16 字节</p>
-<blockquote>
-<p>因为 CPU 进行内存访问时，一次寻址的指针大小是 8 字节，正好是 L1 缓存行的大小。如果不进行内存对齐，则可能出现跨缓存行访问，导致额外的缓存行加载，CPU 的访问效率就会降低</p>
-</blockquote>
-<h3>new Object() 对象内存大小是多少</h3>
-<blockquote>
-<p>目前的操作系统都是 64 位的，并且 JDK 8 中的压缩指针是默认开启的</p>
-</blockquote>
-<p>在 64 位的 JVM 上，<code>new Object()</code> 的大小是 16 字节（12 字节的对象头 + 4 字节的对齐填充）。</p>
-<p>对象头的大小是固定的</p>
-<ul>
-<li>在 32 位 JVM 上是 8 字节</li>
-<li>在 64 位 JVM 上是 16 字节
-<ul>
-<li>如果开启了压缩指针，就是 12 字节。</li>
-</ul>
-</li>
-</ul>
-<p>实例数据的大小取决于对象的成员变量和它们的类型。对于new Object()来说，由于默认没有成员变量，因此我们可以认为此时的实例数据大小是 0</p>
-<blockquote>
-<p>假如 MyObject 对象有三个成员变量，分别是 int、long 和 byte 类型，那么它们占用的内存大小分别是 4 字节、8 字节和 1 字节</p>
-</blockquote>
-<p>考虑到对齐填充，MyObject 对象的总大小为 12（对象头） + 4（a） + 8（b） + 1（c） + 7（填充） = 32 字节</p>
-<h3>JOL — 分析 JVM 对象工具</h3>
-<div class="language-xml" data-ext="xml" data-title="xml"><pre class="language-xml"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">&gt;</span></span>org.openjdk.jol<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">&gt;</span></span>jol-core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">&gt;</span></span>
-  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">&gt;</span></span>0.9<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">&gt;</span></span>
-</code></pre></div><p>简单示例</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">JOLSample</span> <span class="token punctuation">{</span>
-  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token comment">// 打印JVM详细信息（可选）</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token constant">VM</span><span class="token punctuation">.</span><span class="token function">current</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">details</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// 创建Object实例</span>
-    <span class="token class-name">Object</span> obj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token comment">// 打印Object实例的内存布局</span>
-    <span class="token class-name">String</span> layout <span class="token operator">=</span> <span class="token class-name">ClassLayout</span><span class="token punctuation">.</span><span class="token function">parseInstance</span><span class="token punctuation">(</span>obj<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toPrintable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>layout<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>对象的引用大小</h3>
-<p>在 64 位 JVM 上，未开启压缩指针时，对象引用占用 8 字节；开启压缩指针时，对象引用会被压缩到 4 字节</p>
-<p>HotSpot 虚拟机默认是开启压缩指针的。</p>
-<h2>JVM 怎么访问对象</h2>
-<p>主流的方式有两种：句柄和直接指针</p>
-<p>两种方式的区别在于：</p>
-<ul>
-<li>句柄是通过一个中间的句柄表来定位对象的</li>
-<li>而直接指针则是通过引用直接指向对象的内存地址</li>
-</ul>
-<p>句柄的优点是，对象被移动时只需要修改句柄表中的指针，而不需要修改对象引用本身</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>在直接指针访问中，引用直接存储对象的内存地址；对象的实例数据和类型信息都存储在堆中固定的内存区域</p>
-<p>优点是访问速度更快，因为少了一次句柄的寻址操作。缺点是如果对象在内存中移动，引用需要更新为新的地址</p>
-<p>HotSpot 虚拟机主要使用直接指针来进行对象访问。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h2>对象引用方式</h2>
-<p>四种，分别是强引用、软引用、弱引用和虚引用。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h3>强引用</h3>
-<p>强引用是 Java 中最常见的引用类型</p>
-<p>使用 new 关键字赋值的引用就是强引用，只要强引用关联着对象，垃圾收集器就不会回收这部分对象，即使内存不足</p>
-<h3>软引用</h3>
-<p>软引用于描述一些非必须对象，通过 SoftReference 类实现。软引用的对象在内存不足时会被回收</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// softRef 就是一个软引用</span>
-<span class="token class-name">SoftReference</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> softRef <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SoftReference</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"PPP"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><h3>弱引用</h3>
-<p>弱引用用于描述一些短生命周期的非必须对象，如 ThreadLocal 中的 Entry，就是通过 WeakReference 类实现的</p>
-<p>弱引用的对象会在下一次垃圾回收时会被回收，不论内存是否充足</p>
-<h3>虚引用</h3>
-<p>虚引用主要用来跟踪对象被垃圾回收的过程，通过 PhantomReference 类实现。虚引用的对象在任何时候都可能被回收</p>
 ]]></content:encoded>
     </item>
   </channel>

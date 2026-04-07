@@ -6,1249 +6,883 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Mon, 06 Apr 2026 14:42:20 GMT</pubDate>
-    <lastBuildDate>Mon, 06 Apr 2026 14:42:20 GMT</lastBuildDate>
+    <pubDate>Tue, 07 Apr 2026 16:38:57 GMT</pubDate>
+    <lastBuildDate>Tue, 07 Apr 2026 16:38:57 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
     <item>
-      <title>hint - 注解理解2</title>
-      <link>http://ekkosonya.cn/code/java_hint/hint8.html</link>
-      <guid>http://ekkosonya.cn/code/java_hint/hint8.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">hint - 注解理解2</source>
-      <description>注解 什么是注解 @interface 注解就是一个继承了 java.lang.annotation.Annotation 的接口, 而对应的值实际上会被编译成对应的抽象方法 测试 通过 javac 编译后得再通过 javap 反编译可以等价于 元注解 元注解就是修饰注解的注解，全在 java.lang.annotation 包下已经定义好了 @Tar...</description>
+      <title>Net13 - 杂</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article13.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article13.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net13 - 杂</source>
+      <description>杂 Cookie 和 Session Session 是基于Cookie 实现的另一种记录服务端和客户端会话状态的机制。 Session 是存储在服务端，而 SessionId 会被存储在客户端的 Cookie 中。 Session 的认证过程： 客户端第一次发送请求到服务端，服务端根据信息创建对应的 Session，并在响应头返回 SessionID...</description>
       <category>code</category>
-      <pubDate>Sun, 05 Apr 2026 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>注解</h2>
-<h3>什么是注解 <code>@interface</code></h3>
-<p>注解就是一个继承了 <code>java.lang.annotation.Annotation</code> 的接口, 而对应的值实际上会被编译成对应的抽象方法</p>
-<h4>测试</h4>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Penguin.java</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">ElementType</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Retention</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RetentionPolicy</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Target</span></span><span class="token punctuation">;</span>
-
-<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">,</span> <span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">Penguin</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">""</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>通过 <code>javac</code> 编译后得再通过 <code>javap</code> 反编译可以等价于</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">Compiled</span> from <span class="token string">"Penguin.java"</span>
-<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name"><span class="token namespace">com<span class="token punctuation">.</span>ekko<span class="token punctuation">.</span></span>Penguin</span> <span class="token keyword">extends</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span>Annotation</span> <span class="token punctuation">{</span>
-  <span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token class-name"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span></span>String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>元注解</h3>
-<p>元注解就是修饰注解的注解，全在 <code>java.lang.annotation</code> 包下已经定义好了</p>
-<p>| 元注解 | 作用 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>hint - 注解理解3</title>
-      <link>http://ekkosonya.cn/code/java_hint/hint9.html</link>
-      <guid>http://ekkosonya.cn/code/java_hint/hint9.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">hint - 注解理解3</source>
-      <description>注解3 自定义注解流程 自定义注解 测试类 然后在 Main.java 使用 编译 编译 Penguin.java 时，javac 看到它上面有 @Target 和 @Retention，会依次做这些事： 用 javap -v Penguin.class 可以看到生成结果： 编译 Main.java 时，javac 看到 @Penguin(&amp;quot;123&amp;quot;)...</description>
-      <category>code</category>
-      <pubDate>Sun, 05 Apr 2026 00:00:00 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>注解3</h2>
-<h3>自定义注解流程</h3>
-<h4>自定义注解</h4>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">ElementType</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Retention</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">RetentionPolicy</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Target</span></span><span class="token punctuation">;</span>
-
-<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">,</span> <span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">METHOD</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">Penguin</span> <span class="token punctuation">{</span>
-    <span class="token class-name">String</span> <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">default</span> <span class="token string">""</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>测试类</h4>
-<p>然后在 <code>Main.java</code> 使用</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>ekko<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Penguin</span></span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Penguin</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h4>编译</h4>
-<p>编译 <code>Penguin.java</code> 时，javac 看到它上面有 <code>@Target</code> 和 <code>@Retention</code>，会依次做这些事：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>javac 编译 Penguin.java
-        ↓
-发现 @Target({ElementType.TYPE, ElementType.METHOD})
-        ↓
-去 classpath 找 Target.class，加载进内存，提取两类信息：
-  ① value() → ElementType[]            （用来校验你传的值类型合不合法）
-  ② Target 自身的 @Retention(RUNTIME)  （说明 Target 运行时可见）
-        ↓
-发现 @Retention(RetentionPolicy.RUNTIME)
-        ↓
-去 classpath 找 Retention.class，同样提取信息
-        ↓
-校验通过，将注解信息写入 Penguin.class
-  - 设置 ACC_ANNOTATION | ACC_INTERFACE 标志位
-  - 隐式添加 implements java.lang.annotation.Annotation
-  - 在 RuntimeVisibleAnnotations 属性中记录 @Target 和 @Retention 的值
-</code></pre></div><p>用 <code>javap -v Penguin.class</code> 可以看到生成结果：</p>
-<div class="language-plain" data-ext="plain" data-title="plain"><pre class="language-plain"><code>public interface com.ekko.annotation.Penguin extends java.lang.annotation.Annotation
-  flags: ACC_PUBLIC, ACC_INTERFACE, ACC_ABSTRACT, ACC_ANNOTATION
-
-  public abstract java.lang.String value();
-
-RuntimeVisibleAnnotations:
-  0: java.lang.annotation.Target(
-       value=[TYPE, METHOD]
-     )
-  1: java.lang.annotation.Retention(
-       value=RUNTIME
-     )
-</code></pre></div><p>编译 <code>Main.java</code> 时，javac 看到 <code>@Penguin("123")</code> 用在了 <code>main</code> 方法上：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>发现 @Penguin("123") 标注在方法上
-        ↓
-加载 Penguin.class，读取它的 @Target → 允许 METHOD ✓
-        ↓
-读取 value() 的返回类型 → String，检查传入的 "123" 类型是否匹配 ✓
-        ↓
-读取 @Retention(RUNTIME) → 需要写入 .class 且运行时可见
-        ↓
-将注解信息写入 Main.class 的 RuntimeVisibleAnnotations 属性
-</code></pre></div><h4>运行时读取</h4>
-<p>注解标注了 <code>@Retention(RetentionPolicy.RUNTIME)</code>，所以可以在运行时通过反射读取：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">com<span class="token punctuation">.</span>ekko<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Penguin</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>reflect<span class="token punctuation">.</span></span><span class="token class-name">Method</span></span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Main</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Penguin</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">{</span>
-        <span class="token class-name">Method</span> method <span class="token operator">=</span> <span class="token class-name">Main</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"main"</span><span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>method<span class="token punctuation">.</span><span class="token function">isAnnotationPresent</span><span class="token punctuation">(</span><span class="token class-name">Penguin</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token class-name">Penguin</span> penguin <span class="token operator">=</span> method<span class="token punctuation">.</span><span class="token function">getAnnotation</span><span class="token punctuation">(</span><span class="token class-name">Penguin</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>penguin<span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 输出: 123</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>反射读取流程：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>method.getAnnotation(Penguin.class)
-        ↓
-JVM 去 Main.class 的 RuntimeVisibleAnnotations 属性里查找
-        ↓
-找到 @Penguin，value = "123"
-        ↓
-JVM 动态生成一个实现了 Penguin 接口的代理对象返回
-        ↓
-调用 penguin.value() → 返回 "123"
-</code></pre></div><h3>SOURCE 级别</h3>
-<p><code>SOURCE</code> 级注解在编译后就被丢弃，它靠的是 <strong>APT（Annotation Processing Tool，注解处理器）</strong> 在编译期处理，典型代表是 Lombok 的 <code>@Data</code>、<code>@Getter</code>。</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>你的 .java 源文件
-        ↓
-javac 启动，先运行所有注册的注解处理器（APT）
-        ↓
-APT 读取 AST（抽象语法树），发现 @Data 注解
-        ↓
-APT 自动生成 getter/setter/toString 等方法，插入 AST
-        ↓
-javac 继续编译（此时 AST 里已经有生成的代码了）
-        ↓
-输出 .class 文件（@Data 注解本身不写入）
-</code></pre></div><p>自己写一个最简单的 APT，在编译时打印所有被 <code>@Penguin</code> 标注的方法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">import</span> <span class="token import"><span class="token namespace">javax<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span>processing<span class="token punctuation">.</span></span><span class="token operator">*</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">javax<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>model<span class="token punctuation">.</span>element<span class="token punctuation">.</span></span><span class="token operator">*</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Set</span></span><span class="token punctuation">;</span>
-
-<span class="token annotation punctuation">@SupportedAnnotationTypes</span><span class="token punctuation">(</span><span class="token string">"com.ekko.annotation.Penguin"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@SupportedSourceVersion</span><span class="token punctuation">(</span><span class="token class-name"><span class="token namespace">javax<span class="token punctuation">.</span>lang<span class="token punctuation">.</span>model<span class="token punctuation">.</span></span>SourceVersion</span><span class="token punctuation">.</span><span class="token constant">RELEASE_17</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">PenguinProcessor</span> <span class="token keyword">extends</span> <span class="token class-name">AbstractProcessor</span> <span class="token punctuation">{</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">process</span><span class="token punctuation">(</span><span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">TypeElement</span><span class="token punctuation">&gt;</span></span> annotations<span class="token punctuation">,</span> <span class="token class-name">RoundEnvironment</span> roundEnv<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Element</span> element <span class="token operator">:</span> roundEnv<span class="token punctuation">.</span><span class="token function">getElementsAnnotatedWith</span><span class="token punctuation">(</span><span class="token class-name">Penguin</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            processingEnv<span class="token punctuation">.</span><span class="token function">getMessager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">printMessage</span><span class="token punctuation">(</span>
-                <span class="token class-name"><span class="token namespace">javax<span class="token punctuation">.</span>tools<span class="token punctuation">.</span></span>Diagnostic<span class="token punctuation">.</span>Kind</span><span class="token punctuation">.</span><span class="token constant">NOTE</span><span class="token punctuation">,</span>
-                <span class="token string">"发现 @Penguin 标注的元素: "</span> <span class="token operator">+</span> element<span class="token punctuation">.</span><span class="token function">getSimpleName</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-            <span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>编译时会看到：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>注意: 发现 @Penguin 标注的元素: main
-</code></pre></div><h3>CLASS 级别</h3>
-<p><code>CLASS</code> 注解会写入 <code>.class</code> 文件，但 JVM 加载时<strong>不读入内存</strong>，无法用反射获取。它的使用者是<strong>字节码操作工具</strong>，在 <code>.class</code> 文件加载进 JVM 之前直接修改字节码。</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>.class 文件（含 CLASS 级注解）
-        ↓
-字节码工具（ASM / Javassist）读取
-        ↓
-发现注解标记，按规则修改字节码（插入代码、替换方法体等）
-        ↓
-修改后的字节码交给 JVM 加载
-        ↓
-JVM 运行（注解已不可见，效果已生效）
-</code></pre></div><p>典型代表：AspectJ 的编译期织入</p>
-<h3>三种处理时机对比</h3>
-<p>| | SOURCE + APT | CLASS + 字节码工具 | RUNTIME + 反射 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Spring系列八股13 - 事务</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article13.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article13.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股13 - 事务</source>
-      <description>事务 Spring 提供了两种事务管理方式，编程式事务和声明式事务 编程式事务就是我们要手动调用事务的开始、提交、回滚这些操作，虽然灵活但是代码比较繁琐 声明式事务只需要在需要事务的方法上加上 @Transactional 注解就好了，Spring 会帮我们自动处理事务的整个生命周期 声明式事务原理 Spring 的声明式事务管理是通过 AOP 和代理...</description>
-      <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>事务</h2>
-<p>Spring 提供了两种事务管理方式，编程式事务和声明式事务</p>
-<p>编程式事务就是我们要手动调用事务的开始、提交、回滚这些操作，虽然灵活但是代码比较繁琐</p>
-<p>声明式事务只需要在需要事务的方法上加上 <code>@Transactional</code> 注解就好了，Spring 会帮我们自动处理事务的整个生命周期</p>
-<h3>声明式事务原理</h3>
-<p>Spring 的声明式事务管理是通过 AOP 和代理机制实现的，大致可以分为两个阶段</p>
-<p>第一个阶段发生在 <strong>Spring 容器启动时</strong>，它会扫描所有的 Bean</p>
-<p>如果发现某个 Bean 的方法上标注了 <code>@Transactional</code> 注解，Spring 不会直接返回这个原始的 Bean 实例, 而是为这个 Bean 创建一个代理对象</p>
-<p>这个代理对象拥有和原始对象完全相同的方法，但在内部悄悄地包裹了事务处理的逻辑。</p>
-<p>第二个阶段发生在<strong>方法调用的运行阶段</strong>，当我们的代码调用那个被 <code>@Transactional</code> 注解修饰的方法时，实际上调用的是 Spring 创建的那个代理对象的方法</p>
-<p>事务拦截器会在代理对象执行真正的业务逻辑之前，根据 <code>@Transactional</code> 注解的配置获取事务属性，比如传播行为、隔离级别等，然后通过事务管理器来开启一个新的事务。</p>
-<p>并从数据库连接池获取一个连接，关闭其自动提交</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TransactionInterceptor</span> <span class="token keyword">implements</span> <span class="token class-name">MethodInterceptor</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token class-name">Object</span> <span class="token function">invoke</span><span class="token punctuation">(</span><span class="token class-name">MethodInvocation</span> invocation<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Throwable</span> <span class="token punctuation">{</span>
-        <span class="token comment">// 获取事务属性</span>
-        <span class="token class-name">TransactionAttribute</span> txAttr <span class="token operator">=</span> <span class="token function">getTransactionAttribute</span><span class="token punctuation">(</span>invocation<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> invocation<span class="token punctuation">.</span><span class="token function">getThis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 开始事务</span>
-        <span class="token class-name">TransactionStatus</span> status <span class="token operator">=</span> transactionManager<span class="token punctuation">.</span><span class="token function">getTransaction</span><span class="token punctuation">(</span>txAttr<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">try</span> <span class="token punctuation">{</span>
-            <span class="token comment">// 执行目标方法</span>
-            <span class="token class-name">Object</span> retVal <span class="token operator">=</span> invocation<span class="token punctuation">.</span><span class="token function">proceed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment">// 提交事务</span>
-            transactionManager<span class="token punctuation">.</span><span class="token function">commit</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">return</span> retVal<span class="token punctuation">;</span>
-        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token comment">// 回滚事务</span>
-            transactionManager<span class="token punctuation">.</span><span class="token function">rollback</span><span class="token punctuation">(</span>status<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">throw</span> ex<span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>接着，代理对象会调用原始 Bean 实例中真正的业务方法，如果业务方法顺利执行完毕，没有抛出任何异常，那么拦截器就会通过事务管理器提交事务，将之前的所有数据库操作永久保存</p>
-<p>如果业务方法抛出了异常，拦截器会捕获到这个异常，并通过事务管理器回滚事务，将之前的所有数据库操作撤销</p>
-<blockquote>
-<p>最后，无论事务是提交还是回滚，拦截器都会释放数据库连接</p>
-</blockquote>
-<p>本质上就是：把"开启事务、执行业务、提交/回滚"这段重复代码抽出来，通过代理自动织入，不用你手写</p>
-<p><code>@Transactional</code> 的核心是 <strong>事务管理</strong>，而 Spring 通过 <code>PlatformTransactionManager</code> 接口抽象了事务概念。理论上可以实现各种事务管理器：</p>
-<p>| 事务管理器 | 用途 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Spring系列八股14 - MVC1 (基本概念)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article14.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article14.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股14 - MVC1 (基本概念)</source>
-      <description>MVC MVC 分层介绍 MVC 全名是 Model View Controller，是模型(model)－视图(view)－控制器(controller)的缩写，一种软件设计典范 用一种业务逻辑、数据、界面显示分离的方法组织代码，将业务逻辑聚集到一个部件里面，在改进和个性化定制界面及用户交互的同时，不需要重新编写业务逻辑 视图(view)： 为用户提...</description>
-      <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>MVC</h2>
-<h3>MVC 分层介绍</h3>
-<p>MVC 全名是 Model View Controller，是模型(model)－视图(view)－控制器(controller)的缩写，一种软件设计典范</p>
-<p>用一种业务逻辑、数据、界面显示分离的方法组织代码，将业务逻辑聚集到一个部件里面，在改进和个性化定制界面及用户交互的同时，不需要重新编写业务逻辑</p>
-<ul>
-<li>视图(view)： 为用户提供使用界面，与用户直接进行交互。</li>
-<li>模型(model)： 代表一个存取数据的对象或 JAVA POJO（Plain Old Java Object，简单java对象）
-<ul>
-<li>它也可以带有逻辑，主要用于承载数据，并对用户提交请求进行计算的模块，模型分为两类</li>
-<li>一类称为数据承载 Bean
-<ul>
-<li>所谓数据承载 Bean 是指实体类（如：User类），专门为用户承载业务数据的</li>
-</ul>
-</li>
-<li>一类称为业务处理 Bean
-<ul>
-<li>业务处理 Bean 是指 Service 或 Dao 对象，专门用于处理用户提交请求的。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>控制器(controller)： 用于将用户请求转发给相应的 Model 进行处理，并根据 Model 的计算结果向用户提供相应响应。它使视图与模型分离</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<p>流程步骤：</p>
-<ul>
-<li>用户通过View 页面向服务端提出请求，可以是表单请求、超链接请求、AJAX 请求等；</li>
-<li>服务端 Controller 控制器接收到请求后对请求进行解析，找到相应的Model，对用户请求进行处理Model 处理；</li>
-<li>将处理结果再交给 Controller（控制器其实只是起到了承上启下的作用）；
-根据处理结果找到要作为向客户端发回的响应View 页面，页面经渲染后发送给客户端</li>
-</ul>
-<h4>DAO 层（Data Access Object）</h4>
-<p>DAO 层是数据访问层，负责封装所有与数据库（或其他持久化存储）的交互逻辑</p>
-<blockquote>
-<p>在分层架构中的位置</p>
-</blockquote>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Controller 层（接收请求）
-      ↓
-Service 层（业务逻辑）
-      ↓
-DAO 层（数据访问）  ← 在这里
-      ↓
-Database（数据库）
-</code></pre></div><blockquote>
-<p>典型代码示例</p>
-</blockquote>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserDao</span> <span class="token punctuation">{</span>
-  <span class="token class-name">User</span> <span class="token function">findById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">void</span> <span class="token function">insert</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">void</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token class-name">User</span> user<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token keyword">void</span> <span class="token function">deleteById</span><span class="token punctuation">(</span><span class="token class-name">Long</span> id<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>Service 层只调用 <code>userDao.findById(id)</code>，完全不写 SQL，这就是 DAO 的价值所在。</p>
-<h5>常见实现方式</h5>
-<ul>
-<li><strong>MyBatis</strong>&nbsp;→ 手写 SQL，灵活可控</li>
-<li><strong>Spring Data JPA / Hibernate</strong>&nbsp;→ 自动生成 SQL，快速开发</li>
-<li><strong>JdbcTemplate</strong>&nbsp;→ 轻量级，接近原生 JDBC</li>
-</ul>
-<p>| | <strong>Mapper</strong> | <strong>Repository</strong> |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Spring系列八股15 - MVC2 (Spring MVC)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article15.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article15.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股15 - MVC2 (Spring MVC)</source>
-      <description>MVC Spring MVC 是 Spring 框架对 MVC 模式的具体实现，专门用于构建 Web 应用 核心组件 在 Spring Boot 项目中，DispatcherServlet 的启动是通过自动配置完成的 Spring Boot 会自动注册一个默认的 DispatcherServlet，并将其映射到 / 处理器映射 HandlerMappi...</description>
-      <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>MVC</h2>
-<p>Spring MVC 是 Spring 框架对 MVC 模式的具体实现，专门用于构建 Web 应用</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>MVC        →  一种设计思想（模式）
-Spring MVC →  Spring 对这个思想的落地实现
-</code></pre></div><h3>核心组件</h3>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>请求进来
-   ↓
-DispatcherServlet（前端控制器，所有请求的入口）
-   ↓
-HandlerMapping（找到对应的 Controller）
-   ↓
-Controller（处理请求，调用 Service）
-   ↓
-返回 ModelAndView / JSON
-   ↓
-响应给客户端
-</code></pre></div><p>在 Spring Boot 项目中，<code>DispatcherServlet</code> 的启动是通过自动配置完成的</p>
-<p>Spring Boot 会自动注册一个默认的 <code>DispatcherServlet</code>，并将其映射到 /</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Bean</span>
-<span class="token keyword">public</span> <span class="token class-name">ServletRegistrationBean</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">DispatcherServlet</span><span class="token punctuation">&gt;</span></span> <span class="token function">dispatcherServletRegistration</span><span class="token punctuation">(</span><span class="token class-name">DispatcherServlet</span> dispatcherServlet<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">ServletRegistrationBean</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">DispatcherServlet</span><span class="token punctuation">&gt;</span></span> registration <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServletRegistrationBean</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span>dispatcherServlet<span class="token punctuation">,</span> <span class="token string">"/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 默认映射路径为 "/"</span>
-    registration<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">"dispatcherServlet"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> registration<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>处理器映射 <code>HandlerMapping</code>，当一个请求进来时，前端控制器会询问处理器映射：“这个 URL 应该由哪个 Controller 的哪个方法来处理？”然后它就会根据 @RequestMapping、@GetMapping 这些注解来匹配请求</p>
-<p>处理器 <code>Handler</code>，实际上就是我们写的 Controller 方法，这是真正处理业务逻辑的地方</p>
-<p>处理器适配器 <code>HandlerAdapter</code>，负责调用该处理器的方法，并处理参数绑定、类型转换等</p>
-<p>因为处理器可能有不同的类型，比如注解方式、实现接口方式等，处理器适配器就是为了统一调用方式</p>
-<p>视图解析器 <code>ViewResolver</code>，处理完业务逻辑后，如果需要渲染视图，ViewResolver 会根据返回的视图名称解析实际的视图对象，比如 Thymeleaf</p>
-<p>在前后端分离的项目中，这个组件更多用于返回 JSON 数据</p>
-<p>异常处理器 <code>HandlerExceptionResolver</code>，捕获并处理请求处理过程中抛出的异常</p>
-<p>通常，我们可以通过 <code>@ControllerAdvice</code> 和 <code>@ExceptionHandler</code> 来自定义异常处理逻辑，确保返回友好的错误响应</p>
-<p>除此之外，还有文件上传解析器 <code>MultipartResolver</code>，用于处理文件上传请求；拦截器 <code>HandlerInterceptor</code>, 用于在请求处理前后执行一些额外的逻辑，比如权限校验、日志记录等</p>
-<h3>Spring MVC 的工作流程</h3>
-<p>简单来说，Spring MVC 是一个基于 Servlet 的请求处理框架</p>
-<p>核心流程可以概括为：请求接收 → 路由分发 → 控制器处理 → 视图解析</p>
-<figure><figcaption>alt text</figcaption></figure>
-<figure><figcaption>alt text</figcaption></figure>
-<p>用户发起的 HTTP 请求，首先会被 <code>DispatcherServlet</code> 捕获，这是 Spring MVC 的“前端控制器”，负责拦截所有请求，起到统一入口的作用</p>
-<p><code>DispatcherServlet</code> 接收到请求后，会根据 URL、请求方法等信息，交给 <code>HandlerMapping</code> 进行路由匹配，查找对应的处理器，也就是 Controller 中的具体方法</p>
-<p>找到对应 Controller 方法后，<code>DispatcherServlet</code> 会委托给处理器适配器 <code>HandlerAdapter</code> 进行调用</p>
-<p>处理器适配器负责执行方法本身，并处理参数绑定、数据类型转换等</p>
-<p>在注解驱动开发中，常用的是 <code>RequestMappingHandlerAdapter</code></p>
-<p>这一层会把请求参数自动注入到方法形参中，并调用 <code>Controller</code> 执行实际的业务逻辑</p>
-<p><code>Controller</code> 方法最终会返回结果，比如视图名称、<code>ModelAndView</code> 或直接返回 JSON 数据</p>
-<p>当 <code>Controller</code> 方法返回视图名时，<code>DispatcherServlet</code> 会调用 <code>ViewResolver</code> 将其解析为实际的 View 对象，比如 Thymeleaf 页面</p>
-<p>在前后端分离的接口项目中，这一步则<strong>通常是返回 JSON 数据</strong></p>
-<p>最后，由 View 对象完成渲染，或者将 JSON 结果直接通过 DispatcherServlet 返回给客户端</p>
-<h4>速记</h4>
+      <pubDate>Tue, 07 Apr 2026 16:26:29 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>杂</h2>
+<h3>Cookie 和 Session</h3>
+<p>Session 是<strong>基于Cookie 实现</strong>的另一种记录服务端和客户端会话状态的机制。</p>
+<p>Session 是存储在服务端，而 SessionId 会被存储在客户端的 Cookie 中。</p>
+<p>Session 的<strong>认证过程</strong>：</p>
 <ol>
-<li>用户发送请求至前端控制器 <code>DispatcherServlet</code></li>
-<li><code>DispatcherServlet</code> 收到请求调用处理器映射器 <code>HandlerMapping</code></li>
-<li>处理器映射器根据请求url找到具体的处理器，生成处理器执行链<code>HandlerExecutionChain</code> (包括处理器对象和处理器拦截器) 一并返回给<code>DispatcherServlet</code></li>
-<li><code>DispatcherServlet</code>根据处理器<code>Handler</code>获取处理器适配器 <code>HandlerAdapter</code> 执行 <code>HandlerAdapter</code> 处理一系列的操作，如：参数封装，数据格式转换，数据验证等操作</li>
-<li>执行处理器 <code>Handler</code> (<code>Controller</code>，也叫页面控制器)。</li>
-<li><code>Handler</code> 执行完成返回 <code>ModelAndView</code></li>
-<li><code>HandlerAdapter</code> 将 <code>Handler</code> 执行结果 <code>ModelAndView</code> 返回到<code>DispatcherServlet</code></li>
-<li><code>DispatcherServlet</code> 将 <code>ModelAndView</code> 传给 <code>ViewReslover</code> 视图解析器</li>
-<li><code>ViewReslover</code> 解析后返回具体 <code>View</code></li>
-<li><code>DispatcherServlet</code> 对 <code>View</code> 进行渲染视图（即将模型数据model填充至视图中）。</li>
-<li><code>DispatcherServlet</code> 响应用户</li>
+<li>客户端第一次发送请求到服务端，服务端根据信息创建对应的 Session，并在响应头返回 SessionID</li>
+<li>客户端接收到服务端返回的 SessionID 后，会将此信息存储在 Cookie 上，同时会记录这个 SessionID 属于哪个域名</li>
+<li>当客户端再次访问服务端时，请求会自动判断该域名下是否存在 Cookie 信息，如果有则发送给服务端，服务端会从 Cookie 中拿到 SessionID，再根据 SessionID 找到对应的 Session，如果有对应的 Session 则通过，继续执行请求，否则就中断</li>
 </ol>
-<h4>为什么不直接调用，要通过 HandlerAdapte</h4>
-<p>因为 Controller 的写法不止一种，DispatcherServlet 不知道该怎么调用：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 写法1：最常见的注解方式</span>
-<span class="token annotation punctuation">@RestController</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/user"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">getUser</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// 写法2：实现接口方式（老写法）</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token keyword">implements</span> <span class="token class-name">Controller</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token class-name">ModelAndView</span> <span class="token function">handleRequest</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// 写法3：实现 HttpRequestHandler</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token keyword">implements</span> <span class="token class-name">HttpRequestHandler</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleRequest</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>HandlerAdapter 的作用</h5>
-<p>相当于一个适配器/翻译官：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>DispatcherServlet
-      ↓ 我只会说："帮我调用这个 Controller"
-HandlerAdapter
-      ↓ 我来判断它是哪种类型，用对应的方式调用
-Controller（不管是哪种写法，我都能处理）
-</code></pre></div><p>每种 HandlerAdapter 认识一种 Controller：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// RequestMappingHandlerAdapter 认识注解方式</span>
-<span class="token comment">// 它知道要用反射找 @GetMapping 的方法来调用</span>
-method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>controller<span class="token punctuation">,</span> args<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 反射调用 getUser()</span>
-
-<span class="token comment">// SimpleControllerHandlerAdapter 认识接口方式  </span>
-<span class="token comment">// 它知道直接调 handleRequest</span>
-controller<span class="token punctuation">.</span><span class="token function">handleRequest</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><p>DispatcherServlet 只需要说：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// DispatcherServlet 只跟 HandlerAdapter 说话，不管 Controller 长什么样</span>
-handlerAdapter<span class="token punctuation">.</span><span class="token function">handle</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> handler<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 统一接口</span>
-</code></pre></div><blockquote>
-<p>就是不同 Controller 方法名、参数都不一样，Java 没法用同一行代码调用它们，HandlerAdapter 负责"认出"是哪种 Controller 再用对应的方式去调它</p>
-</blockquote>
-<h4>如果混合有继承接口的，也有注解的呢</h4>
-<p>Spring 会注册多个 HandlerAdapter，按顺序逐个尝试，谁能处理谁上：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Spring 默认注册的适配器（有优先级顺序）</span>
-<span class="token class-name">RequestMappingHandlerAdapter</span>      <span class="token comment">// 处理注解方式 @Controller</span>
-<span class="token class-name">SimpleControllerHandlerAdapter</span>    <span class="token comment">// 处理实现 Controller 接口方式</span>
-<span class="token class-name">HttpRequestHandlerAdapter</span>         <span class="token comment">// 处理实现 HttpRequestHandler 接口方式</span>
-</code></pre></div><h5>处理流程</h5>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>DispatcherServlet 拿到请求
-        ↓
-遍历所有 HandlerAdapter，挨个问：
-        ↓
-RequestMappingHandlerAdapter：    "这个我能处理吗？" 
-  → 是注解 Controller？能 ✅ → 直接调用
-  → 是接口 Controller？不能 ❌ → 下一个
-
-SimpleControllerHandlerAdapter：  "这个我能处理吗？"
-  → 实现了 Controller 接口？能 ✅ → 直接调用
-</code></pre></div><h5>代码角度</h5>
-<p>每个 Adapter 都实现了 supports() 方法来判断自己能不能处理</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// RequestMappingHandlerAdapter</span>
-<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">supports</span><span class="token punctuation">(</span><span class="token class-name">Object</span> handler<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> handler <span class="token keyword">instanceof</span> <span class="token class-name">HandlerMethod</span><span class="token punctuation">;</span>  <span class="token comment">// 注解方式才是 HandlerMethod</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// SimpleControllerHandlerAdapter</span>
-<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">supports</span><span class="token punctuation">(</span><span class="token class-name">Object</span> handler<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> handler <span class="token keyword">instanceof</span> <span class="token class-name">Controller</span><span class="token punctuation">;</span>  <span class="token comment">// 实现接口才是 Controller</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>DispatcherServlet 就是遍历调 supports()，谁返回 true 谁来处理</p>
+<h4>Cookie和Session的区别</h4>
+<ol>
+<li>安全性，因为 Cookie 可以通过客户端修改，而 Session 只能在服务端设置，所以安全性比 Cookie 高，一般会用于验证用户登录状态</li>
+<li>适用性，Cookie 只能存储字符串数据，而 Session 可以存储任意类型数据</li>
+<li>有效期，Cookie 可以设置任意时间有效，而 Session 一般失效时间短</li>
+</ol>
 ]]></content:encoded>
     </item>
     <item>
-      <title>Spring系列八股16 - MVC3 (Spring MVC 流程)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article16.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article16.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股16 - MVC3 (Spring MVC 流程)</source>
-      <description>MVC3 前后端分离下 Spring MVC 流程 完整流程 @RestController @ResponseBody 告诉 Spring：不要找 View，把返回值直接转成 JSON 写进响应体 前后端分离下，Spring MVC 的 View 层消失了，Controller 只返回 JSON，由 @ResponseBody + HttpMessa...</description>
+      <title>Net1 - 重要知识点1</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article1.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net1 - 重要知识点1</source>
+      <description>基础 OSI 与 TCP/IP 网络模型 OSI 七层模型 物联网书会使用 (物数网传会表应) 物理层，数据链路层，网络层，传输层，会话层，表示层，用户层 OSI 七层模型 是国际标准化组织提出一个网络分层模型，其大体结构以及每一层提供的功能如下图所示 alt textalt text 每一层都专注做一件事情，并且每一层都需要使用下一层提供的功能 比如...</description>
       <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>MVC3</h2>
-<h3>前后端分离下 Spring MVC 流程</h3>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>传统 MVC：         前后端分离：
-Controller         Controller
-    ↓                  ↓
-返回 ModelAndView   返回 JSON 数据
-    ↓                  ↓
-服务端渲染 HTML     前端自己渲染页面
-</code></pre></div><h4>完整流程</h4>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>前端（Vue/React）发送请求
-        ↓
-DispatcherServlet 接收请求
-        ↓
-HandlerMapping 查路由表，找到对应 Controller 方法
-        ↓
-HandlerAdapter 调用 Controller 方法
-        ↓
-Controller 调用 Service → DAO → 数据库
-        ↓
-返回 Java 对象
-        ↓
-HttpMessageConverter 把对象转成 JSON
-        ↓
-前端收到 JSON，自己渲染页面
-</code></pre></div><h4><code>@RestController</code></h4>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@RestController</span>          <span class="token comment">// = @Controller + @ResponseBody</span>
-<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/user"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserController</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@GetMapping</span><span class="token punctuation">(</span><span class="token string">"/{id}"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">getUser</span><span class="token punctuation">(</span><span class="token annotation punctuation">@PathVariable</span> <span class="token class-name">Long</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> userService<span class="token punctuation">.</span><span class="token function">getUser</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 直接返回对象，自动转 JSON</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p><code>@ResponseBody</code> 告诉 Spring：不要找 View，把返回值直接转成 JSON 写进响应体</p>
-<p>前后端分离下，Spring MVC 的 View 层消失了，Controller 只返回 JSON，由 <code>@ResponseBody + HttpMessageConverter</code> 负责把 Java 对象序列化成 JSON 响应给前端</p>
-<h3>HandlerMapping 和 HandlerAdapter</h3>
-<h4><code>HandlerMapping</code></h4>
-<p>作用：<code>HandlerMapping</code>负责将请求映射到处理器（Controller）</p>
-<p>功能：根据请求的URL、请求参数等信息，找到处理请求的 Controller</p>
-<p>类型：Spring 提供了多种<code>HandlerMapping</code>实现，如<code>BeanNameUrlHandlerMapping</code>、<code>RequestMappingHandlerMapping</code>等。</p>
-<p>工作流程：根据请求信息确定要请求的处理器(Controller), <code>HandlerMapping</code> 可以根据URL、请求参数等规则确定对应的处理器。</p>
-<h4><code>HandlerAdapter</code></h4>
-<p>作用：<code>HandlerAdapter</code>负责调用处理器(Controller)来处理请求
-功能：处理器(Controller)可能有不同的接口类型（Controller接口、<code>HttpRequestHandler</code>接口等），HandlerAdapter根据处理器的类型来选择合适的方法来调用处理器。
-类型：Spring提供了多个HandlerAdapter实现，用于适配不同类型的处理器。
-工作流程：根据处理器的接口类型，选择相应的HandlerAdapter来调用处理器</p>
-<h3><code>HttpMessageConverter</code></h3>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>传统 MVC：         前后端分离：
-Controller         Controller
-    ↓                  ↓
-返回 ModelAndView   返回 JSON 数据
-    ↓                  ↓
-服务端渲染 HTML     前端自己渲染页面
-</code></pre></div><p>在前后端分离的项目中，负责 Java 对象 ↔ HTTP 报文之间的互相转换</p>
-<h4>核心工作</h4>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>请求进来（前端 → 后端）
-JSON 字符串  →  Java 对象      （反序列化）
-
-响应出去（后端 → 前端）
-Java 对象   →  JSON 字符串     （序列化）
-</code></pre></div><h5>1. 读（Read）：将 HTTP 报文转换为 Java 对象</h5>
-<p>当客户端（如浏览器、Postman）向你的接口发起请求，并在 Body 中携带了 JSON 数据时：</p>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>基础</h2>
+<h3>OSI 与 TCP/IP 网络模型</h3>
+<h4>OSI 七层模型</h4>
+<blockquote>
+<p>物联网书会使用 (物数网传会表应)</p>
+<p>物理层，数据链路层，网络层，传输层，会话层，表示层，用户层</p>
+</blockquote>
+<p>OSI 七层模型 是国际标准化组织提出一个网络分层模型，其大体结构以及每一层提供的功能如下图所示</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>每一层都专注做一件事情，并且每一层都需要使用下一层提供的功能</p>
+<p>比如传输层需要使用网络层提供的路由和寻址功能，这样传输层才知道把数据传输到哪里去</p>
+<p>OSI 的七层体系结构概念清楚，理论也很完整，但是它比较复杂而且不实用，而且有些功能在多个层中重复出现</p>
 <ul>
-<li>你的 Controller 方法上通常会打上 <code>@RequestBody</code> 注解。</li>
-<li>此时，Spring 会遍历已注册的 <code>HttpMessageConverter</code> 列表，找到能处理 <code>application/json</code> 类型的转换器。</li>
-<li>转换器会读取 HTTP 请求的输入流（InputStream），并利用底层的 JSON 库（通常是 Jackson）将其反序列化为你方法参数中指定的 Java 对象。</li>
+<li>物理层：实现原始的数据传输，通过电缆光纤</li>
+<li>链路层：将比特组装成帧，通过 MAC 地址进行节点间传输</li>
+<li>网络层：负责 IP 寻址和路由选择，实现主机间通信 (IP 协议)</li>
+<li>传输层：提供端到端的可靠/不可靠数据传输（TCP/UDP）</li>
+<li>会话层：建立、管理和终止会话</li>
+<li>表示层：数据格式转换、加密解密、压缩解压</li>
+<li>应用层：为应用程序提供网络服务接口（HTTP、FTP 等）</li>
 </ul>
-<h5>2. 写（Write）：将 Java 对象转换为 HTTP 报文</h5>
-<p>当你的业务逻辑处理完毕，需要将数据返回给前端时：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>TCP/IP 网络模型</h4>
+<blockquote>
+<p>应传网接</p>
+</blockquote>
+<p>TCP/IP 四层模型 是目前被广泛采用的一种模型,我们可以将 TCP / IP 模型看作是 OSI 七层模型的精简版本，由以下 4 层组成：</p>
+<ol>
+<li>应用层</li>
+<li>传输层</li>
+<li>网络层</li>
+<li>网络接口层</li>
+</ol>
+<p>需要注意的是，我们并不能将 TCP/IP 四层模型 和 OSI 七层模型完全精确地匹配起来，</p>
+<p>不过可以简单将两者对应起来，如下图所示：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h4>应用层</h4>
+<p>应用层位于传输层之上，主要提供<strong>两个终端设备上的应用程序</strong>之间信息交换的服务，它定义了信息交换的格式，消息会交给下一层传输层来传输</p>
+<p>把应用层交互的数据单元称为报文</p>
+<p>应用层协议定义了网络通信规则，对于不同的网络应用需要不同的应用层协议</p>
+<p>在互联网中应用层协议很多，如支持 Web 应用的 HTTP 协议，支持电子邮件的 SMTP 协议等等</p>
+<p>常见协议：</p>
+<figure><figcaption>alt text</figcaption></figure>
 <ul>
-<li>你的 Controller 类上通常会打上 <code>@RestController</code>（自带 <code>@ResponseBody</code> 语义）。</li>
-<li>你的方法直接 return 了一个 Java 对象（比如一个 <code>User</code> 实体或一个统装类 <code>Result&lt;T&gt;</code>）。</li>
-<li>Spring 同样会找到合适的 <code>HttpMessageConverter</code>，将这个 Java 对象序列化成 JSON 字符串，并写入 HTTP 的输出流（OutputStream）返回给客户端</li>
+<li><strong>HTTP（Hypertext Transfer Protocol，超文本传输协议）</strong>：基于 TCP 协议，是一种用于传输超文本和多媒体内容的协议，主要是为 Web 浏览器与 Web 服务器之间的通信而设计的。当我们使用浏览器浏览网页的时候，我们网页就是通过 HTTP 请求进行加载的。</li>
+<li><strong>SMTP（Simple Mail Transfer Protocol，简单邮件发送协议）</strong>：基于 TCP 协议，是一种用于发送电子邮件的协议。注意 ⚠️：SMTP 协议只负责邮件的发送，而不是接收。要从邮件服务器接收邮件，需要使用 POP3 或 IMAP 协议。</li>
+<li><strong>POP3/IMAP（邮件接收协议）</strong>：基于 TCP 协议，两者都是负责邮件接收的协议。IMAP 协议是比 POP3 更新的协议，它在功能和性能上都更加强大。IMAP 支持邮件搜索、标记、分类、归档等高级功能，而且可以在多个设备之间同步邮件状态。几乎所有现代电子邮件客户端和服务器都支持 IMAP。</li>
+<li><strong>FTP（File Transfer Protocol，文件传输协议）</strong>&nbsp;: 基于 TCP 协议，是一种用于在计算机之间传输文件的协议，可以屏蔽操作系统和文件存储方式。注意 ⚠️：FTP 是一种不安全的协议，因为它在传输过程中不会对数据进行加密。建议在传输敏感数据时使用更安全的协议，如 SFTP。</li>
+<li><strong>Telnet（远程登陆协议）</strong>：基于 TCP 协议，用于通过一个终端登陆到其他服务器。Telnet 协议的最大缺点之一是所有数据（包括用户名和密码）均以明文形式发送，这有潜在的安全风险。这就是为什么如今很少使用 Telnet，而是使用一种称为 SSH 的非常安全的网络传输协议的主要原因。</li>
+<li><strong>SSH（Secure Shell Protocol，安全的网络传输协议）</strong>：基于 TCP 协议，通过加密和认证机制实现安全的访问和文件传输等业务</li>
+<li><strong>RTP（Real-time Transport Protocol，实时传输协议）</strong>：通常基于 UDP 协议，但也支持 TCP 协议。它提供了端到端的实时传输数据的功能，但不包含资源预留存、不保证实时传输质量，这些功能由 WebRTC 实现。</li>
+<li><strong>DNS（Domain Name System，域名管理系统）</strong>: 通常基于 UDP 协议（端口 53），用于解决域名和 IP 地址的映射问题。当响应数据过大或进行区域传送时会改用 TCP</li>
 </ul>
-<h4>常见转换器</h4>
-<p>Spring Boot 默认集成 Jackson，引入依赖就自动生效，不需要额外配置</p>
-<p>| 转换器 | 处理类型 |
+<h4>传输层</h4>
+<p>传输层的主要任务就是负责向<strong>两台终端设备进程</strong>之间的通信提供通用的数据传输服务</p>
+<p>应用进程利用该服务传送应用层报文</p>
+<p>“通用的”是指并不针对某一个特定的网络应用，而是多种应用可以使用同一个运输层服务</p>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li><strong>TCP（Transmission Control Protocol，传输控制协议 ）</strong>：提供&nbsp;<strong>面向连接</strong>&nbsp;的，<strong>可靠</strong>&nbsp;的数据传输服务。</li>
+<li><strong>UDP（User Datagram Protocol，用户数据协议）</strong>：提供&nbsp;<strong>无连接</strong>&nbsp;的，<strong>尽最大努力</strong>&nbsp;的数据传输服务（不保证数据传输的可靠性），简单高效</li>
+</ul>
+<h4>网络层</h4>
+<p><strong>网络层负责为分组交换网上的不同主机提供通信服务</strong></p>
+<p>在发送数据时，网络层把运输层产生的报文段或用户数据报封装成分组和包进行传送。在 TCP/IP 体系结构中，由于网络层使用 IP 协议，因此分组也叫 IP 数据报，简称数据报。</p>
+<p><strong>网络层的还有一个任务就是选择合适的路由，使源主机运输层所传下来的分组，能通过网络层中的路由器找到目的主机</strong></p>
+<p>互联网是由大量的异构（heterogeneous）网络通过路由器（router）相互连接起来的。互联网使用的网络层协议是无连接的网际协议（Internet Protocol）和许多路由选择协议，因此互联网的网络层也叫做&nbsp;<strong>网际层</strong>&nbsp;或&nbsp;<strong>IP 层</strong></p>
+<h4>网络接口层</h4>
+<p>可以把网络接口层看作是数据链路层和物理层的合体。</p>
+<ol>
+<li>数据链路层(data link layer)通常简称为链路层（ 两台主机之间的数据传输，总是在一段一段的链路上传送的）。<strong>数据链路层的作用是将网络层交下来的 IP 数据报组装成帧，在两个相邻节点间的链路上传送帧。每一帧包括数据和必要的控制信息（如同步信息，地址信息，差错控制等）。</strong></li>
+<li><strong>物理层的作用是实现相邻计算机节点之间比特流的透明传送，尽可能屏蔽掉具体传输介质和物理设备的差异</strong></li>
+</ol>
+<h3>网络为什么要分层</h3>
+<h4>分层的好处</h4>
+<ol>
+<li><strong>各层之间相互独立</strong>：各层之间相互独立，各层之间不需要关心其他层是如何实现的，只需要知道自己如何调用下层提供好的功能就可以了（可以简单理解为接口调用）<strong>。这个和我们对开发时系统进行分层是一个道理。</strong></li>
+<li><strong>提高了整体灵活性</strong>：每一层都可以使用最适合的技术来实现，你只需要保证你提供的功能以及暴露的接口的规则没有改变就行了。<strong>这个和我们平时开发系统的时候要求的高内聚、低耦合的原则也是可以对应上的。</strong></li>
+<li><strong>大问题化小</strong>：分层可以将复杂的网络问题分解为许多比较小的、界线比较清晰简单的小问题来处理和解决。这样使得复杂的计算机网络系统变得易于设计，实现和标准化。&nbsp;<strong>这个和我们平时开发的时候，一般会将系统功能分解，然后将复杂的问题分解为容易理解的更小的问题是相对应的，这些较小的问题具有更好的边界（目标和接口）定义</strong></li>
+</ol>
+<h4>简单例子</h4>
+<p><strong>HTTP 和传输层的关系</strong></p>
+<ul>
+<li><strong>独立性</strong>：HTTP 应用层不需要知道数据是通过 TCP 还是 QUIC 传输的，它只需要调用"发送数据"接口就行</li>
+<li><strong>灵活性</strong>：你可以随时把 TCP 换成 QUIC（更高效的协议），但 HTTP 的代码完全不需要改变，只要接口保持一致</li>
+<li><strong>化简问题</strong>：上层程序员只需要考虑"如何实现业务逻辑"，不需要考虑"数据如何在网络上传输"——每层各管各的</li>
+</ul>
+<p><strong>Wi-Fi vs 有线网络</strong></p>
+<ul>
+<li>你的浏览器（应用层）不关心是 Wi-Fi 还是网线</li>
+<li>只要物理层保证数据能送到，上面的所有层都能正常工作</li>
+<li>这就是"各层独立、互不影响"</li>
+</ul>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Net10 - 传输层协议 (Socket + UDP)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article10.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article10.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net10 - 传输层协议 (Socket + UDP)</source>
+      <description>传输层 Socket 即套接字，是应用层 与 TCP/IP 协议族通信的中间软件抽象层，表现为一个封装了 TCP / IP协议族 的编程接口（API） Socket是一个编程接口，让你不用关心TCP/IP协议细节，直接调用函数就能收发数据 对用户来说，只需调用Socket去组织数据，以符合指定的协议，即可通信 流程 alt textalt text 服...</description>
+      <category>code</category>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>传输层</h2>
+<h3>Socket</h3>
+<p>即套接字，是应用层 与 TCP/IP 协议族通信的中间软件抽象层，表现为一个封装了 TCP / IP协议族 的编程接口（API）</p>
+<blockquote>
+<p>Socket是一个编程接口，让你不用关心TCP/IP协议细节，直接调用函数就能收发数据</p>
+</blockquote>
+<p>| 类型 | 协议 | 特点 | 用途 |
 |</p>
 ]]></content:encoded>
     </item>
     <item>
-      <title>Spring系列八股17 - MVC4 (RESTful)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article17.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article17.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股17 - MVC4 (RESTful)</source>
-      <description>MVC4 RESTful RESTful（Representational State Transfer，表现层状态转化）本身并不是一种标准、协议或技术，而是一种软件架构风 当一个 Web 服务（API）的设计符合 REST 架构风格时，我们就称它为 RESTful API 简单来说，RESTful 提倡用 URL 定位资源，用 HTTP 动词（GET...</description>
+      <title>Net11 - 网络层 (IP 1)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article11.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article11.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net11 - 网络层 (IP 1)</source>
+      <description>网络层 网络层的主要作用是：实现主机与主机之间的通信，也叫点对点（end to end）通信 alt textalt text 网络层与数据链路层有什么关系 IP（网络层） 和 MAC （数据链路层）之间的区别和关系 IP 的作用是主机之间通信用的，而 MAC 的作用则是实现「直连」的两个设备之间通信，而 IP 则负责在「没有直连」的两个网络之间进行通...</description>
       <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>MVC4</h2>
-<h3>RESTful</h3>
-<p>RESTful（Representational State Transfer，表现层状态转化）本身并不是一种标准、协议或技术，而是一种软件架构风</p>
-<p>当一个 Web 服务（API）的设计符合 REST 架构风格时，我们就称它为 RESTful API</p>
-<p>简单来说，RESTful 提倡用 URL 定位资源，用 HTTP 动词（GET, POST, PUT, DELETE 等）描述操作</p>
-<h4>1. Resource（资源）</h4>
-<p>在 REST 理念中，网络上的所有事物都被抽象为“资源”。一个资源可以是一个实体（如用户、订单、文章），也可以是一个集合（如用户列表）。</p>
-<ul>
-<li><strong>非 RESTful 风格的 URL（动词驱动）：</strong> 通常会在 URL 里写明动作，比如 <code>/getUser?id=1</code>、<code>/createUser</code>、<code>/deleteUser?id=1</code>。</li>
-<li><strong>RESTful 风格的 URL（名词驱动）：</strong> URL 仅仅用来标识资源的位置，不包含动词。比如 <code>/users/1</code>、<code>/orders/123</code>。</li>
-</ul>
-<h4>2. Representational（表现层）</h4>
-<p>资源在服务器端有一个具体的形态（比如数据库里的一条记录），但当它传输给客户端时，需要一种“表现形式”。
-目前主流的 Web 开发中，这种表现形式通常是 <strong>JSON</strong>，早期也常用 XML。也就是说，客户端和服务器之间传递的是资源的 JSON 格式的数据。</p>
-<h4>3. State Transfer（状态转化）</h4>
-<p>HTTP 协议本身是无状态的（Stateless），这意味着所有的状态都保存在服务器端。如果客户端想要操作服务器端的资源，就必须通过某种手段让资源发生“状态转化”（比如创建、修改、删除）。
-这种转化是通过 <strong>HTTP 动词</strong> 来实现的。在实际的后端开发中（例如使用 Spring Boot），这恰好完美对应了各种请求映射注解：</p>
-<ul>
-<li><strong>GET（查询）：</strong> 获取资源。
-<ul>
-<li><code>GET /api/users</code> -&gt; 获取所有用户列表</li>
-<li><code>GET /api/users/1</code> -&gt; 获取 ID 为 1 的用户</li>
-</ul>
-</li>
-<li><strong>POST（创建）：</strong> 新建资源。
-<ul>
-<li><code>POST /api/users</code> -&gt; 创建一个新用户（数据放在请求体 Body 中）</li>
-</ul>
-</li>
-<li><strong>PUT（全量更新）：</strong> 更新资源的全部属性。
-<ul>
-<li><code>PUT /api/users/1</code> -&gt; 更新 ID 为 1 的用户的全部信息</li>
-</ul>
-</li>
-<li><strong>PATCH（局部更新）：</strong> 更新资源的部分属性。
-<ul>
-<li><code>PATCH /api/users/1</code> -&gt; 仅更新 ID 为 1 的用户的某个字段（如密码）</li>
-</ul>
-</li>
-<li><strong>DELETE（删除）：</strong> 删除资源。
-<ul>
-<li><code>DELETE /api/users/1</code> -&gt; 删除 ID 为 1 的用户</li>
-</ul>
-</li>
-</ul>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Spring系列八股18 - SpringBoot (分析1)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article18.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article18.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股18 - SpringBoot (分析1)</source>
-      <description>SpringBoot Spring Boot 可以说是 Spring 生态的一个重大突破，它极大地简化了 Spring 应用的开发和部署过程 以前我们用 Spring 开发项目的时候，需要配置一大堆 XML 文件，包括 Bean 的定义、数据源配置、事务配置等等，非常繁琐 而且还要手动管理各种 jar 包的依赖关系，很容易出现版本冲突的问题, 部署的时...</description>
-      <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>SpringBoot</h2>
-<p>Spring Boot 可以说是 Spring 生态的一个重大突破，它极大地简化了 Spring 应用的开发和部署过程</p>
-<p>以前我们用 Spring 开发项目的时候，需要配置一大堆 XML 文件，包括 Bean 的定义、数据源配置、事务配置等等，非常繁琐</p>
-<p>而且还要手动管理各种 jar 包的依赖关系，很容易出现版本冲突的问题, 部署的时候还要单独搭建 Tomcat 服务器，整个过程很复杂</p>
-<p>Spring Boot 就是为了解决这些痛点而生的</p>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>网络层</h2>
+<p>网络层的主要作用是：实现主机与主机之间的通信，也叫点对点（end to end）通信</p>
+<figure><figcaption>alt text</figcaption></figure>
+<h3>网络层与数据链路层有什么关系</h3>
+<p>IP（网络层） 和 MAC （数据链路层）之间的区别和关系</p>
+<p>IP 的作用是主机之间通信用的，而&nbsp;<strong>MAC 的作用则是实现「直连」的两个设备之间通信，而 IP 则负责在「没有直连」的两个网络之间进行通信传输</strong></p>
 <blockquote>
-<p>“约定大于配置”是 Spring Boot 最核心的理念</p>
+<p>在区间内移动相当于数据链路层，充当区间内两个节点传输的功能，区间内的出发点好比源 MAC 地址，目标地点好比目的 MAC 地址。</p>
+<p>整个旅游行程表就相当于网络层，充当远程定位的功能，行程的开始好比源 IP，行程的终点好比目的 IP 地址</p>
 </blockquote>
-<p>它预设了很多默认配置，比如默认使用内嵌的 Tomcat 服务器，默认的日志框架是 Logback 等等。这样，我们开发者就只需要关注业务逻辑，不用再纠结于各种配置细节</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>只有两者兼备，既有某个区间的车票又有整个旅行的行程表，才能保证到达目的地。与此类似，<strong>计算机网络中也需要「数据链路层」和「网络层」这个分层才能实现向最终目标地址的通信。</strong></p>
+<p>还有重要一点，旅行途中我们虽然不断变化了交通工具，但是旅行行程的起始地址和目的地址始终都没变。</p>
+<p>其实，在网络中数据包传输中也是如此，<strong>源IP地址和目标IP地址在传输过程中是不会变化的（前提：没有使用 NAT 网络），只有源 MAC 地址和目标 MAC 一直在变化</strong></p>
+<h3>IP 基础</h3>
+<p>在 TCP/IP 网络通信时，为了保证能正常通信，每个设备都需要配置正确的 IP 地址，否则无法实现正常的通信。</p>
+<p>IP 地址（IPv4 地址）由&nbsp;<code>32</code>&nbsp;位正整数来表示，IP 地址在计算机是以二进制的方式处理的。</p>
+<p>而人类为了方便记忆采用了<strong>点分十进制</strong>的标记方式，也就是将 32 位 IP 地址以每 8 位为组，共分为&nbsp;<code>4</code>&nbsp;组，每组以「<code>.</code>」隔开，再将每组转换成十进制</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>IP 地址最大值就是 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>3</mn></msup><mn>2</mn><mo>=</mo><mn>4294967296</mn></mrow><annotation encoding="application/x-tex">2^32=4294967296</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4294967296</span></span></span></span></p>
+<p>也就说，最大允许 43 亿台计算机连接到网络。</p>
+<p>实际上，IP 地址并不是根据主机台数来配置的，而是以网卡。像服务器、路由器等设备都是有 2 个以上的网卡，也就是它们会有 2 个以上的 IP 地址</p>
+<h4>IP 分类</h4>
+<p>互联网诞生之初，IP 地址显得很充裕，于是计算机科学家们设计了分类地址。</p>
+<p>IP 地址分类成了 5 种类型，分别是 A 类、B 类、C 类、D 类、E 类</p>
+<figure><figcaption>alt text</figcaption></figure>
 <blockquote>
-<p>自动装配也是 Spring Boot 的一大特色</p>
+<p>什么是 A B C 类</p>
 </blockquote>
-<p>它会根据项目中引入的依赖自动配置合适的 Bean</p>
-<p>比如说，我们引入了 Spring Data JPA，Spring Boot 就会自动配置数据源；比如说，我们引入了 Spring Security，Spring Boot 就会自动配置安全相关的 Bean。</p>
-<p>Spring Boot 还提供了很多开箱即用的功能，比如 Actuator 监控、DevTools 开发工具、Spring Boot Starter 等等。Actuator 可以让我们轻松监控应用的健康状态、性能指标等；DevTools 可以加快开发效率，比如自动重启、热部署等；Spring Boot Starter 则是一些预配置好的依赖集合，让我们可以快速引入某些常用的功能</p>
-<p>优点：</p>
+<p>其中对于 A、B、C 类主要分为两个部分，分别是网络号和主机号</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>最大主机个数，就是要看主机号的位数，如 C 类地址的主机号占 8 位，那么 C 类地址的最大主机个数 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>8</mn></msup><mo>−</mo><mn>2</mn><mo>=</mo><mn>254</mn></mrow><annotation encoding="application/x-tex">2^8 - 2 = 254</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">8</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">254</span></span></span></span></p>
+<blockquote>
+<p>为什么要减 2 呢？</p>
+</blockquote>
+<p>因为在 IP 地址中，有两个 IP 是特殊的，分别是主机号全为 1 和 全为 0 地址</p>
 <ul>
-<li>简化开发</li>
-<li>快速启动</li>
-<li>自动化配置</li>
-</ul>
-<h3>常用注解</h3>
-<ul>
-<li><code>@SpringBootApplication</code>：这是 Spring Boot 的核心注解，它是一个组合注解，包含了 <code>@Configuration</code>、<code>@EnableAutoConfiguration</code> 和 <code>@ComponentScan</code>。它标志着一个 Spring Boot 应用的入口</li>
-<li><code>@SpringBootTest</code>：用于测试 Spring Boot 应用的注解，它会加载整个 Spring 上下文，适合集成测试</li>
-</ul>
-<h3>自动装配</h3>
-<p>在 Spring Boot 中，开启自动装配的注解是<code>@EnableAutoConfiguration</code></p>
-<p>这个注解会告诉 Spring 去扫描所有可用的自动配置类</p>
-<p>Spring Boot 为了进一步简化，把这个注解包含到了 <code>@SpringBootApplication</code> 注解中</p>
-<p>也就是说，当我们在主类上使用 <code>@SpringBootApplication</code> 注解时，实际上就已经开启了自动装配</p>
-<h4>理解</h4>
-<p>SpringBoot 定义了一套接口规范，这套规范规定：</p>
-<p>SpringBoot 在启动时会扫描外部引用 jar 包中的 <code>META-INF/spring.factories</code> 文件，将文件中配置的类型信息加载到 Spring 容器（此处涉及到 JVM 类加载机制与 Spring 的容器知识），并执行类中定义的各种操作</p>
-<p>对于外部 jar 来说，只需要按照 SpringBoot 定义的标准，就能将自己的功能装置进 SpringBoot</p>
-<p>通俗来讲，自动装配就是通过注解或一些简单的配置就可以在 SpringBoot 的帮助下开启和配置各种功能，比如数据库访问、Web 开发</p>
-<h4>原理</h4>
-<p>首先点进 <code>@SpringBootApplication</code> 注解的内部</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token class-name">ElementType</span><span class="token punctuation">.</span><span class="token constant">TYPE</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span><span class="token class-name">RetentionPolicy</span><span class="token punctuation">.</span><span class="token constant">RUNTIME</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Documented</span>
-<span class="token annotation punctuation">@Inherited</span>
-<span class="token annotation punctuation">@SpringBootConfiguration</span>
-<span class="token annotation punctuation">@EnableAutoConfiguration</span>
-<span class="token annotation punctuation">@ComponentScan</span><span class="token punctuation">(</span>
-    excludeFilters <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token annotation punctuation">@Filter</span><span class="token punctuation">(</span>
-    type <span class="token operator">=</span> <span class="token class-name">FilterType</span><span class="token punctuation">.</span><span class="token constant">CUSTOM</span><span class="token punctuation">,</span>
-    classes <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token class-name">TypeExcludeFilter</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">}</span>
-<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token annotation punctuation">@Filter</span><span class="token punctuation">(</span>
-    type <span class="token operator">=</span> <span class="token class-name">FilterType</span><span class="token punctuation">.</span><span class="token constant">CUSTOM</span><span class="token punctuation">,</span>
-    classes <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token class-name">AutoConfigurationExcludeFilter</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">}</span>
-<span class="token punctuation">)</span><span class="token punctuation">}</span>
-<span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token annotation punctuation">@interface</span> <span class="token class-name">SpringBootApplication</span> <span class="token punctuation">{</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">}</span>
-</code></pre></div><ul>
-<li><code>@Target({ElementType.TYPE})</code>: 该注解指定了这个注解可以用来标记在类上。在这个特定的例子中，这表示该注解用于标记配置类。</li>
-<li><code>@Retention(RetentionPolicy.RUNTIME)</code>: 这个注解指定了注解的生命周期，即在运行时保留。这是因为 Spring Boot 在运行时扫描类路径上的注解来实现自动配置，所以这里使用了 RUNTIME 保留策略。</li>
-<li><code>@Documented</code>: 该注解表示这个注解应该被包含在 Java 文档中。它是用于生成文档的标记，使开发者能够看到这个注解的相关信息。</li>
-<li><code>@Inherited</code>: 这个注解指示一个被标注的类型是被继承的。在这个例子中，它表明这个注解可以被继承，如果一个类继承了带有这个注解的类，它也会继承这个注解。</li>
-<li><code>@SpringBootConfiguration</code>: 这个注解表明这是一个 Spring Boot 配置类。如果点进这个注解内部会发现与标准的 <code>@Configuration</code> 没啥区别，只是为了表明这是一个专门用于 SpringBoot 的配置。</li>
-<li><code>@EnableAutoConfiguration</code>: 这个注解是 Spring Boot 自动装配的核心。它告诉 Spring oot 启用自动配置机制，根据项目的依赖和配置自动配置应用程序的上下文。通过这个注解，SpringBoot 将尝试根据类路径上的依赖自动配置应用程序。</li>
-<li><code>@ComponentScan</code>: 这个注解用于配置组件扫描的规则。在这里，它告诉 SpringBoot 在指定的包及其子包中查找组件，这些组件包括被注解的类、@Component 注解的类等。其中的 excludeFilters 参数用于指定排除哪些组件，这里使用了两个自定义的过滤器，分别是 TypeExcludeFilter 和 AutoConfigurationExcludeFilte</li>
+<li>主机号全为 1 指定某个网络下的所有主机，用于广播</li>
+<li>主机号全为 0 指定某个网络</li>
 </ul>
 <blockquote>
-<p>SpringBoot 利用 @ComponentScan 扫描当前项目（主类所在包及其子包）中标注了 @Component、@Service、@Controller 等注解的类，将其注册为 Bean</p>
-<p>利用 @EnableAutoConfiguration 触发自动装配：借助 SpringFactoriesLoader 读取 classpath 各依赖 jar 包中 META-INF/spring.factories</p>
-<p>Spring Boot 3.x 后改为 META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports）里预定义的自动配置类</p>
-<p>再配合 @Conditional 系列注解按条件将 Bean 注册到容器</p>
+<p>什么是 D、E 类地址</p>
 </blockquote>
-<p>| | <code>@ComponentScan</code> | <code>@EnableAutoConfiguration</code> |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Spring系列八股19 - SpringBoot2 (自动装配分析 @Import)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article19.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article19.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股19 - SpringBoot2 (自动装配分析 @Import)</source>
-      <description>SpringBoot @Import 它的核心作用是：将指定的类、配置类或动态生成的 Bean 注册到 Spring 的 IoC 容器中 @ComponentScan 只能扫描你项目包路径下的类。但如果你想导入一个外部 jar 包里的类，或者一个不在扫描路径下的配置类，@ComponentScan 就够不着了。 @Import 就是解决这个问题的。 引...</description>
-      <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>SpringBoot</h2>
-<h3><code>@Import</code></h3>
-<p>它的核心作用是：将指定的类、配置类或动态生成的 Bean 注册到 Spring 的 IoC 容器中</p>
-<p><code>@ComponentScan</code> 只能扫描你项目包路径下的类。但如果你想导入一个外部 jar 包里的类，或者一个不在扫描路径下的配置类，<code>@ComponentScan</code> 就够不着了。</p>
-<p><code>@Import</code> 就是解决这个问题的。</p>
-<h4>引入普通类或 <code>@Configuration</code> 类</h4>
-<p>当你把项目拆分成了多个配置类，或者你想直接把某个没有加上 @Component 注解的第三方类注入到 Spring 容器时，就可以直接使用它</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 被引入的配置类</span>
-<span class="token annotation punctuation">@Configuration</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DatabaseConfig</span> <span class="token punctuation">{</span>
-    <span class="token comment">// ... 配置数据库 Bean</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// 主配置类</span>
-<span class="token annotation punctuation">@Configuration</span>
-<span class="token annotation punctuation">@Import</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token class-name">DatabaseConfig</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token class-name">User</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token comment">// 明确引入 DatabaseConfig 和 User 类</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>效果：DatabaseConfig 里面的 Bean 以及 User 类本身，都会被直接注册进 Spring 容器</p>
-<h4>引入 <code>ImportSelector</code> 的实现类（动态引入机制）</h4>
-<p>这是 Spring Boot 自动装配（Auto-Configuration）的核心秘密所在。你可以通过编写代码逻辑，动态决定要向容器中注入哪些配置类</p>
+<p>而 D 类和 E 类地址是没有主机号的，所以不可用于主机 IP，D 类常被用于多播，E 类是预留的分类，暂时未使用</p>
+<h5>缺点</h5>
+<p><em>缺点一</em></p>
+<p><strong>同一网络下没有地址层次</strong>，比如一个公司里用了 B 类地址，但是可能需要根据生产环境、测试环境、开发环境来划分地址层次，而这种 IP 分类是没有地址层次划分的功能，所以这就<strong>缺少地址的灵活性</strong>。</p>
+<p><em>缺点二</em></p>
+<p>A、B、C类有个尴尬处境，就是<strong>不能很好的与现实网络匹配</strong>。</p>
 <ul>
-<li>实现 ImportSelector 接口的 selectImports 方法，返回一个包含全限定类名的字符串数组。Spring 会把这些类注册进容器</li>
+<li>C 类地址能包含的最大主机数量实在太少了，只有 254 个，估计一个网吧都不够用。</li>
+<li>而 B 类地址能包含的最大主机数量又太多了，6 万多台机器放在一个网络下面，一般的企业基本达不到这个规模，闲着的地址就是浪费。</li>
 </ul>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyImportSelector</span> <span class="token keyword">implements</span> <span class="token class-name">ImportSelector</span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">selectImports</span><span class="token punctuation">(</span><span class="token class-name">AnnotationMetadata</span> importingClassMetadata<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment">// 可以根据条件（比如环境变量、其他注解存在与否）动态返回要加载的类</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span><span class="token string">"com.example.config.AConfig"</span><span class="token punctuation">,</span> <span class="token string">"com.example.config.BConfig"</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token annotation punctuation">@Configuration</span>
-<span class="token annotation punctuation">@Import</span><span class="token punctuation">(</span><span class="token class-name">MyImportSelector</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span> 
-<span class="token comment">// Spring 会调用其 selectImports 方法并注入返回的类</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AppConfig</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-</code></pre></div><h4>引入 ImportBeanDefinitionRegistrar 的实现类（最底层、最灵活的用法）</h4>
-<p>如果你需要更细粒度的控制，比如自己构建 BeanDefinition（Bean 的定义信息，包含作用域、懒加载等），你可以使用这种方式。</p>
-<ul>
-<li>MyBatis 的 <code>@MapperScan</code>、Feign 的 <code>@EnableFeignClients</code> 等框架整合注解，底层几乎全是用这个机制实现的，用来动态扫描并生成代理对象的 Bean。</li>
-</ul>
-<h4>原理分析</h4>
+<p>这两个缺点，都可以在&nbsp;<code>CIDR</code>&nbsp;无分类地址解决</p>
+<h4>无分类地址 CIDR</h4>
+<p>正因为 IP 分类存在许多缺点，所以后面提出了无分类地址的方案，即&nbsp;<code>CIDR</code>。</p>
+<p>这种方式不再有分类地址的概念，32 比特的 IP 地址被划分为两部分，前面是<strong>网络号</strong>，后面是<strong>主机号</strong></p>
 <blockquote>
-<p>为什么设计一个实现类 ImportSelector 接口，然后@Import它就会调用对应的selectImports方法</p>
+<p>怎么划分网络号和主机号的</p>
 </blockquote>
-<p>这并不是 Java 语言本身的某种自动机制，而是 Spring 容器在启动时，专门写了一段代码去“特殊照顾” ImportSelector 这个接口</p>
-<h5>后置处理器 <code>ConfigurationClassPostProcessor</code></h5>
-<p>在 Spring 启动时，有一个非常核心的“总管家”叫做 <code>ConfigurationClassPostProcessor</code>（它是一个 Bean 工厂后置处理器）</p>
-<p>它的主要工作就是去解析所有的配置类（带有 <code>@Configuration</code>、<code>@Component</code>、<code>@Import</code> 等注解的类）</p>
-<p>当这位总管家在解析某个配置类时，如果看到了 <code>@Import</code> 注解，它就会进入一个专门处理 Import 的解析器：<code>ConfigurationClassParser</code></p>
-<p>在 <code>ConfigurationClassParser</code> 的源码中（具体是 <code>processImports</code> 方法），Spring 拿到你 <code>@Import</code> 进来的类之后，做了一个<strong>类型判断大分流</strong></p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// configClass：当前正在被解析的配置类（比如标了 @SpringBootApplication 的主类）</span>
-<span class="token comment">// currentSourceClass：当前配置类的源信息</span>
-<span class="token comment">// importCandidates：@Import 里传入的所有候选类</span>
-<span class="token comment">// filter：过滤器，用于排除某些类</span>
-<span class="token comment">// checkForCircularImports：是否要检查循环导入</span>
-<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">processImports</span><span class="token punctuation">(</span><span class="token class-name">ConfigurationClass</span> configClass<span class="token punctuation">,</span> <span class="token class-name">SourceClass</span> currentSourceClass<span class="token punctuation">,</span> <span class="token class-name">Collection</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">SourceClass</span><span class="token punctuation">&gt;</span></span> importCandidates<span class="token punctuation">,</span> <span class="token class-name">Predicate</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> filter<span class="token punctuation">,</span> <span class="token keyword">boolean</span> checkForCircularImports<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-  <span class="token comment">// 如果没有任何 @Import 的候选类，直接跳过</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>importCandidates<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-      <span class="token comment">// 检查循环导入：比如 A @Import B，B 又 @Import A，这种情况直接报错</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>checkForCircularImports <span class="token operator">&amp;&amp;</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">isChainedImportOnStack</span><span class="token punctuation">(</span>configClass<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span>problemReporter<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CircularImportProblem</span><span class="token punctuation">(</span>configClass<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>importStack<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-          <span class="token comment">// 把当前配置类压栈，用于后续循环导入的检测</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span>importStack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>configClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token keyword">try</span> <span class="token punctuation">{</span>
-              <span class="token comment">// 遍历所有 @Import 进来的候选类，逐一判断类型</span>
-              <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token class-name">SourceClass</span> candidate <span class="token operator">:</span> importCandidates<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-                  <span class="token comment">// ① 判断是否是 ImportSelector 类型（如 AutoConfigurationImportSelector）</span>
-                  <span class="token keyword">if</span> <span class="token punctuation">(</span>candidate<span class="token punctuation">.</span><span class="token function">isAssignable</span><span class="token punctuation">(</span><span class="token class-name">ImportSelector</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                      <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> candidateClass <span class="token operator">=</span> candidate<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token comment">// 实例化这个 ImportSelector</span>
-                      <span class="token class-name">ImportSelector</span> selector <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ImportSelector</span><span class="token punctuation">)</span><span class="token class-name">ParserStrategyUtils</span><span class="token punctuation">.</span><span class="token function">instantiateClass</span><span class="token punctuation">(</span>candidateClass<span class="token punctuation">,</span> <span class="token class-name">ImportSelector</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>environment<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>resourceLoader<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                      <span class="token comment">// 如果 selector 自带了额外的排除过滤器，合并进来</span>
-                      <span class="token class-name">Predicate</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">&gt;</span></span> selectorFilter <span class="token operator">=</span> selector<span class="token punctuation">.</span><span class="token function">getExclusionFilter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token keyword">if</span> <span class="token punctuation">(</span>selectorFilter <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                          filter <span class="token operator">=</span> filter<span class="token punctuation">.</span><span class="token function">or</span><span class="token punctuation">(</span>selectorFilter<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token punctuation">}</span>
-
-                      <span class="token comment">// 判断是否是「延迟执行」的 ImportSelector</span>
-                      <span class="token keyword">if</span> <span class="token punctuation">(</span>selector <span class="token keyword">instanceof</span> <span class="token class-name">DeferredImportSelector</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                          <span class="token comment">// DeferredImportSelector 不立即执行，等所有配置类都解析完再处理</span>
-                          <span class="token comment">// AutoConfigurationImportSelector 就实现了这个接口</span>
-                          <span class="token comment">// 目的是确保自动配置类在用户自定义的 Bean 之后再处理，避免覆盖用户配置</span>
-                          <span class="token class-name">DeferredImportSelector</span> deferredImportSelector <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">DeferredImportSelector</span><span class="token punctuation">)</span>selector<span class="token punctuation">;</span>
-                          <span class="token keyword">this</span><span class="token punctuation">.</span>deferredImportSelectorHandler<span class="token punctuation">.</span><span class="token function">handle</span><span class="token punctuation">(</span>configClass<span class="token punctuation">,</span> deferredImportSelector<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-                          <span class="token comment">// 普通 ImportSelector：立即调用 selectImports() 拿到要导入的类名数组</span>
-                          <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> importClassNames <span class="token operator">=</span> selector<span class="token punctuation">.</span><span class="token function">selectImports</span><span class="token punctuation">(</span>currentSourceClass<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                          <span class="token class-name">Collection</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">SourceClass</span><span class="token punctuation">&gt;</span></span> importSourceClasses <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">asSourceClasses</span><span class="token punctuation">(</span>importClassNames<span class="token punctuation">,</span> filter<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                          <span class="token comment">// 递归处理这些被导入的类（它们可能也有 @Import）</span>
-                          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">processImports</span><span class="token punctuation">(</span>configClass<span class="token punctuation">,</span> currentSourceClass<span class="token punctuation">,</span> importSourceClasses<span class="token punctuation">,</span> filter<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token punctuation">}</span>
-
-                  <span class="token comment">// ② 判断是否是 ImportBeanDefinitionRegistrar 类型</span>
-                  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>candidate<span class="token punctuation">.</span><span class="token function">isAssignable</span><span class="token punctuation">(</span><span class="token class-name">ImportBeanDefinitionRegistrar</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                      <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> candidateClass <span class="token operator">=</span> candidate<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token comment">// 实例化后先存起来，等配置类解析完再统一调用 registerBeanDefinitions()</span>
-                      <span class="token class-name">ImportBeanDefinitionRegistrar</span> registrar <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ImportBeanDefinitionRegistrar</span><span class="token punctuation">)</span><span class="token class-name">ParserStrategyUtils</span><span class="token punctuation">.</span><span class="token function">instantiateClass</span><span class="token punctuation">(</span>candidateClass<span class="token punctuation">,</span> <span class="token class-name">ImportBeanDefinitionRegistrar</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>environment<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>resourceLoader<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>registry<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      configClass<span class="token punctuation">.</span><span class="token function">addImportBeanDefinitionRegistrar</span><span class="token punctuation">(</span>registrar<span class="token punctuation">,</span> currentSourceClass<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                  <span class="token comment">// ③ 普通类（既不是 ImportSelector 也不是 Registrar）</span>
-                  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-                      <span class="token comment">// 直接当作 @Configuration 配置类来处理，注册到容器中</span>
-                      <span class="token keyword">this</span><span class="token punctuation">.</span>importStack<span class="token punctuation">.</span><span class="token function">registerImport</span><span class="token punctuation">(</span>currentSourceClass<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> candidate<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClassName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">processConfigurationClass</span><span class="token punctuation">(</span>candidate<span class="token punctuation">.</span><span class="token function">asConfigClass</span><span class="token punctuation">(</span>configClass<span class="token punctuation">)</span><span class="token punctuation">,</span> filter<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                  <span class="token punctuation">}</span>
-              <span class="token punctuation">}</span>
-          <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">BeanDefinitionStoreException</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-              <span class="token keyword">throw</span> ex<span class="token punctuation">;</span>
-          <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-              <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">BeanDefinitionStoreException</span><span class="token punctuation">(</span><span class="token string">"Failed to process import candidates for configuration class ["</span> <span class="token operator">+</span> configClass<span class="token punctuation">.</span><span class="token function">getMetadata</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getClassName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"]: "</span> <span class="token operator">+</span> ex<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
-              <span class="token comment">// 无论成功还是失败，最后都要把当前类从栈里弹出</span>
-              <span class="token keyword">this</span><span class="token punctuation">.</span>importStack<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token punctuation">}</span>
-      <span class="token punctuation">}</span>
-
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+<p>表示形式&nbsp;<code>a.b.c.d/x</code>，其中&nbsp;<code>/x</code>&nbsp;表示前 x 位属于<strong>网络号</strong>， x 的范围是&nbsp;<code>0 ~ 32</code>，这就使得 IP 地址更加具有灵活性。</p>
+<p>比如 <code>10.100.122.2/24</code>，这种地址表示形式就是 CIDR，/24 表示前 24 位是网络号，剩余的 8 位是主机号</p>
+<p>还有另一种划分网络号与主机号形式，那就是<strong>子网掩码</strong>，掩码的意思就是掩盖掉主机号，剩余的就是网络号</p>
+<p><strong>将子网掩码和 IP 地址按位计算 AND，就可得到网络号</strong></p>
+<figure><figcaption>alt text</figcaption></figure>
+<h5>为什么要分离网络号和主机号</h5>
+<p>因为两台计算机要通讯，首先要判断是否处于同一个广播域内，即网络地址是否相同。如果网络地址相同，表明接受方在本网络上，那么可以把数据包直接发送到目标主机。</p>
+<p>路由器寻址工作中，也就是通过这样的方式来找到对应的网络号的，进而把数据包转发给对应的网络内</p>
+<p><strong>因为两台计算机要通讯，首先要判断是否处于同一个广播域内，即网络地址是否相同。</strong></p>
+<p>这意味着，当计算机 A 要给计算机 B 发数据时，第一步不是直接发，而是先问一个问题：<strong>B 在我的本网络上吗？</strong></p>
+<p>怎么判断呢？就是比较双方的<strong>网络号</strong>部分是否相同。</p>
+<p>比如：</p>
+<ul>
+<li>A 的 IP 是&nbsp;<code>10.100.122.5/24</code>（网络号是&nbsp;<code>10.100.122.0</code>）</li>
+<li>B 的 IP 是&nbsp;<code>10.100.122.10/24</code>（网络号也是&nbsp;<code>10.100.122.0</code>）</li>
+<li>网络号相同，说明 B 在我的本网络上</li>
+</ul>
+<p><strong>第二句：如果网络地址相同，表明接受方在本网络上，那么可以把数据包直接发送到目标主机。</strong></p>
+<p>既然对方在本网络上，就可以<strong>直接发送</strong>，不需要经过路由器。</p>
+<p>计算机 A 会用 ARP 协议（数据链路层）去查找 B 的 MAC 地址，然后直接通过以太网把数据发过去。</p>
+<p><strong>第三句：路由器寻址工作中，也就是通过这样的方式来找到对应的网络号的，进而把数据包转发给对应的网络内。</strong></p>
+<p>反过来，如果网络号<strong>不同</strong>，说明对方在其他网络上，就需要经过路由器。</p>
+<p>路由器会根据 IP 地址的网络号部分去查找<strong>路由表</strong>，找到应该转发到哪个网络去，然后把数据包转发过去。</p>
+<ul>
+<li>*核心理解：**分离网络号和主机号，就是为了快速判断"对方在不在本网络上"——</li>
+<li>在本网络 → 直接发</li>
+<li>不在本网络 → 路由器帮你转发</li>
+</ul>
+<h5>子网划分</h5>
+<p>我们知道可以通过子网掩码划分出网络号和主机号，那实际上子网掩码还有一个作用，那就是<strong>划分子网</strong></p>
+<p><strong>子网划分实际上是将主机地址分为两个部分：子网网络地址和子网主机地址</strong></p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>假设对 C 类地址进行子网划分，网络地址 192.168.1.0，使用子网掩码 255.255.255.192 对其进行子网划分。</p>
+<p>C 类地址中前 24 位是网络号，最后 8 位是主机号，根据子网掩码可知<strong>从 8 位主机号中借用 2 位作为子网号</strong></p>
+<p>由于子网网络地址被划分成 2 位，那么子网地址就有 4 个，分别是 00、01、10、11</p>
+<h4>公有 IP 和 私有 IP</h4>
+<p>在 A、B、C 分类地址，实际上有分公有 IP 地址和私有 IP 地址</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>RFC 1918 标准定义的私有地址范围：</strong></p>
+<ul>
+<li><strong>A 类私有地址</strong>：<code>10.0.0.0/8</code>（对应原 A 类）</li>
+<li><strong>B 类私有地址</strong>：<code>172.16.0.0/12</code>（对应原 B 类）</li>
+<li><strong>C 类私有地址</strong>：<code>192.168.0.0/16</code>（对应原 C 类）</li>
+</ul>
+<p>这些就是从 ABC 分类时代遗留下来的定义，一直沿用到现在。</p>
+<p><strong>但在实际使用中，企业还是用 CIDR 来进一步划分。</strong></p>
+<p>比如某企业申请了一个私有地址 <code>10.0.0.0/8</code>（A 类范围），内部会这样划分：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>生产环境：10.1.0.0/16
+测试环境：10.2.0.0/16
+开发环境：10.3.0.0/16`
+</code></pre></div><p><strong>总结：</strong></p>
+<ul>
+<li><strong>私有 IP 的范围定义</strong>&nbsp;→ 还是按 ABC 分类</li>
+<li><strong>私有 IP 的实际管理和划分</strong>&nbsp;→ 用 CIDR</li>
+</ul>
+<p>所以你的理解是对的，ABC 分类虽然在公网上被 CIDR 取代了，但它的影子还是保留在私有地址的定义里</p>
+<p>私有 IP 地址通常是内部的 IT 人员管理，公有 IP 地址是由&nbsp;<code>ICANN</code>&nbsp;组织管理，中文叫「互联网名称与数字地址分配机构」。</p>
+<p>IANA 是 ICANN 的其中一个机构，它负责分配互联网 IP 地址，是按州的方式层层分配</p>
+<ul>
+<li>ARIN 北美地区</li>
+<li>LACNIC 拉丁美洲和一些加勒比群岛</li>
+<li>RIPE NCC 欧洲、中东和中亚</li>
+<li>AfriNIC 非洲地区</li>
+<li>APNIC 亚太地区</li>
+</ul>
+<p>其中，在中国是由 CNNIC 的机构进行管理，它是中国国内唯一指定的全局 IP 地址管理的组织</p>
+<h5>简单例子</h5>
+<p><strong>地区 RIR 的管理范围：</strong></p>
+<p><code>APNIC（亚太）→ IP 段: 1.0.0.0/8 ~ 223.255.255.255/8 的一部分 RIPE NCC（欧洲）→ IP 段: 194.0.0.0/6 ~ 195.0.0.0/6 等 ARIN（北美）→ IP 段: 8.0.0.0/4 ~ 15.0.0.0/4 等 LACNIC（南美）→ IP 段: 177.0.0.0/8 ~ 179.0.0.0/8 等 AFRINIC（非洲）→ IP 段: 41.0.0.0/8 等</code></p>
+<p><strong>在地区内部的分配：</strong></p>
+<p>以 APNIC 为例，它再细分给不同国家：</p>
+<p><code>中国：58.0.0.0/8、210.0.0.0/8 等 日本：61.0.0.0/8、203.0.0.0/8 的一部分 澳大利亚：1.0.0.0/8 的一部分</code></p>
+<p><strong>甚至更细致（但不严格）：</strong></p>
+<p>在中国内部，不同运营商也有大概的 IP 段范围：</p>
+<p><code>中国移动：58.0.0.0/8、139.0.0.0/8 的一部分 中国电信：1.0.0.0/8 的一部分、202.0.0.0/8 的一部分 中国联通：210.0.0.0/8 的一部分、123.0.0.0/8 的一部分</code></p>
+<p><strong>但这不是绝对的：</strong></p>
+<ul>
+<li>一个 IP 段不一定完全对应一个地区或运营商，可能被分割或重新分配</li>
+<li>某些大公司可能拥有跨多个地区的 IP 段</li>
+<li>你可以用&nbsp;<code>whois</code>&nbsp;命令查询某个 IP 的归属地和运营商</li>
+</ul>
+<p><strong>例子：</strong></p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>$ whois 8.8.8.8
+结果：Google LLC, United States`
 </code></pre></div>]]></content:encoded>
     </item>
     <item>
-      <title>Spring系列八股20 - SpringBoot3 (Spring Boot 启动原理)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article20.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/Spring/article20.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Spring系列八股20 - SpringBoot3 (Spring Boot 启动原理)</source>
-      <description>SpringBoot alt textalt text 创建 SpringApplication 实例，并识别应用类型，比如说是标准的 Servlet Web 还是响应式的 WebFlux，然后准备监听器和初始化监听容器。 创建并准备 ApplicationContext，将主类作为配置源进行加载。 刷新 Spring 上下文，触发 Bean 的实例化...</description>
+      <title>Net12 - 网络层 (IP 2)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article12.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article12.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net12 - 网络层 (IP 2)</source>
+      <description>网络层 IP 地址与路由控制 IP地址的网络地址这一部分是用于进行路由控制。 路由控制表中记录着网络地址与下一步应该发送至路由器的地址。在主机和路由器上都会有各自的路由器控制表。 在发送 IP 包时，首先要确定 IP 包首部中的目标地址，再从路由控制表中找到与该地址具有相同网络地址的记录，根据该记录将 IP 包转发给相应的下一个路由器。如果路由控制表中...</description>
       <category>code</category>
-      <pubDate>Mon, 06 Apr 2026 14:40:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>SpringBoot</h2>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>网络层</h2>
+<h3>IP 地址与路由控制</h3>
+<p>IP地址的<strong>网络地址</strong>这一部分是用于进行路由控制。</p>
+<p>路由控制表中记录着网络地址与下一步应该发送至路由器的地址。在主机和路由器上都会有各自的路由器控制表。</p>
+<p>在发送 IP 包时，首先要确定 IP 包首部中的目标地址，再从路由控制表中找到与该地址具有<strong>相同网络地址</strong>的记录，根据该记录将 IP 包转发给相应的下一个路由器。如果路由控制表中存在多条相同网络地址的记录，就选择相同位数最多的网络地址，也就是最长匹配。</p>
+<p>下面以下图的网络链路作为例子说明：</p>
 <figure><figcaption>alt text</figcaption></figure>
-<ul>
-<li>创建 SpringApplication 实例，并识别应用类型，比如说是标准的 Servlet Web 还是响应式的 WebFlux，然后准备监听器和初始化监听容器。</li>
-<li>创建并准备 ApplicationContext，将主类作为配置源进行加载。</li>
-<li>刷新 Spring 上下文，触发 Bean 的实例化，比如说扫描并注册 @ComponentScan 指定路径下的 Bean</li>
-<li>触发自动配置，在 Spring Boot 2.7 及之前是通过 spring.factories 加载的，3.x 是通过读取 AutoConfiguration.imports，并结合 @ConditionalOn 系列注解依据条件注册 Bean</li>
-<li>如果引入了 Web 相关依赖，会创建并启动 Tomcat 容器，完成 HTTP 端口监听</li>
-</ul>
-<h3>Spring Boot 启动流程</h3>
-<p>可以把 Spring Boot 容器比作一个汽车制造厂：</p>
-<ul>
-<li><strong>BeanDefinition (Bean 定义)</strong>：汽车的设计图纸。</li>
-<li><strong>BeanFactoryPostProcessor</strong>：审阅和修改图纸的工程师（在真正造车之前，他们可以修改图纸，或者画新的图纸）。</li>
-<li><strong>Bean (实例)</strong>：造出来的真正汽车</li>
-</ul>
-<h4>源码分析</h4>
-<p>从启动类出发</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token annotation punctuation">@SpringBootApplication</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Demo1Application</span> <span class="token punctuation">{</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">SpringApplication</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">Demo1Application</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>编译阶段</h5>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>src/main/java/
-  ├── Demo1Application.java
-  ├── controller/
-  │    └── UserController.java
-  ├── service/
-  │    └── UserService.java
-  └── entity/
-       └── User.java
-
-         ↓ mvn compile / 点击运行时 IDE 自动编译
-
-target/classes/
-  ├── Demo1Application.class
-  ├── controller/
-  │    └── UserController.class
-  ├── service/
-  │    └── UserService.class
-  └── entity/
-       └── User.class
-</code></pre></div><p>所有 .java 文件都会被编译成对应的 .class 文件，注解也都带着</p>
+<ol>
+<li>主机 A 要发送一个 IP 包，其源地址是&nbsp;<code>10.1.1.30</code>&nbsp;和目标地址是&nbsp;<code>10.1.2.10</code>，由于没有在主机 A 的路由表找到与目标地址&nbsp;<code>10.1.2.10</code>&nbsp;相同的网络地址，于是包被转发到默认路由（路由器&nbsp;<code>1</code>&nbsp;）</li>
+<li>路由器&nbsp;<code>1</code>&nbsp;收到 IP 包后，也在路由器&nbsp;<code>1</code>&nbsp;的路由表匹配与目标地址相同的网络地址记录，发现匹配到了，于是就把 IP 数据包转发到了&nbsp;<code>10.1.0.2</code>&nbsp;这台路由器&nbsp;<code>2</code></li>
+<li>路由器&nbsp;<code>2</code>&nbsp;收到后，同样对比自身的路由表，发现匹配到了，于是把 IP 包从路由器&nbsp;<code>2</code>&nbsp;的&nbsp;<code>10.1.2.1</code>&nbsp;这个接口出去，最终经过交换机把 IP 数据包转发到了目标主机</li>
+</ol>
 <blockquote>
-<p>但 Spring 运行时是从入口类出发，通过 @ComponentScan 按需扫描加载，不是一股脑全读进来</p>
+<p>环回地址是不会流向网络</p>
 </blockquote>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>src/ 下所有 .java  →  javac 编译  →  target/classes/ 下所有 .class
-  - 普通注解（@Controller 等）：存入 .class 元数据
-  - Lombok 注解（@Data 等）：APT 直接生成代码到 .class
-  - 第三方包：检查类存不存在，仅此而已
-</code></pre></div><h5><code>SpringApplication</code> 实例</h5>
-<p>JVM 启动，进入 main 方法</p>
-<p><code>primarySource</code>: 传入的启动类的 Class 对象</p>
+<p>环回地址是在同一台计算机上的程序之间进行网络通信时所使用的一个默认地址。</p>
+<p>计算机使用一个特殊的 IP 地址&nbsp;<strong>127.0.0.1 作为环回地址</strong>。与该地址具有相同意义的是一个叫做&nbsp;<code>localhost</code>&nbsp;的主机名。使用这个 IP 或主机名时，数据包不会流向网络</p>
+<h4>如果路由器看到请求源ip是私网，是会怎么样</h4>
+<p><strong>场景一：在内网中的路由器看到私网 IP</strong></p>
+<p>比如你家的 WiFi 路由器看到一个源 IP 为 <code>192.168.1.100</code> 的请求。</p>
+<p>路由器会<strong>正常转发</strong>，因为这是内网流量，没有问题。</p>
+<p><strong>场景二：互联网上的公网路由器看到私网 IP</strong></p>
+<p>比如某个数据包到达互联网上的某个路由器，源 IP 是 <code>192.168.1.100</code>（私网）。</p>
+<p>路由器会<strong>直接丢弃这个数据包</strong>，不会转发。</p>
+<p><strong>为什么会丢弃？</strong></p>
+<p>根据 <strong>BCP 38</strong> 标准（互联网最佳实践），ISP 的边界路由器会做<strong>入栈过滤（Ingress Filtering）</strong>：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>如果看到源 IP 是私网地址（10.0.0.0/8、172.16.0.0/12、192.168.0.0/16）
+→ 这个数据包肯定是伪造的或配置错误的
+→ 直接丢弃
+</code></pre></div><p><strong>为什么要这么做？</strong></p>
+<ol>
+<li><strong>防止欺骗攻击</strong>：黑客无法伪造成私网 IP 来隐藏真实身份（因为私网 IP 本身就说明来自某个内网，不应该出现在公网上）</li>
+<li><strong>保证私网地址的隔离性</strong>：私网地址的设计初衷就是"只在内网使用，不能在公网路由"，这是底线</li>
+</ol>
+<p><strong>实际例子：</strong></p>
+<p>假设你用 NAT 穿透软件试图从内网直接发送一个源 IP 为 <code>192.168.1.100</code> 的数据包到互联网：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>你的电脑: 192.168.1.100
+    ↓ (直接发出，源 IP 没改)
+你的路由器 WAN 口
+    ↓ (看到源 IP 是私网，直接丢弃)
+互联网: 数据包永远到不了
+</code></pre></div><p>所以这就是为什么必须用 <strong>NAT</strong>——必须把源 IP 从私网改成公网，才能在互联网上通信。</p>
+<p><strong>总结：</strong></p>
 <ul>
-<li>以这个类所在的包为根包，进行组件扫描</li>
-<li>读取这个类上的注解 —— @SpringBootApplication、@EnableAutoConfiguration 等都标在它上面</li>
-<li>作为第一张图纸 —— 它本身会被注册为一个配置类（@Configuration），是整个容器解析的起点</li>
+<li>内网中的路由器 → 允许私网 IP 通过</li>
+<li>公网的路由器 → 拒绝私网 IP（入栈过滤）</li>
 </ul>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">ConfigurableApplicationContext</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span> primarySource<span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Class</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span>primarySource<span class="token punctuation">}</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">ConfigurableApplicationContext</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span> primarySources<span class="token punctuation">,</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">SpringApplication</span><span class="token punctuation">(</span>primarySources<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>最终以 入口类 <code>primarySource</code> 创建了 <code>SpringApplication</code> 实例，并执行了 run 方法</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">SpringApplication</span><span class="token punctuation">(</span><span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> primarySources<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ResourceLoader</span><span class="token punctuation">)</span><span class="token keyword">null</span><span class="token punctuation">,</span> primarySources<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">public</span> <span class="token class-name">SpringApplication</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> <span class="token class-name">ResourceLoader</span> resourceLoader<span class="token punctuation">,</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> primarySources<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>addCommandLineProperties <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>addConversionService <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>headless <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>initializers <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>listeners <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>additionalProfiles <span class="token operator">=</span> <span class="token class-name">Collections</span><span class="token punctuation">.</span><span class="token function">emptySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>applicationContextFactory <span class="token operator">=</span> <span class="token class-name">ApplicationContextFactory</span><span class="token punctuation">.</span><span class="token constant">DEFAULT</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>applicationStartup <span class="token operator">=</span> <span class="token class-name">ApplicationStartup</span><span class="token punctuation">.</span><span class="token constant">DEFAULT</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>properties <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ApplicationProperties</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>resourceLoader <span class="token operator">=</span> resourceLoader<span class="token punctuation">;</span>
-    <span class="token class-name">Assert</span><span class="token punctuation">.</span><span class="token function">notNull</span><span class="token punctuation">(</span>primarySources<span class="token punctuation">,</span> <span class="token string">"'primarySources' must not be null"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>primarySources <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedHashSet</span><span class="token punctuation">(</span><span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">asList</span><span class="token punctuation">(</span>primarySources<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>properties<span class="token punctuation">.</span><span class="token function">setWebApplicationType</span><span class="token punctuation">(</span><span class="token class-name">WebApplicationType</span><span class="token punctuation">.</span><span class="token function">deduce</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>bootstrapRegistryInitializers <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getSpringFactoriesInstances</span><span class="token punctuation">(</span><span class="token class-name">BootstrapRegistryInitializer</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setInitializers</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getSpringFactoriesInstances</span><span class="token punctuation">(</span><span class="token class-name">ApplicationContextInitializer</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">setListeners</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getSpringFactoriesInstances</span><span class="token punctuation">(</span><span class="token class-name">ApplicationListener</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span>mainApplicationClass <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">deduceMainApplicationClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>后面在 <code>run()</code> 里创建容器时，Spring Boot 会根据应用类型自动创建对应的 <code>ResourceLoader</code></p>
-<blockquote>
-<p><code>this.applicationContextFactory = ApplicationContextFactory.DEFAULT;</code> 构建 applicationContext 的工厂</p>
-</blockquote>
-<p>采用的是 <code>ApplicationContextFactory.DEFAULT</code></p>
-<p>即</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">ApplicationContextFactory</span> <span class="token punctuation">{</span>
-    <span class="token class-name">ApplicationContextFactory</span> <span class="token constant">DEFAULT</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultApplicationContextFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">}</span>
-</code></pre></div><blockquote>
-<p><code>WebApplicationType.deduce()</code> 自动推断应用类型</p>
-</blockquote>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">this</span><span class="token punctuation">.</span>properties<span class="token punctuation">.</span><span class="token function">setWebApplicationType</span><span class="token punctuation">(</span><span class="token class-name">WebApplicationType</span><span class="token punctuation">.</span><span class="token function">deduce</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>`
-</code></pre></div><p>Spring Boot 会根据 classpath 里有没有某些类，自动判断你是什么类型的应用</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>有 DispatcherServlet → SERVLET（普通 Web 应用）
-有 DispatcherHandler → REACTIVE（响应式 Web 应用）
-都没有             → NONE（纯后台应用，不启动 Tomcat）
-</code></pre></div><p>这决定了后面创建的是哪种 ApplicationContext</p>
-<blockquote>
-<p><code>deduceMainApplicationClass()</code>&nbsp;通过堆栈推断主类</p>
-</blockquote>
-<p><code>this.mainApplicationClass = this.deduceMainApplicationClass();</code></p>
-<p>没有直接用 <code>primarySource</code>，而是通过<strong>分析当前调用堆栈</strong>，找到哪个类有 <code>main</code> 方法，用于后续打印日志：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 伪代码：</span>
-<span class="token class-name">StackTraceElement</span><span class="token punctuation">[</span><span class="token punctuation">]</span> stack <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">StackTraceElement</span> element <span class="token operator">:</span> stack<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">"main"</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>element<span class="token punctuation">.</span><span class="token function">getMethodName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> <span class="token class-name">Class</span><span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span>element<span class="token punctuation">.</span><span class="token function">getClassName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 找到了</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h5>启动 <code>run</code></h5>
-<p>最终是在 <code>SpringApplication</code> 类的 <code>run</code> 函数</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">public</span> <span class="token class-name">ConfigurableApplicationContext</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">// 记录启动时间（用于最后算启动耗时）</span>
-  <span class="token comment">// 还会看有没有 CoRC 快照</span>
-  <span class="token class-name">Startup</span> startup <span class="token operator">=</span> <span class="token class-name">SpringApplication<span class="token punctuation">.</span>Startup</span><span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment">// 注册 JVM 关闭钩子，确保应用关闭时能优雅释放资源（关闭数据库连接池等）</span>
-  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>properties<span class="token punctuation">.</span><span class="token function">isRegisterShutdownHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      shutdownHook<span class="token punctuation">.</span><span class="token function">enableShutdownHookAddition</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token comment">// 创建引导上下文（给 Bootstrapper 扩展用，一般用不到）</span>
-  <span class="token class-name">DefaultBootstrapContext</span> bootstrapContext <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createBootstrapContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment">// 注册了上下文</span>
-  <span class="token class-name">ConfigurableApplicationContext</span> context <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-
-  <span class="token comment">// 设置 headless 模式（服务器环境没有显示器，告诉 JVM 不需要图形界面）</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">configureHeadlessProperty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token comment">// 获取所有 SpringApplicationRunListener，准备广播启动事件</span>
-  <span class="token class-name">SpringApplicationRunListeners</span> listeners <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getRunListeners</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  listeners<span class="token punctuation">.</span><span class="token function">starting</span><span class="token punctuation">(</span>bootstrapContext<span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>mainApplicationClass<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token comment">// 包装命令行参数（就是 main 方法的 args）</span>
-      <span class="token class-name">ApplicationArguments</span> applicationArguments <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">DefaultApplicationArguments</span><span class="token punctuation">(</span>args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 准备环境：读取 application.properties / application.yml，处理 profile 等</span>
-      <span class="token class-name">ConfigurableEnvironment</span> environment <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">prepareEnvironment</span><span class="token punctuation">(</span>listeners<span class="token punctuation">,</span> bootstrapContext<span class="token punctuation">,</span> applicationArguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 打印 Banner</span>
-      <span class="token class-name">Banner</span> printedBanner <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">printBanner</span><span class="token punctuation">(</span>environment<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 创建一个空的 ApplicationContext 容器（只是 new 出来，还什么都没有）</span>
-      <span class="token comment">// 这里便会注册对应的 PostProcessBeanFactory</span>
-      context <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 把环境、Banner 等信息塞进容器，完成容器的预备工作</span>
-      context<span class="token punctuation">.</span><span class="token function">setApplicationStartup</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>applicationStartup<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">prepareContext</span><span class="token punctuation">(</span>bootstrapContext<span class="token punctuation">,</span> context<span class="token punctuation">,</span> environment<span class="token punctuation">,</span> listeners<span class="token punctuation">,</span> applicationArguments<span class="token punctuation">,</span> printedBanner<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 上面是初始化工作</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">refreshContext</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 扩展点，目前是空实现，留给子类重写用</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">afterRefresh</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> applicationArguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token comment">// 记录启动耗时</span>
-      <span class="token class-name">Duration</span> timeTakenToStarted <span class="token operator">=</span> startup<span class="token punctuation">.</span><span class="token function">started</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 打印启动日志，就是你控制台看到的那行：</span>
-      <span class="token comment">// Started MyApplication in 2.345 seconds (JVM running for 3.012)</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>properties<span class="token punctuation">.</span><span class="token function">isLogStartupInfo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">StartupInfoLogger</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>mainApplicationClass<span class="token punctuation">,</span> environment<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">logStarted</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getApplicationLog</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> startup<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-
-      <span class="token comment">// 通知所有监听器"容器已启动"</span>
-      listeners<span class="token punctuation">.</span><span class="token function">started</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> timeTakenToStarted<span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token comment">// 调用你自定义的 Runner</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">callRunners</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> applicationArguments<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">throw</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">handleRunFailure</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> ex<span class="token punctuation">,</span> listeners<span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token keyword">if</span> <span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">isRunning</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          listeners<span class="token punctuation">.</span><span class="token function">ready</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> startup<span class="token punctuation">.</span><span class="token function">ready</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-
-      <span class="token keyword">return</span> context<span class="token punctuation">;</span>
-  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Throwable</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-      <span class="token keyword">throw</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">handleRunFailure</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> ex<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token class-name">SpringApplicationRunListeners</span><span class="token punctuation">)</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>核心连接点：<code>this.refreshContext(context);</code></p>
-<ul>
-<li><strong>在这行代码之前</strong>：全是 Spring Boot 在做准备工作（准备环境、打印 Banner、实例化一个空的容器）。</li>
-<li><strong>在这行代码执行时</strong>：正式拉起 Spring 的 IoC 容器，开始前面我们讲的“解析图纸、画图纸、造汽车”的宏大工程</li>
-</ul>
-<h5>注册上下文 <code>ConfigurableApplicationContext context</code></h5>
-<p>在初始化时，除了一些配置初始化以外，关键是在 <code>context</code> 的初始化</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">ConfigurableApplicationContext</span> context <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
-</code></pre></div><p>先实例化了一个 null 的 context</p>
-<blockquote>
-<p>BeanFactory 只是一个"Bean 仓库"，ApplicationContext 是加了事件、国际化、资源等能力的"增强版仓库"，ConfigurableApplicationContext 再加上了控制容器生命周期的能力（启动/关闭）</p>
-</blockquote>
-<p>进一步，根据所获得的配置，来进行初始化一个当前没有注册任何 Bean 的容器</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>context <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">createApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token keyword">protected</span> <span class="token class-name">ConfigurableApplicationContext</span> <span class="token function">createApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">ConfigurableApplicationContext</span> context <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>applicationContextFactory<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>properties<span class="token punctuation">.</span><span class="token function">getWebApplicationType</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">Assert</span><span class="token punctuation">.</span><span class="token function">state</span><span class="token punctuation">(</span>context <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token string">"ApplicationContextFactory created null context"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">return</span> context<span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这里的 <code>this.applicationContextFactory</code> 在初始化的时候是 <code>DefaultApplicationContextFactory</code> 这个类型</p>
-<p>作用是根据之前推断出的 WebApplicationType 来决定创建哪种容器</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// DefaultApplicationContextFactory 内部逻辑（简化）：</span>
-<span class="token keyword">public</span> <span class="token class-name">ConfigurableApplicationContext</span> <span class="token function">create</span><span class="token punctuation">(</span><span class="token class-name">WebApplicationType</span> webApplicationType<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">return</span> <span class="token keyword">switch</span> <span class="token punctuation">(</span>webApplicationType<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">case</span> <span class="token constant">SERVLET</span>   <span class="token operator">-&gt;</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigServletWebServerApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 普通 Web</span>
-        <span class="token keyword">case</span> <span class="token constant">REACTIVE</span>  <span class="token operator">-&gt;</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigReactiveWebServerApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 响应式</span>
-        <span class="token keyword">case</span> <span class="token constant">NONE</span>      <span class="token operator">-&gt;</span> <span class="token keyword">new</span> <span class="token class-name">AnnotationConfigApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                  <span class="token comment">// 非 Web</span>
-    <span class="token punctuation">}</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>一般都是 <code>AnnotationConfigServletWebServerApplicationContext</code></p>
+<p>私网地址永远被隔离在内网内部，这是一个硬性规则</p>
+<h3>IPv4 和 IPv6 首部</h3>
 <figure><figcaption>alt text</figcaption></figure>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>AnnotationConfigServletWebServerApplicationContext
-  │
-  ├─ 实现了 ApplicationContext（对外提供增强能力）
-  │    └─ ApplicationContext 继承了 BeanFactory 接口
-  │         所以 context 本身可以当 BeanFactory 用
-  │
-  └─ 内部持有一个 DefaultListableBeanFactory beanFactory
-       └─ 真正存放 BeanDefinition、管理 Bean 的地方
-</code></pre></div><h5><code>context</code> 初始化塞入的 5 个 BeanDefinition</h5>
-<p>Spring 容器本身是一个“瞎子”，它不认识 @Autowired、@Bean 这些注解。 必须先注入这 5 个工具人（处理器），靠它们去解析你代码里的注解</p>
-<p>internal 开头的名字是 Spring 故意起的"内部专用名"，和类名分开，为了防冲突 + 明确这是框架内部组件</p>
+<p>IPv6 相比 IPv4 的首部改进：</p>
+<ul>
+<li><strong>取消了首部校验和字段。</strong>&nbsp;因为在数据链路层和传输层都会校验，因此 IPv6 直接取消了 IP 的校验。</li>
+<li><strong>取消了分片/重新组装相关字段。</strong>&nbsp;分片与重组是耗时的过程，IPv6 不允许在中间路由器进行分片与重组，这种操作只能在源与目标主机，这将大大提高了路由器转发的速度。</li>
+<li><strong>取消选项字段。</strong>&nbsp;选项字段不再是标准 IP 首部的一部分了，但它并没有消失，而是可能出现在 IPv6 首部中的「下一个首部」指出的位置上。删除该选项字段使的 IPv6 的首部成为固定长度的&nbsp;<code>40</code>&nbsp;字节</li>
+</ul>
+<h3>IP 协议相关技术</h3>
+<h4>DNS</h4>
+<p>我们在上网的时候，通常使用的方式是域名，而不是 IP 地址，因为域名方便人类记忆。</p>
+<p>那么实现这一技术的就是&nbsp;<strong>DNS 域名解析</strong>，DNS 可以将域名网址自动转换为具体的 IP 地址。</p>
+<blockquote>
+<p>域名的层级关系</p>
+</blockquote>
+<p>DNS 中的域名都是用<strong>句点</strong>来分隔的，比如&nbsp;<code>www.server.com</code>，这里的句点代表了不同层次之间的<strong>界限</strong>。</p>
+<p>在域名中，<strong>越靠右</strong>的位置表示其层级<strong>越高</strong>。</p>
+<p>毕竟域名是外国人发明，所以思维和中国人相反，比如说一个城市地点的时候，外国喜欢从小到大的方式顺序说起（如 XX 街道 XX 区 XX 市 XX 省），而中国则喜欢从大到小的顺序（如 XX 省 XX 市 XX 区 XX 街道）。</p>
+<p>根域是在最顶层，它的下一层就是 com 顶级域，再下面是 server.com。</p>
+<p>所以域名的层级关系类似一个树状结构：</p>
+<ul>
+<li>根 DNS 服务器</li>
+<li>顶级域 DNS 服务器（com）</li>
+<li>权威 DNS 服务器（server.com）</li>
+</ul>
+<p>根域的 DNS 服务器信息保存在互联网中所有的 DNS 服务器中。这样一来，任何 DNS 服务器就都可以找到并访问根域 DNS 服务器了。</p>
+<p>因此，客户端只要能够找到任意一台 DNS 服务器，就可以通过它找到根域 DNS 服务器，然后再一路顺藤摸瓜找到位于下层的某台目标 DNS 服务器。</p>
+<blockquote>
+<p>域名解析的工作流程</p>
+</blockquote>
+<p>浏览器首先看一下自己的缓存里有没有，如果没有就向操作系统的缓存要，还没有就检查本机域名解析文件&nbsp;<code>hosts</code>，如果还是没有，就会 DNS 服务器进行查询，查询的过程如下：</p>
+<ol>
+<li>客户端首先会发出一个 DNS 请求，问 <code>www.server.com</code> 的 IP 是啥，并发给本地 DNS 服务器（也就是客户端的 TCP/IP 设置中填写的 DNS 服务器地址）。</li>
+<li>本地域名服务器收到客户端的请求后，如果缓存里的表格能找到 <code>www.server.com</code>，则它直接返回 IP 地址。如果没有，本地 DNS 会去问它的根域名服务器：“老大， 能告诉我 <code>www.server.com</code> 的 IP 地址吗？” 根域名服务器是最高层次的，它不直接用于域名解析，但能指明一条道路。</li>
+<li>根 DNS 收到来自本地 DNS 的请求后，发现后置是 .com，说：“www.server.com 这个域名归 .com 区域管理”，我给你 .com 顶级域名服务器地址给你，你去问问它吧。”</li>
+<li>本地 DNS 收到顶级域名服务器的地址后，发起请求问“老二， 你能告诉我 <code>www.server.com</code> 的 IP 地址吗？”</li>
+<li>顶级域名服务器说：“我给你负责 <code>www.server.com</code> 区域的权威 DNS 服务器的地址，你去问它应该能问到”。</li>
+<li>本地 DNS 于是转向问权威 DNS 服务器：“老三，<code>www.server.com</code>对应的IP是啥呀？” server.com 的权威 DNS 服务器，它是域名解析结果的原出处。为啥叫权威呢？就是我的域名我做主。</li>
+<li>权威 DNS 服务器查询后将对应的 IP 地址 X.X.X.X 告诉本地 DNS。</li>
+<li>本地 DNS 再将 IP 地址返回客户端，客户端和目标建立连接。</li>
+</ol>
+<h4>ARP</h4>
+<p>在传输一个 IP 数据报的时候，确定了源 IP 地址和目标 IP 地址后，就会通过主机「路由表」确定 IP 数据包下一跳。然而，网络层的下一层是数据链路层，所以我们还要知道「下一跳」的 MAC 地址。</p>
+<p>由于主机的路由表中可以找到下一跳的 IP 地址，所以可以通过&nbsp;<strong>ARP 协议</strong>，求得下一跳的 MAC 地址。</p>
+<blockquote>
+<p>那么 ARP 又是如何知道对方 MAC 地址的呢？</p>
+</blockquote>
+<p>简单地说，ARP 是借助&nbsp;<strong>ARP 请求与 ARP 响应</strong>两种类型的包确定 MAC 地址的</p>
+<h4>NAT</h4>
+<p>IPv4 的地址是非常紧缺的，在前面我们也提到可以通过无分类地址来减缓 IPv4 地址耗尽的速度，但是互联网的用户增速是非常惊人的，所以 IPv4 地址依然有被耗尽的危险。</p>
+<p>于是，提出了一种<strong>网络地址转换 NAT</strong>&nbsp;的方法，再次缓解了 IPv4 地址耗尽的问题。</p>
+<p>简单的来说 NAT 就是同个公司、家庭、教室内的主机对外部通信时，把私有 IP 地址转换成公有 IP 地址。</p>
+<blockquote>
+<p>那不是 N 个私有 IP 地址，你就要 N 个公有 IP 地址？这怎么就缓解了 IPv4 地址耗尽的问题？这不瞎扯吗？</p>
+</blockquote>
+<p>确实是，普通的 NAT 转换没什么意义。</p>
+<p>由于绝大多数的网络应用都是使用传输层协议 TCP 或 UDP 来传输数据的。</p>
+<p>因此，<strong>可以把 IP 地址 + 端口号一起进行转换</strong>。</p>
+<p>这样，就用一个全球 IP 地址就可以了，这种转换技术就叫<strong>网络地址与端口转换 NAPT</strong></p>
 <figure><figcaption>alt text</figcaption></figure>
+<p>图中有两个客户端 192.168.1.10 和 192.168.1.11 同时与服务器 183.232.231.172 进行通信，并且这两个客户端的本地端口都是 1025。</p>
+<p>此时，<strong>两个私有 IP 地址都转换 IP 地址为公有地址 120.229.175.121，但是以不同的端口号作为区分。</strong></p>
+<p>于是，生成一个 NAPT 路由器的转换表，就可以正确地转换地址跟端口的组合，令客户端 A、B 能同时与服务器之间进行通信。</p>
+<p>这种转换表在 NAT 路由器上自动生成。例如，在 TCP 的情况下，建立 TCP 连接首次握手时的 SYN 包一经发出，就会生成这个表。而后又随着收到关闭连接时发出 FIN 包的确认应答从表中被删除</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Net2 - 重要知识点2 (浏览器访问网页全过程)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article2.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net2 - 重要知识点2 (浏览器访问网页全过程)</source>
+      <description>基础 浏览器访问网页全过程 整体流程 在浏览器中输入指定网页的 URL 浏览器通过 DNS 协议，获取域名对应的 IP 地址 浏览器根据 IP 地址和端口号，向目标服务器发起一个 TCP 连接请求 (三次握手) 浏览器在 TCP 连接上，向服务器发送一个 HTTP 请求报文，请求获取网页的内容 服务器收到 HTTP 请求报文后，处理请求，并返回 HTT...</description>
+      <category>code</category>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>基础</h2>
+<h3>浏览器访问网页全过程</h3>
+<h4>整体流程</h4>
+<ol>
+<li>在浏览器中输入指定网页的 URL</li>
+<li>浏览器通过 DNS 协议，获取域名对应的 IP 地址</li>
+<li>浏览器根据 IP 地址和端口号，向目标服务器发起一个 TCP 连接请求 (三次握手)</li>
+<li>浏览器在 TCP 连接上，向服务器发送一个 HTTP 请求报文，请求获取网页的内容</li>
+<li>服务器收到 HTTP 请求报文后，处理请求，并返回 HTTP 响应报文给浏览器</li>
+<li>浏览器收到 HTTP 响应报文后，解析响应体中的 HTML 代码，渲染网页的结构和样式，同时根据 HTML 中的其他资源的 URL（如图片、CSS、JS 等），再次发起 HTTP 请求，获取这些资源的内容，直到网页完全加载显示</li>
+<li>浏览器在不需要和服务器通信时，可以主动关闭 TCP 连接，或者等待服务器的关闭请求 (TCP 四次挥手)</li>
+</ol>
+<h4>详细过程</h4>
+<h5>应用层</h5>
+<p>一切的开始——打开浏览器，在地址栏输入 URL，回车确认</p>
 <blockquote>
-<p><code>internalConfigurationAnnotationProcessor</code> (绝对的核心)</p>
+<p>URL</p>
 </blockquote>
-<ul>
-<li><strong>真实类名：</strong> <code>ConfigurationClassPostProcessor</code></li>
-<li><strong>它的职责：</strong> 这是 Spring 启动过程中最累的“包工头”。它负责解析所有的 <code>@Configuration</code> 配置类。</li>
-<li><strong>具体工作：</strong> 当你在代码里写了 <code>@ComponentScan</code>、<code>@Import</code>、或者用 <code>@Bean</code> 声明了对象，都是由它负责扫描出来，并把它们也变成 <code>BeanDefinition</code> 塞进你现在看到的这个 Map 里。</li>
-</ul>
+<p>URL（Uniform Resource Locators），即统一资源定位器</p>
+<p>网络上的所有资源都靠 URL 来定位，每一个文件就对应着一个 URL，就像是路径地址</p>
+<p>理论上，文件资源和 URL 一一对应</p>
+<p>实际上也有例外，比如某些 URL 指向的文件已经被重定位到另一个位置，这样就有多个 URL 指向同一个文件</p>
 <blockquote>
-<p><code>internalAutowiredAnnotationProcessor</code> (依赖注入的灵魂)</p>
+<p>URL 的组成结构</p>
 </blockquote>
+<figure><figcaption>alt text</figcaption></figure>
+<ol>
+<li>协议
 <ul>
-<li><strong>真实类名：</strong> <code>AutowiredAnnotationBeanPostProcessor</code></li>
-<li><strong>它的职责：</strong> 顾名思义，它负责处理依赖注入。</li>
-<li><strong>具体工作：</strong> 只要你在属性、方法或构造器上写了 <code>@Autowired</code> 或者 <code>@Value</code> 注解，这个处理器就会在 Bean 实例化的过程中，自动帮你把需要的对象找出来并赋值进去。</li>
+<li>URL 的前缀通常表示了该网址采用了何种应用层协议，通常有两种——HTTP 和 HTTPS</li>
+<li>当然也有一些不太常见的前缀头，比如文件传输时用到的<code>ftp:</code>。</li>
 </ul>
+</li>
+<li>域名
+<ul>
+<li>域名便是访问网址的通用名，这里也有可能是网址的 IP 地址</li>
+<li>域名可以理解为 IP 地址的可读版本，毕竟绝大部分人都不会选择记住一个网址的 IP 地址。</li>
+</ul>
+</li>
+<li>端口
+<ul>
+<li>如果指明了访问网址的端口的话，端口会紧跟在域名后面，并用一个冒号隔开。</li>
+</ul>
+</li>
+<li>资源路径
+<ul>
+<li>域名（端口）后紧跟的就是资源路径，从第一个<code>/</code>开始，表示从服务器上根目录开始进行索引到的文件路径</li>
+<li>上图中要访问的文件就是服务器根目录下<code>/path/to/myfile.html</code></li>
+<li>早先的设计是该文件通常物理存储于服务器主机上，但现在随着网络技术的进步，该文件不一定会物理存储在服务器主机上</li>
+<li>有可能存放在云上，而文件路径也有可能是虚拟的（遵循某种规则）。</li>
+</ul>
+</li>
+<li>参数
+<ul>
+<li>参数是浏览器在向服务器提交请求时，在 URL 中附带的参数</li>
+<li>服务器解析请求时，会提取这些参数</li>
+<li>参数采用键值对的形式<code>key=value</code>，每一个键值对使用<code>&amp;</code>隔开。参数的具体含义和请求操作的具体方法有关。</li>
+</ul>
+</li>
+<li>锚点
+<ul>
+<li>锚点顾名思义，是在要访问的页面上的一个锚</li>
+<li>要访问的页面大部分都多于一页，如果指定了锚点，那么在客户端显示该网页是就会定位到锚点处，相当于一个小书签。值得一提的是，在 URL 中，锚点以<code>#</code>开头，并且<strong>不会</strong>作为请求的一部分发送给服务端</li>
+</ul>
+</li>
+</ol>
 <blockquote>
-<p><code>internalCommonAnnotationProcessor</code> (生命周期管家)</p>
+<p>DNS</p>
 </blockquote>
-<ul>
-<li><strong>真实类名：</strong> <code>CommonAnnotationBeanPostProcessor</code></li>
-<li><strong>它的职责：</strong> 它负责处理 Java 标准（JSR-250）中的通用注解。</li>
-<li><strong>具体工作：</strong> 如果你使用了 <code>@Resource</code>（按名称注入）、或者在方法上加了 <code>@PostConstruct</code>（初始化后执行）和 <code>@PreDestroy</code>（销毁前执行），就是由它来负责触发的。</li>
-</ul>
+<p>键入了 URL 之后，第一个重头戏登场——DNS 服务器解析。DNS（Domain Name System）域名系统，要解决的是 域名和 IP 地址的映射问题 。毕竟，域名只是一个网址便于记住的名字，而网址真正存在的地址其实是 IP 地址</p>
 <blockquote>
-<p><code>internalEventListenerProcessor</code> (事件处理器)</p>
+<p>HTTP/HTTPS</p>
 </blockquote>
+<p>利用 DNS 拿到了目标主机的 IP 地址之后，浏览器便可以向目标 IP 地址发送 HTTP 报文，请求需要的资源了。在这里，根据目标网站的不同，请求报文可能是 HTTP 协议或安全性增强的 HTTPS 协议</p>
+<h5>传输层</h5>
+<p>由于 HTTP 协议是基于 TCP 协议的，在应用层的数据封装好以后，要交给传输层，经 TCP 协议继续封装。</p>
+<p>TCP 协议保证了数据传输的可靠性，是数据包传输的主力协议</p>
 <ul>
-<li><strong>真实类名：</strong> <code>EventListenerMethodProcessor</code></li>
-<li><strong>它的职责：</strong> Spring 的事件驱动机制核心。</li>
-<li><strong>具体工作：</strong> 它会扫描所有 Spring 管理的 Bean。如果在某个方法上发现了 <code>@EventListener</code> 注解，它就会把这个方法注册为一个事件监听器（ApplicationListener），等系统有对应事件发布时去调用它。</li>
+<li>TCP 三次握手和四次挥手（传输层）</li>
+<li>TCP 传输可靠性保障（传输层）</li>
 </ul>
+<h5>网络层</h5>
+<p><strong>网络层的核心功能——转发与路由</strong></p>
+<ul>
+<li>转发：将分组从路由器的输入端口转移到合适的输出端口。</li>
+<li>路由：确定分组从源到目的经过的路径。</li>
+</ul>
+<p>此时我们的主机不再是和另一台主机进行交互了，而是在和中间系统进行交互。也就是说，应用层和传输层都是端到端的协议，而网络层及以下都是中间件的协议了</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>应用层/传输层（端到端）：
+主机A ←→ 主机B  （两个端点直接通信）
+
+网络层及以下（中间件）：
+主机A ←→ 路由器1 ←→ 路由器2 ←→ 路由器3 ←→ 主机B
+      （和中间的路由器一个个交互）
+</code></pre></div><p>简单说：</p>
+<ul>
+<li>你发的 HTTP 请求是从你电脑直接到目标服务器（端到端）</li>
+<li>但这个请求在网络上跳跃时，每经过一个路由器，都要和那个路由器"握手"（中间件）</li>
+</ul>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Net3 - 应用层协议 (HTTP)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article3.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net3 - 应用层协议 (HTTP)</source>
+      <description>应用层 HTTP 协议 HTTP 是超文本传输协议，也就是 HyperText Transfer Protocol 是一种用于传输超文本和多媒体内容的协议，主要是为 Web 浏览器与 Web 服务器之间的通信而设计的 当我们使用浏览器浏览网页的时候，我们网页就是通过 HTTP 请求进行加载的。 HTTP 使用客户端-服务器模型，客户端向服务器发送 HT...</description>
+      <category>code</category>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>应用层</h2>
+<h3>HTTP 协议</h3>
+<p>HTTP 是超文本传输协议，也就是 HyperText Transfer Protocol</p>
+<p>是一种用于传输超文本和多媒体内容的协议，主要是为 Web 浏览器与 Web 服务器之间的通信而设计的</p>
+<p>当我们使用浏览器浏览网页的时候，我们网页就是通过 HTTP 请求进行加载的。</p>
+<p>HTTP 使用客户端-服务器模型，客户端向服务器发送 HTTP Request（请求），服务器响应请求并返回 HTTP Response（响应）</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>HTTP 协议基于 TCP 协议，发送 HTTP 请求之前首先要建立 TCP 连接也就是要经历 3 次握手</p>
+<p>目前使用的 HTTP 协议大部分都是 1.1。在 1.1 的协议里面，默认是开启了 Keep-Alive 的，这样的话建立的连接就可以在多次请求中被复用了</p>
+<p>另外， HTTP 协议是“无状态”的协议，它无法记录客户端用户的状态，一般我们都是通过 Session 来记录客户端用户的状态。</p>
 <blockquote>
-<p><code>internalEventListenerFactory</code> (事件工厂)</p>
+<p>HTTP 是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」</p>
 </blockquote>
+<h4>常见状态码</h4>
+<figure><figcaption>alt text</figcaption></figure>
+<p>5大类：</p>
+<p><code>1xx</code>&nbsp;类状态码属于<strong>提示信息</strong>，是协议处理中的一种中间状态，实际用到的比较少。</p>
+<p><code>2xx</code>&nbsp;类状态码表示服务器<strong>成功</strong>处理了客户端的请求，也是我们最愿意看到的状态。</p>
 <ul>
-<li><strong>真实类名：</strong> <code>DefaultEventListenerFactory</code></li>
-<li><strong>它的职责：</strong> 它是第 4 个组件的“搭档”。</li>
-<li><strong>具体工作：</strong> 配合 <code>EventListenerMethodProcessor</code> 工作，它的具体任务是将带有 <code>@EventListener</code> 注解的方法真正封装转换成 <code>ApplicationListener</code> 实例对象。</li>
+<li>「<strong>200 OK</strong>」是最常见的成功状态码，表示一切正常。如果是非&nbsp;<code>HEAD</code>&nbsp;请求，服务器返回的响应头都会有 body 数据。</li>
+<li>「<strong>204 No Content</strong>」也是常见的成功状态码，与 200 OK 基本相同，但响应头没有 body 数据。</li>
+<li>「<strong>206 Partial Content</strong>」是应用于 HTTP 分块下载或断点续传，表示响应返回的 body 数据并不是资源的全部，而是其中的一部分，也是服务器处理成功的状态。</li>
 </ul>
-<h5>注册入口Bean</h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">prepareContext</span><span class="token punctuation">(</span>bootstrapContext<span class="token punctuation">,</span> context<span class="token punctuation">,</span> environment<span class="token punctuation">,</span> listeners<span class="token punctuation">,</span> applicationArguments<span class="token punctuation">,</span> printedBanner<span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre></div><div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>prepareContext()
-  │
-  ├─ 把 environment 塞进 context
-  ├─ 执行 ApplicationContextInitializer（初始化器，扩展点）
-  ├─ 广播 contextPrepared 事件
-  │
-  ├─ 【关键】把 primarySource（Demo1Application）注册为第一张 BeanDefinition
-  │    └─ 这是整个容器里第一张也是唯一一张"用户图纸"
-  │         后面 refresh 里 ConfigurationClassPostProcessor 就从这里出发
-  │
-  └─ 广播 contextLoaded 事件
-</code></pre></div><figure><figcaption>alt text</figcaption></figure>
-<h5><code>refresh()</code></h5>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// SpringApplication.java</span>
-<span class="token keyword">public</span> <span class="token class-name">ConfigurableApplicationContext</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">refreshContext</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">refreshContext</span><span class="token punctuation">(</span><span class="token class-name">ConfigurableApplicationContext</span> context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span>properties<span class="token punctuation">.</span><span class="token function">isRegisterShutdownHook</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        shutdownHook<span class="token punctuation">.</span><span class="token function">registerApplicationContext</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-
-    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">refresh</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-
-<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token class-name">ConfigurableApplicationContext</span> applicationContext<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    applicationContext<span class="token punctuation">.</span><span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><p>这里的 <code>context</code> 是 <code>AnnotationConfigServletWebServerApplicationContext</code>, 其继承了 <code>ServletWebServerApplicationContext</code></p>
-<p>对应的 <code>refresh</code></p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>AnnotationConfigServletWebServerApplicationContext
-  └─ 继承 ServletWebServerApplicationContext
-       └─ 继承 GenericWebApplicationContext
-            └─ 继承 GenericApplicationContext
-                 └─ 继承 AbstractApplicationContext   ← refresh() 定义在这里
-</code></pre></div><div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// ServletWebServerApplicationContext.java</span>
-<span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">BeansException</span><span class="token punctuation">,</span> <span class="token class-name">IllegalStateException</span> <span class="token punctuation">{</span>
-    <span class="token keyword">try</span> <span class="token punctuation">{</span>
-        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">RuntimeException</span> var5<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token class-name">WebServer</span> webServer <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>webServer<span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>webServer <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">try</span> <span class="token punctuation">{</span>
-                webServer<span class="token punctuation">.</span><span class="token function">stop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                webServer<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">RuntimeException</span> stopOrDestroyEx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                var5<span class="token punctuation">.</span><span class="token function">addSuppressed</span><span class="token punctuation">(</span>stopOrDestroyEx<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-
-        <span class="token keyword">throw</span> var5<span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// AbstractApplicationContext.java</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">refresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  <span class="token comment">// 加锁，防止并发重复刷新容器</span>
-  <span class="token keyword">this</span><span class="token punctuation">.</span>startupShutdownLock<span class="token punctuation">.</span><span class="token function">lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-  <span class="token keyword">try</span> <span class="token punctuation">{</span>
-      <span class="token comment">// ━━━━━━━━━━━ 第一阶段：准备工作 ━━━━━━━━━━━</span>
-
-      <span class="token comment">// 1 刷新前的预处理：校验必填属性、初始化事件集合等</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">prepareRefresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 2 获取 BeanFactory（DefaultListableBeanFactory）</span>
-      <span class="token comment">//    如果是 XML 配置，这里会解析 XML 加载 BeanDefinition</span>
-      <span class="token comment">//    注解驱动的话，这里拿到的是一个已存在的空工厂</span>
-      <span class="token class-name">ConfigurableListableBeanFactory</span> beanFactory <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">obtainFreshBeanFactory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token comment">// 3 给 BeanFactory 配置基础设施：</span>
-      <span class="token comment">//    - 注册 ClassLoader</span>
-      <span class="token comment">//    - 注册内置 Bean（如 environment、systemProperties）</span>
-      <span class="token comment">//    - 添加几个默认的 BeanPostProcessor</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">prepareBeanFactory</span><span class="token punctuation">(</span>beanFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token keyword">try</span> <span class="token punctuation">{</span>
-          <span class="token comment">// ━━━━━━━━━━━ 第二阶段：BeanDefinition 处理 ━━━━━━━━━━━</span>
-
-          <span class="token comment">// 4 扩展点：子类可以在这里对 BeanFactory 做额外处理（模板方法）</span>
-          <span class="token comment">//    Web 容器在这里注册了 request/session 作用域</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">postProcessBeanFactory</span><span class="token punctuation">(</span>beanFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// 5 【核心】执行所有 BeanFactoryPostProcessor</span>
-          <span class="token comment">//    ConfigurationClassPostProcessor 就在这里被调用！</span>
-          <span class="token comment">//    → 解析 @Configuration、@ComponentScan、@Import、@Bean</span>
-          <span class="token comment">//    → 所有图纸（BeanDefinition）在这一步全部注册完毕</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">invokeBeanFactoryPostProcessors</span><span class="token punctuation">(</span>beanFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// 6 注册所有 BeanPostProcessor（只是注册，还没执行）</span>
-          <span class="token comment">//    比如 AutowiredAnnotationBeanPostProcessor（处理 @Autowired）</span>
-          <span class="token comment">//    比如 AopAwareObjenesisCglibAopProxy（处理 AOP）</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerBeanPostProcessors</span><span class="token punctuation">(</span>beanFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// ━━━━━━━━━━━ 第三阶段：初始化各种基础组件 ━━━━━━━━━━━</span>
-
-          <span class="token comment">// 7 初始化国际化资源（i18n，MessageSource）</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">initMessageSource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// 8 初始化事件广播器（ApplicationEventMulticaster）</span>
-          <span class="token comment">//    后面发布事件靠它</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">initApplicationEventMulticaster</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// 9 扩展点：子类在这里做特殊初始化</span>
-          <span class="token comment">//    SpringBoot Web 容器在这里启动内嵌 Tomcat！</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">onRefresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// 10 注册所有 ApplicationListener 监听器</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">registerListeners</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// ━━━━━━━━━━━ 第四阶段：实例化 Bean ━━━━━━━━━━━</span>
-
-          <span class="token comment">// 11 【核心】实例化所有非懒加载的单例 Bean</span>
-          <span class="token comment">//    @Autowired 注入、AOP 代理、@PostConstruct 都在这里执行</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">finishBeanFactoryInitialization</span><span class="token punctuation">(</span>beanFactory<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-          <span class="token comment">// 12 收尾：清理缓存、发布 ContextRefreshedEvent 事件</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">finishRefresh</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-      <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Error</span> <span class="token operator">|</span> <span class="token class-name">RuntimeException</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-          <span class="token comment">// 出错了：停掉 Lifecycle Bean，销毁已创建的 Bean，取消刷新</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">destroyBeans</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">cancelRefresh</span><span class="token punctuation">(</span>ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
-          <span class="token keyword">throw</span> ex<span class="token punctuation">;</span>
-      <span class="token punctuation">}</span>
-  <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
-      <span class="token keyword">this</span><span class="token punctuation">.</span>startupShutdownLock<span class="token punctuation">.</span><span class="token function">unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-  <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>1 ~ 3  准备工作         → 配置好 BeanFactory 的基础设施
-4 ~ 6  处理图纸         → 扫描注解，注册所有 BeanDefinition，登记 PostProcessor
-7 ~ 10  初始化基础组件   → 国际化、事件广播、启动 Tomcat、注册监听器
-11 ~ 12  造 Bean        → 按图纸实例化所有单例 Bean，完成注入和代理
-</code></pre></div><p>处理图纸，会先根据初始的图纸，然后不断解析，又有新的图纸，不断循环</p>
-<h5>BeanPostProcessor 和 BeanFactoryPostProcessor 区别</h5>
-<p>| | <code>BeanFactoryPostProcessor</code> | <code>BeanPostProcessor</code> |
+<p><code>3xx</code>&nbsp;类状态码表示客户端请求的资源发生了变动，需要客户端用新的 URL 重新发送请求获取资源，也就是<strong>重定向</strong>。</p>
+<ul>
+<li>「<strong>301 Moved Permanently</strong>」表示永久重定向，说明请求的资源已经不存在了，需改用新的 URL 再次访问。</li>
+<li>「<strong>302 Found</strong>」表示临时重定向，说明请求的资源还在，但暂时需要用另一个 URL 来访问。</li>
+</ul>
+<p>301 和 302 都会在响应头里使用字段&nbsp;<code>Location</code>，指明后续要跳转的 URL，浏览器会自动重定向新的 URL。</p>
+<ul>
+<li>「<strong>304 Not Modified</strong>」不具有跳转的含义，表示资源未修改，重定向已存在的缓冲文件，也称缓存重定向，也就是告诉客户端可以继续使用缓存资源，用于缓存控制。
+<ul>
+<li>我不给你文件，你本地的就是最新的，继续用吧</li>
+</ul>
+</li>
+</ul>
+<p><code>4xx</code>&nbsp;类状态码表示客户端发送的<strong>报文有误</strong>，服务器无法处理，也就是错误码的含义。</p>
+<ul>
+<li>「<strong>400 Bad Request</strong>」表示客户端请求的报文有错误，但只是个笼统的错误。</li>
+<li>「<strong>403 Forbidden</strong>」表示服务器禁止访问资源，并不是客户端的请求出错。</li>
+<li>「<strong>404 Not Found</strong>」表示请求的资源在服务器上不存在或未找到，所以无法提供给客户端。</li>
+</ul>
+<p><code>5xx</code>&nbsp;类状态码表示客户端请求报文正确，但是<strong>服务器处理时内部发生了错误</strong>，属于服务器端的错误码。</p>
+<ul>
+<li>「<strong>500 Internal Server Error</strong>」与 400 类型，是个笼统通用的错误码，服务器发生了什么错误，我们并不知道。</li>
+<li>「<strong>501 Not Implemented</strong>」表示客户端请求的功能还不支持，类似“即将开业，敬请期待”的意思。</li>
+<li>「<strong>502 Bad Gateway</strong>」通常是服务器作为网关或代理时返回的错误码，表示服务器自身工作正常，访问后端服务器发生了错误。</li>
+<li>「<strong>503 Service Unavailable</strong>」表示服务器当前很忙，暂时无法响应客户端，类似“网络服务正忙，请稍后重试”的意思</li>
+</ul>
+<p>502出现时：</p>
+<ul>
+<li>Nginx（网关）自己工作正常 ✓</li>
+<li>但Nginx去访问后端服务器失败了 ✗</li>
+</ul>
+<h5>总结</h5>
+<p>| 状态码 | 记忆方法 | 含义 |
 |</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Net3 - 应用层协议 (HTTP 与 HTTPS)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article4.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net3 - 应用层协议 (HTTP 与 HTTPS)</source>
+      <description>应用层 HTTP 与 HTTPS 两者区别 HTTP 是超文本传输协议，信息是明文传输，存在安全风险的问题。HTTPS 则解决 HTTP 不安全的缺陷，在 TCP 和 HTTP 网络层之间加入了 SSL/TLS 安全协议，使得报文能够加密传输。 HTTP 连接建立相对简单， TCP 三次握手之后便可进行 HTTP 的报文传输。而 HTTPS 在 TCP...</description>
+      <category>code</category>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>应用层</h2>
+<h3>HTTP 与 HTTPS</h3>
+<h4>两者区别</h4>
+<ul>
+<li>HTTP 是超文本传输协议，信息是<strong>明文传输</strong>，存在安全风险的问题。HTTPS 则解决 HTTP 不安全的缺陷，在 TCP 和 HTTP 网络层之间加入了 SSL/TLS 安全协议，使得报文能够加密传输。</li>
+<li>HTTP 连接建立相对简单， TCP 三次握手之后便可进行 HTTP 的报文传输。而 HTTPS 在 TCP 三次握手之后，<strong>还需进行 SSL/TLS 的握手过程</strong>，才可进入加密报文传输。</li>
+<li>两者的默认端口不一样，HTTP 默认端口号是 80，HTTPS 默认端口号是 443。</li>
+<li>HTTPS 协议需要向 CA（证书权威机构）申请数字证书，来保证服务器的身份是可信的</li>
+</ul>
+<h4>HTTPS 的优势</h4>
+<p>HTTP 由于是明文传输，所以安全上存在以下三个风险：</p>
+<ul>
+<li>窃听风险，比如通信链路上可以获取通信内容，用户号容易没。</li>
+<li>篡改风险，比如强制植入垃圾广告，视觉污染，用户眼容易瞎。</li>
+<li>冒充风险，比如冒充淘宝网站，用户钱容易没。</li>
+</ul>
+<figure><figcaption>alt text</figcaption></figure>
+<p>HTTP<strong>S</strong>&nbsp;在 HTTP 与 TCP 层之间加入了&nbsp;<code>SSL/TLS</code>&nbsp;协议，可以很好的解决了上述的风险：</p>
+<ul>
+<li><strong>信息加密</strong>：交互信息无法被窃取。</li>
+<li><strong>校验机制</strong>：无法篡改通信内容，篡改了就不能正常显示。</li>
+<li><strong>身份证书</strong>：证明发消息的是真的发消息的</li>
+</ul>
+<blockquote>
+<p>HTTPS 是如何解决上面的三个风险的？</p>
+</blockquote>
+<ul>
+<li><strong>混合加密</strong>的方式实现信息的<strong>机密性</strong>，解决了窃听的风险。</li>
+<li><strong>摘要算法</strong>的方式来实现<strong>完整性</strong>，它能够为数据生成独一无二的「指纹」，指纹用于校验数据的完整性，解决了篡改的风险。</li>
+<li>将服务器公钥放入到<strong>数字证书</strong>中，解决了冒充的风险</li>
+</ul>
+<h4>HTTPS 工作原理</h4>
+<p>HTTPS 协议会对传输的数据进行加密，而加密过程是使用了非对称加密实现</p>
+<p>HTTPS 的整体过程分为<strong>证书验证</strong>和<strong>数据传输</strong>阶段，具体的交互过程如下：</p>
+<figure><figcaption>alt text</figcaption></figure>
+<ul>
+<li>Client 发起一个 HTTPS 的请求</li>
+<li>Server 把事先配置好的公钥证书返回给客户端</li>
+<li>Client 验证公钥证书：比如是否在有效期内，证书的用途是不是匹配 Client 请求的站点，是不是在 CRL 吊销列表里面，它的上一级证书是否有效，这是一个递归的过程，直到验证到根证书（操作系统内置的 Root 证书或者 Client 内置的 Root 证书），如果验证通过则继续，不通过则显示警告信息</li>
+<li>Client 使用伪随机数生成器生成加密所使用的对称密钥，然后<strong>用证书的公钥加密这个对称密钥</strong>，发给 Server</li>
+<li>Server 使用自己的<strong>私钥解密这个消息</strong>，<strong>得到对称密钥</strong>。至此，Client 和 Server 双方都持有了相同的对称密钥</li>
+<li>Server 使用对称密钥加密明文内容 A，发送给 Client</li>
+<li>Client 使用对称密钥解密响应的密文，得到明文内容 A</li>
+<li>Client 再次发起 HTTPS 的请求，使用对称密钥加密请求的明文内容 B，然后 Server 使用对称密钥解密密文，得到明文内容 B</li>
+</ul>
+<h5>混合加密 (非对称 + 对称)</h5>
+<p>非对称加密保证秘密交互设计的私钥</p>
+<p>对称加密基于该私钥进行内容传输</p>
+<p>采用的是<strong>对称加密</strong>和<strong>非对称加密</strong>结合的「混合加密」方式：</p>
+<ul>
+<li>在通信建立前采用<strong>非对称加密</strong>的方式交换「会话秘钥」，后续就不再使用非对称加密。</li>
+<li>在通信过程中全部使用<strong>对称加密</strong>的「会话秘钥」的方式加密明文数据。</li>
+</ul>
+<p>采用「混合加密」的方式的原因：</p>
+<ul>
+<li><strong>对称加密</strong>只使用一个密钥，运算速度快，密钥必须保密，无法做到安全的密钥交换。</li>
+<li><strong>非对称加密</strong>使用两个密钥：公钥和私钥，公钥可以任意分发而私钥保密，解决了密钥交换问题但速度慢</li>
+</ul>
+<h5>摘要算法 + 数字签名</h5>
+<p>为了保证传输的内容不被篡改，我们需要对内容计算出一个「指纹」，然后同内容一起传输给对方。</p>
+<p>对方收到后，先是对内容也计算出一个「指纹」，然后跟发送方发送的「指纹」做一个比较，如果「指纹」相同，说明内容没有被篡改，否则就可以判断出内容被篡改了</p>
+<p>那么，在计算机里会用**摘要算法（哈希函数）**来计算出内容的哈希值，也就是内容的「指纹」，这个哈希值是唯一的，且无法通过哈希值推导出内容</p>
+<p>通过哈希算法可以确保内容不会被篡改，<strong>但是并不能保证「内容 + 哈希值」不会被中间人替换，因为这里缺少对客户端收到的消息是否来源于服务端的证明</strong></p>
+<blockquote>
+<p>比如消息在某个路由器传输，内容被人全改了，并修改了对应的指纹，但接受的验证了也不知道</p>
+</blockquote>
+<p>那为了避免这种情况，计算机里会用<strong>非对称加密算法</strong>来解决，共有两个密钥：</p>
+<ul>
+<li>一个是公钥，这个是可以公开给所有人的；</li>
+<li>一个是私钥，这个必须由本人管理，不可泄露。</li>
+</ul>
+<p>这两个密钥可以<strong>双向加解密</strong>的，比如可以用公钥加密内容，然后用私钥解密，也可以用私钥加密内容，公钥解密内容。</p>
+<p>流程的不同，意味着目的也不相同：</p>
+<ul>
+<li><strong>公钥加密，私钥解密</strong>。这个目的是为了<strong>保证内容传输的安全</strong>，因为被公钥加密的内容，其他人是无法解密的，只有持有私钥的人，才能解密出实际的内容；</li>
+<li><strong>私钥加密，公钥解密</strong>。这个目的是为了<strong>保证消息不会被冒充</strong>，因为私钥是不可泄露的，如果公钥能正常解密出私钥加密的内容，就能证明这个消息是来源于持有私钥身份的人发送的。</li>
+</ul>
+<p>一般我们不会用非对称加密来加密实际的传输内容，因为非对称加密的计算比较耗费性能的。</p>
+<p>所以非对称加密的用途主要在于<strong>通过「私钥加密，公钥解密」的方式，来确认消息的身份</strong>，我们常说的<strong>数字签名算法</strong>，就是用的是这种方式，不过私钥加密内容不是内容本身，而是<strong>对内容的哈希值加密</strong></p>
+<p>私钥是由服务端保管，然后服务端会向客户端颁发对应的公钥。如果客户端收到的信息，能被公钥解密，就说明该消息是由服务器发送的</p>
+<p><strong>但这种方式存在一个致命漏洞：无法保证对方的真实身份</strong>。比如你访问了个伪造网站，但你以为是真的，实际上是别人伪造的</p>
+<p>黑客可以自己生成一对公私钥，然后用自己的私钥签名消息，你用黑客给的"公钥"一验...完全有效，但你根本没在和真实网站通信。</p>
+<p>而你就把所有信息全部告诉了盗版网站</p>
+<p><strong>关键问题是：如何确保你收到的"公钥"就是真的公钥，而不是黑客的公钥？</strong></p>
+<h5>数字证书</h5>
+<p>这就需要借助第三方权威机构 CA （数字证书认证机构）。</p>
+<p>CA 的作用是：用<strong>自己的私钥</strong>对服务器的公钥进行签名，生成<strong>数字证书</strong>。这样做的好处是：</p>
+<ul>
+<li>服务器的公钥被 CA 签名了 → 你需要验证 CA 的签名</li>
+<li>而 CA 的公钥是<strong>操作系统和浏览器内置</strong>的，是可信的</li>
+<li>所以通过信任 CA，你就能间接地信任服务器的公钥</li>
+</ul>
+<p>整个信任链就是：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>你信任CA的公钥（内置）
+    ↓
+用CA的公钥验证服务器公钥的签名
+    ↓
+签名有效 = 这个公钥确实是服务器的
+    ↓
+现在你可以放心使用这个公钥了
+</code></pre></div><p>通过数字证书的方式，解决了<strong>冒充的风险</strong>，保证了公钥的真实性。</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Net5 - 应用层协议 (HTTP/1.1 2 3)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article5.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article5.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net5 - 应用层协议 (HTTP/1.1 2 3)</source>
+      <description>应用层 HTTP/1.1 2 3 HTTP/1.1 HTTP/1.1 相比 HTTP/1.0 性能上的改进： 使用长连接的方式改善了 HTTP/1.0 短连接造成的性能开销。 支持管道（pipeline）网络传输，只要第一个请求发出去了，不必等其回来，就可以发第二个请求出去，可以减少整体的响应时间。 但 HTTP/1.1 还是有性能瓶颈： 请求 / 响...</description>
+      <category>code</category>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>应用层</h2>
+<h3>HTTP/1.1 2 3</h3>
+<h4>HTTP/1.1</h4>
+<p>HTTP/1.1 相比 HTTP/1.0 性能上的改进：</p>
+<ul>
+<li>使用长连接的方式改善了 HTTP/1.0 短连接造成的性能开销。</li>
+<li>支持管道（pipeline）网络传输，只要第一个请求发出去了，不必等其回来，就可以发第二个请求出去，可以减少整体的响应时间。</li>
+</ul>
+<p>但 HTTP/1.1 还是有性能瓶颈：</p>
+<ul>
+<li>请求 / 响应头部（Header）未经压缩就发送，首部信息越多延迟越大。只能压缩 Body 的部分；</li>
+<li>发送冗长的首部。每次互相发送相同的首部造成的浪费较多；</li>
+<li>服务器是按请求的顺序响应的，如果服务器响应慢，会招致客户端一直请求不到数据，也就是队头阻塞；</li>
+<li>没有请求优先级控制；</li>
+<li>请求只能从客户端开始，服务器只能被动响应</li>
+</ul>
+<h4>HTTP/2</h4>
+<p>HTTP/2 协议是基于 HTTPS 的，所以 HTTP/2 的安全性也是有保障的</p>
+<ul>
+<li>新的二进制格式，<code>HTTP1.x</code>的解析是基于文本</li>
+<li>多路复用，即连接共享，即每一个request都是是用作连接共享机制的，一个request对应一个id，这样一个连接上可以有多个request，每个连接的request可以随机的混杂在一起，接收方可以根据request的 id将request再归属到各自不同的服务端请求里面</li>
+<li>header压缩，<code>HTTP1.x</code>的header带有大量信息，而且每次都要重复发送，HTTP2.0使用encoder来减少需要传输的header大小，通讯双方各自cache一份header fields表，既避免了重复header的传输，又减小了需要传输的大小</li>
+<li>服务端推送</li>
+</ul>
+<p>HTTP/2 还在一定程度上改善了传统的请求 - 应答工作模式，服务不再是被动地响应，也可以<strong>主动</strong>向客户端发送消息。</p>
+<p>举例来说，在浏览器刚请求 HTML 的时候，就提前把可能会用到的 JS、CSS 文件等静态资源主动发给客户端，<strong>减少延时的等待</strong>，也就是服务器推送</p>
+<p><strong>数据流</strong></p>
+<p>HTTP/2 的数据包不是按顺序发送的，同一个连接里面连续的数据包，可能属于不同的回应。</p>
+<p>因此，必须要对数据包做标记，指出它属于哪个回应。</p>
+<p>每个请求或回应的所有数据包，称为一个数据流（Stream）。</p>
+<p>每个数据流都标记着一个独一无二的编号，其中规定客户端发出的数据流编号为奇数， 服务器发出的数据流编号为偶数</p>
+<p>客户端还可以<strong>指定数据流的优先级</strong>。优先级高的请求，服务器就先响应该请求。</p>
+<h4>HTTP/3.0</h4>
+<p><strong>使用UDP协议</strong></p>
+<p>HTTP/2 主要的问题在于：多个 HTTP 请求在复用一个 TCP 连接，下层的 TCP 协议是不知道有多少个 HTTP 请求的。</p>
+<p>所以一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的<strong>所有的 HTTP 请求都必须等待这个丢了的包被重传回来</strong>。</p>
+<ul>
+<li>HTTP/1.1 中的管道传输中如果有一个请求阻塞了，那么队列后请求也统统被阻塞住了</li>
+<li>HTTP/2 多请求复用一个TCP连接，一旦发生丢包，就会阻塞住所有的 HTTP 请求。</li>
+</ul>
+<p>这都是基于 TCP 传输层的问题，所以&nbsp;<strong>HTTP/3 把 HTTP 下层的 TCP 协议改成了 UDP！</strong></p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Net6 - 应用层协议 (WebSocket)</title>
+      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article6.html</link>
+      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article6.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Net6 - 应用层协议 (WebSocket)</source>
+      <description>应用层 WebSocket HTTP 特点 从HTTP协议的角度来看，就是点一下网页上的某个按钮，前端发一次HTTP请求，网站返回一次HTTP响应。这种由客户端主动请求，服务器响应的方式也满足大部分网页的功能场景。 但有没有发现，这种情况下，服务器从来就「不会主动」给客户端发一次消息 比如： 在线聊天：服务器有新消息但无法主动推送，客户端得不断轮询问&amp;quot;...</description>
+      <category>code</category>
+      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>应用层</h2>
+<h3>WebSocket</h3>
+<h4>HTTP 特点</h4>
+<p>从HTTP协议的角度来看，就是点一下网页上的某个按钮，<strong>前端发一次HTTP请求，网站返回一次HTTP响应</strong>。这种由客户端主动请求，服务器响应的方式也满足大部分网页的功能场景。</p>
+<p>但有没有发现，这种情况下，服务器从来就「不会主动」给客户端发一次消息</p>
+<p>比如：</p>
+<ul>
+<li><strong>在线聊天</strong>：服务器有新消息但无法主动推送，客户端得不断轮询问"有新消息吗？"</li>
+<li><strong>实时通知</strong>：用户登录后，管理员发来通知，用户要等到刷新页面才能看到</li>
+<li><strong>协作编辑</strong>：多人编辑同一个文档，别人的改动无法实时显示</li>
+</ul>
+<h5>使用 HTTP 不断轮询</h5>
+<p>最常见的解决方案是，网页的前端代码里不断定时发 HTTP 请求到服务器，服务器收到请求后给客户端响应消息</p>
+<p>这其实时=是一种「伪」服务器推的形式。</p>
+<p>它其实并不是服务器主动发消息到客户端，而是客户端自己不断偷偷请求服务器，只是用户无感知而已。</p>
+<p>用这种方式的场景也有很多，最常见的就是扫码登录</p>
+<blockquote>
+<p>比如，某信公众号平台，登录页面二维码出现之后，前端网页根本不知道用户扫没扫，于是不断去向后端服务器询问，看有没有人扫过这个码。而且是以大概 1 到 2 秒的间隔去不断发出请求，这样可以保证用户在扫码后能在 1 到 2 秒内得到及时的反馈，不至于等太久</p>
+</blockquote>
+<p>使用HTTP定时轮询</p>
+<p>但这样，会有两个比较明显的问题：</p>
+<ul>
+<li>当你打开 F12 页面时，你会发现满屏的 HTTP 请求。虽然很小，但这其实也消耗带宽，同时也会增加下游服务器的负担。</li>
+<li>最坏情况下，用户在扫码后，需要等个 1~2 秒，正好才触发下一次 HTTP 请求，然后才跳转页面，用户会感到明显的卡顿</li>
+</ul>
+<h5>长轮询</h5>
+<p>我们知道，HTTP 请求发出后，一般会给服务器留一定的时间做响应，比如 3 秒，规定时间内没返回，就认为是超时。</p>
+<p>如果我们的 HTTP 请求<strong>将超时设置的很大</strong>，比如 30 秒，<strong>在这 30 秒内只要服务器收到了扫码请求，就立马返回给客户端网页。如果超时，那就立马发起下一次请求。</strong></p>
+<p>这样就减少了 HTTP 请求的个数，并且由于大部分情况下，用户都会在某个 30 秒的区间内做扫码操作，所以响应也是及时的。</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p>像这种发起一个请求，在较长时间内等待服务器响应的机制，就是所谓的<strong>长训轮机制</strong>。我们常用的消息队列 RocketMQ 中，消费者去取数据时，也用到了这种方式</p>
+<p>像这种，在用户不感知的情况下，服务器将数据推送给浏览器的技术，就是所谓的<strong>服务器推送</strong>技术，它还有个毫不沾边的英文名，<strong>comet</strong>&nbsp;技术，大家听过就好。</p>
+<p>上面提到的两种解决方案（不断轮询和长轮询），本质上，其实还是客户端主动去取数据。</p>
+<p>对于像扫码登录这样的<strong>简单场景</strong>还能用用。但如果是网页游戏呢，游戏一般会有大量的数据需要从服务器主动推送到客户端。</p>
+<p>这就得说下&nbsp;<strong>WebSocket</strong>&nbsp;了</p>
+<h4>WebSocket 设计原因</h4>
+<p>我们知道 TCP 连接的两端，<strong>同一时间里</strong>，<strong>双方</strong>都可以<strong>主动</strong>向对方发送数据。这就是所谓的<strong>全双工</strong>。</p>
+<p>而现在使用最广泛的<code>HTTP/1.1</code>，也是基于TCP协议的，<strong>同一时间里</strong>，客户端和服务器<strong>只能有一方主动</strong>发数据，这就是所谓的<strong>半双工</strong>。</p>
+<p>也就是说，好好的全双工 TCP，被 HTTP/1.1 用成了半双工</p>
+<p>这是由于 HTTP 协议设计之初，考虑的是看看网页文本的场景，能做到<strong>客户端发起请求再由服务器响应</strong>，就够了，根本就没考虑网页游戏这种，客户端和服务器之间都要互相主动发大量数据的场景。</p>
+<p>所以，为了更好的支持这样的场景，我们需要另外一个<strong>基于TCP的新协议</strong>。</p>
+<p>于是新的应用层协议<strong>WebSocket</strong>就被设计出来了</p>
+<h4>如何建立 WebSocket</h4>
+<p>我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是&nbsp;<strong>HTTP 协议</strong>，一会打开网页游戏，这时候就得切换成我们新介绍的&nbsp;<strong>WebSocket 协议</strong>。</p>
+<p>为了兼容这些使用场景。浏览器在&nbsp;<strong>TCP 三次握手</strong>建立连接之后，都<strong>统一使用 HTTP 协议</strong>先进行一次通信。</p>
+<ul>
+<li>如果此时是<strong>普通的 HTTP 请求</strong>，那后续双方就还是老样子继续用普通 HTTP 协议进行交互，这点没啥疑问。</li>
+<li>如果这时候是<strong>想建立 WebSocket 连接</strong>，就会在 HTTP 请求里带上一些<strong>特殊的header 头</strong>，如下：</li>
+</ul>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Connection: Upgrade
+Upgrade: WebSocket
+Sec-WebSocket-Key: T2a6wZlAwhgQNqruZ2YUyg==\r\n
+</code></pre></div><p>这些 header 头的意思是，浏览器想<strong>升级协议（Connection: Upgrade）</strong>，并且<strong>想升级成 WebSocket 协议（Upgrade: WebSocket）</strong>。同时带上一段<strong>随机生成的 base64 码（Sec-WebSocket-Key）</strong>，发给服务器。</p>
+<p>如果服务器正好支持升级成 WebSocket 协议。</p>
+<p>就会走 WebSocket 握手流程，同时根据客户端生成的 base64 码，用某个<strong>公开的</strong>算法变成另一段字符串，放在 HTTP 响应的&nbsp;<code>Sec-WebSocket-Accept</code>&nbsp;头里，同时带上<code>101状态码</code>，发回给浏览器。</p>
+<p>HTTP 的响应如下：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>HTTP/1.1 101 Switching Protocols\r\n
+Sec-WebSocket-Accept: iBJKv/ALIW2DobfoA4dmr3JHBCY=\r\n
+Upgrade: WebSocket\r\n
+Connection: Upgrade\r\n
+</code></pre></div><p>101 确实不常见，它其实是指<strong>协议切换</strong></p>
+<p>之后，浏览器也用同样的<strong>公开算法</strong>将<code>base64码</code>转成另一段字符串，如果这段字符串跟服务器传回来的<strong>字符串一致</strong>，那验证通过</p>
+<p>就这样经历了一来一回两次 HTTP 握手，WebSocket就建立完成了，后续双方就可以使用 webscoket 的数据格式进行通信了</p>
+<blockquote>
+<p>WebSocket和HTTP一样都是基于TCP的协议。<strong>经历了三次TCP握手之后，利用 HTTP 协议升级为 WebSocket 协议</strong></p>
+</blockquote>
+<h4>WebSocket 消息格式</h4>
+<p>在完成协议升级之后，两端就会用webscoket的数据格式进行通信。</p>
+<p>数据包在WebSocket中被叫做帧</p>
+<figure><figcaption>alt text</figcaption></figure>
+<p><strong>opcode字段</strong>：这个是用来标志这是个<strong>什么类型</strong>的数据帧。比如。</p>
+<ul>
+<li>等于 1 ，是指text类型（<code>string</code>）的数据包</li>
+<li>等于 2 ，是二进制数据类型（<code>[]byte</code>）的数据包</li>
+<li>等于 8 ，是关闭连接的信号</li>
+</ul>
+<p><strong>payload字段</strong>：存放的是我们<strong>真正想要传输的数据的长度</strong>，单位是<strong>字节</strong>。比如你要发送的数据是<code>字符串"111"</code>，那它的长度就是<code>3</code></p>
+<p>另外，可以看到，我们存放<strong>payload 长度的字段有好几个</strong>，我们既可以用最前面的<code>7bit</code>, 也可以用后面的<code>7+16bit 或 7+64bit。</code></p>
+<p>那么问题就来了。</p>
+<p>我们知道，在数据层面，大家都是 01 二进制流。我怎么知道<strong>什么情况下应该读 7 bit，什么情况下应该读7+16bit呢？</strong></p>
+<p>WebSocket会用最开始的7bit做标志位。不管接下来的数据有多大，都<strong>先读最先的7个bit</strong>，根据它的取值决定还要不要再读个 16bit 或 64bit。</p>
+<ul>
+<li>如果<code>最开始的7bit</code>的值是 0~125，那么它就表示了&nbsp;<strong>payload 全部长度</strong>，只读最开始的<code>7个bit</code>就完事了</li>
+<li>如果是<code>126（0x7E）</code>。那它表示payload的长度范围在&nbsp;<code>126~65535</code>&nbsp;之间，接下来还需要<strong>再读16bit</strong>。这16bit会包含payload的真实长度</li>
+<li>如果是<code>127（0x7F）</code>。那它表示payload的长度范围<code>&gt;=65536</code>，接下来还需要<strong>再读64bit</strong>。这64bit会包含payload的长度。这能放2的64次方byte的数据，换算一下好多个TB，肯定够用了</li>
+</ul>
+<p><strong>payload data字段</strong>：这里存放的就是真正要传输的数据，在知道了上面的payload长度后，就可以根据这个值去截取对应的数据</p>
+<blockquote>
+<p>这是因为 TCP 协议本身就是全双工，但直接使用<strong>纯裸TCP</strong>去传输数据，会有<strong>粘包</strong>的"问题"。为了解决这个问题，上层协议一般会用<strong>消息头+消息体</strong>的格式去重新包装要发的数据。</p>
+<p>而<strong>消息头</strong>里一般含有<strong>消息体的长度</strong>，通过这个长度可以去截取真正的消息体</p>
+</blockquote>
+<h4>WebSocket的使用场景</h4>
+<p>WebSocket完美继承了 TCP 协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。</p>
+<p>它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景，比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
+<p>回到文章开头的问题，在使用 WebSocket 协议的网页游戏里，怪物移动以及攻击玩家的行为是<strong>服务器逻辑</strong>产生的，对玩家产生的伤害等数据，都需要由<strong>服务器主动发送给客户端</strong>，客户端获得数据后展示对应的效果</p>
+<h4>总结</h4>
+<ul>
+<li>TCP 协议本身是<strong>全双工</strong>的，但我们最常用的 HTTP/1.1，虽然是基于 TCP 的协议，但它是<strong>半双工</strong>的，对于大部分需要服务器主动推送数据到客户端的场景，都不太友好，因此我们需要使用支持全双工的 WebSocket 协议。</li>
+<li>在 HTTP/1.1 里，只要客户端不问，服务端就不答。基于这样的特点，对于登录页面这样的简单场景，可以使用<strong>定时轮询或者长轮询</strong>的方式实现<strong>服务器推送</strong>(comet)的效果。</li>
+<li>对于客户端和服务端之间需要频繁交互的复杂场景，比如网页游戏，都可以考虑使用 WebSocket 协议。</li>
+<li>WebSocket 和 socket 几乎没有任何关系，只是叫法相似。</li>
+<li>正因为各个浏览器都支持 HTTP协 议，所以 WebSocket 会先利用HTTP协议加上一些特殊的 header 头进行握手升级操作，升级成功后就跟 HTTP 没有任何关系了，之后就用 WebSocket 的数据格式进行收发数据</li>
+</ul>
 ]]></content:encoded>
     </item>
   </channel>

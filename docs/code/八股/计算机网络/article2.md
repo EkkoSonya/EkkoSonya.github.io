@@ -43,7 +43,7 @@ URL（Uniform Resource Locators），即统一资源定位器
 
 > URL 的组成结构
 
-![alt text](image.png)
+![alt text](img/6.png)
 
 1. 协议
    - URL 的前缀通常表示了该网址采用了何种应用层协议，通常有两种——HTTP 和 HTTPS

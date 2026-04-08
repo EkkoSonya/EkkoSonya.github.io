@@ -396,6 +396,30 @@ processChunk 里会解析 JSON，取出 choices[0].delta.content，然后 onChun
 
 - 如果请求或解析过程中出错，就走 onError.accept(异常)
 
+在对应的 `ChatHanlder` 中,对应的 `Consumer<String> onChunk` 和 `Consumer<Throwable> onError`：
+
+```java
+deepSeekClient.streamResponse(userMessage, context, history, 
+    chunk -> {
+        // 累积响应内容
+        StringBuilder responseBuilder = responseBuilders.get(session.getId());
+        if (responseBuilder != null) {
+            responseBuilder.append(chunk);
+        }
+        sendResponseChunk(session, chunk);
+    },
+    error -> {
+        // 处理错误并完成future
+        handleError(session, error);
+        // 发送响应完成通知（错误情况）
+        sendCompletionNotification(session);
+        responseFuture.completeExceptionally(error);
+        // 清理会话响应构建器
+        responseBuilders.remove(session.getId());
+        responseFutures.remove(session.getId());
+    });
+```
+
 ##### 构建请求体 `buildRequest`
 
 会生成类似下面的结构:
@@ -485,6 +509,34 @@ private List<Map<String, String>> buildMessages(String userMessage, String conte
 
 ##### 处理返回分块信息 `processChunk`
 
+`onChunk` 就是在对应的 `ChatHanlder` 中传来的
+
+```java
+deepSeekClient.streamResponse(userMessage, context, history, 
+    chunk -> {
+        // 1. 获取该 session 对应的响应构建器
+        StringBuilder responseBuilder = responseBuilders.get(session.getId());
+        // 2. 累积内容
+        if (responseBuilder != null) {
+            responseBuilder.append(chunk);
+        }
+        // 3. 实时发送给客户端
+        sendResponseChunk(session, chunk);
+    },
+    error -> {
+        // 处理错误并完成future
+        handleError(session, error);
+        // 发送响应完成通知（错误情况）
+        sendCompletionNotification(session);
+        responseFuture.completeExceptionally(error);
+        // 清理会话响应构建器
+        responseBuilders.remove(session.getId());
+        responseFutures.remove(session.getId());
+    });
+```
+
+接着套
+
 ```java
 private void processChunk(String chunk, Consumer<String> onChunk) {
   try {
@@ -509,5 +561,65 @@ private void processChunk(String chunk, Consumer<String> onChunk) {
   } catch (Exception e) {
       logger.error("处理数据块时出错: {}", e.getMessage(), e);
   }
+}
+```
+
+最终调用
+
+```java
+public void streamResponse(String userMessage, String context, List<Map<String, String>> history, Consumer<String> onChunk Consumer<Throwable> onError) {
+  
+  Map<String, Object> request = buildRequest(userMessage, context, history);
+  
+  webClient.post()
+    .uri("/chat/completions")
+    .contentType(MediaType.APPLICATION_JSON)
+    .bodyValue(request)
+    .retrieve()
+    .bodyToFlux(String.class)
+    .subscribe(
+        chunk -> processChunk(chunk, onChunk),
+        onError
+    );
+}
+```
+
+##### `Consumer<T>`
+
+> 定义：**接收一个参数，做一些处理，但不返回结果**, 最常用于回调、遍历、事件处理和流式数据消费
+
+可以和别的函数式接口对比着记：
+
+- `Consumer<T>`：吃进去一个 `T`，**不返回**
+- `Function<T, R>`：吃进去一个 `T`，**返回一个 `R`**
+- `Supplier<T>`：**不接收参数**，返回一个 `T`
+- `Predicate<T>`：吃进去一个 `T`，返回 `true/false`
+
+```java
+public interface Consumer<T> {
+
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param t the input argument
+     */
+    void accept(T t);
+
+    /**
+     * Returns a composed {@code Consumer} that performs, in sequence, this
+     * operation followed by the {@code after} operation. If performing either
+     * operation throws an exception, it is relayed to the caller of the
+     * composed operation.  If performing this operation throws an exception,
+     * the {@code after} operation will not be performed.
+     *
+     * @param after the operation to perform after this operation
+     * @return a composed {@code Consumer} that performs in sequence this
+     * operation followed by the {@code after} operation
+     * @throws NullPointerException if {@code after} is null
+     */
+    default Consumer<T> andThen(Consumer<? super T> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> { accept(t); after.accept(t); };
+    }
 }
 ```

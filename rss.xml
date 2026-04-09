@@ -6,11 +6,344 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Wed, 08 Apr 2026 06:44:04 GMT</pubDate>
-    <lastBuildDate>Wed, 08 Apr 2026 06:44:04 GMT</lastBuildDate>
+    <pubDate>Thu, 09 Apr 2026 16:49:31 GMT</pubDate>
+    <lastBuildDate>Thu, 09 Apr 2026 16:49:31 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
+    <item>
+      <title>Alg1 - ACM 模式</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article1.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg1 - ACM 模式</source>
+      <description>ACM 模式(输入输出) Scanner 类 Scanner 是 Java 中用于解析基本类型和字符串的简单文本扫描器，位于 java.util 包中 Scanner 的核心逻辑是基于分隔符（Delimiter）将输入拆分为标记（Tokens）。 默认分隔符：空白符（包括空格、回车 \n、制表符 \t 等）。 解析方式：它不仅能读字符串，还能自动尝试将...</description>
+      <category>code</category>
+      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>ACM 模式(输入输出)</h2>
+<h3>Scanner 类</h3>
+<p><code>Scanner</code> 是 Java 中用于解析基本类型和字符串的简单文本扫描器，位于 <code>java.util</code> 包中</p>
+<p><code>Scanner</code> 的核心逻辑是<strong>基于分隔符（Delimiter）将输入拆分为标记（Tokens）</strong>。</p>
+<ul>
+<li><strong>默认分隔符</strong>：空白符（包括空格、回车 <code>\n</code>、制表符 <code>\t</code> 等）。</li>
+<li><strong>解析方式</strong>：它不仅能读字符串，还能自动尝试将标记转换为 <code>int</code>、<code>double</code> 等基本类型</li>
+</ul>
+<p>本质上就是建立一个输入流读取器，通过分隔符界定标记（token）的边界，逐个从缓冲区消耗数据，并可自动转换为指定类型（int、double 等）</p>
+<h4>常用方法一览</h4>
+<p><strong>读取类方法</strong>（真正消耗缓冲区，没有数据时阻塞等待）：</p>
+<p>| 方法 | 返回类型 | 切割方式 | 说明 |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Alg2 - String 常用API</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article2.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg2 - String 常用API</source>
+      <description>String 常用 API 1. 长度和判空 2. 取字符 3. 截取子串 4. 比较 5. 查找和定位 6. 大小写转换 7. 去空格 8. 分割和替换 9. 连接和格式化 10. 类型转换 11. 其他常用方法 常见场景速查 性能建议 字符串不可变性 </description>
+      <category>code</category>
+      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>String 常用 API</h2>
+<h3>1. 长度和判空</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span> s <span class="token operator">=</span> <span class="token string">"hello"</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> n <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 5</span>
+<span class="token keyword">boolean</span> empty <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// false</span>
+</code></pre></div><h3>2. 取字符</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">char</span> c <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// 'h'</span>
+<span class="token keyword">char</span><span class="token punctuation">[</span><span class="token punctuation">]</span> chars <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">toCharArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 转为字符数组</span>
+</code></pre></div><h3>3. 截取子串</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span> sub1 <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// "ello"，从索引1到末尾</span>
+<span class="token class-name">String</span> sub2 <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// "el"，[1,3)</span>
+<span class="token class-name">String</span> sub3 <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// "h"，第一个字符</span>
+</code></pre></div><h3>4. 比较</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>s<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// true，完全相等</span>
+s<span class="token punctuation">.</span><span class="token function">equalsIgnoreCase</span><span class="token punctuation">(</span><span class="token string">"HELLO"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// true，忽略大小写</span>
+s<span class="token punctuation">.</span><span class="token function">compareTo</span><span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 0，字典序比较</span>
+<span class="token comment">// 不要用 == 比较字符串内容！== 比的是引用</span>
+</code></pre></div><h3>5. 查找和定位</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>s<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span><span class="token string">"ll"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">// true，包含子串</span>
+s<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">"l"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>              <span class="token comment">// 2，第一次出现位置</span>
+s<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">"l"</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// 3，从索引3开始查找</span>
+s<span class="token punctuation">.</span><span class="token function">lastIndexOf</span><span class="token punctuation">(</span><span class="token string">"l"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// 3，最后出现位置</span>
+s<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"he"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// true</span>
+s<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">"lo"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">// true</span>
+s<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"el"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">// true，从索引1开始</span>
+</code></pre></div><h3>6. 大小写转换</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code>s<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token comment">// "hello"</span>
+s<span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token comment">// "HELLO"</span>
+s<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toUpperCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 链式调用</span>
+</code></pre></div><h3>7. 去空格</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span> str <span class="token operator">=</span> <span class="token string">"  hello world  "</span><span class="token punctuation">;</span>
+str<span class="token punctuation">.</span><span class="token function">trim</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                  <span class="token comment">// "hello world"，去首尾空格</span>
+str<span class="token punctuation">.</span><span class="token function">strip</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                 <span class="token comment">// Java 11+，更强大</span>
+</code></pre></div><h3>8. 分割和替换</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> arr <span class="token operator">=</span> <span class="token string">"a,b,c"</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// ["a", "b", "c"]</span>
+<span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> arr2 <span class="token operator">=</span> <span class="token string">"a b  c"</span><span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">" +"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 正则：多个空格</span>
+
+<span class="token class-name">String</span> replaced <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token string">"l"</span><span class="token punctuation">,</span> <span class="token string">"L"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// "heLLo"，全部替换</span>
+<span class="token class-name">String</span> replaced2 <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">replaceFirst</span><span class="token punctuation">(</span><span class="token string">"l"</span><span class="token punctuation">,</span> <span class="token string">"L"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// "heLlo"，替换第一个</span>
+<span class="token class-name">String</span> replaced3 <span class="token operator">=</span> s<span class="token punctuation">.</span><span class="token function">replaceAll</span><span class="token punctuation">(</span><span class="token string">"[aeiou]"</span><span class="token punctuation">,</span> <span class="token string">"*"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 正则替换</span>
+
+<span class="token comment">// 重复</span>
+<span class="token class-name">String</span> repeat <span class="token operator">=</span> <span class="token string">"ab"</span><span class="token punctuation">.</span><span class="token function">repeat</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// "ababab"，Java 11+</span>
+</code></pre></div><h3>9. 连接和格式化</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 连接</span>
+<span class="token class-name">String</span> concat <span class="token operator">=</span> <span class="token string">"Hello"</span> <span class="token operator">+</span> <span class="token string">" "</span> <span class="token operator">+</span> <span class="token string">"World"</span><span class="token punctuation">;</span> <span class="token comment">// "Hello World"</span>
+<span class="token class-name">String</span> joined <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">","</span><span class="token punctuation">,</span> <span class="token string">"a"</span><span class="token punctuation">,</span> <span class="token string">"b"</span><span class="token punctuation">,</span> <span class="token string">"c"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// "a,b,c"</span>
+
+<span class="token comment">// 格式化</span>
+<span class="token class-name">String</span> formatted <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"Hello %s, age %d"</span><span class="token punctuation">,</span> <span class="token string">"Alice"</span><span class="token punctuation">,</span> <span class="token number">25</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// "Hello Alice, age 25"</span>
+
+<span class="token comment">// StringBuilder（高效拼接）</span>
+<span class="token class-name">StringBuilder</span> sb <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">StringBuilder</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+sb<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"Hello"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+sb<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">" "</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+sb<span class="token punctuation">.</span><span class="token function">append</span><span class="token punctuation">(</span><span class="token string">"World"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">String</span> result <span class="token operator">=</span> sb<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// "Hello World"</span>
+</code></pre></div><h3>10. 类型转换</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span> s1 <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span><span class="token number">123</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// "123"</span>
+<span class="token class-name">String</span> s2 <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// "true"</span>
+<span class="token class-name">String</span> s3 <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span><span class="token number">3.14</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// "3.14"</span>
+
+<span class="token class-name">Integer</span> num <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 123</span>
+<span class="token class-name">Double</span> d <span class="token operator">=</span> <span class="token class-name">Double</span><span class="token punctuation">.</span><span class="token function">parseDouble</span><span class="token punctuation">(</span><span class="token string">"3.14"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 3.14</span>
+<span class="token class-name">Boolean</span> b <span class="token operator">=</span> <span class="token class-name">Boolean</span><span class="token punctuation">.</span><span class="token function">parseBoolean</span><span class="token punctuation">(</span><span class="token string">"true"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// true</span>
+</code></pre></div><h3>11. 其他常用方法</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 匹配</span>
+<span class="token keyword">boolean</span> match <span class="token operator">=</span> <span class="token string">"123"</span><span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span><span class="token string">"\\d+"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 正则匹配</span>
+s<span class="token punctuation">.</span><span class="token function">matches</span><span class="token punctuation">(</span><span class="token string">"[a-z]+"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                   <span class="token comment">// 全小写字母</span>
+
+<span class="token comment">// 字符替换</span>
+<span class="token class-name">String</span> s <span class="token operator">=</span> <span class="token string">"hello"</span><span class="token punctuation">;</span>
+s<span class="token punctuation">.</span><span class="token function">codePointAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// 'h' 的Unicode值</span>
+<span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span><span class="token char">'A'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// "A"</span>
+
+<span class="token comment">// 字符串前缀/后缀（Java 11+）</span>
+<span class="token string">"hello"</span><span class="token punctuation">.</span><span class="token function">stripLeading</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 去前导空格</span>
+<span class="token string">"hello"</span><span class="token punctuation">.</span><span class="token function">stripTrailing</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 去尾部空格</span>
+
+<span class="token comment">// 获取第n个子字符串的索引</span>
+<span class="token keyword">int</span> idx <span class="token operator">=</span> <span class="token string">"a-b-c"</span><span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">"-"</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 从0开始找</span>
+</code></pre></div><h2><strong>常见场景速查</strong></h2>
+<p>| 场景 | 方法 |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Alg3 - 集合常用API</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article3.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg3 - 集合常用API</source>
+      <description>接口体系 常用方法速查 高频场景选择 详细方法速查 HashSet ArrayList LinkedList HashMap TreeMap LinkedHashMap（LRU缓存） TreeSet PriorityQueue（堆） Queue（FIFO） Deque（双端队列） Collections 工具类 时间复杂度对比 易错点 </description>
+      <category>code</category>
+      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>接口体系</h2>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Collection
+├── Set（无序、无重复）
+│   ├── HashSet          // O(1) 增删查，无序
+│   ├── LinkedHashSet    // 保持插入顺序
+│   └── TreeSet          // 有序（红黑树），O(log n)
+├── List（有序、可重复）
+│   ├── ArrayList        // 动态数组，O(1) 查，O(n) 增删
+│   ├── LinkedList       // 链表，O(n) 查，O(1) 增删头尾
+│   └── Vector           // 线程安全的ArrayList（较少用）
+└── Queue（队列）
+    ├── LinkedList       // 普通队列
+    ├── PriorityQueue    // 优先级队列（小根堆）
+    ├── Deque            // 双端队列
+    │   └── LinkedList/ArrayDeque
+    └── BlockingQueue    // 阻塞队列（多线程）
+
+Map（键值对，无重复键）
+├── HashMap              // O(1) 平均，无序
+├── LinkedHashMap        // 保持插入顺序
+├── TreeMap              // 有序（红黑树），O(log n)
+├── Hashtable            // 线程安全（较少用）
+└── ConcurrentHashMap    // 线程安全的HashMap
+</code></pre></div><h2>常用方法速查</h2>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// Set</span>
+<span class="token class-name">Set</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> set <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashSet</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+set<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+set<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token comment">// O(1)</span>
+set<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// List</span>
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+list<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>            <span class="token comment">// O(1)</span>
+list<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">// O(n)</span>
+list<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Map</span>
+<span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+map<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token comment">// O(1)</span>
+map<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+map<span class="token punctuation">.</span><span class="token function">values</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>           <span class="token comment">// 获取所有值</span>
+map<span class="token punctuation">.</span><span class="token function">entrySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">// 遍历键值对</span>
+
+<span class="token comment">// Queue / Deque</span>
+<span class="token class-name">Queue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> q <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+q<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token comment">// 入队</span>
+q<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>               <span class="token comment">// 出队（队空返回null）</span>
+q<span class="token punctuation">.</span><span class="token function">peek</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>               <span class="token comment">// 查看队头（队空返回null）</span>
+
+<span class="token class-name">Deque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> dq <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayDeque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dq<span class="token punctuation">.</span><span class="token function">addFirst</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">// 头部插入</span>
+dq<span class="token punctuation">.</span><span class="token function">addLast</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// 尾部插入</span>
+dq<span class="token punctuation">.</span><span class="token function">removeFirst</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+dq<span class="token punctuation">.</span><span class="token function">removeLast</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// PriorityQueue（小根堆）</span>
+<span class="token class-name">PriorityQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> pq <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PriorityQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+pq<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+pq<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>              <span class="token comment">// 取出最小值</span>
+pq<span class="token punctuation">.</span><span class="token function">peek</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 大根堆</span>
+<span class="token class-name">PriorityQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> maxPq <span class="token operator">=</span> 
+    <span class="token keyword">new</span> <span class="token class-name">PriorityQueue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token operator">-&gt;</span> b <span class="token operator">-</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2><strong>高频场景选择</strong></h2>
+<p>| 场景 | 推荐 | 复杂度 |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Alg4 - 典型题目 (LRU)</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article4.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg4 - 典型题目 (LRU)</source>
+      <description>LRU 请你设计并实现一个满足 LRU (最近最少使用) 缓存 约束的数据结构。 实现 LRUCache 类： LRUCache(int capacity) 以 正整数 作为容量 capacity 初始化 LRU 缓存 int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 1 。 void put(int ke...</description>
+      <category>code</category>
+      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>LRU</h2>
+<p>请你设计并实现一个满足&nbsp;&nbsp;<a href="https://baike.baidu.com/item/LRU" target="_blank" rel="noopener noreferrer">LRU (最近最少使用) 缓存</a>&nbsp;约束的数据结构。</p>
+<p>实现&nbsp;<code>LRUCache</code>&nbsp;类：</p>
+<ul>
+<li><code>LRUCache(int capacity)</code>&nbsp;以&nbsp;<strong>正整数</strong>&nbsp;作为容量&nbsp;<code>capacity</code>&nbsp;初始化 LRU 缓存</li>
+<li><code>int get(int key)</code>&nbsp;如果关键字&nbsp;<code>key</code>&nbsp;存在于缓存中，则返回关键字的值，否则返回&nbsp;<code>1</code>&nbsp;。</li>
+<li><code>void put(int key, int value)</code>&nbsp;如果关键字&nbsp;<code>key</code>&nbsp;已经存在，则变更其数据值&nbsp;<code>value</code>&nbsp;；如果不存在，则向缓存中插入该组&nbsp;<code>key-value</code>&nbsp;。如果插入操作导致关键字数量超过&nbsp;<code>capacity</code>&nbsp;，则应该&nbsp;<strong>逐出</strong>&nbsp;最久未使用的关键字。</li>
+</ul>
+<p>函数&nbsp;<code>get</code>&nbsp;和&nbsp;<code>put</code>&nbsp;必须以&nbsp;<code>O(1)</code>&nbsp;的平均时间复杂度运行</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token doc-comment comment">/**
+ * 设计思路：HashMap + 双向链表 (Double LinkedList)
+ * 1. HashMap: 实现 O(1) 查找，存储 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Key,</span> <span class="token attr-name">Node</span><span class="token punctuation">&gt;</span></span>。
+ * 2. 双向链表: 实现 O(1) 删除和插入，维护“最近使用”的顺序。
+ * 3. 哨兵节点 (Sentinel): 使用虚拟 head/tail 简化链表边界判断。
+ */</span>
+<span class="token keyword">class</span> <span class="token class-name">LRUCache</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 1. 节点类：必须有 key，因为从链表删末尾时，需要根据 key 去删 map</span>
+    <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">Node</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> key<span class="token punctuation">,</span> val<span class="token punctuation">;</span>
+        <span class="token class-name">Node</span> prev<span class="token punctuation">,</span> next<span class="token punctuation">;</span>
+        <span class="token class-name">Node</span><span class="token punctuation">(</span><span class="token keyword">int</span> k<span class="token punctuation">,</span> <span class="token keyword">int</span> v<span class="token punctuation">)</span> <span class="token punctuation">{</span> key <span class="token operator">=</span> k<span class="token punctuation">;</span> val <span class="token operator">=</span> v<span class="token punctuation">;</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">int</span> cap<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Map</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">,</span> <span class="token class-name">Node</span><span class="token punctuation">&gt;</span></span> map <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Node</span> head<span class="token punctuation">,</span> tail<span class="token punctuation">;</span> <span class="token comment">// 虚拟头尾节点，省去判空逻辑</span>
+
+    <span class="token keyword">public</span> <span class="token class-name">LRUCache</span><span class="token punctuation">(</span><span class="token keyword">int</span> capacity<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>cap <span class="token operator">=</span> capacity<span class="token punctuation">;</span>
+        head <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Node</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        tail <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Node</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        head<span class="token punctuation">.</span>next <span class="token operator">=</span> tail<span class="token punctuation">;</span>
+        tail<span class="token punctuation">.</span>prev <span class="token operator">=</span> head<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// </span></code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Alg5 - 图论 (DFS &amp;&amp; BFS)</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article5.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article5.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg5 - 图论 (DFS &amp;&amp; BFS)</source>
+      <description>DFS 深度优先搜索（Depth-First Search） 是一种用于遍历或搜索图、树的算法。 核心思想 从起点出发，沿着一条路径尽可能深入，直到无法继续时回溯，再探索其他路径。 特点 使用栈（或递归调用栈）实现 不保证找到最短路径 时间复杂度：O(V + E)，V 为顶点数，E 为边数 空间复杂度：O(V)（递归深度最多为顶点数） 适合：路径搜索、...</description>
+      <category>code</category>
+      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>DFS</h2>
+<p><strong>深度优先搜索（Depth-First Search）</strong> 是一种用于遍历或搜索图、树的算法。</p>
+<h3>核心思想</h3>
+<p>从起点出发，沿着一条路径尽可能深入，直到无法继续时回溯，再探索其他路径。</p>
+<h3>特点</h3>
+<ul>
+<li>使用<strong>栈</strong>（或递归调用栈）实现</li>
+<li>不保证找到最短路径</li>
+<li>时间复杂度：O(V + E)，V 为顶点数，E 为边数</li>
+<li>空间复杂度：O(V)（递归深度最多为顶点数）</li>
+<li>适合：路径搜索、连通性判断、拓扑排序、回溯问题</li>
+</ul>
+<h3>代码模板</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 邻接表表示图</span>
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> adj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">boolean</span><span class="token punctuation">[</span><span class="token punctuation">]</span> visited<span class="token punctuation">;</span>
+
+<span class="token comment">// 递归实现（最常用）</span>
+<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token comment">// 处理当前节点</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> v <span class="token operator">:</span> adj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">dfs</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 栈实现（避免栈溢出）</span>
+<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> start<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Deque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> stack <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayDeque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    stack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>stack<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> u <span class="token operator">=</span> stack<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span>  <span class="token comment">// 跳过已访问节点</span>
+        visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> v <span class="token operator">:</span> adj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                stack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>网格 DFS 模板</h3>
+<p>矩阵/网格问题中常用的 DFS 写法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> grid<span class="token punctuation">;</span>
+<span class="token keyword">int</span> m<span class="token punctuation">,</span> n<span class="token punctuation">;</span>
+<span class="token keyword">boolean</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> visited<span class="token punctuation">;</span>
+<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dx <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">;</span>  <span class="token comment">// 上下左右四个方向</span>
+<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dy <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token comment">// 处理当前格子</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> nx <span class="token operator">=</span> x <span class="token operator">+</span> dx<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> ny <span class="token operator">=</span> y <span class="token operator">+</span> dy<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment">// 边界检查 + 未访问检查</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>nx <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> nx <span class="token operator">&lt;</span> m <span class="token operator">&amp;&amp;</span> ny <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> ny <span class="token operator">&lt;</span> n <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>visited<span class="token punctuation">[</span>nx<span class="token punctuation">]</span><span class="token punctuation">[</span>ny<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">dfs</span><span class="token punctuation">(</span>nx<span class="token punctuation">,</span> ny<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 简化写法：直接枚举四个方向</span>
+<span class="token keyword">void</span> <span class="token function">dfs2</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> x <span class="token operator">&gt;=</span> m <span class="token operator">||</span> y <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> y <span class="token operator">&gt;=</span> n <span class="token operator">||</span> visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>经典应用</h3>
+<p>| 问题 | 说明 |
+|</p>
+]]></content:encoded>
+    </item>
     <item>
       <title>Net13 - 杂</title>
       <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article13.html</link>
@@ -432,457 +765,6 @@
 <p>此时，<strong>两个私有 IP 地址都转换 IP 地址为公有地址 120.229.175.121，但是以不同的端口号作为区分。</strong></p>
 <p>于是，生成一个 NAPT 路由器的转换表，就可以正确地转换地址跟端口的组合，令客户端 A、B 能同时与服务器之间进行通信。</p>
 <p>这种转换表在 NAT 路由器上自动生成。例如，在 TCP 的情况下，建立 TCP 连接首次握手时的 SYN 包一经发出，就会生成这个表。而后又随着收到关闭连接时发出 FIN 包的确认应答从表中被删除</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Net2 - 重要知识点2 (浏览器访问网页全过程)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article2.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net2 - 重要知识点2 (浏览器访问网页全过程)</source>
-      <description>基础 浏览器访问网页全过程 整体流程 在浏览器中输入指定网页的 URL 浏览器通过 DNS 协议，获取域名对应的 IP 地址 浏览器根据 IP 地址和端口号，向目标服务器发起一个 TCP 连接请求 (三次握手) 浏览器在 TCP 连接上，向服务器发送一个 HTTP 请求报文，请求获取网页的内容 服务器收到 HTTP 请求报文后，处理请求，并返回 HTT...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>基础</h2>
-<h3>浏览器访问网页全过程</h3>
-<h4>整体流程</h4>
-<ol>
-<li>在浏览器中输入指定网页的 URL</li>
-<li>浏览器通过 DNS 协议，获取域名对应的 IP 地址</li>
-<li>浏览器根据 IP 地址和端口号，向目标服务器发起一个 TCP 连接请求 (三次握手)</li>
-<li>浏览器在 TCP 连接上，向服务器发送一个 HTTP 请求报文，请求获取网页的内容</li>
-<li>服务器收到 HTTP 请求报文后，处理请求，并返回 HTTP 响应报文给浏览器</li>
-<li>浏览器收到 HTTP 响应报文后，解析响应体中的 HTML 代码，渲染网页的结构和样式，同时根据 HTML 中的其他资源的 URL（如图片、CSS、JS 等），再次发起 HTTP 请求，获取这些资源的内容，直到网页完全加载显示</li>
-<li>浏览器在不需要和服务器通信时，可以主动关闭 TCP 连接，或者等待服务器的关闭请求 (TCP 四次挥手)</li>
-</ol>
-<h4>详细过程</h4>
-<h5>应用层</h5>
-<p>一切的开始——打开浏览器，在地址栏输入 URL，回车确认</p>
-<blockquote>
-<p>URL</p>
-</blockquote>
-<p>URL（Uniform Resource Locators），即统一资源定位器</p>
-<p>网络上的所有资源都靠 URL 来定位，每一个文件就对应着一个 URL，就像是路径地址</p>
-<p>理论上，文件资源和 URL 一一对应</p>
-<p>实际上也有例外，比如某些 URL 指向的文件已经被重定位到另一个位置，这样就有多个 URL 指向同一个文件</p>
-<blockquote>
-<p>URL 的组成结构</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<ol>
-<li>协议
-<ul>
-<li>URL 的前缀通常表示了该网址采用了何种应用层协议，通常有两种——HTTP 和 HTTPS</li>
-<li>当然也有一些不太常见的前缀头，比如文件传输时用到的<code>ftp:</code>。</li>
-</ul>
-</li>
-<li>域名
-<ul>
-<li>域名便是访问网址的通用名，这里也有可能是网址的 IP 地址</li>
-<li>域名可以理解为 IP 地址的可读版本，毕竟绝大部分人都不会选择记住一个网址的 IP 地址。</li>
-</ul>
-</li>
-<li>端口
-<ul>
-<li>如果指明了访问网址的端口的话，端口会紧跟在域名后面，并用一个冒号隔开。</li>
-</ul>
-</li>
-<li>资源路径
-<ul>
-<li>域名（端口）后紧跟的就是资源路径，从第一个<code>/</code>开始，表示从服务器上根目录开始进行索引到的文件路径</li>
-<li>上图中要访问的文件就是服务器根目录下<code>/path/to/myfile.html</code></li>
-<li>早先的设计是该文件通常物理存储于服务器主机上，但现在随着网络技术的进步，该文件不一定会物理存储在服务器主机上</li>
-<li>有可能存放在云上，而文件路径也有可能是虚拟的（遵循某种规则）。</li>
-</ul>
-</li>
-<li>参数
-<ul>
-<li>参数是浏览器在向服务器提交请求时，在 URL 中附带的参数</li>
-<li>服务器解析请求时，会提取这些参数</li>
-<li>参数采用键值对的形式<code>key=value</code>，每一个键值对使用<code>&amp;</code>隔开。参数的具体含义和请求操作的具体方法有关。</li>
-</ul>
-</li>
-<li>锚点
-<ul>
-<li>锚点顾名思义，是在要访问的页面上的一个锚</li>
-<li>要访问的页面大部分都多于一页，如果指定了锚点，那么在客户端显示该网页是就会定位到锚点处，相当于一个小书签。值得一提的是，在 URL 中，锚点以<code>#</code>开头，并且<strong>不会</strong>作为请求的一部分发送给服务端</li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<p>DNS</p>
-</blockquote>
-<p>键入了 URL 之后，第一个重头戏登场——DNS 服务器解析。DNS（Domain Name System）域名系统，要解决的是 域名和 IP 地址的映射问题 。毕竟，域名只是一个网址便于记住的名字，而网址真正存在的地址其实是 IP 地址</p>
-<blockquote>
-<p>HTTP/HTTPS</p>
-</blockquote>
-<p>利用 DNS 拿到了目标主机的 IP 地址之后，浏览器便可以向目标 IP 地址发送 HTTP 报文，请求需要的资源了。在这里，根据目标网站的不同，请求报文可能是 HTTP 协议或安全性增强的 HTTPS 协议</p>
-<h5>传输层</h5>
-<p>由于 HTTP 协议是基于 TCP 协议的，在应用层的数据封装好以后，要交给传输层，经 TCP 协议继续封装。</p>
-<p>TCP 协议保证了数据传输的可靠性，是数据包传输的主力协议</p>
-<ul>
-<li>TCP 三次握手和四次挥手（传输层）</li>
-<li>TCP 传输可靠性保障（传输层）</li>
-</ul>
-<h5>网络层</h5>
-<p><strong>网络层的核心功能——转发与路由</strong></p>
-<ul>
-<li>转发：将分组从路由器的输入端口转移到合适的输出端口。</li>
-<li>路由：确定分组从源到目的经过的路径。</li>
-</ul>
-<p>此时我们的主机不再是和另一台主机进行交互了，而是在和中间系统进行交互。也就是说，应用层和传输层都是端到端的协议，而网络层及以下都是中间件的协议了</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>应用层/传输层（端到端）：
-主机A ←→ 主机B  （两个端点直接通信）
-
-网络层及以下（中间件）：
-主机A ←→ 路由器1 ←→ 路由器2 ←→ 路由器3 ←→ 主机B
-      （和中间的路由器一个个交互）
-</code></pre></div><p>简单说：</p>
-<ul>
-<li>你发的 HTTP 请求是从你电脑直接到目标服务器（端到端）</li>
-<li>但这个请求在网络上跳跃时，每经过一个路由器，都要和那个路由器"握手"（中间件）</li>
-</ul>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Net3 - 应用层协议 (HTTP)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article3.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net3 - 应用层协议 (HTTP)</source>
-      <description>应用层 HTTP 协议 HTTP 是超文本传输协议，也就是 HyperText Transfer Protocol 是一种用于传输超文本和多媒体内容的协议，主要是为 Web 浏览器与 Web 服务器之间的通信而设计的 当我们使用浏览器浏览网页的时候，我们网页就是通过 HTTP 请求进行加载的。 HTTP 使用客户端-服务器模型，客户端向服务器发送 HT...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>应用层</h2>
-<h3>HTTP 协议</h3>
-<p>HTTP 是超文本传输协议，也就是 HyperText Transfer Protocol</p>
-<p>是一种用于传输超文本和多媒体内容的协议，主要是为 Web 浏览器与 Web 服务器之间的通信而设计的</p>
-<p>当我们使用浏览器浏览网页的时候，我们网页就是通过 HTTP 请求进行加载的。</p>
-<p>HTTP 使用客户端-服务器模型，客户端向服务器发送 HTTP Request（请求），服务器响应请求并返回 HTTP Response（响应）</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>HTTP 协议基于 TCP 协议，发送 HTTP 请求之前首先要建立 TCP 连接也就是要经历 3 次握手</p>
-<p>目前使用的 HTTP 协议大部分都是 1.1。在 1.1 的协议里面，默认是开启了 Keep-Alive 的，这样的话建立的连接就可以在多次请求中被复用了</p>
-<p>另外， HTTP 协议是“无状态”的协议，它无法记录客户端用户的状态，一般我们都是通过 Session 来记录客户端用户的状态。</p>
-<blockquote>
-<p>HTTP 是一个在计算机世界里专门在「两点」之间「传输」文字、图片、音频、视频等「超文本」数据的「约定和规范」</p>
-</blockquote>
-<h4>常见状态码</h4>
-<figure><figcaption>alt text</figcaption></figure>
-<p>5大类：</p>
-<p><code>1xx</code>&nbsp;类状态码属于<strong>提示信息</strong>，是协议处理中的一种中间状态，实际用到的比较少。</p>
-<p><code>2xx</code>&nbsp;类状态码表示服务器<strong>成功</strong>处理了客户端的请求，也是我们最愿意看到的状态。</p>
-<ul>
-<li>「<strong>200 OK</strong>」是最常见的成功状态码，表示一切正常。如果是非&nbsp;<code>HEAD</code>&nbsp;请求，服务器返回的响应头都会有 body 数据。</li>
-<li>「<strong>204 No Content</strong>」也是常见的成功状态码，与 200 OK 基本相同，但响应头没有 body 数据。</li>
-<li>「<strong>206 Partial Content</strong>」是应用于 HTTP 分块下载或断点续传，表示响应返回的 body 数据并不是资源的全部，而是其中的一部分，也是服务器处理成功的状态。</li>
-</ul>
-<p><code>3xx</code>&nbsp;类状态码表示客户端请求的资源发生了变动，需要客户端用新的 URL 重新发送请求获取资源，也就是<strong>重定向</strong>。</p>
-<ul>
-<li>「<strong>301 Moved Permanently</strong>」表示永久重定向，说明请求的资源已经不存在了，需改用新的 URL 再次访问。</li>
-<li>「<strong>302 Found</strong>」表示临时重定向，说明请求的资源还在，但暂时需要用另一个 URL 来访问。</li>
-</ul>
-<p>301 和 302 都会在响应头里使用字段&nbsp;<code>Location</code>，指明后续要跳转的 URL，浏览器会自动重定向新的 URL。</p>
-<ul>
-<li>「<strong>304 Not Modified</strong>」不具有跳转的含义，表示资源未修改，重定向已存在的缓冲文件，也称缓存重定向，也就是告诉客户端可以继续使用缓存资源，用于缓存控制。
-<ul>
-<li>我不给你文件，你本地的就是最新的，继续用吧</li>
-</ul>
-</li>
-</ul>
-<p><code>4xx</code>&nbsp;类状态码表示客户端发送的<strong>报文有误</strong>，服务器无法处理，也就是错误码的含义。</p>
-<ul>
-<li>「<strong>400 Bad Request</strong>」表示客户端请求的报文有错误，但只是个笼统的错误。</li>
-<li>「<strong>403 Forbidden</strong>」表示服务器禁止访问资源，并不是客户端的请求出错。</li>
-<li>「<strong>404 Not Found</strong>」表示请求的资源在服务器上不存在或未找到，所以无法提供给客户端。</li>
-</ul>
-<p><code>5xx</code>&nbsp;类状态码表示客户端请求报文正确，但是<strong>服务器处理时内部发生了错误</strong>，属于服务器端的错误码。</p>
-<ul>
-<li>「<strong>500 Internal Server Error</strong>」与 400 类型，是个笼统通用的错误码，服务器发生了什么错误，我们并不知道。</li>
-<li>「<strong>501 Not Implemented</strong>」表示客户端请求的功能还不支持，类似“即将开业，敬请期待”的意思。</li>
-<li>「<strong>502 Bad Gateway</strong>」通常是服务器作为网关或代理时返回的错误码，表示服务器自身工作正常，访问后端服务器发生了错误。</li>
-<li>「<strong>503 Service Unavailable</strong>」表示服务器当前很忙，暂时无法响应客户端，类似“网络服务正忙，请稍后重试”的意思</li>
-</ul>
-<p>502出现时：</p>
-<ul>
-<li>Nginx（网关）自己工作正常 ✓</li>
-<li>但Nginx去访问后端服务器失败了 ✗</li>
-</ul>
-<h5>总结</h5>
-<p>| 状态码 | 记忆方法 | 含义 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Net3 - 应用层协议 (HTTP 与 HTTPS)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article4.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article4.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net3 - 应用层协议 (HTTP 与 HTTPS)</source>
-      <description>应用层 HTTP 与 HTTPS 两者区别 HTTP 是超文本传输协议，信息是明文传输，存在安全风险的问题。HTTPS 则解决 HTTP 不安全的缺陷，在 TCP 和 HTTP 网络层之间加入了 SSL/TLS 安全协议，使得报文能够加密传输。 HTTP 连接建立相对简单， TCP 三次握手之后便可进行 HTTP 的报文传输。而 HTTPS 在 TCP...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>应用层</h2>
-<h3>HTTP 与 HTTPS</h3>
-<h4>两者区别</h4>
-<ul>
-<li>HTTP 是超文本传输协议，信息是<strong>明文传输</strong>，存在安全风险的问题。HTTPS 则解决 HTTP 不安全的缺陷，在 TCP 和 HTTP 网络层之间加入了 SSL/TLS 安全协议，使得报文能够加密传输。</li>
-<li>HTTP 连接建立相对简单， TCP 三次握手之后便可进行 HTTP 的报文传输。而 HTTPS 在 TCP 三次握手之后，<strong>还需进行 SSL/TLS 的握手过程</strong>，才可进入加密报文传输。</li>
-<li>两者的默认端口不一样，HTTP 默认端口号是 80，HTTPS 默认端口号是 443。</li>
-<li>HTTPS 协议需要向 CA（证书权威机构）申请数字证书，来保证服务器的身份是可信的</li>
-</ul>
-<h4>HTTPS 的优势</h4>
-<p>HTTP 由于是明文传输，所以安全上存在以下三个风险：</p>
-<ul>
-<li>窃听风险，比如通信链路上可以获取通信内容，用户号容易没。</li>
-<li>篡改风险，比如强制植入垃圾广告，视觉污染，用户眼容易瞎。</li>
-<li>冒充风险，比如冒充淘宝网站，用户钱容易没。</li>
-</ul>
-<figure><figcaption>alt text</figcaption></figure>
-<p>HTTP<strong>S</strong>&nbsp;在 HTTP 与 TCP 层之间加入了&nbsp;<code>SSL/TLS</code>&nbsp;协议，可以很好的解决了上述的风险：</p>
-<ul>
-<li><strong>信息加密</strong>：交互信息无法被窃取。</li>
-<li><strong>校验机制</strong>：无法篡改通信内容，篡改了就不能正常显示。</li>
-<li><strong>身份证书</strong>：证明发消息的是真的发消息的</li>
-</ul>
-<blockquote>
-<p>HTTPS 是如何解决上面的三个风险的？</p>
-</blockquote>
-<ul>
-<li><strong>混合加密</strong>的方式实现信息的<strong>机密性</strong>，解决了窃听的风险。</li>
-<li><strong>摘要算法</strong>的方式来实现<strong>完整性</strong>，它能够为数据生成独一无二的「指纹」，指纹用于校验数据的完整性，解决了篡改的风险。</li>
-<li>将服务器公钥放入到<strong>数字证书</strong>中，解决了冒充的风险</li>
-</ul>
-<h4>HTTPS 工作原理</h4>
-<p>HTTPS 协议会对传输的数据进行加密，而加密过程是使用了非对称加密实现</p>
-<p>HTTPS 的整体过程分为<strong>证书验证</strong>和<strong>数据传输</strong>阶段，具体的交互过程如下：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<ul>
-<li>Client 发起一个 HTTPS 的请求</li>
-<li>Server 把事先配置好的公钥证书返回给客户端</li>
-<li>Client 验证公钥证书：比如是否在有效期内，证书的用途是不是匹配 Client 请求的站点，是不是在 CRL 吊销列表里面，它的上一级证书是否有效，这是一个递归的过程，直到验证到根证书（操作系统内置的 Root 证书或者 Client 内置的 Root 证书），如果验证通过则继续，不通过则显示警告信息</li>
-<li>Client 使用伪随机数生成器生成加密所使用的对称密钥，然后<strong>用证书的公钥加密这个对称密钥</strong>，发给 Server</li>
-<li>Server 使用自己的<strong>私钥解密这个消息</strong>，<strong>得到对称密钥</strong>。至此，Client 和 Server 双方都持有了相同的对称密钥</li>
-<li>Server 使用对称密钥加密明文内容 A，发送给 Client</li>
-<li>Client 使用对称密钥解密响应的密文，得到明文内容 A</li>
-<li>Client 再次发起 HTTPS 的请求，使用对称密钥加密请求的明文内容 B，然后 Server 使用对称密钥解密密文，得到明文内容 B</li>
-</ul>
-<h5>混合加密 (非对称 + 对称)</h5>
-<p>非对称加密保证秘密交互设计的私钥</p>
-<p>对称加密基于该私钥进行内容传输</p>
-<p>采用的是<strong>对称加密</strong>和<strong>非对称加密</strong>结合的「混合加密」方式：</p>
-<ul>
-<li>在通信建立前采用<strong>非对称加密</strong>的方式交换「会话秘钥」，后续就不再使用非对称加密。</li>
-<li>在通信过程中全部使用<strong>对称加密</strong>的「会话秘钥」的方式加密明文数据。</li>
-</ul>
-<p>采用「混合加密」的方式的原因：</p>
-<ul>
-<li><strong>对称加密</strong>只使用一个密钥，运算速度快，密钥必须保密，无法做到安全的密钥交换。</li>
-<li><strong>非对称加密</strong>使用两个密钥：公钥和私钥，公钥可以任意分发而私钥保密，解决了密钥交换问题但速度慢</li>
-</ul>
-<h5>摘要算法 + 数字签名</h5>
-<p>为了保证传输的内容不被篡改，我们需要对内容计算出一个「指纹」，然后同内容一起传输给对方。</p>
-<p>对方收到后，先是对内容也计算出一个「指纹」，然后跟发送方发送的「指纹」做一个比较，如果「指纹」相同，说明内容没有被篡改，否则就可以判断出内容被篡改了</p>
-<p>那么，在计算机里会用**摘要算法（哈希函数）**来计算出内容的哈希值，也就是内容的「指纹」，这个哈希值是唯一的，且无法通过哈希值推导出内容</p>
-<p>通过哈希算法可以确保内容不会被篡改，<strong>但是并不能保证「内容 + 哈希值」不会被中间人替换，因为这里缺少对客户端收到的消息是否来源于服务端的证明</strong></p>
-<blockquote>
-<p>比如消息在某个路由器传输，内容被人全改了，并修改了对应的指纹，但接受的验证了也不知道</p>
-</blockquote>
-<p>那为了避免这种情况，计算机里会用<strong>非对称加密算法</strong>来解决，共有两个密钥：</p>
-<ul>
-<li>一个是公钥，这个是可以公开给所有人的；</li>
-<li>一个是私钥，这个必须由本人管理，不可泄露。</li>
-</ul>
-<p>这两个密钥可以<strong>双向加解密</strong>的，比如可以用公钥加密内容，然后用私钥解密，也可以用私钥加密内容，公钥解密内容。</p>
-<p>流程的不同，意味着目的也不相同：</p>
-<ul>
-<li><strong>公钥加密，私钥解密</strong>。这个目的是为了<strong>保证内容传输的安全</strong>，因为被公钥加密的内容，其他人是无法解密的，只有持有私钥的人，才能解密出实际的内容；</li>
-<li><strong>私钥加密，公钥解密</strong>。这个目的是为了<strong>保证消息不会被冒充</strong>，因为私钥是不可泄露的，如果公钥能正常解密出私钥加密的内容，就能证明这个消息是来源于持有私钥身份的人发送的。</li>
-</ul>
-<p>一般我们不会用非对称加密来加密实际的传输内容，因为非对称加密的计算比较耗费性能的。</p>
-<p>所以非对称加密的用途主要在于<strong>通过「私钥加密，公钥解密」的方式，来确认消息的身份</strong>，我们常说的<strong>数字签名算法</strong>，就是用的是这种方式，不过私钥加密内容不是内容本身，而是<strong>对内容的哈希值加密</strong></p>
-<p>私钥是由服务端保管，然后服务端会向客户端颁发对应的公钥。如果客户端收到的信息，能被公钥解密，就说明该消息是由服务器发送的</p>
-<p><strong>但这种方式存在一个致命漏洞：无法保证对方的真实身份</strong>。比如你访问了个伪造网站，但你以为是真的，实际上是别人伪造的</p>
-<p>黑客可以自己生成一对公私钥，然后用自己的私钥签名消息，你用黑客给的"公钥"一验...完全有效，但你根本没在和真实网站通信。</p>
-<p>而你就把所有信息全部告诉了盗版网站</p>
-<p><strong>关键问题是：如何确保你收到的"公钥"就是真的公钥，而不是黑客的公钥？</strong></p>
-<h5>数字证书</h5>
-<p>这就需要借助第三方权威机构 CA （数字证书认证机构）。</p>
-<p>CA 的作用是：用<strong>自己的私钥</strong>对服务器的公钥进行签名，生成<strong>数字证书</strong>。这样做的好处是：</p>
-<ul>
-<li>服务器的公钥被 CA 签名了 → 你需要验证 CA 的签名</li>
-<li>而 CA 的公钥是<strong>操作系统和浏览器内置</strong>的，是可信的</li>
-<li>所以通过信任 CA，你就能间接地信任服务器的公钥</li>
-</ul>
-<p>整个信任链就是：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>你信任CA的公钥（内置）
-    ↓
-用CA的公钥验证服务器公钥的签名
-    ↓
-签名有效 = 这个公钥确实是服务器的
-    ↓
-现在你可以放心使用这个公钥了
-</code></pre></div><p>通过数字证书的方式，解决了<strong>冒充的风险</strong>，保证了公钥的真实性。</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Net5 - 应用层协议 (HTTP/1.1 2 3)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article5.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net5 - 应用层协议 (HTTP/1.1 2 3)</source>
-      <description>应用层 HTTP/1.1 2 3 HTTP/1.1 HTTP/1.1 相比 HTTP/1.0 性能上的改进： 使用长连接的方式改善了 HTTP/1.0 短连接造成的性能开销。 支持管道（pipeline）网络传输，只要第一个请求发出去了，不必等其回来，就可以发第二个请求出去，可以减少整体的响应时间。 但 HTTP/1.1 还是有性能瓶颈： 请求 / 响...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>应用层</h2>
-<h3>HTTP/1.1 2 3</h3>
-<h4>HTTP/1.1</h4>
-<p>HTTP/1.1 相比 HTTP/1.0 性能上的改进：</p>
-<ul>
-<li>使用长连接的方式改善了 HTTP/1.0 短连接造成的性能开销。</li>
-<li>支持管道（pipeline）网络传输，只要第一个请求发出去了，不必等其回来，就可以发第二个请求出去，可以减少整体的响应时间。</li>
-</ul>
-<p>但 HTTP/1.1 还是有性能瓶颈：</p>
-<ul>
-<li>请求 / 响应头部（Header）未经压缩就发送，首部信息越多延迟越大。只能压缩 Body 的部分；</li>
-<li>发送冗长的首部。每次互相发送相同的首部造成的浪费较多；</li>
-<li>服务器是按请求的顺序响应的，如果服务器响应慢，会招致客户端一直请求不到数据，也就是队头阻塞；</li>
-<li>没有请求优先级控制；</li>
-<li>请求只能从客户端开始，服务器只能被动响应</li>
-</ul>
-<h4>HTTP/2</h4>
-<p>HTTP/2 协议是基于 HTTPS 的，所以 HTTP/2 的安全性也是有保障的</p>
-<ul>
-<li>新的二进制格式，<code>HTTP1.x</code>的解析是基于文本</li>
-<li>多路复用，即连接共享，即每一个request都是是用作连接共享机制的，一个request对应一个id，这样一个连接上可以有多个request，每个连接的request可以随机的混杂在一起，接收方可以根据request的 id将request再归属到各自不同的服务端请求里面</li>
-<li>header压缩，<code>HTTP1.x</code>的header带有大量信息，而且每次都要重复发送，HTTP2.0使用encoder来减少需要传输的header大小，通讯双方各自cache一份header fields表，既避免了重复header的传输，又减小了需要传输的大小</li>
-<li>服务端推送</li>
-</ul>
-<p>HTTP/2 还在一定程度上改善了传统的请求 - 应答工作模式，服务不再是被动地响应，也可以<strong>主动</strong>向客户端发送消息。</p>
-<p>举例来说，在浏览器刚请求 HTML 的时候，就提前把可能会用到的 JS、CSS 文件等静态资源主动发给客户端，<strong>减少延时的等待</strong>，也就是服务器推送</p>
-<p><strong>数据流</strong></p>
-<p>HTTP/2 的数据包不是按顺序发送的，同一个连接里面连续的数据包，可能属于不同的回应。</p>
-<p>因此，必须要对数据包做标记，指出它属于哪个回应。</p>
-<p>每个请求或回应的所有数据包，称为一个数据流（Stream）。</p>
-<p>每个数据流都标记着一个独一无二的编号，其中规定客户端发出的数据流编号为奇数， 服务器发出的数据流编号为偶数</p>
-<p>客户端还可以<strong>指定数据流的优先级</strong>。优先级高的请求，服务器就先响应该请求。</p>
-<h4>HTTP/3.0</h4>
-<p><strong>使用UDP协议</strong></p>
-<p>HTTP/2 主要的问题在于：多个 HTTP 请求在复用一个 TCP 连接，下层的 TCP 协议是不知道有多少个 HTTP 请求的。</p>
-<p>所以一旦发生了丢包现象，就会触发 TCP 的重传机制，这样在一个 TCP 连接中的<strong>所有的 HTTP 请求都必须等待这个丢了的包被重传回来</strong>。</p>
-<ul>
-<li>HTTP/1.1 中的管道传输中如果有一个请求阻塞了，那么队列后请求也统统被阻塞住了</li>
-<li>HTTP/2 多请求复用一个TCP连接，一旦发生丢包，就会阻塞住所有的 HTTP 请求。</li>
-</ul>
-<p>这都是基于 TCP 传输层的问题，所以&nbsp;<strong>HTTP/3 把 HTTP 下层的 TCP 协议改成了 UDP！</strong></p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Net6 - 应用层协议 (WebSocket)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article6.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article6.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net6 - 应用层协议 (WebSocket)</source>
-      <description>应用层 WebSocket HTTP 特点 从HTTP协议的角度来看，就是点一下网页上的某个按钮，前端发一次HTTP请求，网站返回一次HTTP响应。这种由客户端主动请求，服务器响应的方式也满足大部分网页的功能场景。 但有没有发现，这种情况下，服务器从来就「不会主动」给客户端发一次消息 比如： 在线聊天：服务器有新消息但无法主动推送，客户端得不断轮询问&amp;quot;...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>应用层</h2>
-<h3>WebSocket</h3>
-<h4>HTTP 特点</h4>
-<p>从HTTP协议的角度来看，就是点一下网页上的某个按钮，<strong>前端发一次HTTP请求，网站返回一次HTTP响应</strong>。这种由客户端主动请求，服务器响应的方式也满足大部分网页的功能场景。</p>
-<p>但有没有发现，这种情况下，服务器从来就「不会主动」给客户端发一次消息</p>
-<p>比如：</p>
-<ul>
-<li><strong>在线聊天</strong>：服务器有新消息但无法主动推送，客户端得不断轮询问"有新消息吗？"</li>
-<li><strong>实时通知</strong>：用户登录后，管理员发来通知，用户要等到刷新页面才能看到</li>
-<li><strong>协作编辑</strong>：多人编辑同一个文档，别人的改动无法实时显示</li>
-</ul>
-<h5>使用 HTTP 不断轮询</h5>
-<p>最常见的解决方案是，网页的前端代码里不断定时发 HTTP 请求到服务器，服务器收到请求后给客户端响应消息</p>
-<p>这其实时=是一种「伪」服务器推的形式。</p>
-<p>它其实并不是服务器主动发消息到客户端，而是客户端自己不断偷偷请求服务器，只是用户无感知而已。</p>
-<p>用这种方式的场景也有很多，最常见的就是扫码登录</p>
-<blockquote>
-<p>比如，某信公众号平台，登录页面二维码出现之后，前端网页根本不知道用户扫没扫，于是不断去向后端服务器询问，看有没有人扫过这个码。而且是以大概 1 到 2 秒的间隔去不断发出请求，这样可以保证用户在扫码后能在 1 到 2 秒内得到及时的反馈，不至于等太久</p>
-</blockquote>
-<p>使用HTTP定时轮询</p>
-<p>但这样，会有两个比较明显的问题：</p>
-<ul>
-<li>当你打开 F12 页面时，你会发现满屏的 HTTP 请求。虽然很小，但这其实也消耗带宽，同时也会增加下游服务器的负担。</li>
-<li>最坏情况下，用户在扫码后，需要等个 1~2 秒，正好才触发下一次 HTTP 请求，然后才跳转页面，用户会感到明显的卡顿</li>
-</ul>
-<h5>长轮询</h5>
-<p>我们知道，HTTP 请求发出后，一般会给服务器留一定的时间做响应，比如 3 秒，规定时间内没返回，就认为是超时。</p>
-<p>如果我们的 HTTP 请求<strong>将超时设置的很大</strong>，比如 30 秒，<strong>在这 30 秒内只要服务器收到了扫码请求，就立马返回给客户端网页。如果超时，那就立马发起下一次请求。</strong></p>
-<p>这样就减少了 HTTP 请求的个数，并且由于大部分情况下，用户都会在某个 30 秒的区间内做扫码操作，所以响应也是及时的。</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>像这种发起一个请求，在较长时间内等待服务器响应的机制，就是所谓的<strong>长训轮机制</strong>。我们常用的消息队列 RocketMQ 中，消费者去取数据时，也用到了这种方式</p>
-<p>像这种，在用户不感知的情况下，服务器将数据推送给浏览器的技术，就是所谓的<strong>服务器推送</strong>技术，它还有个毫不沾边的英文名，<strong>comet</strong>&nbsp;技术，大家听过就好。</p>
-<p>上面提到的两种解决方案（不断轮询和长轮询），本质上，其实还是客户端主动去取数据。</p>
-<p>对于像扫码登录这样的<strong>简单场景</strong>还能用用。但如果是网页游戏呢，游戏一般会有大量的数据需要从服务器主动推送到客户端。</p>
-<p>这就得说下&nbsp;<strong>WebSocket</strong>&nbsp;了</p>
-<h4>WebSocket 设计原因</h4>
-<p>我们知道 TCP 连接的两端，<strong>同一时间里</strong>，<strong>双方</strong>都可以<strong>主动</strong>向对方发送数据。这就是所谓的<strong>全双工</strong>。</p>
-<p>而现在使用最广泛的<code>HTTP/1.1</code>，也是基于TCP协议的，<strong>同一时间里</strong>，客户端和服务器<strong>只能有一方主动</strong>发数据，这就是所谓的<strong>半双工</strong>。</p>
-<p>也就是说，好好的全双工 TCP，被 HTTP/1.1 用成了半双工</p>
-<p>这是由于 HTTP 协议设计之初，考虑的是看看网页文本的场景，能做到<strong>客户端发起请求再由服务器响应</strong>，就够了，根本就没考虑网页游戏这种，客户端和服务器之间都要互相主动发大量数据的场景。</p>
-<p>所以，为了更好的支持这样的场景，我们需要另外一个<strong>基于TCP的新协议</strong>。</p>
-<p>于是新的应用层协议<strong>WebSocket</strong>就被设计出来了</p>
-<h4>如何建立 WebSocket</h4>
-<p>我们平时刷网页，一般都是在浏览器上刷的，一会刷刷图文，这时候用的是&nbsp;<strong>HTTP 协议</strong>，一会打开网页游戏，这时候就得切换成我们新介绍的&nbsp;<strong>WebSocket 协议</strong>。</p>
-<p>为了兼容这些使用场景。浏览器在&nbsp;<strong>TCP 三次握手</strong>建立连接之后，都<strong>统一使用 HTTP 协议</strong>先进行一次通信。</p>
-<ul>
-<li>如果此时是<strong>普通的 HTTP 请求</strong>，那后续双方就还是老样子继续用普通 HTTP 协议进行交互，这点没啥疑问。</li>
-<li>如果这时候是<strong>想建立 WebSocket 连接</strong>，就会在 HTTP 请求里带上一些<strong>特殊的header 头</strong>，如下：</li>
-</ul>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Connection: Upgrade
-Upgrade: WebSocket
-Sec-WebSocket-Key: T2a6wZlAwhgQNqruZ2YUyg==\r\n
-</code></pre></div><p>这些 header 头的意思是，浏览器想<strong>升级协议（Connection: Upgrade）</strong>，并且<strong>想升级成 WebSocket 协议（Upgrade: WebSocket）</strong>。同时带上一段<strong>随机生成的 base64 码（Sec-WebSocket-Key）</strong>，发给服务器。</p>
-<p>如果服务器正好支持升级成 WebSocket 协议。</p>
-<p>就会走 WebSocket 握手流程，同时根据客户端生成的 base64 码，用某个<strong>公开的</strong>算法变成另一段字符串，放在 HTTP 响应的&nbsp;<code>Sec-WebSocket-Accept</code>&nbsp;头里，同时带上<code>101状态码</code>，发回给浏览器。</p>
-<p>HTTP 的响应如下：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>HTTP/1.1 101 Switching Protocols\r\n
-Sec-WebSocket-Accept: iBJKv/ALIW2DobfoA4dmr3JHBCY=\r\n
-Upgrade: WebSocket\r\n
-Connection: Upgrade\r\n
-</code></pre></div><p>101 确实不常见，它其实是指<strong>协议切换</strong></p>
-<p>之后，浏览器也用同样的<strong>公开算法</strong>将<code>base64码</code>转成另一段字符串，如果这段字符串跟服务器传回来的<strong>字符串一致</strong>，那验证通过</p>
-<p>就这样经历了一来一回两次 HTTP 握手，WebSocket就建立完成了，后续双方就可以使用 webscoket 的数据格式进行通信了</p>
-<blockquote>
-<p>WebSocket和HTTP一样都是基于TCP的协议。<strong>经历了三次TCP握手之后，利用 HTTP 协议升级为 WebSocket 协议</strong></p>
-</blockquote>
-<h4>WebSocket 消息格式</h4>
-<p>在完成协议升级之后，两端就会用webscoket的数据格式进行通信。</p>
-<p>数据包在WebSocket中被叫做帧</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p><strong>opcode字段</strong>：这个是用来标志这是个<strong>什么类型</strong>的数据帧。比如。</p>
-<ul>
-<li>等于 1 ，是指text类型（<code>string</code>）的数据包</li>
-<li>等于 2 ，是二进制数据类型（<code>[]byte</code>）的数据包</li>
-<li>等于 8 ，是关闭连接的信号</li>
-</ul>
-<p><strong>payload字段</strong>：存放的是我们<strong>真正想要传输的数据的长度</strong>，单位是<strong>字节</strong>。比如你要发送的数据是<code>字符串"111"</code>，那它的长度就是<code>3</code></p>
-<p>另外，可以看到，我们存放<strong>payload 长度的字段有好几个</strong>，我们既可以用最前面的<code>7bit</code>, 也可以用后面的<code>7+16bit 或 7+64bit。</code></p>
-<p>那么问题就来了。</p>
-<p>我们知道，在数据层面，大家都是 01 二进制流。我怎么知道<strong>什么情况下应该读 7 bit，什么情况下应该读7+16bit呢？</strong></p>
-<p>WebSocket会用最开始的7bit做标志位。不管接下来的数据有多大，都<strong>先读最先的7个bit</strong>，根据它的取值决定还要不要再读个 16bit 或 64bit。</p>
-<ul>
-<li>如果<code>最开始的7bit</code>的值是 0~125，那么它就表示了&nbsp;<strong>payload 全部长度</strong>，只读最开始的<code>7个bit</code>就完事了</li>
-<li>如果是<code>126（0x7E）</code>。那它表示payload的长度范围在&nbsp;<code>126~65535</code>&nbsp;之间，接下来还需要<strong>再读16bit</strong>。这16bit会包含payload的真实长度</li>
-<li>如果是<code>127（0x7F）</code>。那它表示payload的长度范围<code>&gt;=65536</code>，接下来还需要<strong>再读64bit</strong>。这64bit会包含payload的长度。这能放2的64次方byte的数据，换算一下好多个TB，肯定够用了</li>
-</ul>
-<p><strong>payload data字段</strong>：这里存放的就是真正要传输的数据，在知道了上面的payload长度后，就可以根据这个值去截取对应的数据</p>
-<blockquote>
-<p>这是因为 TCP 协议本身就是全双工，但直接使用<strong>纯裸TCP</strong>去传输数据，会有<strong>粘包</strong>的"问题"。为了解决这个问题，上层协议一般会用<strong>消息头+消息体</strong>的格式去重新包装要发的数据。</p>
-<p>而<strong>消息头</strong>里一般含有<strong>消息体的长度</strong>，通过这个长度可以去截取真正的消息体</p>
-</blockquote>
-<h4>WebSocket的使用场景</h4>
-<p>WebSocket完美继承了 TCP 协议的<strong>全双工</strong>能力，并且还贴心的提供了解决粘包的方案。</p>
-<p>它适用于<strong>需要服务器和客户端（浏览器）频繁交互</strong>的大部分场景，比如网页/小程序游戏，网页聊天室，以及一些类似飞书这样的网页协同办公软件。</p>
-<p>回到文章开头的问题，在使用 WebSocket 协议的网页游戏里，怪物移动以及攻击玩家的行为是<strong>服务器逻辑</strong>产生的，对玩家产生的伤害等数据，都需要由<strong>服务器主动发送给客户端</strong>，客户端获得数据后展示对应的效果</p>
-<h4>总结</h4>
-<ul>
-<li>TCP 协议本身是<strong>全双工</strong>的，但我们最常用的 HTTP/1.1，虽然是基于 TCP 的协议，但它是<strong>半双工</strong>的，对于大部分需要服务器主动推送数据到客户端的场景，都不太友好，因此我们需要使用支持全双工的 WebSocket 协议。</li>
-<li>在 HTTP/1.1 里，只要客户端不问，服务端就不答。基于这样的特点，对于登录页面这样的简单场景，可以使用<strong>定时轮询或者长轮询</strong>的方式实现<strong>服务器推送</strong>(comet)的效果。</li>
-<li>对于客户端和服务端之间需要频繁交互的复杂场景，比如网页游戏，都可以考虑使用 WebSocket 协议。</li>
-<li>WebSocket 和 socket 几乎没有任何关系，只是叫法相似。</li>
-<li>正因为各个浏览器都支持 HTTP协 议，所以 WebSocket 会先利用HTTP协议加上一些特殊的 header 头进行握手升级操作，升级成功后就跟 HTTP 没有任何关系了，之后就用 WebSocket 的数据格式进行收发数据</li>
-</ul>
 ]]></content:encoded>
     </item>
   </channel>

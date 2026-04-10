@@ -6,19 +6,359 @@
     <link>http://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Thu, 09 Apr 2026 16:49:31 GMT</pubDate>
-    <lastBuildDate>Thu, 09 Apr 2026 16:49:31 GMT</lastBuildDate>
+    <pubDate>Fri, 10 Apr 2026 13:54:20 GMT</pubDate>
+    <lastBuildDate>Fri, 10 Apr 2026 13:54:20 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
     <item>
+      <title>Alg - 图论1 (基础知识)</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article1.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论1 (基础知识)</source>
+      <description>图论基础 简单介绍 想象一下，现在有一个巨大的社交网络，其中每个人都与若干个人有联系 如果是你，你会怎么表示它的数学模型呢（或者说，你会怎样把它抽象出来，使它易于表示、观看）； 一个很显然的做法是：将人抽象成点，将人与人的关系抽象成线，两个点有连线，当且仅当这两个点代表的两个人有联系； 也就是说，两个人有联系时，我们就把他们连起来； 图就是将复杂的关系...</description>
+      <category>code</category>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>图论基础</h2>
+<h3>简单介绍</h3>
+<p>想象一下，现在有一个巨大的社交网络，其中每个人都与若干个人有联系
+如果是你，你会怎么表示它的数学模型呢（或者说，你会怎样把它抽象出来，使它易于表示、观看）；</p>
+<p>一个很显然的做法是：将人抽象成点，将人与人的关系抽象成线，两个点有连线，当且仅当这两个点代表的两个人有联系；
+也就是说，两个人有联系时，我们就把他们连起来；</p>
+<p>图就是将复杂的关系简单化的一种数据结构，能够轻而易举地看出复杂关系，并加以研究</p>
+<blockquote>
+<p>想起了本科跟着老师搞复杂网络，就是在matlab搞图</p>
+</blockquote>
+<h3>定义</h3>
+<p>给定两个集合：<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo separator="true">,</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">V, E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span></span>, 其中 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi></mrow><annotation encoding="application/x-tex">V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span></span></span></span> 存放所有的点，<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span></span> 存放所有的边，那么图 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi></mrow><annotation encoding="application/x-tex">G</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span></span></span></span> 就是这两个集合的组合: <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mo stretchy="false">(</mo><mi>V</mi><mo separator="true">,</mo><mi>E</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">G=(V,E)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mclose">)</span></span></span></span></p>
+<p>由于 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi></mrow><annotation encoding="application/x-tex">V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span></span></span></span> 存放所有的点，称 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi></mrow><annotation encoding="application/x-tex">V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span></span></span></span> 为点集；<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span></span> 存放所有边，称 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span></span> 为边集</p>
+<h4>有向图与无向图</h4>
+<ul>
+<li><strong>无向图</strong>：边没有方向，边 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(u, v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span> 与 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>v</mi><mo separator="true">,</mo><mi>u</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(v, u)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mclose">)</span></span></span></span> 表示同一条边，通常记作无序对 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">{</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\{u, v\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">}</span></span></span></span></li>
+<li><strong>有向图</strong>（Digraph）：边有方向，边 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(u, v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span> 表示从 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 指向 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 的弧，<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo><mo mathvariant="normal">≠</mo><mo stretchy="false">(</mo><mi>v</mi><mo separator="true">,</mo><mi>u</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(u, v) \neq (v, u)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+<h4>边的表示</h4>
+<p>对于边 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>∈</mo><mi>E</mi></mrow><annotation encoding="application/x-tex">e \in E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span></span>：</p>
+<ul>
+<li>在无向图中，<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mo stretchy="false">{</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">e = \{u, v\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">}</span></span></span></span>，称 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo separator="true">,</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">u, v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 为边 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi></mrow><annotation encoding="application/x-tex">e</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span></span></span></span> 的<strong>端点</strong>，也称 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 与 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> <strong>相邻</strong></li>
+<li>在有向图中，<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">e = (u, v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span>，称 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 为<strong>起点</strong>（弧尾），<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 为<strong>终点</strong>（弧头）</li>
+</ul>
+<h4>特殊概念</h4>
+<ul>
+<li><strong>自环</strong>：一条边的两个端点相同，即 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mo stretchy="false">{</mo><mi>u</mi><mo separator="true">,</mo><mi>u</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">e = \{u, u\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mclose">}</span></span></span></span> 或 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>e</mi><mo>=</mo><mo stretchy="false">(</mo><mi>u</mi><mo separator="true">,</mo><mi>u</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">e = (u, u)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">u</span><span class="mclose">)</span></span></span></span></li>
+<li><strong>重边</strong>（平行边）：两个顶点之间存在多条边</li>
+<li><strong>简单图</strong>：既没有自环也没有重边的图</li>
+<li><strong>完全图</strong>：任意两个不同顶点之间都有一条边的简单图，<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi></mrow><annotation encoding="application/x-tex">n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 个顶点的无向完全图记作 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">K_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07153em;">K</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0715em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>，边数为 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>n</mi><mo stretchy="false">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{n(n-1)}{2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.355em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">n</span><span class="mbin mtight">−</span><span class="mord mtight">1</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></li>
+<li><strong>连通图</strong>：无向图中任意两个顶点之间都存在路径</li>
+<li><strong>强连通图</strong>：有向图中任意两个顶点 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo separator="true">,</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">u, v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">u</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span>，既存在 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi><mo>→</mo><mi>v</mi></mrow><annotation encoding="application/x-tex">u \to v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 的路径，也存在 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mo>→</mo><mi>u</mi></mrow><annotation encoding="application/x-tex">v \to u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 的路径</li>
+</ul>
+<h4>顶点的度</h4>
+<ul>
+<li><strong>无向图</strong>：顶点 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 的<strong>度</strong>（Degree）记作 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>deg</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\deg(v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">de<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span>，表示与 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 关联的边的数目</li>
+<li><strong>有向图</strong>：
+<ul>
+<li><strong>出度</strong>（Out-degree）：以 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 为起点的边的数目，记作 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mi>deg</mi><mo>⁡</mo></mrow><mo>+</mo></msup><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\deg^+(v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1057em;vertical-align:-0.25em;"></span><span class="mop"><span class="mop">de<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8557em;"><span style="top:-3.1473em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">+</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span></li>
+<li><strong>入度</strong>（In-degree）：以 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span></span></span></span> 为终点的边的数目，记作 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mrow><mi>deg</mi><mo>⁡</mo></mrow><mo>−</mo></msup><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\deg^-(v)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1057em;vertical-align:-0.25em;"></span><span class="mop"><span class="mop">de<span style="margin-right:0.01389em;">g</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8557em;"><span style="top:-3.1473em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mbin mtight">−</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p><strong>握手定理</strong>：所有顶点的度数之和等于边数的两倍，即 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mrow><mi>v</mi><mo>∈</mo><mi>V</mi></mrow></msub><mi>deg</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>v</mi><mo stretchy="false">)</mo><mo>=</mo><mn>2</mn><mi mathvariant="normal">∣</mi><mi>E</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">\sum_{v \in V} \deg(v) = 2|E|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0771em;vertical-align:-0.3271em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1786em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">v</span><span class="mrel mtight">∈</span><span class="mord mathnormal mtight" style="margin-right:0.22222em;">V</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3271em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">de<span style="margin-right:0.01389em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2∣</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord">∣</span></span></span></span>。推论：图中度数为奇数的顶点个数必为偶数。</p>
+</blockquote>
+<h3>图的存储</h3>
+<h4>邻接矩阵</h4>
+<p>用一个 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>×</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">n \times n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span></span></span></span> 的矩阵 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> 来表示图，其中 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>=</mo><mi mathvariant="normal">∣</mi><mi>V</mi><mi mathvariant="normal">∣</mi></mrow><annotation encoding="application/x-tex">n = |V|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord">∣</span></span></span></span>：</p>
+<ul>
+<li>无向图：<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">A[i][j] = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 表示顶点 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 和 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span> 之间有边，否则为 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span>；矩阵关于主对角线对称</li>
+<li>有向图：<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">A[i][j] = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span> 表示存在从 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> 到 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi></mrow><annotation encoding="application/x-tex">j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.854em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span> 的边</li>
+<li>带权图：<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false">[</mo><mi>i</mi><mo stretchy="false">]</mo><mo stretchy="false">[</mo><mi>j</mi><mo stretchy="false">]</mo><mo>=</mo><msub><mi>w</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">A[i][j] = w_{ij}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">A</span><span class="mopen">[</span><span class="mord mathnormal">i</span><span class="mclose">]</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">]</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">ij</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> 表示边 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>i</mi><mo separator="true">,</mo><mi>j</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(i, j)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">i</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mclose">)</span></span></span></span> 的权值，无边时通常记作 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord">∞</span></span></span></span></li>
+</ul>
+<blockquote>
+<ul>
+<li>空间复杂度：<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></li>
+<li>优点：判断两点间是否有边只需 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">1</span><span class="mclose">)</span></span></span></span></li>
+<li>缺点：稀疏图浪费空间</li>
+</ul>
+</blockquote>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 邻接矩阵</span>
+<span class="token keyword">int</span> n <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> adjMatrix <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span> <span class="token constant">INF</span> <span class="token operator">=</span> <span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token constant">MAX_VALUE</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 初始化：带权图，自身到自身距离为 0，其余为无穷</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">fill</span><span class="token punctuation">(</span>adjMatrix<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token constant">INF</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    adjMatrix<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 无向图加边</span>
+<span class="token keyword">void</span> <span class="token function">addEdge</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> g<span class="token punctuation">,</span> <span class="token keyword">int</span> u<span class="token punctuation">,</span> <span class="token keyword">int</span> v<span class="token punctuation">,</span> <span class="token keyword">int</span> w<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    g<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">=</span> w<span class="token punctuation">;</span>
+    g<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">=</span> w<span class="token punctuation">;</span>  <span class="token comment">// 无向图需要对称</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 有向图只需 g[u][v] = w</span>
+
+<span class="token comment">// 判断两点间是否有边</span>
+<span class="token keyword">boolean</span> <span class="token function">hasEdge</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> g<span class="token punctuation">,</span> <span class="token keyword">int</span> u<span class="token punctuation">,</span> <span class="token keyword">int</span> v<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> g<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> g<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token constant">INF</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>邻接表</h4>
+<p>为每个顶点维护一个链表（或动态数组），存储与其相邻的所有顶点：</p>
+<ul>
+<li>无向图：顶点 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 的链表中包含所有与 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 相邻的顶点</li>
+<li>有向图：通常存储出边表，即顶点 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 的链表中包含所有 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>u</mi></mrow><annotation encoding="application/x-tex">u</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">u</span></span></span></span> 能直接到达的顶点</li>
+</ul>
+<blockquote>
+<ul>
+<li>空间复杂度：<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi>V</mi><mi mathvariant="normal">∣</mi><mo>+</mo><mi mathvariant="normal">∣</mi><mi>E</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(|V| + |E|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord">∣</span><span class="mclose">)</span></span></span></span></li>
+<li>优点：节省空间（尤其是稀疏图），遍历邻居高效</li>
+<li>缺点：判断两点间是否有边需要遍历链表</li>
+</ul>
+</blockquote>
+<p><strong>无权图：</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span> adj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> adj<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 加边</span>
+adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// 有向图</span>
+adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// 无向图再加这行</span>
+
+<span class="token comment">// 遍历顶点 u 的所有邻居</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> neighbor <span class="token operator">:</span> adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>neighbor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><strong>带权图：</strong></p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">class</span> <span class="token class-name">Edge</span> <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> <span class="token keyword">to</span><span class="token punctuation">,</span> weight<span class="token punctuation">;</span>
+    <span class="token class-name">Edge</span><span class="token punctuation">(</span><span class="token keyword">int</span> <span class="token keyword">to</span><span class="token punctuation">,</span> <span class="token keyword">int</span> weight<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token keyword">to</span> <span class="token operator">=</span> <span class="token keyword">to</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>weight <span class="token operator">=</span> weight<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Edge</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">[</span><span class="token punctuation">]</span> adj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> adj<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 加边</span>
+adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Edge</span><span class="token punctuation">(</span>v<span class="token punctuation">,</span> w<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+adj<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Edge</span><span class="token punctuation">(</span>u<span class="token punctuation">,</span> w<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// 无向图再加这行</span>
+
+<span class="token comment">// 遍历顶点 u 的所有邻居</span>
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Edge</span> e <span class="token operator">:</span> adj<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"to: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token keyword">to</span> <span class="token operator">+</span> <span class="token string">", weight: "</span> <span class="token operator">+</span> e<span class="token punctuation">.</span>weight<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h4>边集数组</h4>
+<p>用一个数组存储所有边，每条边记录起点、终点和权值（如果有）：</p>
+<blockquote>
+<ul>
+<li>空间复杂度：<span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi mathvariant="normal">∣</mi><mi>E</mi><mi mathvariant="normal">∣</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(|E|)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord">∣</span><span class="mclose">)</span></span></span></span></li>
+<li>优点：结构简单，适合 Kruskal 等基于边的算法</li>
+<li>缺点：找某个顶点的邻居需要遍历所有边</li>
+</ul>
+</blockquote>
+<h3>例题 - 课程表</h3>
+<p>你这个学期必须选修&nbsp;<code>numCourses</code>&nbsp;门课程，记为&nbsp;<code>0</code>&nbsp;到&nbsp;<code>numCourses - 1</code>&nbsp;。</p>
+<p>在选修某些课程之前需要一些先修课程。 先修课程按数组&nbsp;<code>prerequisites</code>&nbsp;给出，其中&nbsp;<code>prerequisites[i] = [ai, bi]</code>&nbsp;，表示如果要学习课程&nbsp;<code>ai</code>&nbsp;则&nbsp;<strong>必须</strong>&nbsp;先学习课程&nbsp;&nbsp;<code>bi</code>&nbsp;。</p>
+<ul>
+<li>例如，先修课程对&nbsp;<code>[0, 1]</code>&nbsp;表示：想要学习课程&nbsp;<code>0</code>&nbsp;，你需要先完成课程&nbsp;<code>1</code>&nbsp;。</li>
+</ul>
+<p>请你判断是否可能完成所有课程的学习？如果可以，返回&nbsp;<code>true</code>&nbsp;；否则，返回&nbsp;<code>false</code></p>
+<h4>题解</h4>
+<p>本题本质是判断<strong>有向图是否有环</strong>，可以用**拓扑排序（Kahn 算法）**解决：</p>
+<ol>
+<li><strong>建图</strong>：对于 <code>[ai, bi]</code>（学 <code>ai</code> 前必须先学 <code>bi</code>），建立有向边 <code>bi -&gt; ai</code>，同时统计每个节点的<strong>入度</strong></li>
+<li><strong>初始化队列</strong>：将所有入度为 0 的节点入队（这些课程没有先修要求，可以直接学）</li>
+<li><strong>BFS 遍历</strong>：每次取出队首节点，将其所有后继节点的入度减 1；若某个后继节点入度变为 0，说明其先修课程已全部完成，将其入队</li>
+<li><strong>判断结果</strong>：统计出队的节点总数，若等于课程总数则无环（能学完），否则有环（存在循环依赖）</li>
+</ol>
+<h5>代码</h5>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">class</span> <span class="token class-name">Solution</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">canFinish</span><span class="token punctuation">(</span><span class="token keyword">int</span> numCourses<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> prerequisites<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 邻接表建图</span>
+        <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> edges <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> numCourses<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> edges<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token comment">// 入度数组</span>
+        <span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> indeg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">int</span><span class="token punctuation">[</span>numCourses<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> p <span class="token operator">:</span> prerequisites<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            edges<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// p[1] -&gt; p[0]</span>
+            indeg<span class="token punctuation">[</span>p<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token operator">++</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 入度为 0 的节点入队</span>
+        <span class="token class-name">Queue</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> que <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinkedList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> numCourses<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>indeg<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> que<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">int</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>que<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">int</span> u <span class="token operator">=</span> que<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            count<span class="token operator">++</span><span class="token punctuation">;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> v <span class="token operator">:</span> edges<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">--</span>indeg<span class="token punctuation">[</span>v<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> que<span class="token punctuation">.</span><span class="token function">offer</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        
+        <span class="token keyword">return</span> count <span class="token operator">==</span> numCourses<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div>]]></content:encoded>
+    </item>
+    <item>
+      <title>Alg - 图论2 (DFS &amp;&amp; BFS)</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article2.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article2.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论2 (DFS &amp;&amp; BFS)</source>
+      <description>DFS 深度优先搜索（Depth-First Search） 是一种用于遍历或搜索图、树的算法。 核心思想 从起点出发，沿着一条路径尽可能深入，直到无法继续时回溯，再探索其他路径。 特点 使用栈（或递归调用栈）实现 不保证找到最短路径 时间复杂度：O(V + E)，V 为顶点数，E 为边数 空间复杂度：O(V)（递归深度最多为顶点数） 适合：路径搜索、...</description>
+      <category>code</category>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>DFS</h2>
+<p><strong>深度优先搜索（Depth-First Search）</strong> 是一种用于遍历或搜索图、树的算法。</p>
+<h3>核心思想</h3>
+<p>从起点出发，沿着一条路径尽可能深入，直到无法继续时回溯，再探索其他路径。</p>
+<h3>特点</h3>
+<ul>
+<li>使用<strong>栈</strong>（或递归调用栈）实现</li>
+<li>不保证找到最短路径</li>
+<li>时间复杂度：O(V + E)，V 为顶点数，E 为边数</li>
+<li>空间复杂度：O(V)（递归深度最多为顶点数）</li>
+<li>适合：路径搜索、连通性判断、拓扑排序、回溯问题</li>
+</ul>
+<h3>代码模板</h3>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 邻接表表示图</span>
+<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> adj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">boolean</span><span class="token punctuation">[</span><span class="token punctuation">]</span> visited<span class="token punctuation">;</span>
+
+<span class="token comment">// 递归实现（最常用）</span>
+<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token comment">// 处理当前节点</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> v <span class="token operator">:</span> adj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">dfs</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 栈实现（避免栈溢出）</span>
+<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> start<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token class-name">Deque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> stack <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayDeque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    stack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>stack<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> u <span class="token operator">=</span> stack<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span>  <span class="token comment">// 跳过已访问节点</span>
+        visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> v <span class="token operator">:</span> adj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                stack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>网格 DFS 模板</h3>
+<p>矩阵/网格问题中常用的 DFS 写法：</p>
+<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> grid<span class="token punctuation">;</span>
+<span class="token keyword">int</span> m<span class="token punctuation">,</span> n<span class="token punctuation">;</span>
+<span class="token keyword">boolean</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> visited<span class="token punctuation">;</span>
+<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dx <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">;</span>  <span class="token comment">// 上下左右四个方向</span>
+<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dy <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token comment">// 处理当前格子</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> nx <span class="token operator">=</span> x <span class="token operator">+</span> dx<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> ny <span class="token operator">=</span> y <span class="token operator">+</span> dy<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token comment">// 边界检查 + 未访问检查</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>nx <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> nx <span class="token operator">&lt;</span> m <span class="token operator">&amp;&amp;</span> ny <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> ny <span class="token operator">&lt;</span> n <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>visited<span class="token punctuation">[</span>nx<span class="token punctuation">]</span><span class="token punctuation">[</span>ny<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">dfs</span><span class="token punctuation">(</span>nx<span class="token punctuation">,</span> ny<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// 简化写法：直接枚举四个方向</span>
+<span class="token keyword">void</span> <span class="token function">dfs2</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> x <span class="token operator">&gt;=</span> m <span class="token operator">||</span> y <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> y <span class="token operator">&gt;=</span> n <span class="token operator">||</span> visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">dfs2</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3>经典应用</h3>
+<p>| 问题 | 说明 |
+|</p>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Alg - 图论3 前缀树 (Trie)</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article3.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article3.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论3 前缀树 (Trie)</source>
+      <description>概念 Trie（发音 &amp;quot;try&amp;quot;，又称前缀树、字典树）是一种树形数据结构，用于高效存储和检索字符串。 核心思想 利用字符串的公共前缀来减少存储空间和查询时间。 结构图示 存储 [&amp;quot;app&amp;quot;, &amp;quot;apple&amp;quot;, &amp;quot;apply&amp;quot;, &amp;quot;bat&amp;quot;] 的结构： * 表示 isEnd = true（单词结尾） 公共前缀 app 只存储一次 节点结构 为什么用数组而...</description>
+      <category>code</category>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>概念</h2>
+<p><strong>Trie</strong>（发音 "try"，又称前缀树、字典树）是一种树形数据结构，用于高效存储和检索字符串。</p>
+<h3>核心思想</h3>
+<p>利用字符串的<strong>公共前缀</strong>来减少存储空间和查询时间。</p>
+<h3>结构图示</h3>
+<p>存储 <code>["app", "apple", "apply", "bat"]</code> 的结构：</p>
+<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>        (root)
+       /      \
+      a        b
+      |        |
+      p        a
+      |        |
+      p*       t*
+    / | \
+   l  l  e*
+   |  |
+   y* e*
+      |
+      *
+</code></pre></div><ul>
+<li><code>*</code> 表示 isEnd = true（单词结尾）</li>
+<li>公共前缀 <code>app</code> 只存储一次</li>
+</ul>
+]]></content:encoded>
+    </item>
+    <item>
+      <title>Alg - 图论4 最短路径(Dijkstra + Floyd 算法)</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article4.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article4.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论4 最短路径(Dijkstra + Floyd 算法)</source>
+      <description>最短路径算法 问题定义 给定一个图 G=(V,E)，每条边有一个权值 w(e)，求从一个点到另一个点的路径，使得路径上所有边的权值之和最小。 最短路径问题在现实中有广泛的应用： 导航系统：地图中两点间的最短/最快路线 网络路由：数据包选择最优传输路径 任务调度：关键路径法（CPM）中的时间估算 最短路径问题主要分为两类： 单源最短路径：从一个起点到其余...</description>
+      <category>code</category>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
+      <content:encoded><![CDATA[<h2>最短路径算法</h2>
+<h3>问题定义</h3>
+<p>给定一个图 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>G</mi><mo>=</mo><mo stretchy="false">(</mo><mi>V</mi><mo separator="true">,</mo><mi>E</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">G = (V, E)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">G</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mclose">)</span></span></span></span>，每条边有一个权值 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi><mo stretchy="false">(</mo><mi>e</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">w(e)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mopen">(</span><span class="mord mathnormal">e</span><span class="mclose">)</span></span></span></span>，求从一个点到另一个点的路径，使得路径上所有边的权值之和最小。</p>
+<p>最短路径问题在现实中有广泛的应用：</p>
+<ul>
+<li><strong>导航系统</strong>：地图中两点间的最短/最快路线</li>
+<li><strong>网络路由</strong>：数据包选择最优传输路径</li>
+<li><strong>任务调度</strong>：关键路径法（CPM）中的时间估算</li>
+</ul>
+<p>最短路径问题主要分为两类：</p>
+<ul>
+<li><strong>单源最短路径</strong>：从一个起点到其余所有点的最短距离（Dijkstra、Bellman-Ford、SPFA）</li>
+<li><strong>多源最短路径</strong>：任意两点之间的最短距离（Floyd-Warshall）</li>
+</ul>
+]]></content:encoded>
+    </item>
+    <item>
       <title>Alg1 - ACM 模式</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article1.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article1.html</guid>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article1.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article1.html</guid>
       <source url="http://ekkosonya.cn/rss.xml">Alg1 - ACM 模式</source>
       <description>ACM 模式(输入输出) Scanner 类 Scanner 是 Java 中用于解析基本类型和字符串的简单文本扫描器，位于 java.util 包中 Scanner 的核心逻辑是基于分隔符（Delimiter）将输入拆分为标记（Tokens）。 默认分隔符：空白符（包括空格、回车 \n、制表符 \t 等）。 解析方式：它不仅能读字符串，还能自动尝试将...</description>
       <category>code</category>
-      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
       <content:encoded><![CDATA[<h2>ACM 模式(输入输出)</h2>
 <h3>Scanner 类</h3>
 <p><code>Scanner</code> 是 Java 中用于解析基本类型和字符串的简单文本扫描器，位于 <code>java.util</code> 包中</p>
@@ -36,12 +376,12 @@
     </item>
     <item>
       <title>Alg2 - String 常用API</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article2.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article2.html</guid>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article2.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article2.html</guid>
       <source url="http://ekkosonya.cn/rss.xml">Alg2 - String 常用API</source>
       <description>String 常用 API 1. 长度和判空 2. 取字符 3. 截取子串 4. 比较 5. 查找和定位 6. 大小写转换 7. 去空格 8. 分割和替换 9. 连接和格式化 10. 类型转换 11. 其他常用方法 常见场景速查 性能建议 字符串不可变性 </description>
       <category>code</category>
-      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
       <content:encoded><![CDATA[<h2>String 常用 API</h2>
 <h3>1. 长度和判空</h3>
 <div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token class-name">String</span> s <span class="token operator">=</span> <span class="token string">"hello"</span><span class="token punctuation">;</span>
@@ -131,12 +471,12 @@ s<span class="token punctuation">.</span><span class="token function">codePointA
     </item>
     <item>
       <title>Alg3 - 集合常用API</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article3.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article3.html</guid>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article3.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article3.html</guid>
       <source url="http://ekkosonya.cn/rss.xml">Alg3 - 集合常用API</source>
       <description>接口体系 常用方法速查 高频场景选择 详细方法速查 HashSet ArrayList LinkedList HashMap TreeMap LinkedHashMap（LRU缓存） TreeSet PriorityQueue（堆） Queue（FIFO） Deque（双端队列） Collections 工具类 时间复杂度对比 易错点 </description>
       <category>code</category>
-      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
       <content:encoded><![CDATA[<h2>接口体系</h2>
 <div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>Collection
 ├── Set（无序、无重复）
@@ -209,13 +549,13 @@ pq<span class="token punctuation">.</span><span class="token function">peek</spa
 ]]></content:encoded>
     </item>
     <item>
-      <title>Alg4 - 典型题目 (LRU)</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article4.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article4.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg4 - 典型题目 (LRU)</source>
+      <title>Alg - 典型题目 (LRU)</title>
+      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE/article1.html</link>
+      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE/article1.html</guid>
+      <source url="http://ekkosonya.cn/rss.xml">Alg - 典型题目 (LRU)</source>
       <description>LRU 请你设计并实现一个满足 LRU (最近最少使用) 缓存 约束的数据结构。 实现 LRUCache 类： LRUCache(int capacity) 以 正整数 作为容量 capacity 初始化 LRU 缓存 int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 1 。 void put(int ke...</description>
       <category>code</category>
-      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
+      <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
       <content:encoded><![CDATA[<h2>LRU</h2>
 <p>请你设计并实现一个满足&nbsp;&nbsp;<a href="https://baike.baidu.com/item/LRU" target="_blank" rel="noopener noreferrer">LRU (最近最少使用) 缓存</a>&nbsp;约束的数据结构。</p>
 <p>实现&nbsp;<code>LRUCache</code>&nbsp;类：</p>
@@ -252,97 +592,6 @@ pq<span class="token punctuation">.</span><span class="token function">peek</spa
     <span class="token punctuation">}</span>
 
     <span class="token comment">// </span></code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Alg5 - 图论 (DFS &amp;&amp; BFS)</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article5.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/article5.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg5 - 图论 (DFS &amp;&amp; BFS)</source>
-      <description>DFS 深度优先搜索（Depth-First Search） 是一种用于遍历或搜索图、树的算法。 核心思想 从起点出发，沿着一条路径尽可能深入，直到无法继续时回溯，再探索其他路径。 特点 使用栈（或递归调用栈）实现 不保证找到最短路径 时间复杂度：O(V + E)，V 为顶点数，E 为边数 空间复杂度：O(V)（递归深度最多为顶点数） 适合：路径搜索、...</description>
-      <category>code</category>
-      <pubDate>Thu, 09 Apr 2026 16:47:01 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>DFS</h2>
-<p><strong>深度优先搜索（Depth-First Search）</strong> 是一种用于遍历或搜索图、树的算法。</p>
-<h3>核心思想</h3>
-<p>从起点出发，沿着一条路径尽可能深入，直到无法继续时回溯，再探索其他路径。</p>
-<h3>特点</h3>
-<ul>
-<li>使用<strong>栈</strong>（或递归调用栈）实现</li>
-<li>不保证找到最短路径</li>
-<li>时间复杂度：O(V + E)，V 为顶点数，E 为边数</li>
-<li>空间复杂度：O(V)（递归深度最多为顶点数）</li>
-<li>适合：路径搜索、连通性判断、拓扑排序、回溯问题</li>
-</ul>
-<h3>代码模板</h3>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token comment">// 邻接表表示图</span>
-<span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">List</span><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span><span class="token punctuation">&gt;</span></span> adj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">boolean</span><span class="token punctuation">[</span><span class="token punctuation">]</span> visited<span class="token punctuation">;</span>
-
-<span class="token comment">// 递归实现（最常用）</span>
-<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> u<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token comment">// 处理当前节点</span>
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> v <span class="token operator">:</span> adj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token function">dfs</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// 栈实现（避免栈溢出）</span>
-<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> start<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token class-name">Deque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Integer</span><span class="token punctuation">&gt;</span></span> stack <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayDeque</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    stack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>start<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span>stack<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">int</span> u <span class="token operator">=</span> stack<span class="token punctuation">.</span><span class="token function">pop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">continue</span><span class="token punctuation">;</span>  <span class="token comment">// 跳过已访问节点</span>
-        visited<span class="token punctuation">[</span>u<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> v <span class="token operator">:</span> adj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>u<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>visited<span class="token punctuation">[</span>v<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                stack<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>网格 DFS 模板</h3>
-<p>矩阵/网格问题中常用的 DFS 写法：</p>
-<div class="language-java" data-ext="java" data-title="java"><pre class="language-java"><code><span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> grid<span class="token punctuation">;</span>
-<span class="token keyword">int</span> m<span class="token punctuation">,</span> n<span class="token punctuation">;</span>
-<span class="token keyword">boolean</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> visited<span class="token punctuation">;</span>
-<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dx <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">}</span><span class="token punctuation">;</span>  <span class="token comment">// 上下左右四个方向</span>
-<span class="token keyword">int</span><span class="token punctuation">[</span><span class="token punctuation">]</span> dy <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
-
-<span class="token keyword">void</span> <span class="token function">dfs</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token comment">// 处理当前格子</span>
-
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">int</span> nx <span class="token operator">=</span> x <span class="token operator">+</span> dx<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token keyword">int</span> ny <span class="token operator">=</span> y <span class="token operator">+</span> dy<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token comment">// 边界检查 + 未访问检查</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>nx <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> nx <span class="token operator">&lt;</span> m <span class="token operator">&amp;&amp;</span> ny <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> ny <span class="token operator">&lt;</span> n <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>visited<span class="token punctuation">[</span>nx<span class="token punctuation">]</span><span class="token punctuation">[</span>ny<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token function">dfs</span><span class="token punctuation">(</span>nx<span class="token punctuation">,</span> ny<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
-
-<span class="token comment">// 简化写法：直接枚举四个方向</span>
-<span class="token keyword">void</span> <span class="token function">dfs2</span><span class="token punctuation">(</span><span class="token keyword">int</span> x<span class="token punctuation">,</span> <span class="token keyword">int</span> y<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> x <span class="token operator">&gt;=</span> m <span class="token operator">||</span> y <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token operator">||</span> y <span class="token operator">&gt;=</span> n <span class="token operator">||</span> visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token keyword">return</span><span class="token punctuation">;</span>
-    <span class="token punctuation">}</span>
-    visited<span class="token punctuation">[</span>x<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-    <span class="token function">dfs2</span><span class="token punctuation">(</span>x <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">dfs2</span><span class="token punctuation">(</span>x <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">dfs2</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token function">dfs2</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">}</span>
-</code></pre></div><h3>经典应用</h3>
-<p>| 问题 | 说明 |
-|</p>
-]]></content:encoded>
     </item>
     <item>
       <title>Net13 - 杂</title>
@@ -471,300 +720,6 @@ pq<span class="token punctuation">.</span><span class="token function">peek</spa
 <li>只要物理层保证数据能送到，上面的所有层都能正常工作</li>
 <li>这就是"各层独立、互不影响"</li>
 </ul>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Net10 - 传输层协议 (Socket + UDP)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article10.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article10.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net10 - 传输层协议 (Socket + UDP)</source>
-      <description>传输层 Socket 即套接字，是应用层 与 TCP/IP 协议族通信的中间软件抽象层，表现为一个封装了 TCP / IP协议族 的编程接口（API） Socket是一个编程接口，让你不用关心TCP/IP协议细节，直接调用函数就能收发数据 对用户来说，只需调用Socket去组织数据，以符合指定的协议，即可通信 流程 alt textalt text 服...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>传输层</h2>
-<h3>Socket</h3>
-<p>即套接字，是应用层 与 TCP/IP 协议族通信的中间软件抽象层，表现为一个封装了 TCP / IP协议族 的编程接口（API）</p>
-<blockquote>
-<p>Socket是一个编程接口，让你不用关心TCP/IP协议细节，直接调用函数就能收发数据</p>
-</blockquote>
-<p>| 类型 | 协议 | 特点 | 用途 |
-|</p>
-]]></content:encoded>
-    </item>
-    <item>
-      <title>Net11 - 网络层 (IP 1)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article11.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article11.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net11 - 网络层 (IP 1)</source>
-      <description>网络层 网络层的主要作用是：实现主机与主机之间的通信，也叫点对点（end to end）通信 alt textalt text 网络层与数据链路层有什么关系 IP（网络层） 和 MAC （数据链路层）之间的区别和关系 IP 的作用是主机之间通信用的，而 MAC 的作用则是实现「直连」的两个设备之间通信，而 IP 则负责在「没有直连」的两个网络之间进行通...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>网络层</h2>
-<p>网络层的主要作用是：实现主机与主机之间的通信，也叫点对点（end to end）通信</p>
-<figure><figcaption>alt text</figcaption></figure>
-<h3>网络层与数据链路层有什么关系</h3>
-<p>IP（网络层） 和 MAC （数据链路层）之间的区别和关系</p>
-<p>IP 的作用是主机之间通信用的，而&nbsp;<strong>MAC 的作用则是实现「直连」的两个设备之间通信，而 IP 则负责在「没有直连」的两个网络之间进行通信传输</strong></p>
-<blockquote>
-<p>在区间内移动相当于数据链路层，充当区间内两个节点传输的功能，区间内的出发点好比源 MAC 地址，目标地点好比目的 MAC 地址。</p>
-<p>整个旅游行程表就相当于网络层，充当远程定位的功能，行程的开始好比源 IP，行程的终点好比目的 IP 地址</p>
-</blockquote>
-<figure><figcaption>alt text</figcaption></figure>
-<p>只有两者兼备，既有某个区间的车票又有整个旅行的行程表，才能保证到达目的地。与此类似，<strong>计算机网络中也需要「数据链路层」和「网络层」这个分层才能实现向最终目标地址的通信。</strong></p>
-<p>还有重要一点，旅行途中我们虽然不断变化了交通工具，但是旅行行程的起始地址和目的地址始终都没变。</p>
-<p>其实，在网络中数据包传输中也是如此，<strong>源IP地址和目标IP地址在传输过程中是不会变化的（前提：没有使用 NAT 网络），只有源 MAC 地址和目标 MAC 一直在变化</strong></p>
-<h3>IP 基础</h3>
-<p>在 TCP/IP 网络通信时，为了保证能正常通信，每个设备都需要配置正确的 IP 地址，否则无法实现正常的通信。</p>
-<p>IP 地址（IPv4 地址）由&nbsp;<code>32</code>&nbsp;位正整数来表示，IP 地址在计算机是以二进制的方式处理的。</p>
-<p>而人类为了方便记忆采用了<strong>点分十进制</strong>的标记方式，也就是将 32 位 IP 地址以每 8 位为组，共分为&nbsp;<code>4</code>&nbsp;组，每组以「<code>.</code>」隔开，再将每组转换成十进制</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>IP 地址最大值就是 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>3</mn></msup><mn>2</mn><mo>=</mo><mn>4294967296</mn></mrow><annotation encoding="application/x-tex">2^32=4294967296</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">3</span></span></span></span></span></span></span></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4294967296</span></span></span></span></p>
-<p>也就说，最大允许 43 亿台计算机连接到网络。</p>
-<p>实际上，IP 地址并不是根据主机台数来配置的，而是以网卡。像服务器、路由器等设备都是有 2 个以上的网卡，也就是它们会有 2 个以上的 IP 地址</p>
-<h4>IP 分类</h4>
-<p>互联网诞生之初，IP 地址显得很充裕，于是计算机科学家们设计了分类地址。</p>
-<p>IP 地址分类成了 5 种类型，分别是 A 类、B 类、C 类、D 类、E 类</p>
-<figure><figcaption>alt text</figcaption></figure>
-<blockquote>
-<p>什么是 A B C 类</p>
-</blockquote>
-<p>其中对于 A、B、C 类主要分为两个部分，分别是网络号和主机号</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>最大主机个数，就是要看主机号的位数，如 C 类地址的主机号占 8 位，那么 C 类地址的最大主机个数 <span v-pre="" class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mn>8</mn></msup><mo>−</mo><mn>2</mn><mo>=</mo><mn>254</mn></mrow><annotation encoding="application/x-tex">2^8 - 2 = 254</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">8</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">254</span></span></span></span></p>
-<blockquote>
-<p>为什么要减 2 呢？</p>
-</blockquote>
-<p>因为在 IP 地址中，有两个 IP 是特殊的，分别是主机号全为 1 和 全为 0 地址</p>
-<ul>
-<li>主机号全为 1 指定某个网络下的所有主机，用于广播</li>
-<li>主机号全为 0 指定某个网络</li>
-</ul>
-<blockquote>
-<p>什么是 D、E 类地址</p>
-</blockquote>
-<p>而 D 类和 E 类地址是没有主机号的，所以不可用于主机 IP，D 类常被用于多播，E 类是预留的分类，暂时未使用</p>
-<h5>缺点</h5>
-<p><em>缺点一</em></p>
-<p><strong>同一网络下没有地址层次</strong>，比如一个公司里用了 B 类地址，但是可能需要根据生产环境、测试环境、开发环境来划分地址层次，而这种 IP 分类是没有地址层次划分的功能，所以这就<strong>缺少地址的灵活性</strong>。</p>
-<p><em>缺点二</em></p>
-<p>A、B、C类有个尴尬处境，就是<strong>不能很好的与现实网络匹配</strong>。</p>
-<ul>
-<li>C 类地址能包含的最大主机数量实在太少了，只有 254 个，估计一个网吧都不够用。</li>
-<li>而 B 类地址能包含的最大主机数量又太多了，6 万多台机器放在一个网络下面，一般的企业基本达不到这个规模，闲着的地址就是浪费。</li>
-</ul>
-<p>这两个缺点，都可以在&nbsp;<code>CIDR</code>&nbsp;无分类地址解决</p>
-<h4>无分类地址 CIDR</h4>
-<p>正因为 IP 分类存在许多缺点，所以后面提出了无分类地址的方案，即&nbsp;<code>CIDR</code>。</p>
-<p>这种方式不再有分类地址的概念，32 比特的 IP 地址被划分为两部分，前面是<strong>网络号</strong>，后面是<strong>主机号</strong></p>
-<blockquote>
-<p>怎么划分网络号和主机号的</p>
-</blockquote>
-<p>表示形式&nbsp;<code>a.b.c.d/x</code>，其中&nbsp;<code>/x</code>&nbsp;表示前 x 位属于<strong>网络号</strong>， x 的范围是&nbsp;<code>0 ~ 32</code>，这就使得 IP 地址更加具有灵活性。</p>
-<p>比如 <code>10.100.122.2/24</code>，这种地址表示形式就是 CIDR，/24 表示前 24 位是网络号，剩余的 8 位是主机号</p>
-<p>还有另一种划分网络号与主机号形式，那就是<strong>子网掩码</strong>，掩码的意思就是掩盖掉主机号，剩余的就是网络号</p>
-<p><strong>将子网掩码和 IP 地址按位计算 AND，就可得到网络号</strong></p>
-<figure><figcaption>alt text</figcaption></figure>
-<h5>为什么要分离网络号和主机号</h5>
-<p>因为两台计算机要通讯，首先要判断是否处于同一个广播域内，即网络地址是否相同。如果网络地址相同，表明接受方在本网络上，那么可以把数据包直接发送到目标主机。</p>
-<p>路由器寻址工作中，也就是通过这样的方式来找到对应的网络号的，进而把数据包转发给对应的网络内</p>
-<p><strong>因为两台计算机要通讯，首先要判断是否处于同一个广播域内，即网络地址是否相同。</strong></p>
-<p>这意味着，当计算机 A 要给计算机 B 发数据时，第一步不是直接发，而是先问一个问题：<strong>B 在我的本网络上吗？</strong></p>
-<p>怎么判断呢？就是比较双方的<strong>网络号</strong>部分是否相同。</p>
-<p>比如：</p>
-<ul>
-<li>A 的 IP 是&nbsp;<code>10.100.122.5/24</code>（网络号是&nbsp;<code>10.100.122.0</code>）</li>
-<li>B 的 IP 是&nbsp;<code>10.100.122.10/24</code>（网络号也是&nbsp;<code>10.100.122.0</code>）</li>
-<li>网络号相同，说明 B 在我的本网络上</li>
-</ul>
-<p><strong>第二句：如果网络地址相同，表明接受方在本网络上，那么可以把数据包直接发送到目标主机。</strong></p>
-<p>既然对方在本网络上，就可以<strong>直接发送</strong>，不需要经过路由器。</p>
-<p>计算机 A 会用 ARP 协议（数据链路层）去查找 B 的 MAC 地址，然后直接通过以太网把数据发过去。</p>
-<p><strong>第三句：路由器寻址工作中，也就是通过这样的方式来找到对应的网络号的，进而把数据包转发给对应的网络内。</strong></p>
-<p>反过来，如果网络号<strong>不同</strong>，说明对方在其他网络上，就需要经过路由器。</p>
-<p>路由器会根据 IP 地址的网络号部分去查找<strong>路由表</strong>，找到应该转发到哪个网络去，然后把数据包转发过去。</p>
-<ul>
-<li>*核心理解：**分离网络号和主机号，就是为了快速判断"对方在不在本网络上"——</li>
-<li>在本网络 → 直接发</li>
-<li>不在本网络 → 路由器帮你转发</li>
-</ul>
-<h5>子网划分</h5>
-<p>我们知道可以通过子网掩码划分出网络号和主机号，那实际上子网掩码还有一个作用，那就是<strong>划分子网</strong></p>
-<p><strong>子网划分实际上是将主机地址分为两个部分：子网网络地址和子网主机地址</strong></p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>假设对 C 类地址进行子网划分，网络地址 192.168.1.0，使用子网掩码 255.255.255.192 对其进行子网划分。</p>
-<p>C 类地址中前 24 位是网络号，最后 8 位是主机号，根据子网掩码可知<strong>从 8 位主机号中借用 2 位作为子网号</strong></p>
-<p>由于子网网络地址被划分成 2 位，那么子网地址就有 4 个，分别是 00、01、10、11</p>
-<h4>公有 IP 和 私有 IP</h4>
-<p>在 A、B、C 分类地址，实际上有分公有 IP 地址和私有 IP 地址</p>
-<figure><figcaption>alt text</figcaption></figure>
-<p><strong>RFC 1918 标准定义的私有地址范围：</strong></p>
-<ul>
-<li><strong>A 类私有地址</strong>：<code>10.0.0.0/8</code>（对应原 A 类）</li>
-<li><strong>B 类私有地址</strong>：<code>172.16.0.0/12</code>（对应原 B 类）</li>
-<li><strong>C 类私有地址</strong>：<code>192.168.0.0/16</code>（对应原 C 类）</li>
-</ul>
-<p>这些就是从 ABC 分类时代遗留下来的定义，一直沿用到现在。</p>
-<p><strong>但在实际使用中，企业还是用 CIDR 来进一步划分。</strong></p>
-<p>比如某企业申请了一个私有地址 <code>10.0.0.0/8</code>（A 类范围），内部会这样划分：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>生产环境：10.1.0.0/16
-测试环境：10.2.0.0/16
-开发环境：10.3.0.0/16`
-</code></pre></div><p><strong>总结：</strong></p>
-<ul>
-<li><strong>私有 IP 的范围定义</strong>&nbsp;→ 还是按 ABC 分类</li>
-<li><strong>私有 IP 的实际管理和划分</strong>&nbsp;→ 用 CIDR</li>
-</ul>
-<p>所以你的理解是对的，ABC 分类虽然在公网上被 CIDR 取代了，但它的影子还是保留在私有地址的定义里</p>
-<p>私有 IP 地址通常是内部的 IT 人员管理，公有 IP 地址是由&nbsp;<code>ICANN</code>&nbsp;组织管理，中文叫「互联网名称与数字地址分配机构」。</p>
-<p>IANA 是 ICANN 的其中一个机构，它负责分配互联网 IP 地址，是按州的方式层层分配</p>
-<ul>
-<li>ARIN 北美地区</li>
-<li>LACNIC 拉丁美洲和一些加勒比群岛</li>
-<li>RIPE NCC 欧洲、中东和中亚</li>
-<li>AfriNIC 非洲地区</li>
-<li>APNIC 亚太地区</li>
-</ul>
-<p>其中，在中国是由 CNNIC 的机构进行管理，它是中国国内唯一指定的全局 IP 地址管理的组织</p>
-<h5>简单例子</h5>
-<p><strong>地区 RIR 的管理范围：</strong></p>
-<p><code>APNIC（亚太）→ IP 段: 1.0.0.0/8 ~ 223.255.255.255/8 的一部分 RIPE NCC（欧洲）→ IP 段: 194.0.0.0/6 ~ 195.0.0.0/6 等 ARIN（北美）→ IP 段: 8.0.0.0/4 ~ 15.0.0.0/4 等 LACNIC（南美）→ IP 段: 177.0.0.0/8 ~ 179.0.0.0/8 等 AFRINIC（非洲）→ IP 段: 41.0.0.0/8 等</code></p>
-<p><strong>在地区内部的分配：</strong></p>
-<p>以 APNIC 为例，它再细分给不同国家：</p>
-<p><code>中国：58.0.0.0/8、210.0.0.0/8 等 日本：61.0.0.0/8、203.0.0.0/8 的一部分 澳大利亚：1.0.0.0/8 的一部分</code></p>
-<p><strong>甚至更细致（但不严格）：</strong></p>
-<p>在中国内部，不同运营商也有大概的 IP 段范围：</p>
-<p><code>中国移动：58.0.0.0/8、139.0.0.0/8 的一部分 中国电信：1.0.0.0/8 的一部分、202.0.0.0/8 的一部分 中国联通：210.0.0.0/8 的一部分、123.0.0.0/8 的一部分</code></p>
-<p><strong>但这不是绝对的：</strong></p>
-<ul>
-<li>一个 IP 段不一定完全对应一个地区或运营商，可能被分割或重新分配</li>
-<li>某些大公司可能拥有跨多个地区的 IP 段</li>
-<li>你可以用&nbsp;<code>whois</code>&nbsp;命令查询某个 IP 的归属地和运营商</li>
-</ul>
-<p><strong>例子：</strong></p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>$ whois 8.8.8.8
-结果：Google LLC, United States`
-</code></pre></div>]]></content:encoded>
-    </item>
-    <item>
-      <title>Net12 - 网络层 (IP 2)</title>
-      <link>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article12.html</link>
-      <guid>http://ekkosonya.cn/code/%E5%85%AB%E8%82%A1/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/article12.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Net12 - 网络层 (IP 2)</source>
-      <description>网络层 IP 地址与路由控制 IP地址的网络地址这一部分是用于进行路由控制。 路由控制表中记录着网络地址与下一步应该发送至路由器的地址。在主机和路由器上都会有各自的路由器控制表。 在发送 IP 包时，首先要确定 IP 包首部中的目标地址，再从路由控制表中找到与该地址具有相同网络地址的记录，根据该记录将 IP 包转发给相应的下一个路由器。如果路由控制表中...</description>
-      <category>code</category>
-      <pubDate>Tue, 07 Apr 2026 16:23:46 GMT</pubDate>
-      <content:encoded><![CDATA[<h2>网络层</h2>
-<h3>IP 地址与路由控制</h3>
-<p>IP地址的<strong>网络地址</strong>这一部分是用于进行路由控制。</p>
-<p>路由控制表中记录着网络地址与下一步应该发送至路由器的地址。在主机和路由器上都会有各自的路由器控制表。</p>
-<p>在发送 IP 包时，首先要确定 IP 包首部中的目标地址，再从路由控制表中找到与该地址具有<strong>相同网络地址</strong>的记录，根据该记录将 IP 包转发给相应的下一个路由器。如果路由控制表中存在多条相同网络地址的记录，就选择相同位数最多的网络地址，也就是最长匹配。</p>
-<p>下面以下图的网络链路作为例子说明：</p>
-<figure><figcaption>alt text</figcaption></figure>
-<ol>
-<li>主机 A 要发送一个 IP 包，其源地址是&nbsp;<code>10.1.1.30</code>&nbsp;和目标地址是&nbsp;<code>10.1.2.10</code>，由于没有在主机 A 的路由表找到与目标地址&nbsp;<code>10.1.2.10</code>&nbsp;相同的网络地址，于是包被转发到默认路由（路由器&nbsp;<code>1</code>&nbsp;）</li>
-<li>路由器&nbsp;<code>1</code>&nbsp;收到 IP 包后，也在路由器&nbsp;<code>1</code>&nbsp;的路由表匹配与目标地址相同的网络地址记录，发现匹配到了，于是就把 IP 数据包转发到了&nbsp;<code>10.1.0.2</code>&nbsp;这台路由器&nbsp;<code>2</code></li>
-<li>路由器&nbsp;<code>2</code>&nbsp;收到后，同样对比自身的路由表，发现匹配到了，于是把 IP 包从路由器&nbsp;<code>2</code>&nbsp;的&nbsp;<code>10.1.2.1</code>&nbsp;这个接口出去，最终经过交换机把 IP 数据包转发到了目标主机</li>
-</ol>
-<blockquote>
-<p>环回地址是不会流向网络</p>
-</blockquote>
-<p>环回地址是在同一台计算机上的程序之间进行网络通信时所使用的一个默认地址。</p>
-<p>计算机使用一个特殊的 IP 地址&nbsp;<strong>127.0.0.1 作为环回地址</strong>。与该地址具有相同意义的是一个叫做&nbsp;<code>localhost</code>&nbsp;的主机名。使用这个 IP 或主机名时，数据包不会流向网络</p>
-<h4>如果路由器看到请求源ip是私网，是会怎么样</h4>
-<p><strong>场景一：在内网中的路由器看到私网 IP</strong></p>
-<p>比如你家的 WiFi 路由器看到一个源 IP 为 <code>192.168.1.100</code> 的请求。</p>
-<p>路由器会<strong>正常转发</strong>，因为这是内网流量，没有问题。</p>
-<p><strong>场景二：互联网上的公网路由器看到私网 IP</strong></p>
-<p>比如某个数据包到达互联网上的某个路由器，源 IP 是 <code>192.168.1.100</code>（私网）。</p>
-<p>路由器会<strong>直接丢弃这个数据包</strong>，不会转发。</p>
-<p><strong>为什么会丢弃？</strong></p>
-<p>根据 <strong>BCP 38</strong> 标准（互联网最佳实践），ISP 的边界路由器会做<strong>入栈过滤（Ingress Filtering）</strong>：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>如果看到源 IP 是私网地址（10.0.0.0/8、172.16.0.0/12、192.168.0.0/16）
-→ 这个数据包肯定是伪造的或配置错误的
-→ 直接丢弃
-</code></pre></div><p><strong>为什么要这么做？</strong></p>
-<ol>
-<li><strong>防止欺骗攻击</strong>：黑客无法伪造成私网 IP 来隐藏真实身份（因为私网 IP 本身就说明来自某个内网，不应该出现在公网上）</li>
-<li><strong>保证私网地址的隔离性</strong>：私网地址的设计初衷就是"只在内网使用，不能在公网路由"，这是底线</li>
-</ol>
-<p><strong>实际例子：</strong></p>
-<p>假设你用 NAT 穿透软件试图从内网直接发送一个源 IP 为 <code>192.168.1.100</code> 的数据包到互联网：</p>
-<div class="language-text" data-ext="text" data-title="text"><pre class="language-text"><code>你的电脑: 192.168.1.100
-    ↓ (直接发出，源 IP 没改)
-你的路由器 WAN 口
-    ↓ (看到源 IP 是私网，直接丢弃)
-互联网: 数据包永远到不了
-</code></pre></div><p>所以这就是为什么必须用 <strong>NAT</strong>——必须把源 IP 从私网改成公网，才能在互联网上通信。</p>
-<p><strong>总结：</strong></p>
-<ul>
-<li>内网中的路由器 → 允许私网 IP 通过</li>
-<li>公网的路由器 → 拒绝私网 IP（入栈过滤）</li>
-</ul>
-<p>私网地址永远被隔离在内网内部，这是一个硬性规则</p>
-<h3>IPv4 和 IPv6 首部</h3>
-<figure><figcaption>alt text</figcaption></figure>
-<p>IPv6 相比 IPv4 的首部改进：</p>
-<ul>
-<li><strong>取消了首部校验和字段。</strong>&nbsp;因为在数据链路层和传输层都会校验，因此 IPv6 直接取消了 IP 的校验。</li>
-<li><strong>取消了分片/重新组装相关字段。</strong>&nbsp;分片与重组是耗时的过程，IPv6 不允许在中间路由器进行分片与重组，这种操作只能在源与目标主机，这将大大提高了路由器转发的速度。</li>
-<li><strong>取消选项字段。</strong>&nbsp;选项字段不再是标准 IP 首部的一部分了，但它并没有消失，而是可能出现在 IPv6 首部中的「下一个首部」指出的位置上。删除该选项字段使的 IPv6 的首部成为固定长度的&nbsp;<code>40</code>&nbsp;字节</li>
-</ul>
-<h3>IP 协议相关技术</h3>
-<h4>DNS</h4>
-<p>我们在上网的时候，通常使用的方式是域名，而不是 IP 地址，因为域名方便人类记忆。</p>
-<p>那么实现这一技术的就是&nbsp;<strong>DNS 域名解析</strong>，DNS 可以将域名网址自动转换为具体的 IP 地址。</p>
-<blockquote>
-<p>域名的层级关系</p>
-</blockquote>
-<p>DNS 中的域名都是用<strong>句点</strong>来分隔的，比如&nbsp;<code>www.server.com</code>，这里的句点代表了不同层次之间的<strong>界限</strong>。</p>
-<p>在域名中，<strong>越靠右</strong>的位置表示其层级<strong>越高</strong>。</p>
-<p>毕竟域名是外国人发明，所以思维和中国人相反，比如说一个城市地点的时候，外国喜欢从小到大的方式顺序说起（如 XX 街道 XX 区 XX 市 XX 省），而中国则喜欢从大到小的顺序（如 XX 省 XX 市 XX 区 XX 街道）。</p>
-<p>根域是在最顶层，它的下一层就是 com 顶级域，再下面是 server.com。</p>
-<p>所以域名的层级关系类似一个树状结构：</p>
-<ul>
-<li>根 DNS 服务器</li>
-<li>顶级域 DNS 服务器（com）</li>
-<li>权威 DNS 服务器（server.com）</li>
-</ul>
-<p>根域的 DNS 服务器信息保存在互联网中所有的 DNS 服务器中。这样一来，任何 DNS 服务器就都可以找到并访问根域 DNS 服务器了。</p>
-<p>因此，客户端只要能够找到任意一台 DNS 服务器，就可以通过它找到根域 DNS 服务器，然后再一路顺藤摸瓜找到位于下层的某台目标 DNS 服务器。</p>
-<blockquote>
-<p>域名解析的工作流程</p>
-</blockquote>
-<p>浏览器首先看一下自己的缓存里有没有，如果没有就向操作系统的缓存要，还没有就检查本机域名解析文件&nbsp;<code>hosts</code>，如果还是没有，就会 DNS 服务器进行查询，查询的过程如下：</p>
-<ol>
-<li>客户端首先会发出一个 DNS 请求，问 <code>www.server.com</code> 的 IP 是啥，并发给本地 DNS 服务器（也就是客户端的 TCP/IP 设置中填写的 DNS 服务器地址）。</li>
-<li>本地域名服务器收到客户端的请求后，如果缓存里的表格能找到 <code>www.server.com</code>，则它直接返回 IP 地址。如果没有，本地 DNS 会去问它的根域名服务器：“老大， 能告诉我 <code>www.server.com</code> 的 IP 地址吗？” 根域名服务器是最高层次的，它不直接用于域名解析，但能指明一条道路。</li>
-<li>根 DNS 收到来自本地 DNS 的请求后，发现后置是 .com，说：“www.server.com 这个域名归 .com 区域管理”，我给你 .com 顶级域名服务器地址给你，你去问问它吧。”</li>
-<li>本地 DNS 收到顶级域名服务器的地址后，发起请求问“老二， 你能告诉我 <code>www.server.com</code> 的 IP 地址吗？”</li>
-<li>顶级域名服务器说：“我给你负责 <code>www.server.com</code> 区域的权威 DNS 服务器的地址，你去问它应该能问到”。</li>
-<li>本地 DNS 于是转向问权威 DNS 服务器：“老三，<code>www.server.com</code>对应的IP是啥呀？” server.com 的权威 DNS 服务器，它是域名解析结果的原出处。为啥叫权威呢？就是我的域名我做主。</li>
-<li>权威 DNS 服务器查询后将对应的 IP 地址 X.X.X.X 告诉本地 DNS。</li>
-<li>本地 DNS 再将 IP 地址返回客户端，客户端和目标建立连接。</li>
-</ol>
-<h4>ARP</h4>
-<p>在传输一个 IP 数据报的时候，确定了源 IP 地址和目标 IP 地址后，就会通过主机「路由表」确定 IP 数据包下一跳。然而，网络层的下一层是数据链路层，所以我们还要知道「下一跳」的 MAC 地址。</p>
-<p>由于主机的路由表中可以找到下一跳的 IP 地址，所以可以通过&nbsp;<strong>ARP 协议</strong>，求得下一跳的 MAC 地址。</p>
-<blockquote>
-<p>那么 ARP 又是如何知道对方 MAC 地址的呢？</p>
-</blockquote>
-<p>简单地说，ARP 是借助&nbsp;<strong>ARP 请求与 ARP 响应</strong>两种类型的包确定 MAC 地址的</p>
-<h4>NAT</h4>
-<p>IPv4 的地址是非常紧缺的，在前面我们也提到可以通过无分类地址来减缓 IPv4 地址耗尽的速度，但是互联网的用户增速是非常惊人的，所以 IPv4 地址依然有被耗尽的危险。</p>
-<p>于是，提出了一种<strong>网络地址转换 NAT</strong>&nbsp;的方法，再次缓解了 IPv4 地址耗尽的问题。</p>
-<p>简单的来说 NAT 就是同个公司、家庭、教室内的主机对外部通信时，把私有 IP 地址转换成公有 IP 地址。</p>
-<blockquote>
-<p>那不是 N 个私有 IP 地址，你就要 N 个公有 IP 地址？这怎么就缓解了 IPv4 地址耗尽的问题？这不瞎扯吗？</p>
-</blockquote>
-<p>确实是，普通的 NAT 转换没什么意义。</p>
-<p>由于绝大多数的网络应用都是使用传输层协议 TCP 或 UDP 来传输数据的。</p>
-<p>因此，<strong>可以把 IP 地址 + 端口号一起进行转换</strong>。</p>
-<p>这样，就用一个全球 IP 地址就可以了，这种转换技术就叫<strong>网络地址与端口转换 NAPT</strong></p>
-<figure><figcaption>alt text</figcaption></figure>
-<p>图中有两个客户端 192.168.1.10 和 192.168.1.11 同时与服务器 183.232.231.172 进行通信，并且这两个客户端的本地端口都是 1025。</p>
-<p>此时，<strong>两个私有 IP 地址都转换 IP 地址为公有地址 120.229.175.121，但是以不同的端口号作为区分。</strong></p>
-<p>于是，生成一个 NAPT 路由器的转换表，就可以正确地转换地址跟端口的组合，令客户端 A、B 能同时与服务器之间进行通信。</p>
-<p>这种转换表在 NAT 路由器上自动生成。例如，在 TCP 的情况下，建立 TCP 连接首次握手时的 SYN 包一经发出，就会生成这个表。而后又随着收到关闭连接时发出 FIN 包的确认应答从表中被删除</p>
 ]]></content:encoded>
     </item>
   </channel>

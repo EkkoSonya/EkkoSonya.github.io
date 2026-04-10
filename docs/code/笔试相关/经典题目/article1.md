@@ -1,5 +1,5 @@
 ---
-title: Alg4 - 典型题目 (LRU)
+title: Alg - 典型题目 (LRU)
 date: 2026-4-9
 category:
   - code

@@ -153,6 +153,66 @@ Response:
 
 - 经理（Rescore）：对前两组提交的初选名单进行最终精选
 
+### 官网介绍
+
+[混合查询原理](https://www.elastic.co/docs/solutions/search/vector/knn)
+
+混合搜索允许在同一个请求中组合使用 **kNN (向量相似度)** 和 **标准查询 (全文检索/滤镜/聚合)**。它能够同时利用向量的语义关联性和传统文本的精确匹配能力。
+
+**2组合逻辑 (Disjunction)**
+
+- **并集关系**：`knn` 和 `query` 的匹配结果是以“逻辑或 (OR)”的方式组合的。
+- **全局 Top K**：`knn` 模块会先在所有分片中寻找全局最匹配的 `k` 个向量，然后再与 `query` 的结果合并。
+
+**评分机制 (Boosting & Scoring)**
+
+最终文档的得分是两部分得分的 **加权总和**。
+
+- **公式**：`最终得分 = (match_score * query_boost) + (knn_score * knn_boost)`
+- **权重控制**：通过为每种查询设置 `boost` 值，可以手动平衡“文本相关性”与“向量相似度”对排名的影响权重。
+
+**聚合 (Aggregations) 的表现**
+
+- 聚合操作会在 `knn` 的 Top K 结果与 `query` 匹配结果的 **并集** 上执行
+
+#### 原文
+
+> Combine approximate kNN with other features
+
+You can perform hybrid retrieval by combining the knn option with a standard query. This blends vector similarity with lexical relevance, filters, and aggregations.
+
+```json
+POST image-index/_search
+{
+  "query": {
+    "match": {
+      "title": {
+        "query": "mountain lake",
+        "boost": 0.9
+      }
+    }
+  },
+  "knn": {
+    "field": "image-vector",
+    "query_vector": [54, 10, -2],
+    "k": 5,
+    "num_candidates": 50,
+    "boost": 0.1
+  },
+  "size": 10
+}
+```
+
+This search finds the global top k = 5 vector matches, combines them with the matches from the match query, and finally returns the 10 top-scoring results. The knn and query matches are combined through a disjunction, as if you took a boolean or between them. The top k vector results represent the global nearest neighbors across all index shards.
+
+The score of each hit is the sum of the knn and query scores. You can specify a boost value to give a weight to each score in the sum. In the example above, the scores will be calculated as
+
+```
+score = 0.9 * match_score + 0.1 * knn_score
+```
+
+The knn option can also be used with aggregations. In general, Elasticsearch computes aggregations over all documents that match the search. So for approximate kNN search, aggregations are calculated on the top k nearest documents. If the search also includes a query, then aggregations are calculated on the combined set of knn and query matches.
+
 ### 原理
 
 ES 会根据所给的查询语句，判断是否执行混合查询

@@ -57,7 +57,7 @@ export default hopeTheme({
   copyright: `Copyright © 2024-present <a href="http://ekkosonya.cn/" target="_blank" rel="noopener noreferrer">EkkoSonya's Blog</a>`,
   displayFooter: true,
   // 页脚，支持使用 HTMLString 以显示备案信息等
-  footer: `<img src="/beian.png" style="width:1.2rem;margin-right:2px;"> <a href="https://beian.mps.gov.cn/#/query/webSearch?code=33019202000049" rel="noopener noreferrer" target="_blank">浙公网安备33019202000049</a>`,
+  footer: `<img src="/beian.png" style="width:1.2rem;margin-right:2px;"> <a href="https://beian.mps.gov.cn/#/query/webSearch?code=33019202000049" rel="noopener noreferrer" target="_blank">浙公网安备33019202000049</a> <a href="https://beian.miit.gov.cn/" target="_blank">浙ICP备2021022739号</a>`,
 
   // 页面布局 Frontmatter 配置：https://theme-hope.vuejs.press/zh/config/frontmatter/layout.html#pageinfo
   pageInfo: ["Category", "Tag", "Word", "ReadingTime", "PageView"],

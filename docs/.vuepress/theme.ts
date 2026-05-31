@@ -4,7 +4,7 @@ import sidebar from "./sidebar";
 
 export default hopeTheme({
   // 主题选项：https://theme-hope.vuejs.press/zh/config/theme/layout.html
-  hostname: "http://ekkosonya.cn",
+  hostname: "https://ekkosonya.cn",
 
   iconAssets: "iconfont",
 

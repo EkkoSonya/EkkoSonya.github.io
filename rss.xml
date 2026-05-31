@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="http://ekkosonya.cn/rss.xsl"?>
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="https://ekkosonya.cn/rss.xsl"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
-    <atom:link href="http://ekkosonya.cn/rss.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="https://ekkosonya.cn/rss.xml" rel="self" type="application/rss+xml"/>
     <title>EkkoSonya&amp;apos;s Blog</title>
-    <link>http://ekkosonya.cn/</link>
+    <link>https://ekkosonya.cn/</link>
     <description>笔记记录</description>
     <language>zh-CN</language>
-    <pubDate>Mon, 11 May 2026 07:58:42 GMT</pubDate>
-    <lastBuildDate>Mon, 11 May 2026 07:58:42 GMT</lastBuildDate>
+    <pubDate>Sun, 31 May 2026 04:02:27 GMT</pubDate>
+    <lastBuildDate>Sun, 31 May 2026 04:02:27 GMT</lastBuildDate>
     <generator>@vuepress/plugin-feed</generator>
     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
     <category>code</category>
     <item>
       <title>hint - 拦截器 vs 过滤器</title>
-      <link>http://ekkosonya.cn/code/java_hint/hint10.html</link>
-      <guid>http://ekkosonya.cn/code/java_hint/hint10.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">hint - 拦截器 vs 过滤器</source>
+      <link>https://ekkosonya.cn/code/java_hint/hint10.html</link>
+      <guid>https://ekkosonya.cn/code/java_hint/hint10.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">hint - 拦截器 vs 过滤器</source>
       <description>拦截器 vs 过滤器 拦截器（Interceptor）和过滤器（Filter）都是 Java Web 应用中实现 AOP（面向切面编程）思想的重要组件，它们都可以用来在请求处理前后执行特定的逻辑。但在底层机制、归属规范和应用场景上有非常显著的区别。 在以 Spring Boot 为核心的后端架构中，理解这两者的差异是设计优雅请求处理链路的关键。 核心对...</description>
       <category>code</category>
       <pubDate>Sun, 05 Apr 2026 00:00:00 GMT</pubDate>
@@ -29,9 +29,9 @@
     </item>
     <item>
       <title>hint - 请求从客户端发出的流程</title>
-      <link>http://ekkosonya.cn/code/java_hint/hint11.html</link>
-      <guid>http://ekkosonya.cn/code/java_hint/hint11.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">hint - 请求从客户端发出的流程</source>
+      <link>https://ekkosonya.cn/code/java_hint/hint11.html</link>
+      <guid>https://ekkosonya.cn/code/java_hint/hint11.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">hint - 请求从客户端发出的流程</source>
       <description>整体流程 如果后端是 Spring Boot（常见是 Spring MVC + Tomcat），一个请求从客户端发出到后端处理完成，大致可以分成两层来看： 一、从网络角度看，请求是怎么到后端的 1. 客户端发起请求 客户端可能是： 浏览器 App 前端项目（Vue/React） 其他服务 比如前端发一个请求： 2. 先找到服务器 客户端要先知道请求发给...</description>
       <category>code</category>
       <pubDate>Sun, 05 Apr 2026 00:00:00 GMT</pubDate>
@@ -77,9 +77,9 @@ Content-Type: application/json
     </item>
     <item>
       <title>Alg - 图论1 (基础知识)</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article1.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论1 (基础知识)</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article1.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article1.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg - 图论1 (基础知识)</source>
       <description>图论基础 简单介绍 想象一下，现在有一个巨大的社交网络，其中每个人都与若干个人有联系 如果是你，你会怎么表示它的数学模型呢（或者说，你会怎样把它抽象出来，使它易于表示、观看）； 一个很显然的做法是：将人抽象成点，将人与人的关系抽象成线，两个点有连线，当且仅当这两个点代表的两个人有联系； 也就是说，两个人有联系时，我们就把他们连起来； 图就是将复杂的关系...</description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
@@ -269,9 +269,9 @@ adj<span class="token punctuation">[</span>v<span class="token punctuation">]</s
     </item>
     <item>
       <title>Alg - 图论2 (DFS &amp;&amp; BFS)</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article2.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论2 (DFS &amp;&amp; BFS)</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article2.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article2.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg - 图论2 (DFS &amp;&amp; BFS)</source>
       <description>DFS 深度优先搜索（Depth-First Search） 是一种用于遍历或搜索图、树的算法。 核心思想 从起点出发，沿着一条路径尽可能深入，直到无法继续时回溯，再探索其他路径。 特点 使用栈（或递归调用栈）实现 不保证找到最短路径 时间复杂度：O(V + E)，V 为顶点数，E 为边数 空间复杂度：O(V)（递归深度最多为顶点数） 适合：路径搜索、...</description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
@@ -360,9 +360,9 @@ adj<span class="token punctuation">[</span>v<span class="token punctuation">]</s
     </item>
     <item>
       <title>Alg - 图论3 前缀树 (Trie)</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article3.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论3 前缀树 (Trie)</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article3.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article3.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg - 图论3 前缀树 (Trie)</source>
       <description>概念 Trie（发音 &amp;quot;try&amp;quot;，又称前缀树、字典树）是一种树形数据结构，用于高效存储和检索字符串。 核心思想 利用字符串的公共前缀来减少存储空间和查询时间。 结构图示 存储 [&amp;quot;app&amp;quot;, &amp;quot;apple&amp;quot;, &amp;quot;apply&amp;quot;, &amp;quot;bat&amp;quot;] 的结构： * 表示 isEnd = true（单词结尾） 公共前缀 app 只存储一次 节点结构 为什么用数组而...</description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
@@ -393,9 +393,9 @@ adj<span class="token punctuation">[</span>v<span class="token punctuation">]</s
     </item>
     <item>
       <title>Alg - 图论4 最短路径(Dijkstra + Floyd 算法)</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article4.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article4.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg - 图论4 最短路径(Dijkstra + Floyd 算法)</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article4.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9B%BE%E8%AE%BA/article4.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg - 图论4 最短路径(Dijkstra + Floyd 算法)</source>
       <description>最短路径算法 问题定义 给定一个图 G=(V,E)，每条边有一个权值 w(e)，求从一个点到另一个点的路径，使得路径上所有边的权值之和最小。 最短路径问题在现实中有广泛的应用： 导航系统：地图中两点间的最短/最快路线 网络路由：数据包选择最优传输路径 任务调度：关键路径法（CPM）中的时间估算 最短路径问题主要分为两类： 单源最短路径：从一个起点到其余...</description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
@@ -417,9 +417,9 @@ adj<span class="token punctuation">[</span>v<span class="token punctuation">]</s
     </item>
     <item>
       <title>Alg1 - ACM 模式</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article1.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg1 - ACM 模式</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article1.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article1.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg1 - ACM 模式</source>
       <description>ACM 模式(输入输出) Scanner 类 Scanner 是 Java 中用于解析基本类型和字符串的简单文本扫描器，位于 java.util 包中 Scanner 的核心逻辑是基于分隔符（Delimiter）将输入拆分为标记（Tokens）。 默认分隔符：空白符（包括空格、回车 \n、制表符 \t 等）。 解析方式：它不仅能读字符串，还能自动尝试将...</description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
@@ -440,9 +440,9 @@ adj<span class="token punctuation">[</span>v<span class="token punctuation">]</s
     </item>
     <item>
       <title>Alg2 - String 常用API</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article2.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article2.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg2 - String 常用API</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article2.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article2.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg2 - String 常用API</source>
       <description>String 常用 API 1. 长度和判空 2. 取字符 3. 截取子串 4. 比较 5. 查找和定位 6. 大小写转换 7. 去空格 8. 分割和替换 9. 连接和格式化 10. 类型转换 11. 其他常用方法 常见场景速查 性能建议 字符串不可变性 </description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
@@ -535,9 +535,9 @@ s<span class="token punctuation">.</span><span class="token function">codePointA
     </item>
     <item>
       <title>Alg3 - 集合常用API</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article3.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article3.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg3 - 集合常用API</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article3.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F/article3.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg3 - 集合常用API</source>
       <description>接口体系 常用方法速查 高频场景选择 详细方法速查 HashSet ArrayList LinkedList HashMap TreeMap LinkedHashMap（LRU缓存） TreeSet PriorityQueue（堆） Queue（FIFO） Deque（双端队列） Collections 工具类 时间复杂度对比 易错点 </description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>
@@ -614,9 +614,9 @@ pq<span class="token punctuation">.</span><span class="token function">peek</spa
     </item>
     <item>
       <title>Alg - 典型题目 (LRU)</title>
-      <link>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE/article1.html</link>
-      <guid>http://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE/article1.html</guid>
-      <source url="http://ekkosonya.cn/rss.xml">Alg - 典型题目 (LRU)</source>
+      <link>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE/article1.html</link>
+      <guid>https://ekkosonya.cn/code/%E7%AC%94%E8%AF%95%E7%9B%B8%E5%85%B3/%E7%BB%8F%E5%85%B8%E9%A2%98%E7%9B%AE/article1.html</guid>
+      <source url="https://ekkosonya.cn/rss.xml">Alg - 典型题目 (LRU)</source>
       <description>LRU 请你设计并实现一个满足 LRU (最近最少使用) 缓存 约束的数据结构。 实现 LRUCache 类： LRUCache(int capacity) 以 正整数 作为容量 capacity 初始化 LRU 缓存 int get(int key) 如果关键字 key 存在于缓存中，则返回关键字的值，否则返回 1 。 void put(int ke...</description>
       <category>code</category>
       <pubDate>Fri, 10 Apr 2026 13:51:52 GMT</pubDate>

@@ -2,4 +2,4 @@
 User-agent:*
 Disallow:
 
-Sitemap: http://ekkosonya.cn/sitemap.xml
+Sitemap: https://ekkosonya.cn/sitemap.xml
